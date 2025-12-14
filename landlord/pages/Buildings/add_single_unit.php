@@ -428,102 +428,102 @@ $conn->close();
                 //if the Submit button is clicked
                 if (isset($_POST['submit_unit'])) {
 
-                        try {
+                    try {
 
-                            $buildingId = $_SESSION['building_id'] ?? null;
+                        $buildingId = $_SESSION['building_id'] ?? null;
 
-                            if (!$buildingId) {
-                                throw new Exception('Invalid building context.');
-                            }
+                        if (!$buildingId) {
+                            throw new Exception('Invalid building context.');
+                        }
 
-                            // START TRANSACTION FIRST (prevents race conditions)
-                            $pdo->beginTransaction();
+                        // START TRANSACTION FIRST (prevents race conditions)
+                        $pdo->beginTransaction();
 
-                            // --------------------------------------------------
-                            // Check for duplicate unit_number + building_id
-                            // --------------------------------------------------
-                            $check = $pdo->prepare("
+                        // --------------------------------------------------
+                        // Check for duplicate unit_number + building_id
+                        // --------------------------------------------------
+                        $check = $pdo->prepare("
                                 SELECT COUNT(*) 
                                 FROM building_units 
                                 WHERE unit_number = :unit_number 
                                 AND building_id = :building_id
                             ");
-                            $check->execute([
-                                ':unit_number'  => $_POST['unit_number'],
-                                ':building_id'  => $buildingId
-                            ]);
+                        $check->execute([
+                            ':unit_number'  => $_POST['unit_number'],
+                            ':building_id'  => $buildingId
+                        ]);
 
-                            if ($check->fetchColumn() > 0) {
-                                throw new Exception('No double submission of data: this unit already exists in the database.');
-                            }
+                        if ($check->fetchColumn() > 0) {
+                            throw new Exception('No double submission of data: this unit already exists in the database.');
+                        }
 
-                            // --------------------------------------------------
-                            // Insert into building_units
-                            // --------------------------------------------------
-                            // $stmt = $pdo->prepare("
-                            //     INSERT INTO building_units
-                            //     (
-                            //         structure_type,
-                            //         first_name,
-                            //         last_name,
-                            //         owner_email,
-                            //         entity_name,
-                            //         entity_phone,
-                            //         entity_phoneother,
-                            //         entity_email,
-                            //         unit_number,
-                            //         purpose,
-                            //         building_link,
-                            //         location,
-                            //         monthly_rent,
-                            //         occupancy_status,
-                            //         created_at
-                            //     )
-                            //     VALUES
-                            //     (
-                            //         :structure_type,
-                            //         :first_name,
-                            //         :last_name,
-                            //         :owner_email,
-                            //         :entity_name,
-                            //         :entity_phone,
-                            //         :entity_phoneother,
-                            //         :entity_email,
-                            //         :unit_number,
-                            //         :purpose,
-                            //         :building_link,
-                            //         :location,
-                            //         :monthly_rent,
-                            //         :occupancy_status,
-                            //         NOW()
-                            //     )
-                            // ");
+                        // --------------------------------------------------
+                        // Insert into building_units
+                        // --------------------------------------------------
+                        // $stmt = $pdo->prepare("
+                        //     INSERT INTO building_units
+                        //     (
+                        //         structure_type,
+                        //         first_name,
+                        //         last_name,
+                        //         owner_email,
+                        //         entity_name,
+                        //         entity_phone,
+                        //         entity_phoneother,
+                        //         entity_email,
+                        //         unit_number,
+                        //         purpose,
+                        //         building_link,
+                        //         location,
+                        //         monthly_rent,
+                        //         occupancy_status,
+                        //         created_at
+                        //     )
+                        //     VALUES
+                        //     (
+                        //         :structure_type,
+                        //         :first_name,
+                        //         :last_name,
+                        //         :owner_email,
+                        //         :entity_name,
+                        //         :entity_phone,
+                        //         :entity_phoneother,
+                        //         :entity_email,
+                        //         :unit_number,
+                        //         :purpose,
+                        //         :building_link,
+                        //         :location,
+                        //         :monthly_rent,
+                        //         :occupancy_status,
+                        //         NOW()
+                        //     )
+                        // ");
 
-                            // --------------------------------------------------
-                            // Get unit_category_id (single_unit)
-                            // --------------------------------------------------
-                            $sql = "
+                        // --------------------------------------------------
+                        // Get unit_category_id (single_unit)
+                        // --------------------------------------------------
+                        $sql = "
                                 SELECT id 
                                 FROM unit_categories 
                                 WHERE category_name = :category_name 
                                 LIMIT 1
                             ";
-                            $stmt = $pdo->prepare($sql);
-                            $stmt->execute([
-                                ':category_name' => 'single_unit'
-                            ]);
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute([
+                            ':category_name' => 'single_unit'
+                        ]);
 
-                            $singleUnitCategoryId = $stmt->fetchColumn();
+                        $singleUnitCategoryId = $stmt->fetchColumn();
 
-                            // Safety check
-                            if ($singleUnitCategoryId === false) {
-                                throw new Exception('Unit category "single_unit" not found.');
-                            }
+                        // Safety check
+                        if ($singleUnitCategoryId === false) {
+                            throw new Exception('Unit category "single_unit" not found.');
+                        }
 
-                            // --------------------------------------------------
-                            // Insert building unit (normalized approach)
-                            // --------------------------------------------------
-                            $stmt = $pdo->prepare("
+                        // --------------------------------------------------
+                        // Insert building unit (normalized approach)
+                        // --------------------------------------------------
+                        $stmt = $pdo->prepare("
                                 INSERT INTO building_units 
                                 (
                                     building_id,
@@ -546,63 +546,63 @@ $conn->close();
                                 )
                             ");
 
-                            $stmt->execute([
-                                // ':structure_type' => $_POST['structure_type'],
-                                // ':first_name' => $_POST['first_name'],
-                                // ':last_name' => $_POST['last_name'],
-                                // ':owner_email' => $_POST['owner_email'],
-                                // ':entity_name' => $_POST['entity_name'],
-                                // ':entity_phone' => $_POST['entity_phone'],
-                                // ':entity_phoneother' => $_POST['entity_phoneother'],
-                                // ':entity_email' => $_POST['entity_email'],
-                                ':building_id'      => $buildingId,
-                                ':unit_category_id' => $singleUnitCategoryId,
-                                ':unit_number'      => $_POST['unit_number'],
-                                ':purpose'          => $_POST['purpose'],
-                                // ':building_link' => $_POST['building_link'],
-                                ':location'         => $_POST['location'],
-                                ':monthly_rent'     => $_POST['monthly_rent'],
-                                ':occupancy_status' => $_POST['occupancy_status']
-                            ]);
+                        $stmt->execute([
+                            // ':structure_type' => $_POST['structure_type'],
+                            // ':first_name' => $_POST['first_name'],
+                            // ':last_name' => $_POST['last_name'],
+                            // ':owner_email' => $_POST['owner_email'],
+                            // ':entity_name' => $_POST['entity_name'],
+                            // ':entity_phone' => $_POST['entity_phone'],
+                            // ':entity_phoneother' => $_POST['entity_phoneother'],
+                            // ':entity_email' => $_POST['entity_email'],
+                            ':building_id'      => $buildingId,
+                            ':unit_category_id' => $singleUnitCategoryId,
+                            ':unit_number'      => $_POST['unit_number'],
+                            ':purpose'          => $_POST['purpose'],
+                            // ':building_link' => $_POST['building_link'],
+                            ':location'         => $_POST['location'],
+                            ':monthly_rent'     => $_POST['monthly_rent'],
+                            ':occupancy_status' => $_POST['occupancy_status']
+                        ]);
 
-                            // --------------------------------------------------
-                            // Get inserted unit_id (used later for bills)
-                            // --------------------------------------------------
-                            $unit_id = $pdo->lastInsertId();
+                        // --------------------------------------------------
+                        // Get inserted unit_id (used later for bills)
+                        // --------------------------------------------------
+                        $unit_id = $pdo->lastInsertId();
 
-                            // --------------------------------------------------
-                            // Insert unit bills (currently disabled)
-                            // --------------------------------------------------
-                            // if (!empty($_POST['bill'])) {
-                            //     $stmtBill = $pdo->prepare("
-                            //         INSERT INTO single_unit_bills
-                            //         (unit_id, bill, qty, unit_price, created_at)
-                            //         VALUES
-                            //         (:unit_id, :bill, :qty, :unit_price, NOW())
-                            //     ");
-                            //
-                            //     foreach ($_POST['bill'] as $i => $billName) {
-                            //         if ($billName != '') {
-                            //             $qty       = $_POST['qty'][$i] ?? 0;
-                            //             $unitPrice = $_POST['unit_price'][$i] ?? 0;
-                            //
-                            //             $stmtBill->execute([
-                            //                 ':unit_id'    => $unit_id,
-                            //                 ':bill'       => $billName,
-                            //                 ':qty'        => $qty,
-                            //                 ':unit_price' => $unitPrice
-                            //             ]);
-                            //         }
-                            //     }
-                            // }
+                        // --------------------------------------------------
+                        // Insert unit bills (currently disabled)
+                        // --------------------------------------------------
+                        // if (!empty($_POST['bill'])) {
+                        //     $stmtBill = $pdo->prepare("
+                        //         INSERT INTO single_unit_bills
+                        //         (unit_id, bill, qty, unit_price, created_at)
+                        //         VALUES
+                        //         (:unit_id, :bill, :qty, :unit_price, NOW())
+                        //     ");
+                        //
+                        //     foreach ($_POST['bill'] as $i => $billName) {
+                        //         if ($billName != '') {
+                        //             $qty       = $_POST['qty'][$i] ?? 0;
+                        //             $unitPrice = $_POST['unit_price'][$i] ?? 0;
+                        //
+                        //             $stmtBill->execute([
+                        //                 ':unit_id'    => $unit_id,
+                        //                 ':bill'       => $billName,
+                        //                 ':qty'        => $qty,
+                        //                 ':unit_price' => $unitPrice
+                        //             ]);
+                        //         }
+                        //     }
+                        // }
 
-                            // --------------------------------------------------
-                            // Commit transaction
-                            // --------------------------------------------------
-                            $pdo->commit();
+                        // --------------------------------------------------
+                        // Commit transaction
+                        // --------------------------------------------------
+                        $pdo->commit();
 
-                            // Success alert
-                            echo "
+                        // Success alert
+                        echo "
                             <script>
                                 Swal.fire({
                                     title: 'Success!',
@@ -613,16 +613,15 @@ $conn->close();
                                     window.location.href = 'single_units.php';
                                 });
                             </script>";
-                            exit;
+                        exit;
+                    } catch (Exception $e) {
 
-                        } catch (Exception $e) {
+                        if ($pdo->inTransaction()) {
+                            $pdo->rollBack();
+                        }
 
-                            if ($pdo->inTransaction()) {
-                                $pdo->rollBack();
-                            }
-
-                            // Error alert
-                            echo "
+                        // Error alert
+                        echo "
                             <script>
                                 Swal.fire({
                                     title: 'Error!',
@@ -631,9 +630,9 @@ $conn->close();
                                     confirmButtonText: 'OK'
                                 });
                             </script>";
-                            exit;
-                        }
+                        exit;
                     }
+                }
                 ?>
                 <!--First Row-->
                 <div class="row align-items-center mb-4">
@@ -684,116 +683,115 @@ $conn->close();
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="row">
-                    <div class="card shadow">
-                        <div class="card-header" style="background-color: #00192D; color:#fff;">
-                            <p>Add Unit (<?= htmlspecialchars($building_name); ?>)</p>
-                        </div>
-                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="structure_type" value="<?= htmlspecialchars($structure_type); ?>">
-                            <input type="hidden" name="first_name" value="<?= htmlspecialchars($first_name); ?>">
-                            <input type="hidden" name="last_name" value="<?= htmlspecialchars($last_name); ?>">
-                            <input type="hidden" name="owner_email" value="<?= htmlspecialchars($owner_email); ?>">
-                            <input type="hidden" name="entity_name" value="<?= htmlspecialchars($entity_name); ?>">
-                            <input type="hidden" name="entity_phone" value="<?= htmlspecialchars($entity_phone); ?>">
-                            <input type="hidden" name="entity_phoneother" value="<?= htmlspecialchars($entity_phoneother); ?>">
-                            <input type="hidden" name="entity_email" value="<?= htmlspecialchars($entity_email); ?>">
-                            <div class="card-body">
-                                <div class="card shadow" id="firstSection" style="border:1px solid rgb(0,25,45,.2);">
-                                    <div class="card-header" style="background-color: #00192D; color:#fff;">
-                                        <b>Unit Identification</b>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Unit Number</label>
-                                                    <input type="text" name="unit_number" required class="form-control" id="unit_number" placeholder="Unit Number">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="">Purpose</label>
-                                                    <select name="purpose" id="purpose" class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;">
-                                                        <option value="" selected hidden>-- Select Option -- </option>
-                                                        <option value="Office">Office</option>
-                                                        <option value="Residential">Residential</option>
-                                                        <option value="Business">Business</option>
-                                                        <option value="Store">Store</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="">Link to the Building</label>
-                                                    <input type="text" name="building_link" class="form-control" value="<?= htmlspecialchars($building_name); ?>" readonly>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="">Location with in the Building</label>
-                                                    <input name="location" type="text" class="form-control" id="location" placeholder="Location e.g.Second Floor">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer text-right">
-                                        <button type="button" class="btn btn-sm next-btn" id="firstSectionNexttBtn">Next</button>
-                                    </div>
-                                </div>
+                    <div class="col-md-12">
+                        <div class="card shadow">
 
-                                <div class="card shadow" id="secondSection" style="border:1px solid rgb(0,25,45,.2); display:none;">
-                                    <div class="card-header" style="background-color: #00192D; color:#fff;">
-                                        <b>Financials and Other Information</b>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="form-group">
-                                            <label>Monthly Rent</label>
-                                            <input type="number" class="form-control" id="monthly_rent" name="monthly_rent" placeholder="Monthly Rent">
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="structure_type" value="<?= htmlspecialchars($structure_type); ?>">
+                                <input type="hidden" name="first_name" value="<?= htmlspecialchars($first_name); ?>">
+                                <input type="hidden" name="last_name" value="<?= htmlspecialchars($last_name); ?>">
+                                <input type="hidden" name="owner_email" value="<?= htmlspecialchars($owner_email); ?>">
+                                <input type="hidden" name="entity_name" value="<?= htmlspecialchars($entity_name); ?>">
+                                <input type="hidden" name="entity_phone" value="<?= htmlspecialchars($entity_phone); ?>">
+                                <input type="hidden" name="entity_phoneother" value="<?= htmlspecialchars($entity_phoneother); ?>">
+                                <input type="hidden" name="entity_email" value="<?= htmlspecialchars($entity_email); ?>">
+                                <div class="card-body">
+                                    <div class="card shadow" id="firstSection" style="border:1px solid rgb(0,25,45,.2);">
+                                        <div class="card-header" style="background-color: #00192D; color:#fff;">
+                                            <b>Unit Identification</b>
                                         </div>
-                                        <div class="card shadow">
-                                            <div class="card-header" style="background-color:#00192D; color: #fff;">Recurring Bills</div>
-                                            <div class="card-body">
-                                                <table id="expensesTable" class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Bill</th>
-                                                            <th>Qty</th>
-                                                            <th>Unit Price</th>
-                                                            <th>Subtotal</th>
-                                                            <th>Options</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <!-- Rows will be added here dynamically -->
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td>Total</td>
-                                                            <td id="totalQty">0</td>
-                                                            <td id="totalUnitPrice">0.00</td>
-                                                            <td id="totalSubtotal">0.00</td>
-                                                            <td></td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
-                                                <button type="button" class="btn btn-sm shadow" style="border:1px solid #00192D; color:#00192D;" onclick="addRow()">+ Add Row</button>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Unit Number</label>
+                                                        <input type="text" name="unit_number" required class="form-control" id="unit_number" placeholder="Unit Number">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="">Purpose</label>
+                                                        <select name="purpose" id="purpose" class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;">
+                                                            <option value="" selected hidden>-- Select Option -- </option>
+                                                            <option value="Office">Office</option>
+                                                            <option value="Residential">Residential</option>
+                                                            <option value="Business">Business</option>
+                                                            <option value="Store">Store</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="">Link to the Building</label>
+                                                        <input type="text" name="building_link" class="form-control" value="<?= htmlspecialchars($building_name); ?>" readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="">Location with in the Building</label>
+                                                        <input name="location" type="text" class="form-control" id="location" placeholder="Location e.g.Second Floor">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Occupancy Status</label>
-                                            <select name="occupancy_status" id="occupancy_status" required class="form-control">
-                                                <option value="" selected hidden>-- Select Status --</option>
-                                                <option value="Occupied">Occupied</option>
-                                                <option value="Vacant">Vacant</option>
-                                                <option value="Under Maintenance">Under Maintenance</option>
-                                            </select>
+                                        <div class="card-footer text-right">
+                                            <button type="button" class="btn btn-sm next-btn" id="firstSectionNexttBtn">Next</button>
                                         </div>
                                     </div>
-                                    <div class="card-footer text-right">
-                                        <button class="btn btn-sm" id="secondSectionBackBtn" type="button" style="background-color:#00192D; color:#fff;">Go Back</button>
-                                        <button class="btn btn-sm" type="submit" name="submit_unit" style="background-color:#00192D; color: #fff;"><i class="bi bi-send"></i> Submit</button
+
+                                    <div class="card shadow" id="secondSection" style="border:1px solid rgb(0,25,45,.2); display:none;">
+                                        <div class="card-header" style="background-color: #00192D; color:#fff;">
+                                            <b>Financials and Other Information</b>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label>Monthly Rent</label>
+                                                <input type="number" class="form-control" id="monthly_rent" name="monthly_rent" placeholder="Monthly Rent">
                                             </div>
-                                    </div>
-                        </form>
+                                            <div class="card shadow">
+                                                <div class="card-header" style="background-color:#00192D; color: #fff;">Recurring Bills</div>
+                                                <div class="card-body">
+                                                    <table id="expensesTable" class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Bill</th>
+                                                                <th>Qty</th>
+                                                                <th>Unit Price</th>
+                                                                <th>Subtotal</th>
+                                                                <th>Options</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- Rows will be added here dynamically -->
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td>Total</td>
+                                                                <td id="totalQty">0</td>
+                                                                <td id="totalUnitPrice">0.00</td>
+                                                                <td id="totalSubtotal">0.00</td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                    <button type="button" class="btn btn-sm shadow" style="border:1px solid #00192D; color:#00192D;" onclick="addRow()">+ Add Row</button>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Occupancy Status</label>
+                                                <select name="occupancy_status" id="occupancy_status" required class="form-control">
+                                                    <option value="" selected hidden>-- Select Status --</option>
+                                                    <option value="Occupied">Occupied</option>
+                                                    <option value="Vacant">Vacant</option>
+                                                    <option value="Under Maintenance">Under Maintenance</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button class="btn btn-sm" id="secondSectionBackBtn" type="button" style="background-color:#00192D; color:#fff;">Go Back</button>
+                                            <button class="btn btn-sm" type="submit" name="submit_unit" style="background-color:#00192D; color: #fff;"><i class="bi bi-send"></i> Submit</button
+                                                </div>
+                                        </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
