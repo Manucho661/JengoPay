@@ -428,112 +428,212 @@ $conn->close();
                 //if the Submit button is clicked
                 if (isset($_POST['submit_unit'])) {
 
-                    //Check for duplicate unit_number + building_link and avoid double entry of information
-                    try {
-                        $buildingId = $_SESSION['building_id'] ?? null;
-                        $check = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE unit_number = :unit_number AND building_id = :building_id");
-                        $check->execute([
-                            ':unit_number'   => $_POST['unit_number'],
-                            ':building_id' => $buildingId
-                        ]);
+                        try {
 
-                        if ($check->fetchColumn() < 0) {
-                            // Check if Duplicate found
-                            echo "
-                                        <script>
-                                            Swal.fire({
-                                                title: 'Warning!',
-                                                text: 'No double submission of data: this unit already exists in the Database.',
-                                                icon: 'warning',
-                                                confirmButtonText: 'OK'
-                                            }).then(() => {
-                                                window.history.back();
-                                            });
-                                        </script>";
-                            // exit;
-                        }
-                        // Start transaction
-                        $pdo->beginTransaction();
+                            $buildingId = $_SESSION['building_id'] ?? null;
 
-                        //Insert into building_units
-                        // $stmt = $pdo->prepare("INSERT INTO building_units (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, monthly_rent, occupancy_status, created_at) VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :monthly_rent, :occupancy_status, NOW())");
-                        $stmt = $pdo->prepare("
+                            if (!$buildingId) {
+                                throw new Exception('Invalid building context.');
+                            }
+
+                            // START TRANSACTION FIRST (prevents race conditions)
+                            $pdo->beginTransaction();
+
+                            // --------------------------------------------------
+                            // Check for duplicate unit_number + building_id
+                            // --------------------------------------------------
+                            $check = $pdo->prepare("
+                                SELECT COUNT(*) 
+                                FROM building_units 
+                                WHERE unit_number = :unit_number 
+                                AND building_id = :building_id
+                            ");
+                            $check->execute([
+                                ':unit_number'  => $_POST['unit_number'],
+                                ':building_id'  => $buildingId
+                            ]);
+
+                            if ($check->fetchColumn() > 0) {
+                                throw new Exception('No double submission of data: this unit already exists in the database.');
+                            }
+
+                            // --------------------------------------------------
+                            // Insert into building_units
+                            // --------------------------------------------------
+                            // $stmt = $pdo->prepare("
+                            //     INSERT INTO building_units
+                            //     (
+                            //         structure_type,
+                            //         first_name,
+                            //         last_name,
+                            //         owner_email,
+                            //         entity_name,
+                            //         entity_phone,
+                            //         entity_phoneother,
+                            //         entity_email,
+                            //         unit_number,
+                            //         purpose,
+                            //         building_link,
+                            //         location,
+                            //         monthly_rent,
+                            //         occupancy_status,
+                            //         created_at
+                            //     )
+                            //     VALUES
+                            //     (
+                            //         :structure_type,
+                            //         :first_name,
+                            //         :last_name,
+                            //         :owner_email,
+                            //         :entity_name,
+                            //         :entity_phone,
+                            //         :entity_phoneother,
+                            //         :entity_email,
+                            //         :unit_number,
+                            //         :purpose,
+                            //         :building_link,
+                            //         :location,
+                            //         :monthly_rent,
+                            //         :occupancy_status,
+                            //         NOW()
+                            //     )
+                            // ");
+
+                            // --------------------------------------------------
+                            // Get unit_category_id (single_unit)
+                            // --------------------------------------------------
+                            $sql = "
+                                SELECT id 
+                                FROM unit_categories 
+                                WHERE category_name = :category_name 
+                                LIMIT 1
+                            ";
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->execute([
+                                ':category_name' => 'single_unit'
+                            ]);
+
+                            $singleUnitCategoryId = $stmt->fetchColumn();
+
+                            // Safety check
+                            if ($singleUnitCategoryId === false) {
+                                throw new Exception('Unit category "single_unit" not found.');
+                            }
+
+                            // --------------------------------------------------
+                            // Insert building unit (normalized approach)
+                            // --------------------------------------------------
+                            $stmt = $pdo->prepare("
                                 INSERT INTO building_units 
-                                (building_id, unit_number, purpose, location, monthly_rent, occupancy_status, created_at) 
+                                (
+                                    building_id,
+                                    unit_category_id,
+                                    unit_number,
+                                    purpose,
+                                    location,
+                                    monthly_rent,
+                                    occupancy_status
+                                ) 
                                 VALUES 
-                                (:building_id, :unit_number, :purpose, :location, :monthly_rent, :occupancy_status, NOW())
+                                (
+                                    :building_id,
+                                    :unit_category_id,
+                                    :unit_number,
+                                    :purpose,
+                                    :location,
+                                    :monthly_rent,
+                                    :occupancy_status
+                                )
                             ");
 
-                        $stmt->execute([
-                            // ':structure_type' => $_POST['structure_type'],
-                            // ':first_name' => $_POST['first_name'],
-                            // ':last_name' => $_POST['last_name'],
-                            // ':owner_email' => $_POST['owner_email'],
-                            // ':entity_name' => $_POST['entity_name'],
-                            // ':entity_phone' => $_POST['entity_phone'],
-                            // ':entity_phoneother' => $_POST['entity_phoneother'],
-                            // ':entity_email' => $_POST['entity_email'],
-                            ':building_id' => $buildingId,
-                            ':unit_number' => $_POST['unit_number'],
-                            ':purpose' => $_POST['purpose'],
-                            // ':building_link' => $_POST['building_link'],
-                            ':location' => $_POST['location'],
-                            ':monthly_rent' => $_POST['monthly_rent'],
-                            ':occupancy_status' => $_POST['occupancy_status']
-                        ]);
+                            $stmt->execute([
+                                // ':structure_type' => $_POST['structure_type'],
+                                // ':first_name' => $_POST['first_name'],
+                                // ':last_name' => $_POST['last_name'],
+                                // ':owner_email' => $_POST['owner_email'],
+                                // ':entity_name' => $_POST['entity_name'],
+                                // ':entity_phone' => $_POST['entity_phone'],
+                                // ':entity_phoneother' => $_POST['entity_phoneother'],
+                                // ':entity_email' => $_POST['entity_email'],
+                                ':building_id'      => $buildingId,
+                                ':unit_category_id' => $singleUnitCategoryId,
+                                ':unit_number'      => $_POST['unit_number'],
+                                ':purpose'          => $_POST['purpose'],
+                                // ':building_link' => $_POST['building_link'],
+                                ':location'         => $_POST['location'],
+                                ':monthly_rent'     => $_POST['monthly_rent'],
+                                ':occupancy_status' => $_POST['occupancy_status']
+                            ]);
 
-                        // Get inserted unit_id from single units. This will be used to initiate recurring bills on the foreign key unit_id
-                        $unit_id = $pdo->lastInsertId();
+                            // --------------------------------------------------
+                            // Get inserted unit_id (used later for bills)
+                            // --------------------------------------------------
+                            $unit_id = $pdo->lastInsertId();
 
-                        //Insert the Bills of the Unit into single_unit_bills
-                        // if (!empty($_POST['bill'])) {
-                        //     $stmtBill = $pdo->prepare("INSERT INTO single_unit_bills (unit_id, bill, qty, unit_price, created_at) VALUES (:unit_id, :bill, :qty, :unit_price, NOW())");
+                            // --------------------------------------------------
+                            // Insert unit bills (currently disabled)
+                            // --------------------------------------------------
+                            // if (!empty($_POST['bill'])) {
+                            //     $stmtBill = $pdo->prepare("
+                            //         INSERT INTO single_unit_bills
+                            //         (unit_id, bill, qty, unit_price, created_at)
+                            //         VALUES
+                            //         (:unit_id, :bill, :qty, :unit_price, NOW())
+                            //     ");
+                            //
+                            //     foreach ($_POST['bill'] as $i => $billName) {
+                            //         if ($billName != '') {
+                            //             $qty       = $_POST['qty'][$i] ?? 0;
+                            //             $unitPrice = $_POST['unit_price'][$i] ?? 0;
+                            //
+                            //             $stmtBill->execute([
+                            //                 ':unit_id'    => $unit_id,
+                            //                 ':bill'       => $billName,
+                            //                 ':qty'        => $qty,
+                            //                 ':unit_price' => $unitPrice
+                            //             ]);
+                            //         }
+                            //     }
+                            // }
 
-                        //     foreach ($_POST['bill'] as $i => $billName) {
-                        //         if ($billName != "") {
-                        //             $qty       = $_POST['qty'][$i] ?? 0;
-                        //             $unitPrice = $_POST['unit_price'][$i] ?? 0;
-                        //             $subtotal  = $qty * $unitPrice;
+                            // --------------------------------------------------
+                            // Commit transaction
+                            // --------------------------------------------------
+                            $pdo->commit();
 
-                        //             $stmtBill->execute([
-                        //                 ':unit_id'    => $unit_id,
-                        //                 ':bill'       => $billName,   // ✅ match placeholder
-                        //                 ':qty'        => $qty,
-                        //                 ':unit_price' => $unitPrice
-                        //             ]);
-                        //         }
-                        //     }
-                        // }
-                        $pdo->commit();
+                            // Success alert
+                            echo "
+                            <script>
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'Unit information saved successfully.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    window.location.href = 'single_units.php';
+                                });
+                            </script>";
+                            exit;
 
-                        //SweetAlert success and redirect
-                        echo "
-                                    <script>
-                                        Swal.fire({
-                                            title: 'Success!',
-                                            text: 'Unit information and bills saved successfully.',
-                                            icon: 'success',
-                                            confirmButtonText: 'OK'
-                                        }).then(() => {
-                                            window.location.href = 'single_units.php';
-                                        });
-                                    </script>";
-                        exit;
-                    } catch (PDOException $e) {
-                        $pdo->rollBack();
-                        // SweetAlert error
-                        echo "
-                                    <script>
-                                        Swal.fire({
-                                            title: 'Error!',
-                                            text: '" . addslashes($e->getMessage()) . "',
-                                            icon: 'error',
-                                            confirmButtonText: 'OK'
-                                        });
-                                    </script>";
-                        exit;
+                        } catch (Exception $e) {
+
+                            if ($pdo->inTransaction()) {
+                                $pdo->rollBack();
+                            }
+
+                            // Error alert
+                            echo "
+                            <script>
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: '" . addslashes($e->getMessage()) . "',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            </script>";
+                            exit;
+                        }
                     }
-                }
                 ?>
                 <!--First Row-->
                 <div class="row align-items-center mb-4">
