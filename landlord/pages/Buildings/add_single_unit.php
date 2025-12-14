@@ -350,10 +350,12 @@ $conn->close();
             <div class="container-fluid">
                 <?php
                 include_once 'processes/encrypt_decrypt_function.php';
-                $id =null;
+
+                $id = null;
                 if (isset($_GET['add_single_unit']) && !empty($_GET['add_single_unit'])) {
                     $id = $_GET['add_single_unit'];
                     $id = encryptor('decrypt', $id);
+                    $_SESSION['building_id'] = $id; // persist building id across different requests
                     try {
                         if (!empty($id)) {
                             $select = "SELECT * FROM buildings WHERE id =:id";
@@ -428,11 +430,11 @@ $conn->close();
 
                     //Check for duplicate unit_number + building_link and avoid double entry of information
                     try {
-
+                        $buildingId = $_SESSION['building_id'] ?? null;
                         $check = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE unit_number = :unit_number AND building_id = :building_id");
                         $check->execute([
                             ':unit_number'   => $_POST['unit_number'],
-                            ':building_id' => $id
+                            ':building_id' => $buildingId
                         ]);
 
                         if ($check->fetchColumn() < 0) {
@@ -452,10 +454,16 @@ $conn->close();
                         }
                         // Start transaction
                         $pdo->beginTransaction();
-                        
+
                         //Insert into building_units
                         // $stmt = $pdo->prepare("INSERT INTO building_units (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, monthly_rent, occupancy_status, created_at) VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :monthly_rent, :occupancy_status, NOW())");
-                        $stmt = $pdo->prepare("INSERT INTO building_units (building_id, unit_number, purpose, location, monthly_rent, occupancy_status, created_at) VALUES (:buiding_id, :unit_number, :purpose, :location, :monthly_rent, :occupancy_status, NOW())");
+                        $stmt = $pdo->prepare("
+                                INSERT INTO building_units 
+                                (building_id, unit_number, purpose, location, monthly_rent, occupancy_status, created_at) 
+                                VALUES 
+                                (:building_id, :unit_number, :purpose, :location, :monthly_rent, :occupancy_status, NOW())
+                            ");
+
                         $stmt->execute([
                             // ':structure_type' => $_POST['structure_type'],
                             // ':first_name' => $_POST['first_name'],
@@ -465,7 +473,7 @@ $conn->close();
                             // ':entity_phone' => $_POST['entity_phone'],
                             // ':entity_phoneother' => $_POST['entity_phoneother'],
                             // ':entity_email' => $_POST['entity_email'],
-                            ':building_id' => $id,
+                            ':building_id' => $buildingId,
                             ':unit_number' => $_POST['unit_number'],
                             ':purpose' => $_POST['purpose'],
                             // ':building_link' => $_POST['building_link'],
@@ -526,7 +534,6 @@ $conn->close();
                         exit;
                     }
                 }
-
                 ?>
                 <!--First Row-->
                 <div class="row align-items-center mb-4">
