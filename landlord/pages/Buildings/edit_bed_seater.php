@@ -1,5 +1,6 @@
 <?php
- require_once "../db/connect.php";
+session_start();
+require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
 
@@ -92,7 +93,7 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-        <link rel="stylesheet" href="../../assets/main.css" />
+    <link rel="stylesheet" href="../../assets/main.css" />
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -202,101 +203,83 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
 <body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
+
         <!--begin::Header-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
-        <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <a href="./index.html" class="brand-link">
 
-                    <!--begin::Brand Text-->
-                    <span class="brand-text font-weight-light"><b class="p-2"
-                            style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-                            class="p-2"
-                            style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-                </a>
-                </span>
-                <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-            <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-            <!--end::Sidebar Wrapper-->
-        </aside>
+        <!--begin::Sidebar-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
         <!--end::Sidebar-->
+
         <!--begin::App Main-->
-        <main class="app-main mt-4">
+        <main class="main">
             <div class="content-wrapper">
                 <!-- Main content -->
                 <section class="content">
-        <div class="container-fluid">
-            <?php
-                include_once 'processes/encrypt_decrypt_function.php';
-                if(isset($_GET['edit']) && !empty($_GET['edit'])) {
-                    $unit_id = $_GET['edit'];
-                    $unit_id = encryptor('decrypt', $unit_id);
-
-                    try{
-                        // 1. Fetch unit details
-                        $stmt = $pdo->prepare("SELECT * FROM bedsitter_units WHERE id = ?");
-                        $stmt->execute([$unit_id]);
-                        $unit = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                        if (!$unit) {
-                            die("Unit not found!");
-                        }
-
-                        // 2. Fetch bills (always return array)
-                        $stmtBills = $pdo->prepare("SELECT * FROM bed_seater_bills WHERE unit_id = ?");
-                        $stmtBills->execute([$unit_id]);
-                        $bills = $stmtBills->fetchAll(PDO::FETCH_ASSOC) ?: [];
-                    } catch(PDOException $e){  
-                        //if the query fails to select
-                    }
-                }
-
-                //If the Update Button is Clicked
-                if(isset($_POST['update'])) {
-                     $id             = $_POST['id'];
-                    $unit_number    = $_POST['unit_number'];
-                    $purpose        = $_POST['purpose'];
-                    $building_link  = $_POST['building_link'];
-                    $location       = $_POST['location'];
-                    $water_meter    = $_POST['water_meter'];
-                    $monthly_rent   = $_POST['monthly_rent'];
-                    $occupancy_status = $_POST['occupancy_status'];
-                    try{
-                    //No Update to be done until Any of the Form values are changed
-                    $no_changes = "SELECT * FROM bedsitter_units WHERE unit_number = '$_POST[unit_number]' AND purpose = '$_POST[purpose]' AND building_link = '$_POST[building_link]' AND location = '$_POST[location]' AND monthly_rent = '$_POST[monthly_rent]' AND occupancy_status = '$_POST[occupancy_status]'";
-                    $stmt = $pdo->prepare($no_changes);
-                    $stmt->execute();
-                    if($stmt->rowCount() > 0) {
-                        ?>
-                            <script>
-                                Swal.fire({
-                                    icon: 'warning',
-                                    title: 'Warning!',
-                                    text: 'Unit Update Failed! You Have not Changed Anything.',
-                                    confirmButtonColor: '#00192D'
-                                    }).then(() => {
-                                    window.location.href = 'bed_sitter_units.php'; // redirect after confirmation
-                                });
-                            </script>
+                    <div class="container-fluid">
                         <?php
-                    } else {
-                        
-                        // Start transaction
-                        if (!$pdo->inTransaction()) {
-                            $pdo->beginTransaction();
+                        include_once 'processes/encrypt_decrypt_function.php';
+                        if (isset($_GET['edit']) && !empty($_GET['edit'])) {
+                            $unit_id = $_GET['edit'];
+                            $unit_id = encryptor('decrypt', $unit_id);
+
+                            try {
+                                // 1. Fetch unit details
+                                $stmt = $pdo->prepare("SELECT * FROM bedsitter_units WHERE id = ?");
+                                $stmt->execute([$unit_id]);
+                                $unit = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                                if (!$unit) {
+                                    die("Unit not found!");
+                                }
+
+                                // 2. Fetch bills (always return array)
+                                $stmtBills = $pdo->prepare("SELECT * FROM bed_seater_bills WHERE unit_id = ?");
+                                $stmtBills->execute([$unit_id]);
+                                $bills = $stmtBills->fetchAll(PDO::FETCH_ASSOC) ?: [];
+                            } catch (PDOException $e) {
+                                //if the query fails to select
+                            }
                         }
 
-                        // 1. Update single_units
-                        $stmt = $pdo->prepare("
+                        //If the Update Button is Clicked
+                        if (isset($_POST['update'])) {
+                            $id             = $_POST['id'];
+                            $unit_number    = $_POST['unit_number'];
+                            $purpose        = $_POST['purpose'];
+                            $building_link  = $_POST['building_link'];
+                            $location       = $_POST['location'];
+                            $water_meter    = $_POST['water_meter'];
+                            $monthly_rent   = $_POST['monthly_rent'];
+                            $occupancy_status = $_POST['occupancy_status'];
+                            try {
+                                //No Update to be done until Any of the Form values are changed
+                                $no_changes = "SELECT * FROM bedsitter_units WHERE unit_number = '$_POST[unit_number]' AND purpose = '$_POST[purpose]' AND building_link = '$_POST[building_link]' AND location = '$_POST[location]' AND monthly_rent = '$_POST[monthly_rent]' AND occupancy_status = '$_POST[occupancy_status]'";
+                                $stmt = $pdo->prepare($no_changes);
+                                $stmt->execute();
+                                if ($stmt->rowCount() > 0) {
+                        ?>
+                                    <script>
+                                        Swal.fire({
+                                            icon: 'warning',
+                                            title: 'Warning!',
+                                            text: 'Unit Update Failed! You Have not Changed Anything.',
+                                            confirmButtonColor: '#00192D'
+                                        }).then(() => {
+                                            window.location.href = 'bed_sitter_units.php'; // redirect after confirmation
+                                        });
+                                    </script>
+                        <?php
+                                } else {
+
+                                    // Start transaction
+                                    if (!$pdo->inTransaction()) {
+                                        $pdo->beginTransaction();
+                                    }
+
+                                    // 1. Update single_units
+                                    $stmt = $pdo->prepare("
                             UPDATE bedsitter_units 
                             SET unit_number = ?, 
                                 purpose = ?, 
@@ -307,45 +290,45 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                                 occupancy_status = ? 
                             WHERE id = ?
                         ");
-                        $stmt->execute([
-                            $unit_number,
-                            $purpose,
-                            $building_link,
-                            $location,
-                            $water_meter,
-                            $monthly_rent,
-                            $occupancy_status,
-                            $id
-                        ]);
+                                    $stmt->execute([
+                                        $unit_number,
+                                        $purpose,
+                                        $building_link,
+                                        $location,
+                                        $water_meter,
+                                        $monthly_rent,
+                                        $occupancy_status,
+                                        $id
+                                    ]);
 
 
-                        // 2. Delete old bills for this unit
-                        $stmt = $pdo->prepare("DELETE FROM single_unit_bills WHERE unit_id = ?");
-                        $stmt->execute([$id]);
+                                    // 2. Delete old bills for this unit
+                                    $stmt = $pdo->prepare("DELETE FROM single_unit_bills WHERE unit_id = ?");
+                                    $stmt->execute([$id]);
 
-                        // 3. Insert new bills
-                        if (!empty($_POST['bill'])) {
-                            $stmt = $pdo->prepare("
+                                    // 3. Insert new bills
+                                    if (!empty($_POST['bill'])) {
+                                        $stmt = $pdo->prepare("
                                 INSERT INTO single_unit_bills (unit_id, bill, qty, unit_price) 
                                 VALUES (?, ?, ?, ?)
                             ");
 
-                            foreach ($_POST['bill'] as $index => $billName) {
-                                $bill       = trim($billName);
-                                $qty        = !empty($_POST['qty'][$index]) ? $_POST['qty'][$index] : 0;
-                                $unit_price = !empty($_POST['unit_price'][$index]) ? $_POST['unit_price'][$index] : 0;
+                                        foreach ($_POST['bill'] as $index => $billName) {
+                                            $bill       = trim($billName);
+                                            $qty        = !empty($_POST['qty'][$index]) ? $_POST['qty'][$index] : 0;
+                                            $unit_price = !empty($_POST['unit_price'][$index]) ? $_POST['unit_price'][$index] : 0;
 
-                                if ($bill !== "") {
-                                    $stmt->execute([$id, $bill, $qty, $unit_price]);
-                                }
-                            }
-                        }
-                        // Commit only if still active
-                        if ($pdo->inTransaction()) {
-                            $pdo->commit();
-                        }
+                                            if ($bill !== "") {
+                                                $stmt->execute([$id, $bill, $qty, $unit_price]);
+                                            }
+                                        }
+                                    }
+                                    // Commit only if still active
+                                    if ($pdo->inTransaction()) {
+                                        $pdo->commit();
+                                    }
 
-                        echo "
+                                    echo "
                         <script>
                             Swal.fire({
                                 icon: 'success',
@@ -357,185 +340,187 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                             });
                         </script>
                         ";
-                    }
-
-                    } catch(Exception $e){
-                        if ($pdo->inTransaction()) {
-                            $pdo->rollBack();
-                        }
-                        echo "
+                                }
+                            } catch (Exception $e) {
+                                if ($pdo->inTransaction()) {
+                                    $pdo->rollBack();
+                                }
+                                echo "
                             <script>
                               Swal.fire({
                                 icon: 'error',
                                 title: 'Database Error',
-                                text: '".addslashes($e->getMessage())."',
+                                text: '" . addslashes($e->getMessage()) . "',
                                 confirmButtonColor: '#00192D'
                               });
                             </script>";
+                            }
+                        }
+                        ?>
+                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" value="<?= htmlspecialchars($unit['id']); ?>" name="id">
+                            <div class="card shadow">
+                                <div class="card-header" style="background-color:#00192D; color: #fff;"><b>Edit Bed Sitter Information</b></div>
+                                <div class="card-body">
+                                    <fieldset class="border p-3" style="border: 2px solid #D8DCE0;">
+                                        <legend class="w-auto p-2" style="font-size: 18px;">Unit Information</legend>
+                                        <div class="row p-2 border">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Unit Number</label>
+                                                    <input type="text" name="unit_number" class="form-control" value="<?= htmlspecialchars($unit['unit_number']); ?>" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Purpose</label>
+                                                    <input type="text" name="purpose" class="form-control" value="<?= htmlspecialchars($unit['purpose']); ?>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Building Link</label>
+                                                    <input type="text" name="building_link" class="form-control" value="<?= htmlspecialchars($unit['building_link']); ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+
+                                        <div class="row p-2 border">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Location</label>
+                                                    <input type="text" name="location" class="form-control" value="<?= htmlspecialchars($unit['location']); ?>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Water Meter</label>
+                                                    <input type="number" name="water_meter" class="form-control" value="<?= htmlspecialchars($unit['water_meter']); ?>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Monthly Rent</label>
+                                                    <input type="number" step="0.01" name="monthly_rent" class="form-control" value="<?= htmlspecialchars($unit['monthly_rent']); ?>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Occupancy Status</label>
+                                                    <input type="text" value="<?= htmlspecialchars($unit['occupancy_status']); ?>" name="occupancy_status" class="form-control" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <hr>
+
+                                </div>
+                                <div class="card-footer text-right">
+                                    <button class="btn btn-sm shadow" type="submit" name="update" style="background-color:#00192D; color: #fff;"><i class="bi bi-check"></i> Update</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+                <!-- /.content -->
+                <!-- php script to process the submission of the tenant details -->
+                <?php
+                if (isset($_POST['rent_unit'])) {
+                    $tm = md5(time()); // Unique prefix for uploaded files
+
+                    //Files Uploads Handling
+                    function uploadFile($fileKey, $tm)
+                    {
+                        if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
+                            $name = basename($_FILES[$fileKey]['name']);
+                            $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $name); // sanitize
+                            $destination = "all_uploads/" . $tm . "_" . $safeName;
+                            move_uploaded_file($_FILES[$fileKey]['tmp_name'], $destination);
+                            return $destination;
+                        }
+                        return null;
                     }
-                } 
-            ?>        
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ;?>" method="POST" enctype="multipart/form-data">
-                <input type="hidden" value="<?= htmlspecialchars($unit['id']); ?>" name="id">
-                <div class="card shadow">
-                    <div class="card-header" style="background-color:#00192D; color: #fff;"><b>Edit Bed Sitter Information</b></div>
-                    <div class="card-body">
-                        <fieldset class="border p-3" style="border: 2px solid #D8DCE0;">
-                            <legend class="w-auto p-2" style="font-size: 18px;">Unit Information</legend>
-                            <div class="row p-2 border">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Unit Number</label>
-                                    <input type="text" name="unit_number" class="form-control" value="<?= htmlspecialchars($unit['unit_number']); ?>" required>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Purpose</label>
-                                    <input type="text" name="purpose" class="form-control" value="<?= htmlspecialchars($unit['purpose']); ?>">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Building Link</label>
-                                    <input type="text" name="building_link" class="form-control" value="<?= htmlspecialchars($unit['building_link']); ?>">
-                                </div>
-                            </div>
-                        </div> <hr>
-                        
-                        <div class="row p-2 border">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Location</label>
-                                    <input type="text" name="location" class="form-control" value="<?= htmlspecialchars($unit['location']); ?>">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Water Meter</label>
-                                    <input type="number" name="water_meter" class="form-control" value="<?= htmlspecialchars($unit['water_meter']); ?>">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Monthly Rent</label>
-                                    <input type="number" step="0.01" name="monthly_rent" class="form-control" value="<?= htmlspecialchars($unit['monthly_rent']); ?>">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Occupancy Status</label>
-                                    <input type="text" value="<?= htmlspecialchars($unit['occupancy_status']); ?>" name="occupancy_status" class="form-control" readonly>
-                                </div>
-                            </div>
-                        </div>  
-                        </fieldset> <hr>
-                        
-                    </div>
-                    <div class="card-footer text-right">
-                        <button class="btn btn-sm shadow" type="submit" name="update" style="background-color:#00192D; color: #fff;"><i class="bi bi-check"></i> Update</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-      </section>
-      <!-- /.content -->
-      <!-- php script to process the submission of the tenant details -->
-      <?php
-        if(isset($_POST['rent_unit'])) {
-          $tm = md5(time()); // Unique prefix for uploaded files
+                    $id_upload_destination = uploadFile('id_upload', $tm);
+                    $tax_pin_copy_destination = uploadFile('tax_pin_copy', $tm);
+                    $rental_agreement_destination = uploadFile('rental_agreement', $tm);
 
-          //Files Uploads Handling
-          function uploadFile($fileKey, $tm) {
-            if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
-              $name = basename($_FILES[$fileKey]['name']);
-              $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $name); // sanitize
-              $destination = "all_uploads/" . $tm . "_" . $safeName;
-              move_uploaded_file($_FILES[$fileKey]['tmp_name'], $destination);
-              return $destination;
-            }
-            return null;
-          }
-          $id_upload_destination = uploadFile('id_upload', $tm);
-          $tax_pin_copy_destination = uploadFile('tax_pin_copy', $tm);
-          $rental_agreement_destination = uploadFile('rental_agreement', $tm);
+                    //Collect Form Data
+                    $id = trim($_POST['id'] ?? null);
+                    $occupancy_status = trim($_POST['occupancy_status'] ?? null);
+                    $tfirst_name = trim($_POST['tfirst_name'] ?? null);
+                    $tmiddle_name = trim($_POST['tmiddle_name'] ?? null);
+                    $tlast_name = trim($_POST['tlast_name'] ?? null);
+                    $tmain_contact = trim($_POST['tmain_contact'] ?? null);
+                    $talt_contact = trim($_POST['talt_contact'] ?? null);
+                    $temail = trim($_POST['temail'] ?? null);
+                    $idMode = trim($_POST['idMode'] ?? null);
+                    $id_no = trim($_POST['id_no'] ?? null);
+                    $pass_no = trim($_POST['pass_no'] ?? null);
+                    $leasing_period = trim($_POST['leasing_period'] ?? null);
+                    $leasing_start_date = trim($_POST['leasing_start_date'] ?? null);
+                    $leasing_end_date = trim($_POST['leasing_end_date'] ?? null);
+                    $move_in_date = trim($_POST['move_in_date'] ?? null);
+                    $move_out_date = trim($_POST['move_out_date'] ?? null);
+                    $account_no = trim($_POST['account_no'] ?? null);
+                    $income = trim($_POST['income'] ?? null);
+                    $job_title = trim($_POST['job_title'] ?? null);
+                    $job_location = trim($_POST['job_location'] ?? null);
+                    $casual_job = trim($_POST['casual_job'] ?? null);
+                    $business_name = trim($_POST['business_name'] ?? null);
+                    $business_location = trim($_POST['business_location'] ?? null);
+                    $tenant_status = trim($_POST['tenant_status'] ?? null);
 
-          //Collect Form Data
-          $id = trim($_POST['id'] ?? null);
-          $occupancy_status = trim($_POST['occupancy_status'] ?? null);
-          $tfirst_name = trim($_POST['tfirst_name'] ?? null);
-          $tmiddle_name = trim($_POST['tmiddle_name'] ?? null);
-          $tlast_name = trim($_POST['tlast_name'] ?? null);
-          $tmain_contact = trim($_POST['tmain_contact'] ?? null);
-          $talt_contact = trim($_POST['talt_contact'] ?? null);
-          $temail = trim($_POST['temail'] ?? null);
-          $idMode = trim($_POST['idMode'] ?? null);
-          $id_no = trim($_POST['id_no'] ?? null);
-          $pass_no = trim($_POST['pass_no'] ?? null);
-          $leasing_period = trim($_POST['leasing_period'] ?? null);
-          $leasing_start_date = trim($_POST['leasing_start_date'] ?? null);
-          $leasing_end_date = trim($_POST['leasing_end_date'] ?? null);
-          $move_in_date = trim($_POST['move_in_date'] ?? null);
-          $move_out_date = trim($_POST['move_out_date'] ?? null);
-          $account_no = trim($_POST['account_no'] ?? null);
-          $income = trim($_POST['income'] ?? null);
-          $job_title = trim($_POST['job_title'] ?? null);
-          $job_location = trim($_POST['job_location'] ?? null);
-          $casual_job = trim($_POST['casual_job'] ?? null);
-          $business_name = trim($_POST['business_name'] ?? null);
-          $business_location = trim($_POST['business_location'] ?? null);
-          $tenant_status = trim($_POST['tenant_status'] ?? null);
+                    // ---------- File Inputs ----------
+                    $required_files = [
+                        'id_copy'        => 'National ID / Passport Copy',
+                        'kra_pin_copy'   => 'KRA PIN Copy',
+                        'rental_agreement' => 'Rental Agreement'
+                    ];
 
-          // ---------- File Inputs ----------
-          $required_files = [
-            'id_copy'        => 'National ID / Passport Copy',
-            'kra_pin_copy'   => 'KRA PIN Copy',
-            'rental_agreement' => 'Rental Agreement'
-          ];
+                    // ---------- Required Text Fields ----------
+                    $required_text = [
+                        'First Name'            => $first_name,
+                        'Middle Name'           => $middle_name,
+                        'Last Name'             => $last_name,
+                        'Main Contact'          => $main_contact,
+                        'Alternative Contact'   => $talt_contact,
+                        'Email'                 => $email,
+                        'Identification Mode'   => $idMode,
+                        'Leasing Period'        => $leasing_period,
+                        'Leasing Start Date'    => $leasing_start,
+                        'Move In Date'          => $move_in_date,
+                        'Unit Number'           => $account_no,
+                        'Source of Income'      => $income
+                    ];
 
-          // ---------- Required Text Fields ----------
-          $required_text = [
-            'First Name'            => $first_name,
-            'Middle Name'           => $middle_name,
-            'Last Name'             => $last_name,
-            'Main Contact'          => $main_contact,
-            'Alternative Contact'   => $talt_contact,
-            'Email'                 => $email,
-            'Identification Mode'   => $idMode,
-            'Leasing Period'        => $leasing_period,
-            'Leasing Start Date'    => $leasing_start,
-            'Move In Date'          => $move_in_date,
-            'Unit Number'           => $account_no,
-            'Source of Income'      => $income
-          ];
+                    $emptyFields = [];
+                    $missingFiles = [];
 
-          $emptyFields = [];
-          $missingFiles = [];
+                    // ---------- For each Loop to Check Empty Text Fields ----------
+                    foreach ($required_text as $label => $value) {
+                        if (empty($value)) {
+                            $emptyFields[] = $label;
+                        }
+                    }
 
-          // ---------- For each Loop to Check Empty Text Fields ----------
-          foreach ($required_text as $label => $value) {
-            if (empty($value)) {
-              $emptyFields[] = $label;
-            }
-          }
+                    // ---------- For Each Loop to Check Missing File Uploads ----------
+                    foreach ($required_files as $key => $label) {
+                        if (!isset($_FILES[$key]) || $_FILES[$key]['error'] !== UPLOAD_ERR_OK) {
+                            $missingFiles[] = $label;
+                        }
+                    }
 
-          // ---------- For Each Loop to Check Missing File Uploads ----------
-          foreach ($required_files as $key => $label) {
-            if (!isset($_FILES[$key]) || $_FILES[$key]['error'] !== UPLOAD_ERR_OK) {
-              $missingFiles[] = $label;
-            }
-          }
-
-          // ---------- If Statement to Check on the Missing Fields or Files ----------
-          if (empty($emptyFields) || empty($missingFiles)) {
-            $message = '';
-            if (empty($emptyFields)) {
-              $message .= 'Please fill the following fields:<br><b>' . implode('<br>', $emptyFields) . '</b><br><br>';
-            }
-            if (empty($missingFiles)) {
-              $message .= 'Please upload the following files:<br><b>' . implode('<br>', $missingFiles) . '</b>';
-            }
-            echo "
+                    // ---------- If Statement to Check on the Missing Fields or Files ----------
+                    if (empty($emptyFields) || empty($missingFiles)) {
+                        $message = '';
+                        if (empty($emptyFields)) {
+                            $message .= 'Please fill the following fields:<br><b>' . implode('<br>', $emptyFields) . '</b><br><br>';
+                        }
+                        if (empty($missingFiles)) {
+                            $message .= 'Please upload the following files:<br><b>' . implode('<br>', $missingFiles) . '</b>';
+                        }
+                        echo "
                 <script>
                   Swal.fire({
                     icon: 'warning',
@@ -544,10 +529,10 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                     confirmButtonColor: '#00192D'
                   });
                 </script>";
-            exit;
-          }
+                        exit;
+                    }
 
-          echo "
+                    echo "
               <script>
                 Swal.fire({
                   title: 'Saving data...',
@@ -558,27 +543,27 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                 });
               </script>";
 
-          try {
-            //Check if the Tenant Information Exists in the Database. No submission if this is true to avoid duplication of data
-            $checkTenant = $pdo->prepare("SELECT * FROM multi_rooms_units
+                    try {
+                        //Check if the Tenant Information Exists in the Database. No submission if this is true to avoid duplication of data
+                        $checkTenant = $pdo->prepare("SELECT * FROM multi_rooms_units
                 WHERE tmain_contact = :tmain_contact
                    AND talt_contact = :talt_contact
                    AND temail = :temail
                    AND id_no = :id_no
                    AND pass_no = :pass_no");
 
-            $checkTenant->execute([
-           
-                ':tmain_contact' => $tmain_contact,
-                ':talt_contact'  => $talt_contact,
-                ':temail'        => $temail,
-                ':id_no'         => $id_no,
-                ':pass_no'       => $pass_no
-            ]);
+                        $checkTenant->execute([
+
+                            ':tmain_contact' => $tmain_contact,
+                            ':talt_contact'  => $talt_contact,
+                            ':temail'        => $temail,
+                            ':id_no'         => $id_no,
+                            ':pass_no'       => $pass_no
+                        ]);
 
 
-            if($checkTenant->rowCount() > 0) {
-              echo "
+                        if ($checkTenant->rowCount() > 0) {
+                            echo "
                 <script>
                   Swal.fire({
                     icon: 'warning',
@@ -587,10 +572,10 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                     confirmButtonColor: '#00192D'
                   });
                 </script>";
-              exit;
-            } else {
-              //Update the Single Units Information by Submitting the Tenant Information
-              $updateTable = $pdo->prepare("UPDATE multi_rooms_units SET
+                            exit;
+                        } else {
+                            //Update the Single Units Information by Submitting the Tenant Information
+                            $updateTable = $pdo->prepare("UPDATE multi_rooms_units SET
                 occupancy_status =:occupancy_status,
                 tfirst_name =:tfirst_name,
                 tmiddle_name =:tmiddle_name,
@@ -621,37 +606,37 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                 WHERE
                 id =:id
               ");
-              $updateTable->execute([
-                ':occupancy_status'     => $occupancy_status,
-                ':tfirst_name'          => $tfirst_name,
-                ':tmiddle_name'         => $tmiddle_name,
-                ':tlast_name'           => $tlast_name,
-                ':tmain_contact'        => $tmain_contact,
-                ':talt_contact'         => $talt_contact,
-                ':temail'               => $temail,
-                ':idMode'               => $idMode,
-                ':id_no'                => $id_no,
-                ':pass_no'              => $pass_no,
-                ':leasing_period'       => $leasing_period,
-                ':leasing_start_date'   => $leasing_start_date,
-                ':leasing_end_date'     => $leasing_end_date,
-                ':move_in_date'         => $move_in_date,
-                ':move_out_date'        => $move_out_date,
-                ':account_no'           => $account_no,
-                ':id_upload'            => $id_upload_destination,
-                ':tax_pin_copy'         => $tax_pin_copy_destination,
-                ':rental_agreement'     => $rental_agreement_destination,
-                ':income'               => $income,
-                ':job_title'            => $job_title,
-                ':job_location'         => $job_location,
-                ':casual_job'           => $casual_job,
-                ':business_name'        => $business_name,
-                ':business_location'    => $business_location,
-                ':tenant_status'        => $tenant_status,
-                ':id'                   => $id
-              ]);
+                            $updateTable->execute([
+                                ':occupancy_status'     => $occupancy_status,
+                                ':tfirst_name'          => $tfirst_name,
+                                ':tmiddle_name'         => $tmiddle_name,
+                                ':tlast_name'           => $tlast_name,
+                                ':tmain_contact'        => $tmain_contact,
+                                ':talt_contact'         => $talt_contact,
+                                ':temail'               => $temail,
+                                ':idMode'               => $idMode,
+                                ':id_no'                => $id_no,
+                                ':pass_no'              => $pass_no,
+                                ':leasing_period'       => $leasing_period,
+                                ':leasing_start_date'   => $leasing_start_date,
+                                ':leasing_end_date'     => $leasing_end_date,
+                                ':move_in_date'         => $move_in_date,
+                                ':move_out_date'        => $move_out_date,
+                                ':account_no'           => $account_no,
+                                ':id_upload'            => $id_upload_destination,
+                                ':tax_pin_copy'         => $tax_pin_copy_destination,
+                                ':rental_agreement'     => $rental_agreement_destination,
+                                ':income'               => $income,
+                                ':job_title'            => $job_title,
+                                ':job_location'         => $job_location,
+                                ':casual_job'           => $casual_job,
+                                ':business_name'        => $business_name,
+                                ':business_location'    => $business_location,
+                                ':tenant_status'        => $tenant_status,
+                                ':id'                   => $id
+                            ]);
 
-              echo "
+                            echo "
                   <script>
                     setTimeout(() => {
                       Swal.fire({
@@ -667,10 +652,9 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                       });
                     }, 800); // short delay to smooth transition from loader
                     </script>";
-            }
-
-          } catch (Exception $e) {
-            echo "<script>
+                        }
+                    } catch (Exception $e) {
+                        echo "<script>
                   Swal.fire({
                   icon: 'error',
                   title: 'Error Saving Tenant',
@@ -678,31 +662,22 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                   confirmButtonColor: '#cc0001'
                   });
               </script>";
-          }
-        }
-      ?>
+                    }
+                }
+                ?>
             </div>
         </main>
         <!--end::App Main-->
+        
         <!--begin::Footer-->
-        <footer class="app-footer">
-            <!--begin::To the end-->
-            <div class="float-end d-none d-sm-inline">Anything you want</div>
-            <!--end::To the end-->
-            <!--begin::Copyright-->
-            <strong>
-                Copyright &copy; 2014-2024&nbsp;
-                <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
-            </strong>
-            All rights reserved.
-            <!--end::Copyright-->
-        </footer>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+        <!-- end footer -->
 
     </div>
     <!--end::App Wrapper-->
 
     <!-- plugin for pdf -->
-    
+
 
     <!-- Main Js File -->
     <script src="../../js/adminlte.js"></script>
@@ -720,40 +695,42 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <?php include_once 'includes/required_scripts.php';?>
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
-    // Function to recalculate subtotal for a row
-    function updateSubtotal(row) {
-        const qty = parseFloat(row.querySelector(".qty").value) || 0;
-        const unitPrice = parseFloat(row.querySelector(".unit_price").value) || 0;
-        row.querySelector(".subtotal").value = (qty * unitPrice).toFixed(2);
-        updateGrandTotal();
-    }
+    <?php
+    //  include_once 'includes/required_scripts.php';
+    ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to recalculate subtotal for a row
+            function updateSubtotal(row) {
+                const qty = parseFloat(row.querySelector(".qty").value) || 0;
+                const unitPrice = parseFloat(row.querySelector(".unit_price").value) || 0;
+                row.querySelector(".subtotal").value = (qty * unitPrice).toFixed(2);
+                updateGrandTotal();
+            }
 
-    // Function to calculate grand total
-    function updateGrandTotal() {
-        let total = 0;
-        document.querySelectorAll(".subtotal").forEach(input => {
-            total += parseFloat(input.value) || 0;
-        });
-        const totalField = document.getElementById("grandTotal");
-        if (totalField) totalField.value = total.toFixed(2);
-    }
+            // Function to calculate grand total
+            function updateGrandTotal() {
+                let total = 0;
+                document.querySelectorAll(".subtotal").forEach(input => {
+                    total += parseFloat(input.value) || 0;
+                });
+                const totalField = document.getElementById("grandTotal");
+                if (totalField) totalField.value = total.toFixed(2);
+            }
 
-    // Handle input changes (qty or unit_price)
-    document.addEventListener("input", function (e) {
-        if (e.target.classList.contains("qty") || e.target.classList.contains("unit_price")) {
-            const row = e.target.closest("tr");
-            updateSubtotal(row);
-        }
-    });
+            // Handle input changes (qty or unit_price)
+            document.addEventListener("input", function(e) {
+                if (e.target.classList.contains("qty") || e.target.classList.contains("unit_price")) {
+                    const row = e.target.closest("tr");
+                    updateSubtotal(row);
+                }
+            });
 
-    // Add new row
-    document.getElementById("addRow").addEventListener("click", function () {
-        const table = document.querySelector("#billsTable tbody");
-        const newRow = document.createElement("tr");
-        newRow.innerHTML = `
+            // Add new row
+            document.getElementById("addRow").addEventListener("click", function() {
+                const table = document.querySelector("#billsTable tbody");
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
             <td><input type="text" name="bill[]" class="form-control bill"></td>
             <td><input type="number" name="qty[]" class="form-control qty" value="1"></td>
             <td><input type="number" step="0.01" name="unit_price[]" class="form-control unit_price"></td>
@@ -765,21 +742,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 </button>
             </td>
         `;
-        table.appendChild(newRow);
-    });
+                table.appendChild(newRow);
+            });
 
-    // Remove row
-    document.addEventListener("click", function (e) {
-        if (e.target.closest(".removeRow")) {
-            e.target.closest("tr").remove();
-            updateGrandTotal();
-        }
-    });
+            // Remove row
+            document.addEventListener("click", function(e) {
+                if (e.target.closest(".removeRow")) {
+                    e.target.closest("tr").remove();
+                    updateGrandTotal();
+                }
+            });
 
-    // Initialize subtotals for existing rows on load
-    document.querySelectorAll("#billsTable tbody tr").forEach(row => updateSubtotal(row));
-});
-</script>
+            // Initialize subtotals for existing rows on load
+            document.querySelectorAll("#billsTable tbody tr").forEach(row => updateSubtotal(row));
+        });
+    </script>
 </body>
 <!--end::Body-->
 

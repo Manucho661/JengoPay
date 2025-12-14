@@ -193,6 +193,7 @@ $rentAccounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             if (isset($_GET['add_bed_sitter']) && !empty($_GET['add_bed_sitter'])) {
                                 $id = $_GET['add_bed_sitter'];
                                 $id = encryptor('decrypt', $id);
+                                $_SESSION['building_id'] = $id; // persist building id across different requests
                                 try {
                                     if (!empty($id)) {
                                         $select = "SELECT * FROM buildings WHERE id =:id";
@@ -267,6 +268,11 @@ $rentAccounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             if (isset($_POST['submit_unit'])) {
                                 //Check for duplicate unit_number + building_link and avoid double entry of information
                                 try {
+                                    $buildingId = $_SESSION['building_id'] ?? null;
+
+                                    if (!$buildingId) {
+                                        throw new Exception('Invalid building context.');
+                                    }
                                     $check = $pdo->prepare("SELECT COUNT(*) FROM bedsitter_units WHERE unit_number = :unit_number AND building_link = :building_link");
                                     $check->execute([
                                         ':unit_number'   => $_POST['unit_number'],
@@ -291,21 +297,44 @@ $rentAccounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     // Start transaction
                                     $pdo->beginTransaction();
 
+                                    // --------------------------------------------------
+                                    // Get unit_category_id (bed_sitter_unit)
+                                    // --------------------------------------------------
+                                    $sql = "
+                                        SELECT id 
+                                        FROM unit_categories 
+                                        WHERE category_name = :category_name 
+                                        LIMIT 1
+                                    ";
+                                    $stmt = $pdo->prepare($sql);
+                                    $stmt->execute([
+                                        ':category_name' => 'bed_sitter_unit'
+                                    ]);
+
+                                    $bedSitterUnitCategoryId = $stmt->fetchColumn();
+
+                                    // Safety check
+                                    if ($bedSitterUnitCategoryId === false) {
+                                        throw new Exception('Unit category "bed_sitter_unit" not found.');
+                                    }
+
                                     //Insert into Bed Sitter Units
-                                    $stmt = $pdo->prepare("INSERT INTO bedsitter_units (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, water_meter, monthly_rent, occupancy_status, created_at) VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :water_meter, :monthly_rent, :occupancy_status, NOW())");
+                                    // $stmt = $pdo->prepare("INSERT INTO bedsitter_units (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, water_meter, monthly_rent, occupancy_status, created_at) VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :water_meter, :monthly_rent, :occupancy_status, NOW())");
+                                    $stmt = $pdo->prepare("INSERT INTO building_units (building_id, unit_category_id, unit_number, purpose, location, water_meter, monthly_rent, occupancy_status, created_at) VALUES (:building_id, :unit_category_id, :unit_number, :purpose, :location, :water_meter, :monthly_rent, :occupancy_status, NOW())");
 
                                     $stmt->execute([
-                                        ':structure_type' => $_POST['structure_type'],
-                                        ':first_name' => $_POST['first_name'],
-                                        ':last_name' => $_POST['last_name'],
-                                        ':owner_email' => $_POST['owner_email'],
-                                        ':entity_name' => $_POST['entity_name'],
-                                        ':entity_phone' => $_POST['entity_phone'],
-                                        ':entity_phoneother' => $_POST['entity_phoneother'],
-                                        ':entity_email' => $_POST['entity_email'],
+                                        // ':structure_type' => $_POST['structure_type'],
+                                        // ':first_name' => $_POST['first_name'],
+                                        // ':last_name' => $_POST['last_name'],
+                                        // ':owner_email' => $_POST['owner_email'],
+                                        // ':entity_name' => $_POST['entity_name'],
+                                        // ':entity_phone' => $_POST['entity_phone'],
+                                        // ':entity_phoneother' => $_POST['entity_phoneother'],
+                                        // ':entity_email' => $_POST['entity_email'],
+                                        ':building_id'      => $buildingId,
+                                        ':unit_category_id' => $bedSitterUnitCategoryId,
                                         ':unit_number' => $_POST['unit_number'],
                                         ':purpose' => $_POST['purpose'],
-                                        ':building_link' => $_POST['building_link'],
                                         ':location' => $_POST['location'],
                                         ':water_meter' => $_POST['water_meter'],
                                         ':monthly_rent' => $_POST['monthly_rent'],
