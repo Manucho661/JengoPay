@@ -18,9 +18,6 @@ if (isset($_GET['id'])) {
   <!--begin::Primary Meta Tags-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="title" content="AdminLTE | Dashboard v2" />
-  <meta name="author" content="ColorlibHQ" />
-  <meta name="description" content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-  <meta name="keywords" content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
 
   <!-- LINKS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
@@ -246,7 +243,7 @@ if (isset($_GET['id'])) {
         <div class="row">
           <div class="col-md-8">
             <div class="content-card">
-              <h5>Request Information</h5>
+              <h5>Request Information (<span class="mx-2" style="font-size: 12px;" id="request-status"></span>)</h5>
               <!-- <span class="badge bg-warning badge-status">In Progress</span> -->
               <div class="info-row">
                 <span class="info-label">Category:</span>
@@ -307,12 +304,11 @@ if (isset($_GET['id'])) {
                 </div>
               </div>
             </div>
-            <div class="card">
-              <div class="card-header">Provider Details</div>
-              <div class="card-body">
+            <div class="content-card">
+              <h5 class="card-header">Provider Details</h5>
                 <div class="text-center mb-3">
                   <img src="https://ui-avatars.com/api/?name=QuickFix+Plumbing&size=80&background=3498db&color=fff" alt="Provider" class="rounded-circle mb-2">
-                  <h5 class="mb-0">QuickFix Plumbing Services</h5>
+                  <h6 class="mb-0">QuickFix Plumbing Services</h6>
                   <small class="text-muted">Licensed Plumber</small>
                 </div>
                 <div class="info-row">
@@ -338,7 +334,6 @@ if (isset($_GET['id'])) {
                     (4.5)
                   </span>
                 </div>
-              </div>
             </div>
           </div>
         </div>
@@ -405,10 +400,6 @@ if (isset($_GET['id'])) {
           </div>
           <div class="col-md-4">
             <div class="card p-3 d-flex flex-row gap-5 border-0 shadow-none d-flex ">
-              <div>
-                <p class="fw-bold">Status</p>
-                <p id="request-status" class="request-status">Not Assigned</p>
-              </div>
               <div>
                 <p class="fw-bold">Payment</p>
                 <p id="request-payment" style="font-size: 15px; color: #b93232ff;" class="">Not assigned</p>
