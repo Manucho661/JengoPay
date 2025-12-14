@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../db/connect.php";
+
 ?>
 
 <!doctype html>
@@ -558,25 +559,57 @@ require_once "../db/connect.php";
                                                 </thead>
                                                 <tbody>
                                                     <?php
+
                                                     try {
-                                                        $select = "SELECT * FROM building_units";
+                                                        // get unit category id
+                                                        $categoryStmt = $pdo->prepare("
+                                                            SELECT id 
+                                                            FROM unit_categories 
+                                                            WHERE category_name = :category_name
+                                                            LIMIT 1
+                                                        ");
+                                                        $categoryStmt->execute([
+                                                            ':category_name' => 'single_unit'
+                                                        ]);
+
+                                                        $unitCategoryId = $categoryStmt->fetchColumn();
+
+                                                        if (!$unitCategoryId) {
+                                                            throw new Exception('Unit category not found');
+                                                        }
+                                                        $select = "
+                                                                SELECT 
+                                                                    bu.*,
+                                                                    b.building_name
+                                                                FROM building_units bu
+                                                                INNER JOIN buildings b 
+                                                                    ON bu.building_id = b.id
+                                                                WHERE bu.unit_category_id = :unit_category_id
+                                                            ";
+
                                                         $stmt = $pdo->prepare($select);
-                                                        $stmt->execute();
+                                                        $stmt->execute([
+                                                            ':unit_category_id' => $unitCategoryId
+                                                        ]);
+                                                        // $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                                        // var_dump($rows); // dumps all rows
+                                                        // exit;
+                                                    
                                                         while ($row = $stmt->fetch()) {
+
                                                             $id = encryptor('encrypt', $row['id']);
                                                             $unit_number = $row['unit_number'];
-                                                            $building_link = $row['building_link'];
                                                             $purpose = $row['purpose'];
                                                             $location = $row['location'];
                                                             $monthly_rent = $row['monthly_rent'];
                                                             $occupancy_status = $row['occupancy_status'];
                                                             $created_at = $row['created_at'];
-                                                            $unit_category = $row['unit_category'];
+                                                            $building_name = $row['building_name'];
                                                     ?>
                                                             <tr>
                                                                 <td><i class="bi bi-house-door"></i><?= htmlspecialchars($unit_number) ?></td>
                                                                 <td><i class="bi bi-building"></i>
-                                                                    <?= htmlspecialchars($building_link) ?></td>
+                                                                    <?= htmlspecialchars($building_name) ?></td>
                                                                 <td>
                                                                     <?php
                                                                     if (htmlspecialchars($purpose) == 'Business') {

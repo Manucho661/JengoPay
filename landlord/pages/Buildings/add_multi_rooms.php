@@ -176,10 +176,10 @@ $rentAccounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
         <!--begin::Sidebar-->
-        
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> 
-            <!--end::Sidebar Wrapper-->
-        
+
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
+        <!--end::Sidebar Wrapper-->
+
         <!--end::Sidebar-->
         <!--begin::App Main-->
         <main class="main">
@@ -193,6 +193,7 @@ $rentAccounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             if (isset($_GET['add_multi_rooms']) && !empty($_GET['add_multi_rooms'])) {
                                 $id = $_GET['add_multi_rooms'];
                                 $id = encryptor('decrypt', $id);
+                                $_SESSION['building_id'] = $id; // persist building id across different requests
                                 try {
                                     if (!empty($id)) {
                                         $select = "SELECT * FROM buildings WHERE id =:id";
@@ -267,48 +268,88 @@ $rentAccounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 try {
                                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                                    // 🔍 Check for duplicate unit_number + building_link
-                                    $check = $pdo->prepare("SELECT COUNT(*) FROM multi_rooms_units WHERE unit_number = :unit_number AND building_link = :building_link");
+                                    $buildingId = $_SESSION['building_id'] ?? null;
+
+                                    if (!$buildingId) {
+                                        throw new Exception('Invalid building context.');
+                                    }
+
+                                    // START TRANSACTION FIRST (prevents race conditions)
+                                    $pdo->beginTransaction();
+
+                                    // --------------------------------------------------
+                                    // Check for duplicate unit_number + building_id
+                                    // --------------------------------------------------
+                                    $check = $pdo->prepare("
+                                        SELECT COUNT(*) 
+                                        FROM building_units 
+                                        WHERE unit_number = :unit_number 
+                                        AND building_id = :building_id
+                                    ");
                                     $check->execute([
-                                        ':unit_number'   => $_POST['unit_number'],
-                                        ':building_link' => $_POST['building_link']
+                                        ':unit_number'  => $_POST['unit_number'],
+                                        ':building_id'  => $buildingId
                                     ]);
+
 
                                     if ($check->fetchColumn() > 0) {
                                         echo "
-            <script>
-                Swal.fire({
-                    title: 'Warning!',
-                    text: 'This unit already exists in the Database. No duplicate entries allowed.',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    window.history.back();
-                });
-            </script>";
+                                            <script>
+                                                Swal.fire({
+                                                    title: 'Warning!',
+                                                    text: 'This unit already exists in the Database. No duplicate entries allowed.',
+                                                    icon: 'warning',
+                                                    confirmButtonText: 'OK'
+                                                }).then(() => {
+                                                    window.history.back();
+                                                });
+                                            </script>";
                                         exit;
                                     }
 
-                                    // Begin Transaction
-                                    $pdo->beginTransaction();
-
                                     // Insert into multi_rooms
-                                    $stmt = $pdo->prepare("INSERT INTO multi_rooms_units
-            (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, water_meter, monthly_rent, number_of_rooms, number_of_washrooms, number_of_doors, occupancy_status, created_at)
-            VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :water_meter, :monthly_rent, :number_of_rooms, :number_of_washrooms, :number_of_doors, :occupancy_status, NOW())");
+                                    // $stmt = $pdo->prepare("INSERT INTO building_units
+                                    // (structure_type, first_name, last_name, owner_email, entity_name, entity_phone, entity_phoneother, entity_email, unit_number, purpose, building_link, location, water_meter, monthly_rent, number_of_rooms, number_of_washrooms, number_of_doors, occupancy_status, created_at)
+                                    // VALUES (:structure_type, :first_name, :last_name, :owner_email, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :unit_number, :purpose, :building_link, :location, :water_meter, :monthly_rent, :number_of_rooms, :number_of_washrooms, :number_of_doors, :occupancy_status, NOW())");
 
+                                    // --------------------------------------------------
+                                    // Get unit_category_id (single_unit)
+                                    // --------------------------------------------------
+                                    $sql = "
+                                        SELECT id 
+                                        FROM unit_categories 
+                                        WHERE category_name = :category_name 
+                                        LIMIT 1
+                                    ";
+                                    $stmt = $pdo->prepare($sql);
                                     $stmt->execute([
-                                        ':structure_type'    => $_POST['structure_type'],
-                                        ':first_name'        => $_POST['first_name'],
-                                        ':last_name'         => $_POST['last_name'],
-                                        ':owner_email'       => $_POST['owner_email'],
-                                        ':entity_name'       => $_POST['entity_name'],
-                                        ':entity_phone'      => $_POST['entity_phone'],
-                                        ':entity_phoneother' => $_POST['entity_phoneother'],
-                                        ':entity_email'      => $_POST['entity_email'],
+                                        ':category_name' => 'multi_room'
+                                    ]);
+
+                                    $multiRoomCategoryId = $stmt->fetchColumn();
+
+                                    // Safety check
+                                    if ($multiRoomCategoryId === false) {
+                                        throw new Exception('Unit category "multi_room" not found.');
+                                    }
+
+                                    $stmt = $pdo->prepare("INSERT INTO building_units
+                                    (building_id, unit_category_id, unit_number, purpose, location, water_meter, monthly_rent, number_of_rooms, number_of_washrooms, number_of_doors, occupancy_status, created_at)
+                                    VALUES (:building_id, :unit_category_id, :unit_number, :purpose, :location, :water_meter, :monthly_rent, :number_of_rooms, :number_of_washrooms, :number_of_doors, :occupancy_status, NOW())");
+                                    $stmt->execute([
+                                        // ':structure_type'    => $_POST['structure_type'],
+                                        // ':first_name'        => $_POST['first_name'],
+                                        // ':last_name'         => $_POST['last_name'],
+                                        // ':owner_email'       => $_POST['owner_email'],
+                                        // ':entity_name'       => $_POST['entity_name'],
+                                        // ':entity_phone'      => $_POST['entity_phone'],
+                                        // ':entity_phoneother' => $_POST['entity_phoneother'],
+                                        // ':entity_email'      => $_POST['entity_email'],
+                                        ':building_id' => $buildingId,
+                                        ':unit_category_id' => $multiRoomCategoryId,
                                         ':unit_number'       => $_POST['unit_number'],
                                         ':purpose'           => $_POST['purpose'],
-                                        ':building_link'     => $_POST['building_link'],
+                                        // ':building_link'     => $_POST['building_link'],
                                         ':location'          => $_POST['location'],
                                         ':water_meter'       => $_POST['water_meter'],
                                         ':monthly_rent'      => $_POST['monthly_rent'],
@@ -323,8 +364,8 @@ $rentAccounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                     // Insert bills if provided
                                     if (!empty($_POST['bill'])) {
-                                        $stmtBill = $pdo->prepare("INSERT INTO multi_room_bills (unit_id, bill, qty, unit_price, subtotal, created_at) 
-                                        VALUES (:unit_id, :bill, :qty, :unit_price, :subtotal, NOW())");
+                                        $stmtBill = $pdo->prepare("INSERT INTO bills (building_unit_id, bill_name, quantity, unit_price, sub_total, created_at) 
+                                        VALUES (:unit_id, :bill, :quantity, :unit_price, :sub_total, NOW())");
 
                                         foreach ($_POST['bill'] as $i => $billName) {
                                             if ($billName != "") {
@@ -335,9 +376,9 @@ $rentAccounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 $stmtBill->execute([
                                                     ':unit_id'    => $unit_id,
                                                     ':bill'       => $billName,
-                                                    ':qty'        => $qty,
+                                                    ':quantity'        => $qty,
                                                     ':unit_price' => $unitPrice,
-                                                    ':subtotal'   => $subtotal
+                                                    ':sub_total'   => $subtotal
                                                 ]);
                                             }
                                         }
