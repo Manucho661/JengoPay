@@ -638,48 +638,52 @@ $conn->close();
                 <div class="row align-items-center mb-4">
                     <div class="col-12 d-flex align-items-center">
                         <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
-                        <h3 class="mb-0 ms-3">Add single unit</h3>
-                        <span class="mx-4"><?= htmlspecialchars($building_name); ?></span>
+                        <h3 class="mb-0 ms-3">Add a single unit</h3>
+                        <span class="mx-4"></span>
                     </div>
                 </div>
                 <div class="row mb-4">
                     <div class="col-md-3 col-sm-6 col-12">
-                        <div class="info-box shadow">
-                            <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="bi bi-building"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Building</span>
-                                <span class="info-box-number"></span>
+                        <div class="stat-card d-flex align-items-center rounded-2 p-1">
+                            <div>
+                                <i class="fas fa-building me-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Building</p>
+                                <h3><?= htmlspecialchars($building_name); ?></h3>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-12">
-                        <div class="info-box shadow">
-                            <span class="info-box-icon" style="background-color:#00192D; color: #fff;"><i class="bi bi-houses"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Structure Type</span>
-                                <span class="info-box-number"><?= htmlspecialchars($structure_type); ?></span>
+                        <div class="stat-card d-flex align-items-center rounded-2 p-1">
+                            <div>
+                                <i class="fas fa-city me-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Structure type</p>
+                                <h3><?= htmlspecialchars($structure_type); ?></h3>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-12">
-                        <div class="info-box shadow">
-                            <span class="info-box-icon" style="background-color:#00192D; color: #fff;"><i class="bi bi-house-exclamation"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Building Type</span>
-                                <span class="info-box-number"><?= htmlspecialchars($building_type); ?></span>
+                        <div class="stat-card d-flex align-items-center rounded-2 p-1">
+                            <div>
+                                <i class="fas fa-house-damage me-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Building Type</p>
+                                <h3><?= htmlspecialchars($structure_type); ?></h3>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-12">
-                        <div class="info-box shadow">
-                            <span class="info-box-icon" style="background-color:#00192D; color: #fff;"><i class="bi bi-table"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Number of Units</span>
-                                <span class="info-box-number"><?= htmlspecialchars($no_of_units); ?></span>
+                        <div class="stat-card d-flex align-items-center rounded-2 p-1">
+                            <div>
+                                <i class="fas fa-city me-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Number of Units</p>
+                                <h3><?= htmlspecialchars($no_of_units); ?></h3>
                             </div>
                         </div>
                     </div>
@@ -700,7 +704,7 @@ $conn->close();
                                 <div class="card-body">
                                     <div class="card shadow" id="firstSection" style="border:1px solid rgb(0,25,45,.2);">
                                         <div class="card-header" style="background-color: #00192D; color:#fff;">
-                                            <b>Unit Identification</b>
+                                            <b class="text-warning">Unit Identification</b>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
