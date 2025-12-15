@@ -343,7 +343,8 @@ $conn->close();
         <main class="main">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb" style="">
-                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Buildings/buildings.php" style="text-decoration: none;">Buildings</a></li>
                     <li class="breadcrumb-item active">Add single unit</li>
                 </ol>
             </nav>

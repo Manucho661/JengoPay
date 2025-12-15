@@ -176,7 +176,8 @@ require_once "../db/connect.php";
         <main class="main">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb" style="">
-                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Buildings/buildings.php" style="text-decoration: none;">Buildings</a></li>
                     <li class="breadcrumb-item active">Single units</li>
                 </ol>
             </nav>
@@ -208,33 +209,39 @@ require_once "../db/connect.php";
                         echo "<div class='alert alert-danger'>Error: " . htmlspecialchars($e->getMessage()) . "</div>";
                     }
                     ?>
-                    <div class="col-md-4 col-sm-6 col-12">
-                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                            <span class="info-box-icon" style="background-color:#cc0001; color:#fff;"><i
-                                    class="bi bi-house-exclamation-fill"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Vacant Units</span>
-                                <span class="info-box-number"><?= $vacant; ?></span>
+                    <div class="col-md-4 col-sm-6 col-12 d-flex">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="bi bi bi-house-exclamation-fill fs-1 me-3 text-warning"></i>
+                                <!-- <i class="bi bi-building fs-1 me-3 text-warning"></i> -->
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Vacant Units</p>
+                                <b><?= $vacant; ?></b>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 col-12">
-                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                            <span class="info-box-icon" style="background-color:#1B712F; color:#fff;"><i
-                                    class="bi bi-house-lock-fill"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Occupied Units</span>
-                                <span class="info-box-number"><?= htmlspecialchars($occupied); ?></span>
+                    <div class="col-md-4 col-sm-6 col-12 d-flex">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="bi bi-house-lock-fill fs-1 me-3 text-warning"></i>
+                                <!-- <i class="bi bi-building fs-1 me-3 text-warning"></i> -->
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Occupied Units</p>
+                                <b><?= htmlspecialchars($occupied); ?></b>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 col-12">
-                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                            <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                                    class="fas fa-home"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Under Maintenance</span>
-                                <span class="info-box-number"><?= htmlspecialchars($maintenance); ?></span>
+                    <div class="col-md-4 col-sm-6 col-12 d-flex">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="fas fa-home fs-1 me-3 text-warning"></i>
+                                <!-- <i class="bi bi-building fs-1 me-3 text-warning"></i> -->
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Under Maintenance</p>
+                                <b><?= htmlspecialchars($maintenance); ?></b>
                             </div>
                         </div>
                     </div>
@@ -594,7 +601,7 @@ require_once "../db/connect.php";
                                                         // $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         // var_dump($rows); // dumps all rows
                                                         // exit;
-                                                    
+
                                                         while ($row = $stmt->fetch()) {
 
                                                             $id = encryptor('encrypt', $row['id']);

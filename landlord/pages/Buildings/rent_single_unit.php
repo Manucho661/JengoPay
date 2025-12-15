@@ -21,7 +21,7 @@ include_once 'processes/encrypt_decrypt_function.php';
 if (isset($_GET['rent']) && !empty($_GET['rent'])) {
   $id = $_GET['rent'];
   $id = encryptor('decrypt', $id);
-
+  
   try {
     if (!empty($id)) {
       $sql = "
@@ -340,258 +340,185 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
         </section>
 
         <?php
-        if (isset($_POST['rent_unit'])) {
+if (isset($_POST['rent_unit'])) {
 
-          $tm = md5(time()); // Unique prefix for uploaded files
+    $tm = md5(time()); // Unique prefix for uploaded files
 
-          // --------------------------------------------
-          // FILE UPLOAD HANDLER
-          // --------------------------------------------
-          function uploadFile($fileKey, $tm)
-          {
-            if (!isset($_FILES[$fileKey]) || $_FILES[$fileKey]['error'] !== UPLOAD_ERR_OK) {
-              return null;
-            }
-
-            $name = basename($_FILES[$fileKey]['name']);
-            $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $name);
-            $destination = "all_uploads/" . $tm . "_" . $safeName;
-
-            move_uploaded_file($_FILES[$fileKey]['tmp_name'], $destination);
-            return $destination;
-          }
-
-          $id_upload_destination        = uploadFile('id_upload', $tm);
-          $tax_pin_copy_destination     = uploadFile('tax_pin_copy', $tm);
-          $rental_agreement_destination = uploadFile('rental_agreement', $tm);
-
-
-          // --------------------------------------------
-          // COLLECT FORM DATA (USE CORRECT FORM NAMES)
-          // --------------------------------------------
-          $id                 = $_POST['id'] ?? null;
-          $occupancy_status   = $_POST['occupancy_status'] ?? null;
-
-          $first_name         = $_POST['tfirst_name'] ?? null;
-          $middle_name        = $_POST['tmiddle_name'] ?? null;
-          $last_name          = $_POST['tlast_name'] ?? null;
-
-          $main_contact       = $_POST['tmain_contact'] ?? null;
-          $alt_contact        = $_POST['talt_contact'] ?? null;
-          $email              = $_POST['temail'] ?? null;
-
-          $idMode             = $_POST['idMode'] ?? null;
-          $id_no              = $_POST['id_no'] ?? null;
-          $pass_no            = $_POST['pass_no'] ?? null;
-
-          $leasing_period     = $_POST['leasing_period'] ?? null;
-          $leasing_start_date = $_POST['leasing_start_date'] ?? null;
-          $leasing_end_date   = $_POST['leasing_end_date'] ?? null;
-
-          $move_in_date       = $_POST['move_in_date'] ?? null;
-          $move_out_date      = $_POST['move_out_date'] ?? null;
-
-          $account_no         = $_POST['account_no'] ?? null;
-          $income             = $_POST['income'] ?? null;
-
-          $job_title          = $_POST['job_title'] ?? null;
-          $job_location       = $_POST['job_location'] ?? null;
-          $casual_job         = $_POST['casual_job'] ?? null;
-          $business_name      = $_POST['business_name'] ?? null;
-          $business_location  = $_POST['business_location'] ?? null;
-
-          $tenant_status      = $_POST['tenant_status'] ?? null;
-
-
-          // --------------------------------------------
-          // VALIDATION
-          // --------------------------------------------
-          $required_fields = [
-            "First Name"        => $first_name,
-            "Last Name"         => $last_name,
-            "Main Contact"      => $main_contact,
-            "Email"             => $email,
-            "ID Mode"           => $idMode,
-            "Leasing Period"    => $leasing_period,
-            "Leasing Start"     => $leasing_start_date,
-            "Move In Date"      => $move_in_date,
-            "Unit Account No."  => $account_no,
-            "Source of Income"  => $income
-          ];
-
-          $required_files = [
-            "ID Copy"             => $id_upload_destination,
-            "KRA PIN Copy"        => $tax_pin_copy_destination,
-            "Rental Agreement"    => $rental_agreement_destination
-          ];
-
-          $emptyFields = [];
-          foreach ($required_fields as $label => $val) {
-            if (empty($val)) {
-              $emptyFields[] = $label;
-            }
-          }
-
-          $missingFiles = [];
-          foreach ($required_files as $label => $val) {
-            if (empty($val)) {
-              $missingFiles[] = $label;
-            }
-          }
-
-          if (!empty($emptyFields) || !empty($missingFiles)) {
-            $msg = "";
-
-            if (!empty($emptyFields)) {
-              $msg .= "Missing Fields:<br><b>" . implode("<br>", $emptyFields) . "</b><br><br>";
-            }
-
-            if (!empty($missingFiles)) {
-              $msg .= "Missing Files:<br><b>" . implode("<br>", $missingFiles) . "</b><br>";
-            }
-
-            echo "
-        <script>
-            Swal.fire({
-                icon:'warning',
-                title:'Missing Information',
-                html:`$msg`,
-                confirmButtonColor:'#00192D'
-            });
-        </script>";
-            exit;
-          }
-
-
-          // --------------------------------------------
-          // DUPLICATE CHECK
-          // --------------------------------------------
-          $checkTenant = $pdo->prepare("
-        SELECT id FROM tenants 
-        WHERE main_contact = :main_contact 
-          AND email = :email
-    ");
-
-          $checkTenant->execute([
-            ":main_contact" => $main_contact,
-            ":email"        => $email
-          ]);
-
-          if ($checkTenant->rowCount() > 0) {
-            echo "
-        <script>
-            Swal.fire({
-                icon:'warning',
-                title:'Duplicate Entry!',
-                text:'A tenant with same contact/email already exists.'
-            });
-        </script>";
-            exit;
-          }
-
-
-          // --------------------------------------------
-          // INSERT INTO TENANTS
-          // --------------------------------------------
-          $insert = $pdo->prepare("
-        INSERT INTO tenants (
-            first_name, middle_name, last_name,
-            main_contact, alt_contact, email,
-            idMode, id_no, pass_no,
-            leasing_period, leasing_start_date, leasing_end_date,
-            move_in_date, move_out_date,
-            account_no,
-            id_upload, tax_pin_copy, rental_agreement,
-            income, job_title, job_location, casual_job,
-            business_name, business_location,
-            tenant_status, tenant_reg
-        ) VALUES (
-            :first_name, :middle_name, :last_name,
-            :main_contact, :alt_contact, :email,
-            :idMode, :id_no, :pass_no,
-            :leasing_period, :leasing_start_date, :leasing_end_date,
-            :move_in_date, :move_out_date,
-            :account_no,
-            :id_upload, :tax_pin_copy, :rental_agreement,
-            :income, :job_title, :job_location, :casual_job,
-            :business_name, :business_location,
-            :tenant_status, NOW()
-        )
-    ");
-
-          $insert->execute([
-            ":first_name"        => $first_name,
-            ":middle_name"       => $middle_name,
-            ":last_name"         => $last_name,
-            ":main_contact"      => $main_contact,
-            ":alt_contact"       => $alt_contact,
-            ":email"             => $email,
-            ":idMode"            => $idMode,
-            ":id_no"             => $id_no,
-            ":pass_no"           => $pass_no,
-            ":leasing_period"    => $leasing_period,
-            ":leasing_start_date" => $leasing_start_date,
-            ":leasing_end_date"  => $leasing_end_date,
-            ":move_in_date"      => $move_in_date,
-            ":move_out_date"     => $move_out_date,
-            ":account_no"        => $account_no,
-            ":id_upload"         => $id_upload_destination,
-            ":tax_pin_copy"      => $tax_pin_copy_destination,
-            ":rental_agreement"  => $rental_agreement_destination,
-            ":income"            => $income,
-            ":job_title"         => $job_title,
-            ":job_location"      => $job_location,
-            ":casual_job"        => $casual_job,
-            ":business_name"     => $business_name,
-            ":business_location" => $business_location,
-            ":tenant_status"     => $tenant_status
-          ]);
-
-
-          // --------------------------------------------
-          // UPDATE OCCUPANCY FOR UNIT
-          // --------------------------------------------
-          $updateUnit = $pdo->prepare("
-        UPDATE building_units 
-        SET occupancy_status = :status 
-        WHERE id = :id
-    ");
-          $updateUnit->execute([
-            ":status" => $occupancy_status,
-            ":id"     => $id
-          ]);
-
-
-          // --------------------------------------------
-          // SUCCESS MESSAGE
-          // --------------------------------------------
-          echo "
-    <script>
-        Swal.fire({
-            icon:'success',
-            title:'Success!',
-            text:'Tenant saved successfully.'
-        }).then(()=>{ window.location='single_units_tenants.php'; });
-    </script>";
+    // --------------------------------------------
+    // FILE UPLOAD HANDLER
+    // --------------------------------------------
+    function uploadFile($fileKey, $tm) {
+        if (!isset($_FILES[$fileKey]) || $_FILES[$fileKey]['error'] !== UPLOAD_ERR_OK) {
+            return null;
         }
-        ?>
+        $name = basename($_FILES[$fileKey]['name']);
+        $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $name);
+        $destination = "all_uploads/" . $tm . "_" . $safeName;
+        move_uploaded_file($_FILES[$fileKey]['tmp_name'], $destination);
+        return $destination;
+    }
+
+    $files = [
+        'id_upload' => uploadFile('id_upload', $tm),
+        'tax_pin' => uploadFile('tax_pin_copy', $tm),
+        'rental_agreement' => uploadFile('rental_agreement', $tm)
+    ];
+
+    // --------------------------------------------
+    // COLLECT FORM DATA
+    // --------------------------------------------
+    $tenantData = [
+        'first_name'   => $_POST['tfirst_name'] ?? null,
+        'middle_name'  => $_POST['tmiddle_name'] ?? null,
+        'last_name'    => $_POST['tlast_name'] ?? null,
+        'phone'        => $_POST['tmain_contact'] ?? null,
+        'alt_phone'    => $_POST['talt_contact'] ?? null,
+        'email'        => $_POST['temail'] ?? null,
+        'national_id'  => $_POST['id_no'] ?? null,
+        'tenant_reg'   => $_POST['tenant_reg'] ?? null,
+    ];
+
+    $profileData = [
+        'income'             => $_POST['income'] ?? null,
+        'job_title'          => $_POST['job_title'] ?? null,
+        'job_location'       => $_POST['job_location'] ?? null,
+        'casual_job'         => $_POST['casual_job'] ?? 0,
+        'business_name'      => $_POST['business_name'] ?? null,
+        'business_location'  => $_POST['business_location'] ?? null,
+    ];
+
+    $tenancyData = [
+        'unit_id'           => $_POST['id'] ?? null,
+        'account_no'        => $_POST['account_no'] ?? null,
+        'leasing_period'    => $_POST['leasing_period'] ?? null,
+        'leasing_start_date'=> $_POST['leasing_start_date'] ?? null,
+        'leasing_end_date'  => $_POST['leasing_end_date'] ?? null,
+        'move_in_date'      => $_POST['move_in_date'] ?? null,
+        'move_out_date'     => $_POST['move_out_date'] ?? null,
+        'status'            => 'Active'
+    ];
+
+    // --------------------------------------------
+    // VALIDATION (basic example)
+    // --------------------------------------------
+    $requiredTenantFields = ['first_name', 'last_name', 'phone', 'email', 'national_id'];
+    $requiredTenancyFields = ['unit_id', 'account_no', 'leasing_period', 'leasing_start_date', 'move_in_date'];
+    $missing = [];
+
+    foreach ($requiredTenantFields as $f) if (empty($tenantData[$f])) $missing[] = $f;
+    foreach ($requiredTenancyFields as $f) if (empty($tenancyData[$f])) $missing[] = $f;
+    foreach ($files as $key => $file) if (empty($file)) $missing[] = $key;
+
+    if (!empty($missing)) {
+        $msg = "Missing Fields/Files: <b>" . implode(", ", $missing) . "</b>";
+        echo "<script>
+            Swal.fire({icon:'warning',title:'Missing Information',html:`$msg`});
+        </script>";
+        exit;
+    }
+
+    try {
+        $pdo->beginTransaction();
+
+        // --------------------------------------------
+        // CHECK OR INSERT TENANT
+        // --------------------------------------------
+        $stmt = $pdo->prepare("SELECT id FROM tenants WHERE national_id = :national_id LIMIT 1");
+        $stmt->execute([':national_id' => $tenantData['national_id']]);
+        $tenantId = $stmt->fetchColumn();
+
+        if (!$tenantId) {
+            $stmt = $pdo->prepare("
+                INSERT INTO tenants 
+                (first_name, middle_name, last_name, phone, alt_phone, email, national_id, tenant_reg)
+                VALUES (:first_name, :middle_name, :last_name, :phone, :alt_phone, :email, :national_id, :tenant_reg)
+            ");
+            $stmt->execute($tenantData);
+            $tenantId = $pdo->lastInsertId();
+        }
+
+        // --------------------------------------------
+        // INSERT TENANT PROFILE
+        // --------------------------------------------
+        $stmt = $pdo->prepare("
+            INSERT INTO tenant_profiles
+            (tenant_id, income, job_title, job_location, casual_job, business_name, business_location)
+            VALUES (:tenant_id, :income, :job_title, :job_location, :casual_job, :business_name, :business_location)
+            ON DUPLICATE KEY UPDATE
+                income=VALUES(income),
+                job_title=VALUES(job_title),
+                job_location=VALUES(job_location),
+                casual_job=VALUES(casual_job),
+                business_name=VALUES(business_name),
+                business_location=VALUES(business_location)
+        ");
+        $stmt->execute(array_merge(['tenant_id'=>$tenantId], $profileData));
+
+        // --------------------------------------------
+        // INSERT TENANCY
+        // --------------------------------------------
+        $stmt = $pdo->prepare("
+            INSERT INTO tenancies
+            (tenant_id, unit_id, account_no, leasing_period, leasing_start_date, leasing_end_date, move_in_date, move_out_date, status)
+            VALUES (:tenant_id, :unit_id, :account_no, :leasing_period, :leasing_start_date, :leasing_end_date, :move_in_date, :move_out_date, :status)
+        ");
+        $stmt->execute(array_merge(['tenant_id'=>$tenantId], $tenancyData));
+        $tenancyId = $pdo->lastInsertId();
+
+        // --------------------------------------------
+        // UPLOAD DOCUMENTS TO TENANT_DOCUMENTS TABLE
+        // --------------------------------------------
+        $stmt = $pdo->prepare("
+            INSERT INTO tenant_documents (tenant_id, tenancy_id, document_type, file_path)
+            VALUES (:tenant_id, :tenancy_id, :doc_type, :file_path)
+        ");
+        foreach ($files as $type => $path) {
+            $stmt->execute([
+                ':tenant_id' => $tenantId,
+                ':tenancy_id'=> $tenancyId,
+                ':doc_type'  => $type,
+                ':file_path' => $path
+            ]);
+        }
+
+        // --------------------------------------------
+        // UPDATE UNIT OCCUPANCY
+        // --------------------------------------------
+        $stmt = $pdo->prepare("UPDATE building_units SET occupancy_status='Occupied' WHERE id=:unit_id");
+        $stmt->execute([':unit_id' => $tenancyData['unit_id']]);
+
+        $pdo->commit();
+
+        echo "<script>
+            Swal.fire({
+                icon:'success',
+                title:'Success!',
+                text:'Tenant rented successfully.',
+                confirmButtonText:'OK'
+            }).then(()=>{ window.location='single_units_tenants.php'; });
+        </script>";
+
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        echo "<script>
+            Swal.fire({
+                icon:'error',
+                title:'Error!',
+                html:`" . addslashes($e->getMessage()) . "`
+            });
+        </script>";
+    }
+
+}
+?>
+
 
       </div>
     </main>
     <!--end::App Main-->
     <!--begin::Footer-->
-    <footer class="app-footer">
-      <!--begin::To the end-->
-      <div class="float-end d-none d-sm-inline">Anything you want</div>
-      <!--end::To the end-->
-      <!--begin::Copyright-->
-      <strong>
-        Copyright &copy; 2014-2024&nbsp;
-        <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
-      </strong>
-      All rights reserved.
-      <!--end::Copyright-->
-    </footer>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+    <!-- end footer -->
 
   </div>
   <!--end::App Wrapper-->
