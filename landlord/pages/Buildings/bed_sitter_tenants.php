@@ -1,3 +1,4 @@
+<?php session_start()?>
 <?php
  require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
@@ -195,43 +196,78 @@
                 <!-- Main content -->
                 <section class="content">
         <div class="container-fluid">
-          <?php
-            $single_unit_tenants = "SELECT tenant_status, COUNT(*) AS total FROM bedsitter_units GROUP BY tenant_status";
-            $result_single_unit_tenants = $pdo->prepare($single_unit_tenants);
-            $result_single_unit_tenants->execute();
-            //Initialize the countings for all the buildings
-            $counts = [
-                      'Active' => 0,
-                      'Vacated'   => 0
-                    ];
-                    while($row = $result_single_unit_tenants->fetch()) {
-                      $counts[$row['tenant_status']] = $row['total'];
-                    }
+        <div class="row align-items-center mb-3">
+    <div class="col-12 d-flex align-items-center">
+        <!-- Small colored bar on the left -->
+        <span style="width:5px; height:28px; background:#F5C518;" class="rounded"></span>
+        
+        <!-- Header text -->
+        <h3 class="mb-0 ms-3">Bedsitter Tenants</h3>
+    </div>
+</div>
 
-                    // Assign icons for each building type
-              $icons = [
-                'Active' => 'bi-check',
-                'Vacated'   => 'bi-house'
-                 ];
-            ?>
+<?php
+    $single_unit_tenants = "SELECT tenant_status, COUNT(*) AS total FROM tenants GROUP BY tenant_status";
+    $stmt = $pdo->prepare($single_unit_tenants);
+    $stmt->execute();
 
+    $counts = [
+        'Active'  => 0,
+        'Vacated' => 0
+    ];
 
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $counts[$row['tenant_status']] = $row['total'];
+    }
 
-          <div class="row">
-              <?php foreach ($counts as $type => $total): ?>
-                <div class="col-md-3">
-                  <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                    <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="bi  <?php echo $icons[$type]; ?>"></i></span>
-                    <div class="info-box-content">
-                      <span class="info-box-text"><?php echo $type; ?></span>
-                      <span class="info-box-number"><?php echo $total; ?></span>
+    $icons = [
+        'Active'  => 'bi-person-check',
+        'Vacated' => 'bi-person-dash'
+    ];
+?>
+
+<div class="row g-3">
+    <?php foreach ($counts as $type => $total): ?>
+        <?php
+            $iconColor = 'text-warning';
+            if ($type === 'Active') {
+                $iconColor = 'text-success';
+                $displayType = 'Active Tenants';
+            } elseif ($type === 'Vacated') {
+                $iconColor = 'text-secondary';
+                $displayType = 'Vacated Tenants';
+            } else {
+                $displayType = $type;
+            }
+
+            $barColor = '#F5C518'; // fixed gold color for left bar
+        ?>
+        <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100 shadow"
+                 style="border:1px solid rgba(0,25,45,.2); background:#fff;">
+
+                <!-- Left colored bar -->
+                <span style="width:5px; height:100%; background:<?php echo $barColor; ?>;" class="rounded me-3"></span>
+
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi <?php echo $icons[$type]; ?> fs-2 <?php echo $iconColor; ?>"></i>
                     </div>
-                  </div>
+
+                    <div>
+                        <p class="mb-0 fw-bold text-muted"><?php echo $displayType; ?></p>
+                        <h5 class="mb-0 fw-bold"><?php echo $total; ?></h5>
+                    </div>
                 </div>
-                <?php endforeach; ?>
-            </div><hr>
+
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<b><hr></b>
           <div class="card shadow">
-            <div class="card-header" style="background-color:#00192D; color:#fff;"><b>All Tenants</b></div>
+            <div class="card-header" style="background-color:#00192D; color:#fff;"><b>Bedsitter Tenants</b></div>
             <div class="card-body">
               <table class="table table-striped" id="dataTable">
                 <thead>

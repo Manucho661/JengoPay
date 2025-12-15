@@ -2,12 +2,12 @@
 <?php
  require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
-
 ?>
 
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
+
 <head>
     <?php if (isset($successMessage)) echo "<div class='alert alert-success'>$successMessage</div>"; ?>
     <?php if (isset($errorMessage)) echo "<div class='alert alert-danger'>$errorMessage</div>"; ?>
@@ -195,14 +195,14 @@
             <div class="content-wrapper">
                 <!-- Main content -->
                 <section class="content">
-                <div class="container-fluid">
-                  <div class="row align-items-center mb-3">
+        <div class="container-fluid">
+        <div class="row align-items-center mb-3">
     <div class="col-12 d-flex align-items-center">
         <!-- Small colored bar on the left -->
         <span style="width:5px; height:28px; background:#F5C518;" class="rounded"></span>
         
         <!-- Header text -->
-        <h3 class="mb-0 ms-3">Single Unit Tenants</h3>
+        <h3 class="mb-0 ms-3">MultiRoom Tenants</h3>
     </div>
 </div>
 
@@ -266,26 +266,8 @@
 </div>
 
 <b><hr></b>
-
-<!-- <div class="row mb-3 mt-3">
-                    <div class="col-md-6 d-flex">
-                        <input
-                            type="text"
-                            class="form-control filter-shadow"
-                            placeholder="Search requests..."
-                            style="border-radius: 25px 0 0 25px;">
-
-                         Search Button -->
-                        <!-- <button
-                            class="btn text-white"
-                            style="border-radius: 0 25px 25px 0; background: linear-gradient(135deg, #00192D, #002B5B)">
-                            Search
-                        </button> -->
-                    </div>
-
-                    <br>
           <div class="card shadow">
-            <div class="card-header" style="background-color:#00192D; color:#fff;"><b>Single Unit Tenants</b></div>
+            <div class="card-header" style="background-color:#00192D; color:#fff;"><b>MultiRoom Tenants</b></div>
             <div class="card-body">
               <table class="table table-striped" id="dataTable">
                 <thead>
@@ -302,7 +284,7 @@
                 <tbody>
                   <?php
                   include_once 'processes/encrypt_decrypt_function.php';
-                    $select = $pdo->prepare("SELECT * FROM tenants ORDER BY tenant_reg DESC");
+                    $select = $pdo->prepare("SELECT * FROM bedsitter_units ORDER BY tenant_reg DESC");
                     $select->execute();
                     $row = 0;
                     while($row = $select->fetch()){
@@ -319,12 +301,12 @@
                             </script>";
                             ?>
                               <tr>
-                                <td><?= $row['first_name'].' '.$row['middle_name'];?></td>
+                                <td><?= $row['tfirst_name'].' '.$row['tmiddle_name'];?></td>
                                 <td><?= $row['account_no'].' ('.$row['building_link'].')';?></td>
                                 <td><?= htmlspecialchars($row['unit_category']) ;?></td>
                                 <td>
-                                  <a href="tel:<?= $row['main_contact'];?>"><?= $row['main_contact'];?></a><br>
-                                  <a href="tel:<?= $row['alt_contact'];?>"> <?= $row['alt_contact'];?></a>
+                                  <a href="tel:<?= $row['tmain_contact'];?>"><?= $row['tmain_contact'];?></a><br>
+                                  <a href="tel:<?= $row['talt_contact'];?>"> <?= $row['talt_contact'];?></a>
                               </td>
                                 <td><i class="bi bi-person-vcard"></i> <?= $row['pass_no'].''.$row['id_no']. ' ('.ucfirst($row['idMode']).')';?></td>
                                 <td><?= $row['move_in_date'];?></td>
@@ -352,11 +334,11 @@
                                       <?php
                                         if($row['tenant_status'] == 'Active') {
                                           ?>
-                                            <a class="dropdown-item" href="<?= 'https://wa.me/'.$row['main_contact'].'/?text=Hello,'." ". $row['first_name']. '' ?>" target="_blank"><i class="fa fa-whatsapp"></i> WhatsApp</a>
-                                            <a class="dropdown-item" href="messaging.php?mesage=<?= $row['first_name'] ;?>"><i class="fa fa-envelope"></i> Message</a>
+                                            <a class="dropdown-item" href="<?= 'https://wa.me/'.$row['tmain_contact'].'/?text=Hello,'." ". $row['tfirst_name']. '' ?>" target="_blank"><i class="fa fa-whatsapp"></i> WhatsApp</a>
+                                            <a class="dropdown-item" href="messaging.php?mesage=<?= $row['tfirst_name'] ;?>"><i class="fa fa-envelope"></i> Message</a>
                                             <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-newspaper"></i> Profile</a>
                                             <a class="dropdown-item" href="edit_tenant_info.php?edit_tenant=<?= encryptor('encrypt', $row['id']);?>"><i class="fas fa-edit"></i> Edit</a>
-                                            <a class="dropdown-item" href="single_unit_tenant_invoice.php?invoice=<?= encryptor('encrypt', $row['id']);?>"><i class="fa fa-newspaper"></i> Invoice</a>
+                                            <a class="dropdown-item" href="bed_sitter_tenant_invoice.php?invoice=<?= encryptor('encrypt', $row['id']);?>"><i class="fa fa-newspaper"></i> Invoice</a>
                                             <a class="dropdown-item" href="all_individual_tenant_invoices.php?invoice=<?= encryptor('encrypt', $row['id']);?>"><i class="fa fa-table"></i> All Invoices</a>
                                             <a class="dropdown-item" data-toggle="modal" data-target="#vacateTenantModal<?= htmlspecialchars($row['id']);?>" href="#"><i class="fa fa-arrow-right"></i> Vacate</a>
                                             <a class="dropdown-item" data-toggle="modal" data-target="#shiftTenantModal<?= htmlspecialchars($row['id']);?>" href="#"><i class="fa fa-refresh"></i> Shift</a>
@@ -391,7 +373,7 @@
                                       <input type="hidden" name="occupancy_status" value="Vacant">
                                       <div class="modal-body">
                                         <div class="form-group">
-                                         <p class="text-center"><b><?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?></b> Will be Vacated from this Unit within this Bulding. Note that Other Actions will be Disabled</p>
+                                         <p class="text-center"><b><?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tlast_name']);?></b> Will be Vacated from this Unit within this Bulding. Note that Other Actions will be Disabled</p>
                                           <label for="">Occupancy tatus</label>
                                           <input type="text" class="form-control" name="tenant_status" id="tenant_status" value="Vacated" readonly>
                                         </div>
@@ -408,7 +390,7 @@
                               <div class="modal-dialog modal-md">
                                 <div class="modal-content">
                                   <div class="modal-header" style="background-color:#00192D; color:#fff;">
-                                    <b class="modal-title">Shift <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['middle_name']).' '.htmlspecialchars($row['tlast_name']);?></b>
+                                    <b class="modal-title">Shift <?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tmiddle_name']).' '.htmlspecialchars($row['tlast_name']);?></b>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
                                       <span aria-hidden="true">&times;</span>
                                     </button>
@@ -441,7 +423,7 @@
                                             $unit_category = $row['unit_category'];
 
                                             $getVacantSingle = $pdo->prepare("
-                                                SELECT * FROM tenants
+                                                SELECT * FROM bedsitter_units
                                                 WHERE unit_category = :unit_category
                                                   AND occupancy_status = 'Vacant'
                                                   AND building_link = :building_link
@@ -499,32 +481,24 @@
                                           </div>
                                           <!-- This PHP Code will Extract Bed Sitter Vacant Units within the Building -->
                                           <?php
-                                            $getVacantBedSitter = $pdo->prepare("
-                                                SELECT * FROM bedsitter_units
-                                                WHERE unit_category = :unit_category
-                                                  AND occupancy_status = 'Vacant'
-                                                  AND building_link = :building_link
-                                                  AND tenant_status = 'Vacated'
-                                            ");
+                                            $building = $row['building'];           // current building name
+                                            $bedSitterCategory = 'Bed Sitter'; // Specify the Unit Category which is Bed Sitters
+
+                                            //Query Out all the Vacant Single Units within the Building
+                                            $getVacantBedSitter = $pdo->prepare("SELECT * FROM tenants WHERE unit_category = :unit_category AND building = :building AND status = 'Vacated'");
 
                                             $getVacantBedSitter->execute([
-                                              ':unit_category' => $unit_category,
-                                              ':building_link'      => $building_link
+                                              ':unit_category' => $bedSitterCategory,
+                                              ':building'      => $building
                                             ]);
-
                                             $allVacantBedSitterUnits = $getVacantBedSitter->fetchAll(PDO::FETCH_ASSOC);
-                                            ?>
+                                          ?>
                                           <form action="" method="post" autocomplete="off">
-                                            <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id)) ;?>">
                                             <div class="card-body">
-                                              <p class="text-center">You are Shifting <span style="font-weight:bold; background-color: #cc0001; color: #fff; padding: 2px; border-radius: 2px;"><?= htmlspecialchars($row['tfirst_name']).' '.htmlspecialchars($row['tlast_name']);?></span> to Available <?= htmlspecialchars($unit_category) ;?> Units within <?= htmlspecialchars($row['building_link']) ;?></p>
+                                              <p class="text-center" style="font-weight:bold;">You are Shifting <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?> to Available <?= htmlspecialchars($bedSitterCategory) ;?> Units within <?= htmlspecialchars($row['building']) ;?></p>
                                               <div class="form-group">
                                                 <label for="">Current Unit No</label>
                                                 <input type="text" class="form-control" value="<?= htmlspecialchars($row['account_no']) ;?>" readonly name="account_no">
-                                              </div>
-                                              <div class="form-group">
-                                                <label>Updated Status</label>
-                                                <input class="form-control" value="Vacant" name="occupancy_status" readonly>
                                               </div>
                                               <div class="form-group">
                                                 <label>Assign New Unit</label>
@@ -533,7 +507,7 @@
                                                   <?php if (count($allVacantBedSitterUnits) > 0): ?>
                                                       <?php foreach ($allVacantBedSitterUnits as $unit): ?>
                                                           <option value="<?= htmlspecialchars($unit['account_no']); ?>">
-                                                            <?= htmlspecialchars($unit['account_no']); ?>
+                                                              <?= htmlspecialchars($unit['account_no']); ?>
                                                           </option>
                                                       <?php endforeach; ?>
                                                   <?php else: ?>
@@ -543,7 +517,7 @@
                                               </div>
                                             </div>
                                             <div class="card-footer text-right">
-                                              <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="shift_to_single_unit"><i class="bi bi-send"></i> Shift Tenant</button>
+                                              <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="shift_to_bed_sitter_unit"><i class="bi bi-send"></i> Shift Tenant</button>
                                             </div>
                                           </form>
                                         </div>
@@ -557,7 +531,7 @@
                                           </div>
                                           <!-- This PHP Code will Extract Multi Rooms Vacant Units within the Building -->
                                           <?php
-                                            $building = $row['building_link'];           // current building name
+                                            $building = $row['building'];           // current building name
                                             $multiRoomCategory = 'Multi Room'; // Specify the Unit Category which is Multi Rooms
 
                                             //Query Out all the Vacant Single Units within the Building
@@ -571,7 +545,7 @@
                                           ?>
                                           <form action="" method="post" autocomplete="off">
                                             <div class="card-body">
-                                              <p class="text-center" style="font-weight:bold;">You are Shifting <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?> to Available <?= htmlspecialchars($multiRoomCategory) ;?> Units within <?= htmlspecialchars($row['building_link']) ;?></p>
+                                              <p class="text-center" style="font-weight:bold;">You are Shifting <?= htmlspecialchars($row['first_name']).' '.htmlspecialchars($row['last_name']);?> to Available <?= htmlspecialchars($multiRoomCategory) ;?> Units within <?= htmlspecialchars($row['building']) ;?></p>
                                               <div class="form-group">
                                                 <label for="">Current Unit No</label>
                                                 <input type="text" class="form-control" value="<?= htmlspecialchars($row['account_no']) ;?>" readonly name="account_no">
@@ -658,17 +632,16 @@
             <!-- /.content -->
 
             <!-- Help Pop Up Form -->
-            <?php include_once 'includes/lower_right_popup_form.php' ;?>
+           
         </div>
         <!-- /.content-wrapper -->
 
         <!-- Footer -->
-        <?php include_once 'includes/footer.php';?>
-
+    
     </div>
     <!-- ./wrapper -->
     <!-- Required Scripts -->
-    <?php include_once 'includes/required_scripts.php';?>
+   
     <!-- Meter Readings JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -711,14 +684,13 @@
     <!-- Scripts -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
     <?php
         if (isset($_POST['vacate_tenant'])) {
           $tenant_id = $_POST['id'] ?? '';
           $occupancy_status = $_POST['occupancy_status'] ?? '';
           $tenant_status = $_POST['tenant_status'] ?? '';
             try {
-                $update = $pdo->prepare("UPDATE tenants SET occupancy_status =:occupancy_status, tenant_status = :tenant_status, vacated_on = NOW() WHERE id = :id");
+                $update = $pdo->prepare("UPDATE bedsitter_units SET occupancy_status =:occupancy_status, tenant_status = :tenant_status, vacated_on = NOW() WHERE id = :id");
                 $updated = $update->execute([
                     ':occupancy_status' => $occupancy_status,
                     ':tenant_status' => $tenant_status,
@@ -768,7 +740,7 @@
           $newoccupancy_status = 'Occupied';
           
           try {
-            $shiftTenant = $pdo->prepare("UPDATE tenants SET occupancy_status =:occupancy_status WHERE id =:id");
+            $shiftTenant = $pdo->prepare("UPDATE bedsitter_units SET occupancy_status =:occupancy_status WHERE id =:id");
             $shiftTenantConfirm = $shiftTenant->execute([
               ':occupancy_status' => $newoccupancy_status,
               ':id' => $tenant_id
@@ -820,7 +792,7 @@
           $hashedPassword = password_hash($password, PASSWORD_DEFAULT); //Secure the Password
           try {
             //Check for the Existance of the Same Username in the Database to avoid double regustration
-            $check_username = $pdo->prepare("SELECT * FROM tenants WHERE username =:username");
+            $check_username = $pdo->prepare("SELECT * FROM bedsitter_units WHERE username =:username");
             $check_username->execute([
               'username' => $username
             ]);
@@ -853,7 +825,7 @@
                 exit;
             } else {
               //If All is well, Submit data
-              $addInfo = $pdo->prepare("UPDATE tenants SET username =:username, password=:password WHERE id =:id");
+              $addInfo = $pdo->prepare("UPDATE bedsitter_units SET username =:username, password=:password WHERE id =:id");
               $addInfo->execute([
                 ':username' => $username,
                 ':password' => $hashedPassword,
