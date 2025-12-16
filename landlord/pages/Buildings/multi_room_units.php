@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>

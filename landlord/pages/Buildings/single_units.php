@@ -1,10 +1,7 @@
 <?php
 session_start();
 require_once "../db/connect.php";
-//   include_once 'includes/lower_right_popup_form.php';
-$select = "SELECT * FROM building_units";
-$stmt = $pdo->prepare($select);
-$stmt->execute();
+
 ?>
 
 <!doctype html>
@@ -90,7 +87,7 @@ $stmt->execute();
     <!--Tailwind CSS  -->
     <style>
         .app-wrapper {
-            background-color: rgba(128, 128, 128, 0.1);
+            /* background-color: rgba(128, 128, 128, 0.1); */
         }
 
         .modal-backdrop.show {
@@ -176,50 +173,118 @@ $stmt->execute();
         <!--end::Sidebar-->
 
         <!--begin::App Main-->
-        <main class="main mt-4">
-            <div class="content-wrapper">
-                <!-- Main content -->
-                <section class="content">
-                    <div class="container-fluid">
-                        <?php
-                        include_once '../processes/encrypt_decrypt_function.php';
-                        //Submit Single Unit Information
-                        if (isset($_POST['submit'])) {
-                            try {
-                                // Insert unit data
-                                $stmt = $pdo->prepare("INSERT INTO single_units(unit_number, purpose, building_link, location, monthly_rent, occupancy_status)
+        <main class="main">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="">
+                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Buildings/buildings.php" style="text-decoration: none;">Buildings</a></li>
+                    <li class="breadcrumb-item active">Single units</li>
+                </ol>
+            </nav>
+            <div class="container-fluid">
+                <!--First Row-->
+                <div class="row align-items-center mb-4">
+                    <div class="col-12 d-flex align-items-center">
+                        <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+                        <h3 class="mb-0 ms-3">Single units</h3>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <?php
+                    try {
+                        // Count Vacant
+                        $stmt = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE occupancy_status = 'Vacant'");
+                        $stmt->execute();
+                        $vacant = $stmt->fetchColumn();
+                        // Count Occupied
+                        $stmt = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE occupancy_status = 'Occupied'");
+                        $stmt->execute();
+                        $occupied = $stmt->fetchColumn();
+                        // Count Under Maintenance
+                        $stmt = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE occupancy_status = 'Under Maintenance'");
+                        $stmt->execute();
+                        $maintenance = $stmt->fetchColumn();
+                    } catch (PDOException $e) {
+                        echo "<div class='alert alert-danger'>Error: " . htmlspecialchars($e->getMessage()) . "</div>";
+                    }
+                    ?>
+                    <div class="col-md-4 col-sm-6 col-12 d-flex">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="bi bi bi-house-exclamation-fill fs-1 me-3 text-warning"></i>
+                                <!-- <i class="bi bi-building fs-1 me-3 text-warning"></i> -->
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Vacant Units</p>
+                                <b><?= $vacant; ?></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-12 d-flex">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="bi bi-house-lock-fill fs-1 me-3 text-warning"></i>
+                                <!-- <i class="bi bi-building fs-1 me-3 text-warning"></i> -->
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Occupied Units</p>
+                                <b><?= htmlspecialchars($occupied); ?></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-12 d-flex">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="fas fa-home fs-1 me-3 text-warning"></i>
+                                <!-- <i class="bi bi-building fs-1 me-3 text-warning"></i> -->
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Under Maintenance</p>
+                                <b><?= htmlspecialchars($maintenance); ?></b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                include_once '../processes/encrypt_decrypt_function.php';
+                //Submit Single Unit Information
+                if (isset($_POST['submit'])) {
+                    try {
+                        // Insert unit data
+                        $stmt = $pdo->prepare("INSERT INTO single_units(unit_number, purpose, building_link, location, monthly_rent, occupancy_status)
                                 VALUES (:unit_number, :purpose, :building_link, :location, :monthly_rent, :occupancy_status)");
-                                $stmt->execute([
-                                    ':unit_number'      => $_POST['unit_number'],
-                                    ':purpose'          => $_POST['purpose'],
-                                    ':building_link'    => $_POST['building_link'],
-                                    ':location'         => $_POST['location'],
-                                    ':monthly_rent'     => (string) $_POST['monthly_rent'], // decimals handled as strings
-                                    ':occupancy_status' => $_POST['occupancy_status'],
-                                ]);
+                        $stmt->execute([
+                            ':unit_number'      => $_POST['unit_number'],
+                            ':purpose'          => $_POST['purpose'],
+                            ':building_link'    => $_POST['building_link'],
+                            ':location'         => $_POST['location'],
+                            ':monthly_rent'     => (string) $_POST['monthly_rent'], // decimals handled as strings
+                            ':occupancy_status' => $_POST['occupancy_status'],
+                        ]);
 
-                                $unitId = $pdo->lastInsertId();
+                        $unitId = $pdo->lastInsertId();
 
-                                // Insert recurring expenses if available
-                                if (!empty($_POST['bill'])) {
-                                    $stmtExp = $pdo->prepare("
+                        // Insert recurring expenses if available
+                        if (!empty($_POST['bill'])) {
+                            $stmtExp = $pdo->prepare("
                                     INSERT INTO single_unit_bills (unit_id, bill, qty, unit_price)
                                     VALUES (:unit_id, :bill, :qty, :unit_price)
                                     ");
 
-                                    foreach ($_POST['bill'] as $i => $bill) {
-                                        if (!empty($bill)) {
-                                            $stmtExp->execute([
-                                                ':unit_id'    => $unitId,
-                                                ':bill'       => $bill,
-                                                ':qty'        => (int) $_POST['qty'][$i],
-                                                ':unit_price' => (string) $_POST['unit_price'][$i],
-                                            ]);
-                                        }
-                                    }
+                            foreach ($_POST['bill'] as $i => $bill) {
+                                if (!empty($bill)) {
+                                    $stmtExp->execute([
+                                        ':unit_id'    => $unitId,
+                                        ':bill'       => $bill,
+                                        ':qty'        => (int) $_POST['qty'][$i],
+                                        ':unit_price' => (string) $_POST['unit_price'][$i],
+                                    ]);
                                 }
+                            }
+                        }
 
-                                echo '<div id="countdown" class="alert alert-success" role="alert"></div>
+                        echo '<div id="countdown" class="alert alert-success" role="alert"></div>
                             <script>
                             var timeleft = 10;
                             var downloadTimer = setInterval(function(){
@@ -232,47 +297,47 @@ $stmt->execute();
                                 timeleft -= 1;
                                 }, 1000);
                                 </script>';
-                            } catch (PDOException $e) {
-                                echo "❌ Database error: " . $e->getMessage();
-                            }
-                        }
+                    } catch (PDOException $e) {
+                        echo "❌ Database error: " . $e->getMessage();
+                    }
+                }
 
-                        //Meter Readings Submission PHP Script
-                        if (isset($_POST['submit_reading'])) {
-                            // Collect and sanitize input data
-                            $id = trim($_POST['id'] ?? null);
-                            $reading_date = trim($_POST['reading_date'] ?? null);
-                            $meter_type = trim($_POST['meter_type'] ?? null);
-                            $current_reading = trim($_POST['current_reading'] ?? null);
-                            $previous_reading = trim($_POST['previous_reading'] ?? null);
-                            $units_consumed = trim($_POST['units_consumed'] ?? null);
-                            $cost_per_unit = trim($_POST['cost_per_unit'] ?? null);
-                            $final_bill = trim($_POST['final_bill'] ?? null);
+                //Meter Readings Submission PHP Script
+                if (isset($_POST['submit_reading'])) {
+                    // Collect and sanitize input data
+                    $id = trim($_POST['id'] ?? null);
+                    $reading_date = trim($_POST['reading_date'] ?? null);
+                    $meter_type = trim($_POST['meter_type'] ?? null);
+                    $current_reading = trim($_POST['current_reading'] ?? null);
+                    $previous_reading = trim($_POST['previous_reading'] ?? null);
+                    $units_consumed = trim($_POST['units_consumed'] ?? null);
+                    $cost_per_unit = trim($_POST['cost_per_unit'] ?? null);
+                    $final_bill = trim($_POST['final_bill'] ?? null);
 
-                            try {
-                                //Basic Validations to Ensure that No Required Field is Left Unfilled
-                                if (empty($reading_date) || empty($meter_type) || empty($current_reading) || empty($cost_per_unit) || $current_reading < $previous_reading) {
-                                    echo "<script>
+                    try {
+                        //Basic Validations to Ensure that No Required Field is Left Unfilled
+                        if (empty($reading_date) || empty($meter_type) || empty($current_reading) || empty($cost_per_unit) || $current_reading < $previous_reading) {
+                            echo "<script>
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Invalid Input',
                                         text: 'Please ensure all fields are filled and readings are valid.'
                                     });
                                 </script>";
-                                    exit;
-                                } else {
-                                    //Serverside Computation of the Derived Values
-                                    $units_consumed = $current_reading - $previous_reading;
-                                    $final_bill = $units_consumed * $cost_per_unit;
+                            exit;
+                        } else {
+                            //Serverside Computation of the Derived Values
+                            $units_consumed = $current_reading - $previous_reading;
+                            $final_bill = $units_consumed * $cost_per_unit;
 
-                                    //Check if the for Double Entries of Meter Readings for the Same Unit in the Same Month
-                                    $checkReading = $pdo->prepare("SELECT * FROM single_units WHERE reading_date =:reading_date AND meter_type =:meter_type");
-                                    $checkReading->execute([
-                                        ':reading_date' => $reading_date,
-                                        ':meter_type' => $meter_type
-                                    ]);
-                                    if ($checkReading->rowCount() > 0) {
-                                        echo "
+                            //Check if the for Double Entries of Meter Readings for the Same Unit in the Same Month
+                            $checkReading = $pdo->prepare("SELECT * FROM building_units WHERE reading_date =:reading_date AND meter_type =:meter_type");
+                            $checkReading->execute([
+                                ':reading_date' => $reading_date,
+                                ':meter_type' => $meter_type
+                            ]);
+                            if ($checkReading->rowCount() > 0) {
+                                echo "
                                         <script>
                                             Swal.fire({
                                                 icon: 'warning',
@@ -290,10 +355,10 @@ $stmt->execute();
                                                 }
                                             });
                                         </script>";
-                                        exit;
-                                    } else {
-                                        //If no Double Reading, then Submit the Meter Readings for this Month
-                                        $submitMeterReading = $pdo->prepare("UPDATE single_units SET 
+                                exit;
+                            } else {
+                                //If no Double Reading, then Submit the Meter Readings for this Month
+                                $submitMeterReading = $pdo->prepare("UPDATE building_units SET 
                                         reading_date =:reading_date,
                                         meter_type =:meter_type,
                                         current_reading =:current_reading,
@@ -304,18 +369,18 @@ $stmt->execute();
                                         WHERE
                                         id =:id
                                     ");
-                                        $submitMeterReading->execute([
-                                            ':reading_date' => $reading_date,
-                                            ':meter_type' => $meter_type,
-                                            ':current_reading' => $current_reading,
-                                            ':previous_reading' => $previous_reading,
-                                            ':units_consumed' => $units_consumed,
-                                            ':cost_per_unit' => $cost_per_unit,
-                                            ':final_bill' => $final_bill,
-                                            ':id' => $id,
-                                        ]);
+                                $submitMeterReading->execute([
+                                    ':reading_date' => $reading_date,
+                                    ':meter_type' => $meter_type,
+                                    ':current_reading' => $current_reading,
+                                    ':previous_reading' => $previous_reading,
+                                    ':units_consumed' => $units_consumed,
+                                    ':cost_per_unit' => $cost_per_unit,
+                                    ':final_bill' => $final_bill,
+                                    ':id' => $id,
+                                ]);
 
-                                        echo "
+                                echo "
                                     <script>
                                         setTimeout(() => {
                                           Swal.fire({
@@ -331,32 +396,32 @@ $stmt->execute();
                                           });
                                         }, 800); // short delay to smooth transition from loader
                                     </script>";
-                                    }
-                                }
-                            } catch (Exception $e) {
-                                echo
-                                "<script>
+                            }
+                        }
+                    } catch (Exception $e) {
+                        echo
+                        "<script>
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Database Error',
                                         text: 'Failed to insert meter reading: " . addslashes($e->getMessage()) . "'
                                     });
                                 </script>";
-                            }
-                        }
+                    }
+                }
 
-                        //Change the Occupancy Status of the Vacant Unit to Under Maintenance
-                        if (isset($_POST['update_maintenance_status'])) {
-                            try {
-                                // Fetch current status of the unit
-                                $check = $pdo->prepare("SELECT occupancy_status FROM single_units WHERE id = :id");
-                                $check->execute([
-                                    ':id' => $_POST['id']
-                                ]);
-                                $current_status = $check->fetchColumn();
-                                if ($current_status === $_POST['occupancy_status']) {
-                                    // No change made
-                                    echo "
+                //Change the Occupancy Status of the Vacant Unit to Under Maintenance
+                if (isset($_POST['update_maintenance_status'])) {
+                    try {
+                        // Fetch current status of the unit
+                        $check = $pdo->prepare("SELECT occupancy_status FROM building_units WHERE id = :id");
+                        $check->execute([
+                            ':id' => $_POST['id']
+                        ]);
+                        $current_status = $check->fetchColumn();
+                        if ($current_status === $_POST['occupancy_status']) {
+                            // No change made
+                            echo "
                                 <script>
                                     Swal.fire({
                                     title: 'Warning!',
@@ -367,15 +432,15 @@ $stmt->execute();
                                     window.history.back();
                                     });
                                 </script>";
-                                } else {
-                                    // Update with the new status
-                                    $update = "UPDATE single_units SET occupancy_status = :occupancy_status WHERE id = :id";
-                                    $stmt = $pdo->prepare($update);
-                                    $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
-                                    $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
-                                    $stmt->execute();
-                                    // Success message
-                                    echo "
+                        } else {
+                            // Update with the new status
+                            $update = "UPDATE building_units SET occupancy_status = :occupancy_status WHERE id = :id";
+                            $stmt = $pdo->prepare($update);
+                            $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
+                            $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
+                            $stmt->execute();
+                            // Success message
+                            echo "
                                 <script>
                                     Swal.fire({
                                     icon: 'success',
@@ -393,9 +458,9 @@ $stmt->execute();
                                     }
                                     });
                                 </script>";
-                                }
-                            } catch (PDOException $e) {
-                                echo "
+                        }
+                    } catch (PDOException $e) {
+                        echo "
                                 <script>
                                 Swal.fire({
                                 icon: 'error',
@@ -404,21 +469,21 @@ $stmt->execute();
                                 confirmButtonText: 'Close'
                                 });
                                 </script>";
-                            }
-                        }
+                    }
+                }
 
-                        //Change the Status to Vacant if the Unit is Occupied
-                        if (isset($_POST['update_vacant_status'])) {
-                            try {
-                                // Fetch current status of the unit
-                                $check = $pdo->prepare("SELECT occupancy_status FROM single_units WHERE id = :id");
-                                $check->execute([
-                                    ':id' => $_POST['id']
-                                ]);
-                                $current_status = $check->fetchColumn();
-                                if ($current_status === $_POST['occupancy_status']) {
-                                    // No change made
-                                    echo "
+                //Change the Status to Vacant if the Unit is Occupied
+                if (isset($_POST['update_vacant_status'])) {
+                    try {
+                        // Fetch current status of the unit
+                        $check = $pdo->prepare("SELECT occupancy_status FROM building_units WHERE id = :id");
+                        $check->execute([
+                            ':id' => $_POST['id']
+                        ]);
+                        $current_status = $check->fetchColumn();
+                        if ($current_status === $_POST['occupancy_status']) {
+                            // No change made
+                            echo "
                                     <script>
                                     Swal.fire({
                                     title: 'Warning!',
@@ -429,15 +494,15 @@ $stmt->execute();
                                     window.history.back();
                                     });
                                     </script>";
-                                } else {
-                                    // Update with the new status
-                                    $update = "UPDATE single_units SET occupancy_status = :occupancy_status WHERE id = :id";
-                                    $stmt = $pdo->prepare($update);
-                                    $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
-                                    $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
-                                    $stmt->execute();
-                                    // Success message
-                                    echo "
+                        } else {
+                            // Update with the new status
+                            $update = "UPDATE building_units SET occupancy_status = :occupancy_status WHERE id = :id";
+                            $stmt = $pdo->prepare($update);
+                            $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
+                            $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
+                            $stmt->execute();
+                            // Success message
+                            echo "
                                     <script>
                                         Swal.fire({
                                         icon: 'success',
@@ -455,9 +520,9 @@ $stmt->execute();
                                         }
                                         });
                                     </script>";
-                                }
-                            } catch (PDOException $e) {
-                                echo "
+                        }
+                    } catch (PDOException $e) {
+                        echo "
                                 <script>
                                 Swal.fire({
                                 icon: 'error',
@@ -466,66 +531,13 @@ $stmt->execute();
                                 confirmButtonText: 'Close'
                                 });
                                 </script>";
-                            }
-                        }
-                        ?>
+                    }
+                }
+                ?>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header" style="background-color:#00192D; color: #fff;">
-                                <b>Summary</b>
-                            </div>
                             <div class="card-body">
-
-                                <?php
-                                try {
-                                    // Count Vacant
-                                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM single_units WHERE occupancy_status = 'Vacant'");
-                                    $stmt->execute();
-                                    $vacant = $stmt->fetchColumn();
-                                    // Count Occupied
-                                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM single_units WHERE occupancy_status = 'Occupied'");
-                                    $stmt->execute();
-                                    $occupied = $stmt->fetchColumn();
-                                    // Count Under Maintenance
-                                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM single_units WHERE occupancy_status = 'Under Maintenance'");
-                                    $stmt->execute();
-                                    $maintenance = $stmt->fetchColumn();
-                                } catch (PDOException $e) {
-                                    echo "<div class='alert alert-danger'>Error: " . htmlspecialchars($e->getMessage()) . "</div>";
-                                }
-                                ?>
-                                <div class="row">
-                                    <!-- Vacant Units -->
-                                    <div class="col-md-4 col-sm-6 col-12">
-                                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                            <span class="info-box-icon" style="background-color:#cc0001; color:#fff;"><i
-                                                    class="bi bi-house-exclamation-fill"></i></span>
-                                            <div class="info-box-content">
-                                                <span class="info-box-text">Vacant Units</span>
-                                                <span class="info-box-number"><?= $vacant; ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6 col-12">
-                                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                            <span class="info-box-icon" style="background-color:#1B712F; color:#fff;"><i
-                                                    class="bi bi-house-lock-fill"></i></span>
-                                            <div class="info-box-content">
-                                                <span class="info-box-text">Occupied Units</span>
-                                                <span class="info-box-number"><?= htmlspecialchars($occupied); ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6 col-12">
-                                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                            <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                                                    class="fas fa-home"></i></span>
-                                            <div class="info-box-content">
-                                                <span class="info-box-text">Under Maintenance</span>
-                                                <span class="info-box-number"><?= htmlspecialchars($maintenance); ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <hr>
                                 <div class="card shadow" style="border:1px solid rgb(0,25,45,.2);">
                                     <div class="card-header" style="background-color: #00192D; color:#fff;">
@@ -536,7 +548,7 @@ $stmt->execute();
                                             <?php
                                             try {
                                                 // Fetch all units
-                                                $stmt = $pdo->query("SELECT * FROM single_units ORDER BY created_at DESC");
+                                                $stmt = $pdo->query("SELECT * FROM building_units ORDER BY created_at DESC");
                                                 $units = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             } catch (PDOException $e) {
                                                 die("❌ Database error: " . $e->getMessage());
@@ -554,25 +566,57 @@ $stmt->execute();
                                                 </thead>
                                                 <tbody>
                                                     <?php
+
                                                     try {
-                                                        $select = "SELECT * FROM building_units";
+                                                        // get unit category id
+                                                        $categoryStmt = $pdo->prepare("
+                                                            SELECT id 
+                                                            FROM unit_categories 
+                                                            WHERE category_name = :category_name
+                                                            LIMIT 1
+                                                        ");
+                                                        $categoryStmt->execute([
+                                                            ':category_name' => 'single_unit'
+                                                        ]);
+
+                                                        $unitCategoryId = $categoryStmt->fetchColumn();
+
+                                                        if (!$unitCategoryId) {
+                                                            throw new Exception('Unit category not found');
+                                                        }
+                                                        $select = "
+                                                                SELECT 
+                                                                    bu.*,
+                                                                    b.building_name
+                                                                FROM building_units bu
+                                                                INNER JOIN buildings b 
+                                                                    ON bu.building_id = b.id
+                                                                WHERE bu.unit_category_id = :unit_category_id
+                                                            ";
+
                                                         $stmt = $pdo->prepare($select);
-                                                        $stmt->execute();
+                                                        $stmt->execute([
+                                                            ':unit_category_id' => $unitCategoryId
+                                                        ]);
+                                                        // $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                                        // var_dump($rows); // dumps all rows
+                                                        // exit;
+
                                                         while ($row = $stmt->fetch()) {
+
                                                             $id = encryptor('encrypt', $row['id']);
                                                             $unit_number = $row['unit_number'];
-                                                            $building_link = $row['building_link'];
                                                             $purpose = $row['purpose'];
                                                             $location = $row['location'];
                                                             $monthly_rent = $row['monthly_rent'];
                                                             $occupancy_status = $row['occupancy_status'];
                                                             $created_at = $row['created_at'];
-                                                            $unit_category = $row['unit_category'];
+                                                            $building_name = $row['building_name'];
                                                     ?>
                                                             <tr>
                                                                 <td><i class="bi bi-house-door"></i><?= htmlspecialchars($unit_number) ?></td>
                                                                 <td><i class="bi bi-building"></i>
-                                                                    <?= htmlspecialchars($building_link) ?></td>
+                                                                    <?= htmlspecialchars($building_name) ?></td>
                                                                 <td>
                                                                     <?php
                                                                     if (htmlspecialchars($purpose) == 'Business') {
@@ -819,18 +863,12 @@ $stmt->execute();
                             </div>
                         </div>
                     </div>
-                </section>
-
-
-                <!-- /.content -->
-
-                <!-- Help Pop Up Form -->
-
+                </div>
             </div>
-            <!-- /.content-wrapper -->
-
-
-
+        </main>
+        <!--begin::Footer-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+        <!-- end::footer -->
     </div>
     <!-- ./wrapper -->
     <!-- Required Scripts -->
@@ -860,19 +898,6 @@ $stmt->execute();
 
         });
     </script>
-
-
-    </div>
-    </main>
-
-
-    <!--begin::Footer-->
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
-    <!-- end::footer -->
-
-
-    </div>
-    <!--end::App Wrapper-->
 
     <!-- plugin for pdf -->
     <!-- Main Js File -->

@@ -272,6 +272,29 @@ session_start();
                 <!-- <button type="button" class="btn btn-sm mt-2" id="otherRequestBtn">Other</button> -->
               </div>
 
+              <!-- Building & Unit (same row) -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="building" class="form-label">Building</label>
+                  <select class="form-select" id="building" name="building" required>
+                    <option value="">Select Building</option>
+                    <!-- Dynamically load buildings -->
+                    <option value="1">Building A</option>
+                    <option value="2">Building B</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="unit" class="form-label">Unit</label>
+                  <select class="form-select" id="unit" name="unit" required>
+                    <option value="">Select Unit</option>
+                    <!-- Dynamically load units based on building -->
+                    <option value="101">Unit 101</option>
+                    <option value="102">Unit 102</option>
+                  </select>
+                </div>
+              </div>
+
               <div class="mb-3">
                 <label for="priority" class="form-label">Title</label>
                 <input type="text" class="form-control" id="request_title" name="title" placeholder="Enter request title">
