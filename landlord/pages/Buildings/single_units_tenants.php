@@ -289,7 +289,7 @@
 
                     <br>
           <div class="card shadow">
-            <div class="card-header" style="background-color:#00192D; color:#fff;"><b>All Tenants</b></div>
+            <div class="card-header" style="background-color:#00192D; color:#fff;"><b>All Single Unit Tenants</b></div>
             <div class="card-body">
               <table class="table table-striped" id="dataTable">
                 <thead>
@@ -305,7 +305,7 @@
                 </thead>
                 <tbody>
                   <?php
-                  include_once 'processes/encrypt_decrypt_function.php';
+                  include_once '../processes/encrypt_decrypt_function.php';
                     $select = $pdo->prepare("SELECT * FROM tenants ORDER BY tenant_reg DESC");
                     $select->execute();
                     $row = 0;
@@ -324,7 +324,7 @@
                             ?>
                               <tr>
                                 <td><?= $row['first_name'].' '.$row['middle_name'];?></td>
-                                <td><?= $row['account_no'].' ('.$row['building_link'].')';?></td>
+                                <td><?= $row['unit_number'].' ('.$row['building_id'].')';?></td>
                                 <td><?= htmlspecialchars($row['unit_category']) ;?></td>
                                 <td>
                                   <a href="tel:<?= $row['main_contact'];?>"><?= $row['main_contact'];?></a><br>
