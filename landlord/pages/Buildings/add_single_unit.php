@@ -747,10 +747,19 @@ $conn->close();
                                             <b>Financials and Other Information</b>
                                         </div>
                                         <div class="card-body">
-                                            <div class="form-group">
-                                                <label>Monthly Rent</label>
-                                                <input type="number" class="form-control" id="monthly_rent" name="monthly_rent" placeholder="Monthly Rent">
-                                            </div>
+                                        <div class="form-group">
+    <label>Monthly Rent</label>
+    <input type="number"
+           class="form-control"
+           id="monthly_rent"
+           name="monthly_rent"
+           placeholder="Monthly Rent"
+           required>
+</div>
+
+<!-- Link to Rental Income (COA id 26) -->
+<input type="hidden" name="income_account_id" value="26">
+
                                             <div class="card shadow">
                                                 <div class="card-header" style="background-color:#00192D; color: #fff;">Recurring Bills</div>
                                                 <div class="card-body">

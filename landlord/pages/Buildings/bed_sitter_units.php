@@ -173,51 +173,79 @@ include_once '../processes/encrypt_decrypt_function.php';
         <!--end::Sidebar-->
 
         <!--begin::App Main-->
-        <main class="main mt-4">
-            <div class="content-wrapper">
-                <!-- Main content -->
-                <section class="content">
-                    <div class="card shadow-sm">
-                        <div class="card-header">
-                            <b>Overview</b>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
+        <main class="main">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="">
+                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Buildings/buildings.php" style="text-decoration: none;">Buildings</a></li>
+                    <li class="breadcrumb-item active">Bed Sitter units</li>
+                </ol>
+            </nav>
+            <div class="container-fluid">
+                <!--First Row-->
+                <div class="row align-items-center mb-4">
+                    <div class="col-12 d-flex align-items-center">
+                        <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+                        <h3 class="mb-0 ms-3">Bed Sitter units</h3>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <?php
+                    try {
+                        // Count Vacant
+                        $stmt = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE occupancy_status = 'Vacant'");
+                        $stmt->execute();
+                        $vacant = $stmt->fetchColumn();
+                        // Count Occupied
+                        $stmt = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE occupancy_status = 'Occupied'");
+                        $stmt->execute();
+                        $occupied = $stmt->fetchColumn();
+                        // Count Under Maintenance
+                        $stmt = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE occupancy_status = 'Under Maintenance'");
+                        $stmt->execute();
+                        $maintenance = $stmt->fetchColumn();
+                    } catch (PDOException $e) {
+                        echo "<div class='alert alert-danger'>Error: " . htmlspecialchars($e->getMessage()) . "</div>";
+                    }
+                    ?>
+                    <div class="col-md-4 col-sm-6 col-12 d-flex">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="bi bi bi-house-exclamation-fill fs-1 me-3 text-warning"></i>
+                                <!-- <i class="bi bi-building fs-1 me-3 text-warning"></i> -->
                             </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4 col-sm-6 col-12">
-                                    <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                        <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="fas fa-home"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Bedsitter Units</span>
-                                            <span class="info-box-number">0</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-12">
-                                    <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                        <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="fas fa-users"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Occupied Units</span>
-                                            <span class="info-box-number">0</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-12">
-                                    <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                        <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i class="fas fa-home"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Vacant Units</span>
-                                            <span class="info-box-number">0</span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Vacant Units</p>
+                                <b><?= $vacant; ?></b>
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-4 col-sm-6 col-12 d-flex">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="bi bi-house-lock-fill fs-1 me-3 text-warning"></i>
+                                <!-- <i class="bi bi-building fs-1 me-3 text-warning"></i> -->
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Occupied Units</p>
+                                <b><?= htmlspecialchars($occupied); ?></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-12 d-flex">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="fas fa-home fs-1 me-3 text-warning"></i>
+                                <!-- <i class="bi bi-building fs-1 me-3 text-warning"></i> -->
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Under Maintenance</p>
+                                <b><?= htmlspecialchars($maintenance); ?></b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                     <!-- Container Box -->
                     <div class="card shadow">
                         <div class="card-header">
