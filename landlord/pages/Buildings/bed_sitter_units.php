@@ -258,103 +258,143 @@ include_once '../processes/encrypt_decrypt_function.php';
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
+
+                            <?php
+                                            try {
+                                                // Fetch all units
+                                                $stmt = $pdo->query("SELECT * FROM building_units ORDER BY created_at DESC");
+                                                $units = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                            } catch (PDOException $e) {
+                                                die("❌ Database error: " . $e->getMessage());
+                                            }
+                                            ?>
                                 <table class="table table-hover" id="dataTable">
-                                    <thead>
-                                        <th>Unit No</th>
-                                        <th>Building</th>
-                                        <th>Purpose</th>
-                                        <th>Monthly Rent</th>
-                                        <th>Water Meter</th>
-                                        <th>Occupancy Status</th>
-                                        <th>Added On</th>
-                                        <th>Options</th>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        try {
-                                            $select = "SELECT * FROM bedsitter_units";
-                                            $stmt = $pdo->prepare($select);
-                                            $stmt->execute();
-                                            while ($row = $stmt->fetch()) {
-                                                $id = encryptor('encrypt', $row['id']);
-                                                $unit_number = $row['unit_number'];
-                                                $building_link = $row['building_link'];
-                                                $purpose = $row['purpose'];
-                                                $location = $row['location'];
-                                                $monthly_rent = $row['monthly_rent'];
-                                                $water_meter = $row['water_meter'];
-                                                $occupancy_status = $row['occupancy_status'];
-                                                $created_at = $row['created_at'];
-                                        ?>
-                                                <tr>
-                                                    <td><i class="bi bi-house-door"></i><?= htmlspecialchars($unit_number) ?></td>
-                                                    <td><i class="bi bi-building"></i>
-                                                        <?= htmlspecialchars($building_link) ?></td>
-                                                    <td>
-                                                        <?php
-                                                        if (htmlspecialchars($purpose) == 'Business') {
-                                                            echo '<i class="bi bi-shop"></i> ' . htmlspecialchars($purpose);
-                                                        } else if (htmlspecialchars($purpose) == 'Office') {
-                                                            echo '<i class="bi bi-briefcase"></i> ' . htmlspecialchars($purpose);
-                                                        } else if (htmlspecialchars($purpose) == 'Residential') {
-                                                            echo '<i class="bi bi-file-person"></i> ' . htmlspecialchars($purpose);
-                                                        } else if (htmlspecialchars($purpose) == 'Store') {
-                                                            echo '<i class="bi bi-house-gear"></i> ' . htmlspecialchars($purpose);
+                                                <thead>
+                                                    <th>Unit No</th>
+                                                    <th>Building</th>
+                                                    <th>Purpose</th>
+                                                    <th>Monthly Rent</th>
+                                                    <th>Occupancy Status</th>
+                                                    <th>Added On</th>
+                                                    <th>Options</th>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+
+                                                    try {
+                                                        // get unit category id
+                                                        $categoryStmt = $pdo->prepare("
+                                                            SELECT id 
+                                                            FROM unit_categories 
+                                                            WHERE category_name = :category_name
+                                                            LIMIT 1
+                                                        ");
+                                                        $categoryStmt->execute([
+                                                            ':category_name' => 'single_unit'
+                                                        ]);
+
+                                                        $unitCategoryId = $categoryStmt->fetchColumn();
+
+                                                        if (!$unitCategoryId) {
+                                                            throw new Exception('Unit category not found');
                                                         }
-                                                        ?>
-                                                    </td>
-                                                    <td><?= htmlspecialchars('Kshs.' . $monthly_rent) ?></td>
-                                                    <td><?= htmlspecialchars($water_meter) ?></td>
-                                                    <td>
-                                                        <?php
-                                                        if (htmlspecialchars($occupancy_status) == 'Occupied') {
-                                                            echo '<button class="btn btn-xs shadow" style="border:1px solid #2C9E4B; color:#2C9E4B;"><i class="fa fa-user"></i> ' . htmlspecialchars($occupancy_status) . '</button>';
-                                                        } else if (htmlspecialchars($occupancy_status) == 'Vacant') {
-                                                            echo '<button class="btn btn-xs shadow" style="border:1px solid #cc0001; color:#cc0001;"><i class="bi bi-house-exclamation"></i> ' . htmlspecialchars($occupancy_status) . '</button>';
-                                                        } else if (htmlspecialchars($occupancy_status) == 'Under Maintenance') {
-                                                            echo '<button class="btn btn-xs shadow" style="border:1px solid #F74B00; color:#F74B00;"><i class="fa fa-calendar" ;?=""></i> ' . htmlspecialchars($occupancy_status) . '</button>';
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                    <td><i class="bi bi-calendar"></i>
-                                                        <?= htmlspecialchars($created_at) ?>
-                                                    </td>
-                                                    <td>
-                                                        <div class="btn-group">
-                                                            <button type="button" class="btn btn-default btn-sm shadow" style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
-                                                            <button type="button" class="btn btn-default dropdown-toggle dropdown-icon btn-sm" data-toggle="dropdown" style="border:1px solid rgb(0, 25, 45 ,.3);"> <span class="sr-only">Toggle Dropdown</span></button>
-                                                            <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
-                                                                <?php
-                                                                if (htmlspecialchars($occupancy_status) == 'Occupied') {
-                                                                ?>
-                                                                    <a class="dropdown-item" href="bed_seater_unit_details.php?details=<?php echo $id; ?>"><i class="bi bi-eye"></i> Details</a>
-                                                                    <a class="dropdown-item" href="edit_bed_seater.php?edit=<?php echo $id; ?>"><i class="bi bi-pen"></i> Edit</a>
-                                                                    <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $id; ?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
-                                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $id; ?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
-                                                                <?php
-                                                                } else if (htmlspecialchars($occupancy_status) == 'Vacant') {
-                                                                ?>
-                                                                    <a class="dropdown-item" href="edit_bed_seater.php?details=<?php echo $id; ?>"><i class="bi bi-eye"></i> Details</a>
-                                                                    <a class="dropdown-item" href="rent_bed_sitter_unit.php?rent=<?php echo $id; ?>"><i class="bi bi-wallet"></i> Rent It</a>
-                                                                    <a class="dropdown-item" href="inspect_bed_sitter_unit.php?inspect=<?php echo $id; ?>"><i class="bi bi-sliders"></i> Inspect</a>
-                                                                    <a class="dropdown-item" href="edit_bed_seater.php?edit=<?php echo $id; ?>"><i class="bi bi-pen"></i> Edit</a>
-                                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#underMaintenance<?php echo $id; ?>"><i class="bi bi-house-gear"></i> Under Maintenance</a>
-                                                                <?php
-                                                                } else if (htmlspecialchars($occupancy_status) == 'Under Maintenance') {
-                                                                ?>
-                                                                    <a class="dropdown-item" href="edit_bed_seater.php?edit=<?php echo $id; ?>"><i class="bi bi-pen"></i> Edit</a>
-                                                                    <a class="dropdown-item" href="inspect_single_unit.php?inspect=<?php echo $id; ?>"><i class="bi bi-sliders"></i> Inspect</a>
-                                                                    <a class="dropdown-item" href="single_unit_details.php?details=<?php echo $id; ?>"><i class="bi bi-eye"></i> Details</a>
-                                                                    <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $id; ?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
-                                                                    <a class="dropdown-item" href="rent_bed_sitter_unit.php?rent=<?php echo $id; ?>"><i class="bi bi-wallet"></i> Rent It</a>
-                                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $id; ?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
-                                                                <?php
-                                                                }
-                                                                ?>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        $select = "
+                                                                SELECT 
+                                                                    bu.*,
+                                                                    b.building_name
+                                                                FROM building_units bu
+                                                                INNER JOIN buildings b 
+                                                                    ON bu.building_id = b.id
+                                                                WHERE bu.unit_category_id = :unit_category_id
+                                                            ";
+
+                                                        $stmt = $pdo->prepare($select);
+                                                        $stmt->execute([
+                                                            ':unit_category_id' => $unitCategoryId
+                                                        ]);
+                                                        // $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                                        // var_dump($rows); // dumps all rows
+                                                        // exit;
+
+                                                        while ($row = $stmt->fetch()) {
+
+                                                            $id = encryptor('encrypt', $row['id']);
+                                                            $unit_number = $row['unit_number'];
+                                                            $purpose = $row['purpose'];
+                                                            $location = $row['location'];
+                                                            $monthly_rent = $row['monthly_rent'];
+                                                            $occupancy_status = $row['occupancy_status'];
+                                                            $created_at = $row['created_at'];
+                                                            $building_name = $row['building_name'];
+                                                    ?>
+                                                            <tr>
+                                                                <td><i class="bi bi-house-door"></i><?= htmlspecialchars($unit_number) ?></td>
+                                                                <td><i class="bi bi-building"></i>
+                                                                    <?= htmlspecialchars($building_name) ?></td>
+                                                                <td>
+                                                                    <?php
+                                                                    if (htmlspecialchars($purpose) == 'Business') {
+                                                                        echo '<i class="bi bi-shop"></i> ' . htmlspecialchars($purpose);
+                                                                    } else if (htmlspecialchars($purpose) == 'Office') {
+                                                                        echo '<i class="bi bi-briefcase"></i> ' . htmlspecialchars($purpose);
+                                                                    } else if (htmlspecialchars($purpose) == 'Residential') {
+                                                                        echo '<i class="bi bi-file-person"></i> ' . htmlspecialchars($purpose);
+                                                                    } else if (htmlspecialchars($purpose) == 'Store') {
+                                                                        echo '<i class="bi bi-house-gear"></i> ' . htmlspecialchars($purpose);
+                                                                    }
+                                                                    ?>
+                                                                </td>
+                                                                <td><?= htmlspecialchars('Kshs.' . $monthly_rent) ?></td>
+                                                                <td>
+                                                                    <?php
+                                                                    if (htmlspecialchars($occupancy_status) == 'Occupied') {
+                                                                        echo '<button class="btn btn-xs shadow" style="border:1px solid #2C9E4B; color:#2C9E4B;"><i class="fa fa-user"></i> ' . htmlspecialchars($occupancy_status) . '</button>';
+                                                                    } else if (htmlspecialchars($occupancy_status) == 'Vacant') {
+                                                                        echo '<button class="btn btn-xs shadow" style="border:1px solid #cc0001; color:#cc0001;"><i class="bi bi-house-exclamation"></i> ' . htmlspecialchars($occupancy_status) . '</button>';
+                                                                    } else if (htmlspecialchars($occupancy_status) == 'Under Maintenance') {
+                                                                        echo '<button class="btn btn-xs shadow" style="border:1px solid #F74B00; color:#F74B00;"><i class="fa fa-calendar" ;?=""></i> ' . htmlspecialchars($occupancy_status) . '</button>';
+                                                                    }
+                                                                    ?>
+                                                                </td>
+                                                                <td><i class="bi bi-calendar"></i>
+                                                                    <?= htmlspecialchars($created_at) ?>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="btn-group">
+                                                                        <button type="button" class="btn btn-default btn-sm shadow" style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
+                                                                        <button type="button" class="btn btn-default dropdown-toggle dropdown-icon btn-sm" data-toggle="dropdown" style="border:1px solid rgb(0, 25, 45 ,.3);"> <span class="sr-only">Toggle Dropdown</span></button>
+                                                                        <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
+                                                                            <?php
+                                                                            if (htmlspecialchars($occupancy_status) == 'Occupied') {
+                                                                            ?>
+                                                                                <a class="dropdown-item" href="single_unit_details.php?details=<?php echo $id; ?>"><i class="bi bi-eye"></i> Details</a>
+                                                                                <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $id; ?>"><i class="bi bi-pen"></i> Edit</a>
+                                                                                <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $id; ?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
+                                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $id; ?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
+                                                                            <?php
+                                                                            } else if (htmlspecialchars($occupancy_status) == 'Vacant') {
+                                                                            ?>
+                                                                                <a class="dropdown-item" href="single_unit_details.php?details=<?php echo $id; ?>"><i class="bi bi-eye"></i> Details</a>
+                                                                                <a class="dropdown-item" href="inspect_single_unit.php?inspect=<?php echo $id; ?>"><i class="bi bi-sliders"></i> Inspect</a>
+                                                                                <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $id; ?>"><i class="bi bi-pen"></i> Edit</a>
+                                                                                <a class="dropdown-item" href="rent_single_unit.php?rent=<?php echo $id; ?>"><i class="bi bi-person-fill-check"></i> Rent It</a>
+                                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#underMaintenance<?php echo $id; ?>"><i class="bi bi-house-gear"></i> Under Maintenance</a>
+                                                                            <?php
+                                                                            } else if (htmlspecialchars($occupancy_status) == 'Under Maintenance') {
+                                                                            ?>
+                                                                                <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $id; ?>"><i class="bi bi-pen"></i> Edit</a>
+                                                                                <a class="dropdown-item" href="inspect_single_unit.php?inspect=<?php echo $id; ?>"><i class="bi bi-sliders"></i> Inspect</a>
+                                                                                <a class="dropdown-item" href="single_unit_details.php?details=<?php echo $id; ?>"><i class="bi bi-eye"></i> Details</a>
+                                                                                <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $id; ?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
+                                                                                <a class="dropdown-item" href="rent_single_unit.php?rent=<?php echo $id; ?>"><i class="bi bi-person-fill-check"></i> Rent It</a>
+                                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $id; ?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
+                                                                            <?php
+                                                                            }
+                                                                            ?>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
                                                 <!-- Meter Readings Modal -->
                                                 <div class="modal fade shadow" id="meterReadingModal<?= $id; ?>">
                                                     <div class="modal-dialog modal-md">

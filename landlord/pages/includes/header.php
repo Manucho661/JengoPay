@@ -47,7 +47,7 @@
 
         <span class="user-name">
             <?php
-            $fullName = $_SESSION['user']['name'];   // e.g. "mildred wanyonyi"
+        $fullName = isset($_SESSION['user']['name']) ? $_SESSION['user']['name'] : '';
 
             // Get first name only
             $firstName = explode(" ", trim($fullName))[0];
