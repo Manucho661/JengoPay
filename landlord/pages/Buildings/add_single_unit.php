@@ -2,41 +2,34 @@
 session_start();
 require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
-
-
 ?>
 <?php
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "bt_jengopay";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 // Function to create journal entry
-function createJournalEntry($conn, $date, $description, $entries)
+function createJournalEntry($pdo, $date, $description, $entries)
 {
     // Start transaction
-    $conn->begin_transaction();
+    $pdo->beginTransaction();
 
     try {
         // Insert into journal_entries table (create this table if not exists)
         $sql = "INSERT INTO journal_entries (entry_date, description) VALUES (?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $date, $description);
+        $stmt = $pdo->prepare($sql);
+
+        // Bind parameters using bindValue or bindParam (PDO)
+        $stmt->bindValue(1, $date); // Bind the first parameter (entry_date)
+        $stmt->bindValue(2, $description); // Bind the second parameter (description)
+
+        // Execute the prepared statement
         $stmt->execute();
-        $journal_id = $conn->insert_id;
+
+        $journal_id = $pdo->insert_id;
 
         // Insert each journal entry line
         $sql = "INSERT INTO journal_entry_lines 
                 (journal_id, account_code, debit_amount, credit_amount) 
                 VALUES (?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
+        $stmt = $pdo->prepare($sql);
 
         foreach ($entries as $entry) {
             $stmt->bind_param(
@@ -49,10 +42,10 @@ function createJournalEntry($conn, $date, $description, $entries)
             $stmt->execute();
         }
 
-        $conn->commit();
+        $pdo->commit();
         return true;
     } catch (Exception $e) {
-        $conn->rollback();
+        $pdo->rollback();
         return false;
     }
 }
@@ -112,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     ];
 
     // Create the journal entry
-    $result = createJournalEntry($conn, $payment_date, $description, $entries);
+    $result = createJournalEntry($pdo, $payment_date, $description, $entries);
 
     // if ($result) {
     //     // Optionally, update tenant's payment record in another table
@@ -154,10 +147,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Helper function to get account name
-function getAccountName($conn, $account_code)
+function getAccountName($pdo, $account_code)
 {
     $sql = "SELECT account_name FROM chart_of_accounts WHERE account_code = ?";
-    $stmt = $conn->prepare($sql);
+    $stmt = $pdo->prepare($sql);
     $stmt->bind_param("i", $account_code);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -168,8 +161,6 @@ function getAccountName($conn, $account_code)
 
     return "Unknown Account";
 }
-
-$conn->close();
 ?>
 
 <!doctype html>
@@ -635,6 +626,7 @@ $conn->close();
                     }
                 }
                 ?>
+                
                 <!--First Row-->
                 <div class="row align-items-center mb-4">
                     <div class="col-12 d-flex align-items-center">
@@ -643,6 +635,8 @@ $conn->close();
                         <span class="mx-4"></span>
                     </div>
                 </div>
+                
+                <!-- Second Row -->
                 <div class="row mb-4">
                     <div class="col-md-3 col-sm-6 col-12">
                         <div class="stat-card d-flex align-items-center rounded-2 p-1">

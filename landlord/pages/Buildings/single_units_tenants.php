@@ -274,26 +274,26 @@ require_once "../db/connect.php";
           <div class="card shadow">
             <div class="card-header" style="background-color:#00192D; color:#fff;"><b>All Single Unit Tenants</b></div>
             <div class="card-body">
-  <table class="table table-striped" id="dataTable">
-    <thead>
-      <tr> <!-- Added missing <tr> -->
-        <th>Name</th>
-        <th>Unit | Building</th>
-        <th>Unit Category</th>
-        <th>Contacts</th>
-        <th>Identification</th>
-        <th>Move In Date</th>
-        <th>Added On</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php
-      include_once '../processes/encrypt_decrypt_function.php';
-      
-      // CORRECTED SQL QUERY - Based on your actual table structure
-      $select = $pdo->prepare("
+              <table class="table table-striped" id="dataTable">
+                <thead>
+                  <tr> <!-- Added missing <tr> -->
+                    <th>Name</th>
+                    <th>Unit | Building</th>
+                    <th>Unit Category</th>
+                    <th>Contacts</th>
+                    <th>Identification</th>
+                    <th>Move In Date</th>
+                    <th>Added On</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                  include_once '../processes/encrypt_decrypt_function.php';
+
+                  // CORRECTED SQL QUERY - Based on your actual table structure
+                  $select = $pdo->prepare("
       SELECT 
           t.*,
           b.building_name
@@ -304,120 +304,118 @@ require_once "../db/connect.php";
           AND t.tenant_status = 'Active'
       ORDER BY t.created_at DESC
   ");
-  
-  $select->execute([
-      ':unit_category' => 'single_unit'  // or whatever value indicates single units
-  ]);
-  
-  $tenants = $select->fetchAll(PDO::FETCH_ASSOC);
-  
-      
-  if (count($tenants) > 0) {
-    foreach ($tenants as $row) {
-        $id = encryptor('encrypt', $row['id']);
-        ?>
-        <tr>
-            <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']); ?></td>
-            <td>
-                <?= 
-                !empty($row['unit_number']) ? htmlspecialchars($row['unit_number']) : 'N/A'; 
-                ?> | 
-                <?= 
-                !empty($row['building_name']) ? htmlspecialchars($row['building_name']) : 
-                (!empty($row['building_id']) ? htmlspecialchars($row['building_id']) : 'N/A'); 
-                ?>
-            </td>
-            <td><?= htmlspecialchars($row['unit_category'] ?? 'N/A'); ?></td>
-            <td>
-                <?php if (!empty($row['main_contact'])): ?>
-                    <a href="tel:<?= htmlspecialchars($row['main_contact']); ?>">
-                        <i class="bi bi-telephone"></i> <?= htmlspecialchars($row['main_contact']); ?>
-                    </a><br>
-                <?php endif; ?>
-                <?php if (!empty($row['alt_contact'])): ?>
-                    <a href="tel:<?= htmlspecialchars($row['alt_contact']); ?>">
-                        <i class="bi bi-telephone"></i> <?= htmlspecialchars($row['alt_contact']); ?>
-                    </a>
-                <?php endif; ?>
-            </td>
-            <td>
-                <i class="bi bi-person-vcard"></i> 
-                <?= 
-                !empty($row['id_no']) ? htmlspecialchars($row['id_no']) : 
-                (!empty($row['national_id']) ? htmlspecialchars($row['national_id']) : 'N/A'); 
-                ?>
-                <?php if (!empty($row['idMode'])): ?>
-                    <br><small>(<?= htmlspecialchars(ucfirst($row['idMode'])); ?>)</small>
-                <?php endif; ?>
-            </td>
-            <td>
-                <?= 
-                !empty($row['move_in_date']) ? date('d/m/Y', strtotime($row['move_in_date'])) : 'N/A'; 
-                ?>
-            </td>
-            <td>
-                <?= 
-                !empty($row['created_at']) ? date('d/m/Y', strtotime($row['created_at'])) : 'N/A'; 
-                ?>
-            </td>
-            <td>
-                <?php if ($row['tenant_status'] == 'Active'): ?>
-                    <span class="badge bg-success">
-                        <i class="bi bi-person-check"></i> <?= $row['tenant_status']; ?>
-                    </span>
-                <?php else: ?>
-                    <span class="badge bg-danger">
-                        <i class="bi bi-person-exclamation"></i> <?= $row['tenant_status']; ?>
-                    </span>
-                <?php endif; ?>
-            </td>
-            <td>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                        Actions
-                    </button>
-                    <div class="dropdown-menu">
-                        <!-- WhatsApp -->
-                        <?php if (!empty($row['phone'])): ?>
-                            <a class="dropdown-item" href="https://wa.me/<?= $row['phone']; ?>?text=Hello <?= urlencode($row['first_name']); ?>" target="_blank">
-                                <i class="fab fa-whatsapp"></i> WhatsApp
+
+                  $select->execute([
+                    ':unit_category' => 'single_unit'  // or whatever value indicates single units
+                  ]);
+
+                  $tenants = $select->fetchAll(PDO::FETCH_ASSOC);
+
+
+                  if (count($tenants) > 0) {
+                    foreach ($tenants as $row) {
+                      $id = encryptor('encrypt', $row['id']);
+                  ?>
+                      <tr>
+                        <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']); ?></td>
+                        <td>
+                          <?=
+                          !empty($row['unit_number']) ? htmlspecialchars($row['unit_number']) : 'N/A';
+                          ?> |
+                          <?=
+                          !empty($row['building_name']) ? htmlspecialchars($row['building_name']) : (!empty($row['building_id']) ? htmlspecialchars($row['building_id']) : 'N/A');
+                          ?>
+                        </td>
+                        <td><?= htmlspecialchars($row['unit_category'] ?? 'N/A'); ?></td>
+                        <td>
+                          <?php if (!empty($row['main_contact'])): ?>
+                            <a href="tel:<?= htmlspecialchars($row['main_contact']); ?>">
+                              <i class="bi bi-telephone"></i> <?= htmlspecialchars($row['main_contact']); ?>
+                            </a><br>
+                          <?php endif; ?>
+                          <?php if (!empty($row['alt_contact'])): ?>
+                            <a href="tel:<?= htmlspecialchars($row['alt_contact']); ?>">
+                              <i class="bi bi-telephone"></i> <?= htmlspecialchars($row['alt_contact']); ?>
                             </a>
-                        <?php endif; ?>
-                        
-                        <!-- Email -->
-                        <?php if (!empty($row['email'])): ?>
-                            <a class="dropdown-item" href="mailto:<?= $row['email']; ?>">
-                                <i class="fas fa-envelope"></i> Email
-                            </a>
-                        <?php endif; ?>
-                        
-                        <!-- Profile -->
-                        <a class="dropdown-item" href="tenant_profile.php?profile=<?= $id; ?>">
-                            <i class="fas fa-user"></i> Profile
-                        </a>
-                        
-                        <!-- Edit -->
-                        <a class="dropdown-item" href="edit_tenant_info.php?edit_tenant=<?= $id; ?>">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        
-                        <!-- Invoice -->
-                        <a class="dropdown-item" href="single_unit_tenant_invoice.php?invoice=<?= $id; ?>">
-                            <i class="fas fa-file-invoice"></i> Invoice
-                        </a>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <?php
-    }
-} else {
-    echo '<tr><td colspan="9" class="text-center py-3">No single unit tenants found</td></tr>';
-}
-      ?>
-    </tbody>
-  </table>
-</div>
+                          <?php endif; ?>
+                        </td>
+                        <td>
+                          <i class="bi bi-person-vcard"></i>
+                          <?=
+                          !empty($row['id_no']) ? htmlspecialchars($row['id_no']) : (!empty($row['national_id']) ? htmlspecialchars($row['national_id']) : 'N/A');
+                          ?>
+                          <?php if (!empty($row['idMode'])): ?>
+                            <br><small>(<?= htmlspecialchars(ucfirst($row['idMode'])); ?>)</small>
+                          <?php endif; ?>
+                        </td>
+                        <td>
+                          <?=
+                          !empty($row['move_in_date']) ? date('d/m/Y', strtotime($row['move_in_date'])) : 'N/A';
+                          ?>
+                        </td>
+                        <td>
+                          <?=
+                          !empty($row['created_at']) ? date('d/m/Y', strtotime($row['created_at'])) : 'N/A';
+                          ?>
+                        </td>
+                        <td>
+                          <?php if ($row['tenant_status'] == 'Active'): ?>
+                            <span class="badge bg-success">
+                              <i class="bi bi-person-check"></i> <?= $row['tenant_status']; ?>
+                            </span>
+                          <?php else: ?>
+                            <span class="badge bg-danger">
+                              <i class="bi bi-person-exclamation"></i> <?= $row['tenant_status']; ?>
+                            </span>
+                          <?php endif; ?>
+                        </td>
+                        <td>
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                              Actions
+                            </button>
+                            <div class="dropdown-menu">
+                              <!-- WhatsApp -->
+                              <?php if (!empty($row['phone'])): ?>
+                                <a class="dropdown-item" href="https://wa.me/<?= $row['phone']; ?>?text=Hello <?= urlencode($row['first_name']); ?>" target="_blank">
+                                  <i class="fab fa-whatsapp"></i> WhatsApp
+                                </a>
+                              <?php endif; ?>
+
+                              <!-- Email -->
+                              <?php if (!empty($row['email'])): ?>
+                                <a class="dropdown-item" href="mailto:<?= $row['email']; ?>">
+                                  <i class="fas fa-envelope"></i> Email
+                                </a>
+                              <?php endif; ?>
+
+                              <!-- Profile -->
+                              <a class="dropdown-item" href="tenant_profile.php?profile=<?= $id; ?>">
+                                <i class="fas fa-user"></i> Profile
+                              </a>
+
+                              <!-- Edit -->
+                              <a class="dropdown-item" href="edit_tenant_info.php?edit_tenant=<?= $id; ?>">
+                                <i class="fas fa-edit"></i> Edit
+                              </a>
+
+                              <!-- Invoice -->
+                              <a class="dropdown-item" href="single_unit_tenant_invoice.php?invoice=<?= $id; ?>">
+                                <i class="fas fa-file-invoice"></i> Invoice
+                              </a>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                  <?php
+                    }
+                  } else {
+                    echo '<tr><td colspan="9" class="text-center py-3">No single unit tenants found</td></tr>';
+                  }
+                  ?>
+                </tbody>
+              </table>
+            </div>
           </div>
       </div>
       </section>

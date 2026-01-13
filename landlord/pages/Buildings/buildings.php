@@ -157,6 +157,54 @@ require_once "../db/connect.php"
             z-index: 10;
             white-space: nowrap;
         }
+         .stat-card:hover {
+            transform: translateY(-5px);
+            /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); */
+        }
+
+        .stat-card .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-card.properties .icon {
+            background-color: rgba(0, 25, 45, 0.1);
+            color: var(--main-color);
+        }
+
+        .stat-card.tenants .icon {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #d39e00;
+        }
+
+        .stat-card.revenue .icon {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+
+        .stat-card.maintenance .icon {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+
+        .stat-card h3 {
+            color: var(--main-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 10px 0 5px 0;
+        }
+
+        .stat-card p {
+            color: #6c757d;
+            margin: 0;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 
@@ -180,6 +228,7 @@ require_once "../db/connect.php"
                 </ol>
             </nav>
             <div class="container-fluid">
+                
                 <!--First Row-->
                 <div class="row align-items-center mb-3">
                     <div class="col-12 d-flex align-items-center">
