@@ -36,12 +36,11 @@
         </span>
 
         <!-- Replaced the button with a link styled as a button -->
-        <a href="<?php echo ($serviceProvider) ? 'logout.php' : '/jengopay/auth/login.php'; ?>" class="logout-link">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>
-                <?php echo ($serviceProvider) ? 'Log Out' : 'Login'; ?>
-            </span>
-        </a>
+        <form action="/Jengopay/auth/actions/logout.php" method="post" style="display:inline;">
+            <button class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
+            </button>
+        </form>
     </div>
 
 

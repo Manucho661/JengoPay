@@ -58,3 +58,5 @@ function toggleNotifications() {
     const dropdown = document.getElementById('notificationsDropdown');
     dropdown.classList.toggle('show');
 }
+
+// logout

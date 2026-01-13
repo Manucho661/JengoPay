@@ -278,7 +278,6 @@ require_once "../db/connect.php";
                 <thead>
                   <th>Name</th>
                   <th>Unit | Building</th>
-                  <th>Unit Category</th>
                   <th>Contacts</th>
                   <th>Identification</th>
                   <th>Move In Date</th>
@@ -290,24 +289,30 @@ require_once "../db/connect.php";
                   <?php
                   include_once '../processes/encrypt_decrypt_function.php';
                   $select = $pdo->prepare("
-                        SELECT tenants.*
-                        FROM tenants
-                        INNER JOIN tenancies 
-                            ON tenants.id = tenancies.tenant_id
-                            AND tenancies.status = 'active'
-                        INNER JOIN building_units 
-                            ON tenancies.unit_id = building_units.id
-                        INNER JOIN unit_categories 
-                            ON building_units.unit_category_id = unit_categories.id
-                        WHERE unit_categories.category_name = :unit_category
-                        ORDER BY tenants.tenant_reg DESC
-                    ");
+                    SELECT 
+                        tenants.*, 
+                        building_units.unit_number AS unit_number, 
+                        buildings.building_name
+                    FROM tenants
+                    INNER JOIN tenancies 
+                        ON tenants.id = tenancies.tenant_id
+                        AND tenancies.status = 'active'
+                    INNER JOIN building_units 
+                        ON tenancies.unit_id = building_units.id
+                    INNER JOIN unit_categories 
+                        ON building_units.unit_category_id = unit_categories.id
+                    INNER JOIN buildings
+                        ON building_units.building_id = buildings.id
+                    WHERE unit_categories.category_name = :unit_category
+                    ORDER BY tenants.tenant_reg DESC
+                ");
 
                   $select->execute([
                     ':unit_category' => 'single_unit'
                   ]);
 
                   $row = 0;
+
 
                   while ($row = $select->fetch()) {
                     $id = encryptor('encrypt', $row['id']);
@@ -324,20 +329,20 @@ require_once "../db/connect.php";
                   ?>
                       <tr>
                         <td><?= $row['first_name'] . ' ' . $row['middle_name']; ?></td>
-                        <td><?= $row['unit_number'] . ' (' . $row['building_id'] . ')'; ?></td>
+                        <td><?= $row['unit_number'] . ' (' . $row['building_name'] . ')'; ?></td>
                         <td><?= ""
-                        // htmlspecialchars($row['unit_category']); 
-                        ?>
+                            // htmlspecialchars($row['unit_category']); 
+                            ?>
                         </td>
                         <td>
-                          <a href="tel:<?= $row['main_contact']; ?>"><?= $row['main_contact']; ?></a><br>
-                          <a href="tel:<?= $row['alt_contact']; ?>"> <?= $row['alt_contact']; ?></a>
+                          <a href="tel:<?= $row['phone']; ?>"><?= $row['phone']; ?></a><br>
+                          <a href="tel:<?= $row['alt_phone']; ?>"><?= $row['alt_phone']; ?></a>
                         </td>
-                        <td><i class="bi bi-person-vcard"></i> 
-                        <?= ""
-                        // $row['pass_no'] . '' . $row['id_no'] . ' (' . ucfirst($row['idMode']) . ')'; 
-                        ?>
-                      </td>
+                        <td><i class="bi bi-person-vcard"></i>
+                          <?= ""
+                          // $row['pass_no'] . '' . $row['id_no'] . ' (' . ucfirst($row['idMode']) . ')'; 
+                          ?>
+                        </td>
                         <td><?= $row['move_in_date']; ?></td>
                         <td><?= $row['tenant_reg']; ?></td>
                         <td>
@@ -470,9 +475,9 @@ require_once "../db/connect.php";
                                   <form action="" method="post" autocomplete="off">
                                     <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>">
                                     <div class="card-body">
-                                      <p class="text-center">You are Shifting <span style="font-weight:bold; background-color: #cc0001; color: #fff; padding: 2px; border-radius: 2px;"><?= htmlspecialchars($row['tfirst_name']) . ' ' . htmlspecialchars($row['tlast_name']); ?></span> to Available <?= 
-                                      htmlspecialchars($unit_category); 
-                                      ?> Units within <?= htmlspecialchars($row['building_link']); ?></p>
+                                      <p class="text-center">You are Shifting <span style="font-weight:bold; background-color: #cc0001; color: #fff; padding: 2px; border-radius: 2px;"><?= htmlspecialchars($row['tfirst_name']) . ' ' . htmlspecialchars($row['tlast_name']); ?></span> to Available <?=
+                                                                                                                                                                                                                                                                                                        htmlspecialchars($unit_category);
+                                                                                                                                                                                                                                                                                                        ?> Units within <?= htmlspecialchars($row['building_link']); ?></p>
                                       <div class="form-group">
                                         <label for="">Current Unit No</label>
                                         <input type="text" class="form-control" value="<?= htmlspecialchars($row['account_no']); ?>" readonly name="account_no">

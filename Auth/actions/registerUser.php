@@ -7,7 +7,7 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
 
-require_once '../../../db/connect.php'; // Must define $pdo (PDO instance)
+require_once '../../db/connect.php'; // Must define $pdo (PDO instance)
 
 try {
     // -----------------------------
@@ -46,6 +46,21 @@ try {
     $email    = trim($_POST['email']);
     $password = $_POST['password'];
 
+
+    // -----------------------------
+    // Check if email already exists
+    // -----------------------------
+    $checkStmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+    $checkStmt->execute([$email]);
+    if ($checkStmt->rowCount() > 0) {
+
+        // Email exists
+        echo json_encode([
+            "status"  => "Email_exists"
+        ]);
+        exit;
+    }
+
     // -----------------------------
     // Hash Password
     // -----------------------------
@@ -70,7 +85,6 @@ try {
             INSERT INTO landlords (user_id) VALUES (?)
         ");
         $landlordStmt->execute([$user_id]);
-
     } elseif ($role === "service_provider") {
         $providerStmt = $pdo->prepare("
             INSERT INTO service_providers (user_id) VALUES (?)
@@ -83,18 +97,17 @@ try {
     // -----------------------------
     echo json_encode([
         "status"  => "success",
-        "message" => "User registered successfully.",
-        "user_id" => $user_id
+        // "message" => "User registered successfully.",
+        // "user_id" => $user_id
     ]);
     exit;
-
 } catch (Throwable $e) {
     // Log internal error
     error_log("register error: " . $e->getMessage());
 
-    // Client-safe response
+    // Client-safe response incase an error occurs (uncomment the error message);
     echo json_encode([
-        "status"  => "error",
-        "message" => $e->getMessage()
+        // "status"  => "error",
+        // "errorMessage" => $e->getMessage()
     ]);
 }

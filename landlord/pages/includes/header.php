@@ -57,10 +57,12 @@
             ?>
         </span>
 
+        <form action="/Jengopay/auth/actions/logout.php" method="post" style="display:inline;">
+            <button class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
+            </button>
+        </form>
 
-        <button class="logout-btn">
-            <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
-        </button>
     </div>
 
 

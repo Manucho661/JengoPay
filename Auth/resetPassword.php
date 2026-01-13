@@ -7,7 +7,6 @@
     <title>Welcome Back</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="main.css">
-    
 </head>
 
 <body class="h-screen overflow-hidden">
@@ -30,8 +29,8 @@
                 </div>
 
                 <!-- Form -->
-                <div>
-                    <form id="loginForm" class="space-y-6">
+                <div id="FormSection">
+                    <form id="resetPasswordForm" class="space-y-6">
                         <!-- Email -->
                         <label for="email" class="text-sm font-medium mb-1 block">Email Address</label>
                         <input
@@ -41,14 +40,47 @@
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-yellow-500 focus:outline-none transition-colors mb-4"
                             required>
 
-                        <!-- Password -->
-                        <label for="password" class="text-sm font-medium mb-1 block">Password</label>
+                        <!-- Email error message -->
+                        <div class="text-red-400 text-sm italic" id="emailErrorMessage"></div>
+
+                        <!--New Password -->
+                        <label for="password" class="text-sm font-medium mb-1 block">New password</label>
                         <input
                             type="password"
                             id="password"
-                            name="password"
+                            name="newPassword"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-yellow-500 focus:outline-none transition-colors"
                             required>
+
+                        <!--Confirm Password -->
+                        <label for="password" class="text-sm font-medium mb-1 block">Confirm password</label>
+                        <input
+                            type="password"
+                            id="confirmpassword"
+                            name="confirmPassword"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-yellow-500 focus:outline-none transition-colors"
+                            required>
+
+                        <!-- password error message -->
+                        <div class="text-red-400 text-sm italic" id="passErrorMessage"></div>
+
+                        <!-- validation Rules -->
+                        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-6">
+                            <h4 class="font-semibold text-primary mb-3 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                                Note
+                            </h4>
+                            <p class="space-y-2 text-sm text-gray-700"> <i>Your password must have the following :-</i> </p>
+                            <ul class="text-sm">
+                                <li>1. At least 6 characters</li>
+                                <li>2. At least 1 number</li>
+                                <li>3. At least 1 uppercase letter</li>
+                                <li>4. At least 1 special character</li>
+                            </ul>
+
+                        </div>
 
                         <!-- Remember Me & Forgot Password -->
                         <div class="flex items-center justify-between text-sm">
@@ -56,7 +88,7 @@
                                 <input type="checkbox" class="w-4 h-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-500">
                                 <span class="ml-2 text-gray-600 group-hover:text-gray-800">Remember me</span>
                             </label>
-                            <a href="resetPassword.php" class="text-yellow-500 hover:text-yellow-600 font-medium">Forgot password?</a>
+                            <a href="login.php" class="text-yellow-500 hover:text-yellow-600 font-medium">Sign in?</a>
                         </div>
 
                         <!-- general error message -->
@@ -64,11 +96,14 @@
 
                         <!-- Sign In Button -->
                         <button
-                            id="loginBtn"
+                            id="resetBtn"
                             type="submit"
                             class="w-full gradient-bg text-white font-semibold py-3 rounded-lg hover:opacity-90 transform hover:scale-[1.02] transition-all duration-200">
-                            Sign In
+                            Reset Password
                         </button>
+
+                        <!-- general error message -->
+                        <div class="text-red-400 text-sm italic" id="generalErrorMessage"></div>
 
                         <!-- Divider -->
                         <div class="relative my-6">
