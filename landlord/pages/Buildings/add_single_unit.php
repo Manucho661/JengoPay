@@ -800,7 +800,6 @@ function getAccountName($pdo, $account_code)
         <!--begin::Footer-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
         <!-- end footer -->
-
     </div>
     <!--end::App Wrapper-->
 
