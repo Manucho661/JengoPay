@@ -173,9 +173,7 @@ require_once "../db/connect.php";
 
     <!--begin::App Main-->
     <main class="main">
-      <div class="content-wrapper">
-        <!-- Main content -->
-        <section class="content">
+
           <div class="container-fluid">
             <div class="row align-items-center mb-3">
               <div class="col-12 d-flex align-items-center">
@@ -294,21 +292,20 @@ require_once "../db/connect.php";
 
                   // CORRECTED SQL QUERY - Based on your actual table structure
                   $select = $pdo->prepare("
-                  SELECT 
-                      t.*,
-                      b.building_name
-                  FROM tenants t
-                  LEFT JOIN buildings b ON t.building_id = b.id
-                  WHERE t.unit_id IS NOT NULL
-                    AND t.tenant_status = 'Active'
-                  ORDER BY t.created_at DESC
-              ");
-              $select->execute();
-              
+                        SELECT 
+                            t.*,
+                            b.building_name
+                        FROM tenants t
+                        LEFT JOIN buildings b 
+                            ON t.building_id = b.id
+                        WHERE t.unit_category = :unit_category
+                            AND t.tenant_status = 'Active'
+                        ORDER BY t.created_at DESC
+                    ");
 
-                  // $select->execute([
-                  //   ':unit_category' => 'single_unit'  // or whatever value indicates single units
-                  // ]);
+                  $select->execute([
+                    ':unit_category' => 'single_unit'  // or whatever value indicates single units
+                  ]);
 
                   $tenants = $select->fetchAll(PDO::FETCH_ASSOC);
 
@@ -418,44 +415,32 @@ require_once "../db/connect.php";
               </table>
             </div>
           </div>
-      </div>
-      </section>
 
-      <!-- /.content -->
+        <!-- /.content -->
 
-      <!-- Help Pop Up Form -->
-      <?php include_once 'includes/lower_right_popup_form.php'; ?>
-  </div>
-  <!-- /.content-wrapper -->
+        <!-- Help Pop Up Form -->
+        <?php 
+        // include_once 'includes/lower_right_popup_form.php'; 
+        ?>
+      
+      <!-- /.content-wrapper -->
+    
+        <!-- ./wrapper -->
+        <!-- Required Scripts -->
+        <?php 
+        // include_once 'includes/required_scripts.php'; 
+        
+        ?>
+      <!-- Meter Readings JavaScript -->
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <!-- Footer -->
-  <?php include_once 'includes/footer.php'; ?>
+    </main>
+    <!--end::App Main-->
 
-  </div>
-  <!-- ./wrapper -->
-  <!-- Required Scripts -->
-  <?php include_once 'includes/required_scripts.php'; ?>
-  <!-- Meter Readings JavaScript -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
-  </div>
-  </main>
-  <!--end::App Main-->
-  <!--begin::Footer-->
-  <footer class="app-footer">
-    <!--begin::To the end-->
-    <div class="float-end d-none d-sm-inline">Anything you want</div>
-    <!--end::To the end-->
-    <!--begin::Copyright-->
-    <strong>
-      Copyright &copy; 2014-2024&nbsp;
-      <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
-    </strong>
-    All rights reserved.
-    <!--end::Copyright-->
-  </footer>
-
+    <!--begin::Footer-->
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+    <!-- end footer -->
+ 
   </div>
   <!--end::App Wrapper-->
 
