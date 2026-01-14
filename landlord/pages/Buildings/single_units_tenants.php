@@ -294,20 +294,21 @@ require_once "../db/connect.php";
 
                   // CORRECTED SQL QUERY - Based on your actual table structure
                   $select = $pdo->prepare("
-      SELECT 
-          t.*,
-          b.building_name
-      FROM tenants t
-      LEFT JOIN buildings b 
-          ON t.building_id = b.id
-      WHERE t.unit_category = :unit_category
-          AND t.tenant_status = 'Active'
-      ORDER BY t.created_at DESC
-  ");
+                  SELECT 
+                      t.*,
+                      b.building_name
+                  FROM tenants t
+                  LEFT JOIN buildings b ON t.building_id = b.id
+                  WHERE t.unit_id IS NOT NULL
+                    AND t.tenant_status = 'Active'
+                  ORDER BY t.created_at DESC
+              ");
+              $select->execute();
+              
 
-                  $select->execute([
-                    ':unit_category' => 'single_unit'  // or whatever value indicates single units
-                  ]);
+                  // $select->execute([
+                  //   ':unit_category' => 'single_unit'  // or whatever value indicates single units
+                  // ]);
 
                   $tenants = $select->fetchAll(PDO::FETCH_ASSOC);
 
