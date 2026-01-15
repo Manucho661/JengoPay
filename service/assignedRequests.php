@@ -41,18 +41,15 @@ include './actions/getRequests1.php';
 
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* background-color: var(--light-bg); */
-          background-color: #f4f6f9;
-
+    background-color: var(--light-bg);
   }
 
-  /* Header Styles */
-
+  
   /* Navigation */
   .navigation {
     background: white;
     padding: 1rem 0;
-    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     margin-bottom: 2rem;
   }
 
@@ -83,7 +80,7 @@ include './actions/getRequests1.php';
     padding: 1.5rem;
     border-radius: 10px;
     margin-bottom: 2rem;
-    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   .filter-title {
@@ -98,13 +95,13 @@ include './actions/getRequests1.php';
     border-radius: 10px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
-    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s, box-shadow 0.3s;
   }
 
   .request-card:hover {
     transform: translateY(-3px);
-    /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   }
 
   .request-header {
@@ -179,14 +176,6 @@ include './actions/getRequests1.php';
   }
 
   .description-full.visible {
-    display: block;
-  }
-
-  .images-hidden {
-    display: none;
-  }
-
-  .images-visible {
     display: block;
   }
 
@@ -282,100 +271,23 @@ include './actions/getRequests1.php';
   }
 
   .request-images {
-    position: relative;
-    width: 100%;
+    display: flex;
+    gap: 0.5rem;
     margin-bottom: 1rem;
-    border-radius: 10px;
-    overflow: hidden;
+    flex-wrap: wrap;
   }
 
-  .image-slider {
-    position: relative;
-    width: 100%;
-    height: 300px;
-    background: #f8f9fa;
-  }
-
-  .slider-image {
-    width: 100%;
-    height: 100%;
+  .request-images img {
+    width: 80px;
+    height: 80px;
     object-fit: cover;
-    display: none;
-  }
-
-  .slider-image.active {
-    display: block;
-  }
-
-  .slider-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 25, 45, 0.7);
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-    z-index: 10;
-  }
-
-  .slider-btn:hover {
-    background: var(--accent-color);
-    color: var(--primary-color);
-    transform: translateY(-50%) scale(1.1);
-  }
-
-  .slider-btn.prev {
-    left: 10px;
-  }
-
-  .slider-btn.next {
-    right: 10px;
-  }
-
-  .slider-indicators {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 10;
-  }
-
-  .indicator-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .indicator-dot.active {
-    background: var(--accent-color);
-    width: 25px;
     border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
   }
 
-  .slider-counter {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(0, 25, 45, 0.7);
-    color: white;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    z-index: 10;
+  .request-images img:hover {
+    transform: scale(1.05);
   }
 
   .request-footer {
@@ -594,9 +506,9 @@ include './actions/getRequests1.php';
       <nav class="navigation">
         <div class="container">
           <div class="nav-links">
-            <a href="" class="active"><i class="fas fa-search"></i> Find a Job</a>
+            <a href="requestOrders.php"><i class="fas fa-search"></i> Find a Job</a>
             <a href="yourApplications.php"><i class="fas fa-file-alt"></i> Your Applications</a>
-            <a href="assignedRequests.php"><i class="fas fa-briefcase"></i> Assigned Jobs</a>
+            <a href="" class="active"><i class="fas fa-briefcase"></i> Assigned Jobs</a>
             <a href="previousRequests.php"><i class="fas fa-history"></i> Previous Jobs</a>
           </div>
         </div>
@@ -608,7 +520,7 @@ include './actions/getRequests1.php';
           <div class="row">
 
             <!-- LEFT: Job Tabs and Listings -->
-            <div class="col-lg-8">
+            <div class="col-lg-9">
               <!-- Filter Section -->
               <div class="filter-section">
                 <h3 class="filter-title"><i class="fas fa-filter"></i> Filter & Search</h3>
@@ -636,7 +548,7 @@ include './actions/getRequests1.php';
               <!-- Request Cards -->
               <?php
               // Sample data - in real application, this would come from database
-
+            
 
               // Pagination logic
               $itemsPerPage = 5;
@@ -675,7 +587,7 @@ include './actions/getRequests1.php';
                       <div>
                         <h3 class="request-title"><?php echo $request['title']; ?></h3>
                         <div class="property-info">
-                          <i class="fas fa-building"></i> <strong><?php echo $request['building_name']; ?></strong> - Unit <?php echo $request['unit_number']; ?>
+                          <i class="fas fa-building"></i> <strong><?php echo $request['building_name']; ?></strong> - Unit <?php echo $request['unit']; ?>
                         </div>
                       </div>
                       <span class="category-badge"><?php echo $request['category']; ?></span>
@@ -684,7 +596,7 @@ include './actions/getRequests1.php';
                     <div class="request-meta">
                       <div class="meta-item">
                         <i class="fas fa-calendar"></i>
-                        <span><?php echo date('M d, Y', strtotime($request['created_at'])); ?></span>
+                        <span><?php echo date('M d, Y', strtotime($request['date'])); ?></span>
                       </div>
                       <div class="meta-item">
                         <i class="fas fa-clock"></i>
@@ -696,59 +608,24 @@ include './actions/getRequests1.php';
                     $description = $request['description'];
                     $shortDescription = strlen($description) > 100 ? substr($description, 0, 100) . '...' : $description;
                     $needsToggle = strlen($description) > 100;
-                    $hasImages = !empty($request['photo_paths']);
-
                     ?>
 
                     <div class="request-description">
                       <span class="description-short"><?php echo $shortDescription; ?></span>
                       <?php if ($needsToggle): ?>
                         <span class="description-full"><?php echo $description; ?></span>
-                        <button class="read-more-btn" onclick="toggleDescription(this)" data-has-images="<?php echo $hasImages ? 'true' : 'false'; ?>">
+                        <button class="read-more-btn" onclick="toggleDescription(this)">
                           <span class="more-text">Read More <i class="fas fa-chevron-down"></i></span>
                           <span class="less-text" style="display: none;">Read Less <i class="fas fa-chevron-up"></i></span>
                         </button>
                       <?php endif; ?>
                     </div>
 
-                    <!-- images section -->
-                    <?php if (!empty($request['photo_paths'])): ?>
-                      <div class="request-images images-hidden">
-                        <div class="image-slider" data-slider="<?php echo uniqid(); ?>">
-                          <?php
-                          $photoPaths = explode(',', $request['photo_paths']);
-                          foreach ($photoPaths as $photo_path):
-                          ?>
-                            <img
-                              src="/Jengopay/landlord/pages/maintenance/<?= htmlspecialchars($photo_path) ?>"
-                              alt="Request image"
-                              width="100%">
-                          <?php endforeach; ?>
-
-                          <?php if (count(explode(',', $request['photo_paths'])) > 1): ?>
-                            <!-- Navigation Buttons -->
-                            <!-- Navigation Buttons -->
-                            <button class="slider-btn prev" onclick="changeSlide(this, -1)">
-                              <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button class="slider-btn next" onclick="changeSlide(this, 1)">
-                              <i class="fas fa-chevron-right"></i>
-                            </button>
-
-                            <!-- Image Counter -->
-                            <div class="slider-counter">
-                              <span class="current-slide">1</span> / <?php echo count($request['images']); ?>
-                            </div>
-
-                            <!-- Indicators -->
-                            <div class="slider-indicators">
-                              <?php foreach ($request['images'] as $index => $image): ?>
-                                <span class="indicator-dot <?php echo $index === 0 ? 'active' : ''; ?>"
-                                  onclick="goToSlide(this, <?php echo $index; ?>)"></span>
-                              <?php endforeach; ?>
-                            </div>
-                          <?php endif; ?>
-                        </div>
+                    <?php if (!empty($request['images'])): ?>
+                      <div class="request-images">
+                        <?php foreach ($request['images'] as $image): ?>
+                          <img src="https://via.placeholder.com/80" alt="Request image">
+                        <?php endforeach; ?>
                       </div>
                     <?php endif; ?>
 
@@ -756,13 +633,9 @@ include './actions/getRequests1.php';
                       <div class="budget-info">
                         <i class="fas fa-money-bill-wave"></i> <?php echo $request['budget']; ?>
                       </div>
-                      <button
-                        class="apply-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#applyModal">
+                      <button class="apply-btn">
                         <i class="fas fa-paper-plane"></i> Apply Now
                       </button>
-
                     </div>
                   </div>
               <?php endforeach;
@@ -805,7 +678,7 @@ include './actions/getRequests1.php';
             </div>
 
             <!-- RIGHT: Sidebar -->
-            <div class="col-lg-4">
+            <div class="col-lg-3">
               <div class="position-sticky" style="top: 80px; max-height: calc(100vh - 80px); overflow-y: auto;">
                 <!-- Subscribe -->
                 <div class="p-4 mb-4 shadow-sm bg-white rounded border">
@@ -862,116 +735,37 @@ include './actions/getRequests1.php';
 
         </div> <!-- end .row -->
       </div> <!-- end .container -->
-    </div>
-    <!-- end main-->
-
-    <footer class="footer">
-      <div class="footer-container">
-        <div class="footer-section about">
-          <h2>Jengo Pay</h2>
-          <p>Jengo Pay is your trusted platform for managing properties, tenants, and service providers efficiently. Empowering real estate with smart tech.</p>
-        </div>
-
-        <div class="footer-section links">
-          <h3>Quick Links</h3>
-          <ul>
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Units</a></li>
-            <li><a href="#">Tenants</a></li>
-            <li><a href="#">Reports</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-section contact">
-          <h3>Contact Us</h3>
-          <p><i class="fas fa-phone-alt"></i> +254 712 345 678</p>
-          <p><i class="fas fa-envelope"></i> support@jengopay.co.ke</p>
-          <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>© 2025 Jengo Pay. All Rights Reserved.</p>
-      </div>
-    </footer>
-
-    <!-- modals -->
-
-    <!-- Apply Modal -->
-    <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-0 rounded-4 shadow-lg">
-
-          <!-- Modal Header -->
-          <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
-            <h5 class="modal-title d-flex align-items-center" id="applyModalLabel">
-              <i class="bi bi-briefcase-fill me-2"></i> Apply for Job
-            </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-
-          <!-- Modal Body -->
-          <div class="modal-body">
-            <form id="applyForm" class="px-2">
-
-              <input type="hidden" id="requestId" name="requestId" value="">
-
-              <!-- Client Price (Plain Text) -->
-              <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-                <label class="form-label">
-                  <i class="bi bi-tags me-1" style="color: #00192D;"></i> Client Price
-                </label>
-                <input type="hidden" name="client_price" value="5000">
-                <div class="form-control-plaintext ps-3" style="border: 1px solid #ced4da; border-radius: 50px; background-color: #f8f9fa;">
-                  5000
-                </div>
-              </div>
-
-              <!-- Your Price -->
-              <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-                <label for="yourPrice" class="form-label">
-                  <i class="bi bi-currency-dollar me-1" style="color: #00192D;"></i> Your Price
-                </label>
-                <input type="number" name="your_price" class="form-control rounded-pill" id="yourPrice" step="1" min="0" placeholder="4500" required>
-              </div>
-
-              <!-- Duration -->
-              <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-                <label for="duration" class="form-label">
-                  <i class="bi bi-clock me-1" style="color: #00192D;"></i> Select Duration
-                </label>
-                <select class="form-select" name="duration" id="duration" onchange="handleDurationChange(this)" required>
-                  <option selected disabled value="">Select duration</option>
-                  <option value="less than 24hrs">Less than 24hrs</option>
-                  <option value="1 day">1 day</option>
-                  <option value="2 days">2 days</option>
-                  <option value="3 days">3 days</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <!-- Custom Duration -->
-              <div class="mb-3 d-none" id="customDurationDiv" style="font-weight: bold; font-style: oblique;">
-                <label for="customDuration" class="form-label">
-                  <i class="bi bi-calendar-plus me-1" style="color: #00192D;"></i> Specify Duration
-                </label>
-                <input type="text" name="custom_duration" class="form-control rounded-pill" id="customDuration" placeholder="e.g. 5 days">
-              </div>
-
-              <!-- Modal Footer -->
-              <div class="modal-footer justify-content-center" style="background-color: #f8f9fa;">
-                <button type="submit" class="btn rounded-pill px-4 py-2" style="background-color: #00192D; color: #FFC107;">
-                  <i class="bi bi-check2-circle me-1"></i> Submit Application
-                </button>
-              </div>
-
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    </div> <!-- end .container-fluid -->
   </div>
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section about">
+        <h2>Jengo Pay</h2>
+        <p>Jengo Pay is your trusted platform for managing properties, tenants, and service providers efficiently. Empowering real estate with smart tech.</p>
+      </div>
+
+      <div class="footer-section links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#">Dashboard</a></li>
+          <li><a href="#">Units</a></li>
+          <li><a href="#">Tenants</a></li>
+          <li><a href="#">Reports</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section contact">
+        <h3>Contact Us</h3>
+        <p><i class="fas fa-phone-alt"></i> +254 712 345 678</p>
+        <p><i class="fas fa-envelope"></i> support@jengopay.co.ke</p>
+        <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 Jengo Pay. All Rights Reserved.</p>
+    </div>
+  </footer>
 
   </div>
 
@@ -1040,9 +834,28 @@ include './actions/getRequests1.php';
   <script type="module" src="js/main.js"></script>
   <script>
     // Read more / less toggle
+    document.querySelectorAll('.job-description').forEach(function(desc) {
+      const fullText = desc.textContent.trim();
+      const maxLength = 200;
 
+      if (fullText.length > maxLength) {
+        const shortText = fullText.slice(0, maxLength).trim();
+        desc.setAttribute('data-full', fullText);
+        desc.setAttribute('data-short', shortText);
 
+        desc.innerHTML = `
+        ${shortText}... <span class="read-toggle" style="color: blue; cursor: pointer;">Read more</span>
+      `;
 
+        desc.querySelector('.read-toggle').addEventListener('click', function toggleHandler() {
+          const isShort = desc.textContent.trim().endsWith('Read more');
+          desc.innerHTML = isShort ?
+            `${fullText} <span class="read-toggle" style="color: blue; cursor: pointer;">Read less</span>` :
+            `${shortText}... <span class="read-toggle" style="color: blue; cursor: pointer;">Read more</span>`;
+          desc.querySelector('.read-toggle').addEventListener('click', toggleHandler);
+        });
+      }
+    });
 
     // Show/hide custom duration
     function handleDurationChange(select) {
@@ -1058,46 +871,6 @@ include './actions/getRequests1.php';
     // Form submission with validation
   </script>
 
-  <script>
-    function toggleDescription(button) {
-      const descriptionDiv = button.closest('.request-description');
-      const shortText = descriptionDiv.querySelector('.description-short');
-      const fullText = descriptionDiv.querySelector('.description-full');
-      const moreText = button.querySelector('.more-text');
-      const lessText = button.querySelector('.less-text');
-      const hasImages = button.getAttribute('data-has-images') === 'true';
-
-      // Find the images section (next sibling after description)
-      const requestCard = button.closest('.request-card');
-      const imagesSection = requestCard.querySelector('.request-images');
-
-      if (fullText.classList.contains('visible')) {
-        // Collapse
-        fullText.classList.remove('visible');
-        shortText.classList.remove('hidden');
-        moreText.style.display = 'inline';
-        lessText.style.display = 'none';
-
-        // Hide images
-        if (hasImages && imagesSection) {
-          imagesSection.classList.remove('images-visible');
-          imagesSection.classList.add('images-hidden');
-        }
-      } else {
-        // Expand
-        fullText.classList.add('visible');
-        shortText.classList.add('hidden');
-        moreText.style.display = 'none';
-        lessText.style.display = 'inline';
-
-        // Show images
-        if (hasImages && imagesSection) {
-          imagesSection.classList.remove('images-hidden');
-          imagesSection.classList.add('images-visible');
-        }
-      }
-    }
-  </script>
 
 
 

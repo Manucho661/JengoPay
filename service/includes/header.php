@@ -1,5 +1,5 @@
 <!-- Header -->
-<header class="header">
+<header class="header border-bottom">
     <div style="display: flex; align-items: center; gap: 1rem;">
         <div class="hamburger" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
@@ -42,6 +42,5 @@
             </button>
         </form>
     </div>
-
 
 </header>
