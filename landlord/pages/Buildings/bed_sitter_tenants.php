@@ -166,32 +166,13 @@
         <!--begin::Header-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
-        <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <a href="./index.html" class="brand-link">
 
-                    <!--begin::Brand Text-->
-                    <span class="brand-text font-weight-light"><b class="p-2"
-                            style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-                            class="p-2"
-                            style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-                </a>
-                </span>
-                <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-            <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-            <!--end::Sidebar Wrapper-->
-        </aside>
+        <!--begin::Sidebar-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> 
         <!--end::Sidebar-->
+
         <!--begin::App Main-->
-        <main class="app-main mt-4">
+        <main class="main">
             <div class="content-wrapper">
                 <!-- Main content -->
                 <section class="content">
@@ -274,7 +255,6 @@
       <tr>
         <th>Name</th>
         <th>Unit | Building</th>
-        <th>Unit Category</th>
         <th>Contacts</th>
         <th>Identification</th>
         <th>Move In Date</th>
@@ -288,24 +268,42 @@
       include_once '../processes/encrypt_decrypt_function.php';
       
       // FETCH BEDSITTER TENANTS ONLY
-      $select = $pdo->prepare("
-          SELECT 
-              t.*,
-              b.building_name
-          FROM tenants t
-          LEFT JOIN buildings b 
-              ON t.building_id = b.id
-          WHERE (t.unit_category = :unit_category1 OR t.unit_category = :unit_category2)
-              AND t.tenant_status = 'Active'
-          ORDER BY t.created_at DESC
-      ");
-      
-      $select->execute([
-          ':unit_category1' => 'bedsitter',
-          ':unit_category2' => 'bed sitter'  // Try both variations
-      ]);
-      
-      $tenants = $select->fetchAll(PDO::FETCH_ASSOC);
+      $sql = "
+                    SELECT 
+                        tenants.id AS id,
+                        tenants.first_name,
+                        tenants.middle_name,
+                        tenants.last_name,
+                        tenants.phone,
+                        tenants.email,
+
+                        building_units.id AS unit_id,
+                        building_units.unit_number,
+
+                        tenancies.id AS tenancy_id,
+                        tenancies.account_no,
+                        tenancies.status,
+                        tenancies.move_in_date
+                    FROM tenants
+                    INNER JOIN tenancies 
+                        ON tenants.id = tenancies.tenant_id
+                        AND tenancies.status = 'Active'
+                    INNER JOIN building_units 
+                        ON tenancies.unit_id = building_units.id
+                    INNER JOIN unit_categories 
+                        ON building_units.unit_category_id = unit_categories.id
+                    WHERE unit_categories.category_name = :category
+                ";
+
+              $stmt = $pdo->prepare($sql);
+              $stmt->execute([
+                ':category' => 'single_unit'
+              ]);
+
+              // $singleUnitTenants = 
+
+
+              $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
       
       if (count($tenants) > 0) {
         foreach ($tenants as $row) {
@@ -322,7 +320,6 @@
                     (!empty($row['building_id']) ? htmlspecialchars($row['building_id']) : 'N/A'); 
                     ?>
                 </td>
-                <td><?= htmlspecialchars($row['unit_category'] ?? 'N/A'); ?></td>
                 <td>
                     <?php 
                     // Try multiple contact fields - adjust based on your actual column names
@@ -362,17 +359,17 @@
                     ?>
                 </td>
                 <td>
-                    <?php if ($row['tenant_status'] == 'Active'): ?>
+                    <?php if ($row['status'] == 'Active'): ?>
                         <span class="badge bg-success">
-                            <i class="bi bi-person-check"></i> <?= $row['tenant_status']; ?>
+                            <i class="bi bi-person-check"></i> <?= $row['status']; ?>
                         </span>
-                    <?php elseif ($row['tenant_status'] == 'Vacated'): ?>
+                    <?php elseif ($row['status'] == 'Vacated'): ?>
                         <span class="badge bg-secondary">
-                            <i class="bi bi-person-x"></i> <?= $row['tenant_status']; ?>
+                            <i class="bi bi-person-x"></i> <?= $row['status']; ?>
                         </span>
                     <?php else: ?>
                         <span class="badge bg-warning">
-                            <i class="bi bi-person-exclamation"></i> <?= $row['tenant_status']; ?>
+                            <i class="bi bi-person-exclamation"></i> <?= $row['status']; ?>
                         </span>
                     <?php endif; ?>
                 </td>

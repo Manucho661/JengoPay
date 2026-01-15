@@ -1,5 +1,5 @@
 <?php
- require_once "../db/connect.php";
+require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
 
@@ -52,7 +52,7 @@
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-        <link rel="stylesheet" href="../../assets/main.css" />
+    <link rel="stylesheet" href="../../assets/main.css" />
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -165,45 +165,26 @@
         <!--begin::Header-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
-        <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <a href="./index.html" class="brand-link">
 
-                    <!--begin::Brand Text-->
-                    <span class="brand-text font-weight-light"><b class="p-2"
-                            style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-                            class="p-2"
-                            style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-                </a>
-                </span>
-                <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-            <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-            <!--end::Sidebar Wrapper-->
-        </aside>
+        <!--begin::Sidebar-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
         <!--end::Sidebar-->
+
         <!--begin::App Main-->
         <main class="app-main mt-4">
             <div class="content-wrapper">
                 <!-- Main content -->
                 <section class="content">
-        <div class="container-fluid">
-          <div class="card shadow">
-              <div class="card-header" style="background-color: #00192D; color: #fff;">
-                  <b>All Invoices</b>
-              </div>
-              <div class="card-body">
-                <?php
-                include_once 'processes/encrypt_decrypt_function.php';
-                    // FETCH ALL INVOICES
-                    $sql = "SELECT 
+                    <div class="container-fluid">
+                        <div class="card shadow">
+                            <div class="card-header" style="background-color: #00192D; color: #fff;">
+                                <b>All Invoices</b>
+                            </div>
+                            <div class="card-body">
+                                <?php
+                                include_once 'processes/encrypt_decrypt_function.php';
+                                // FETCH ALL INVOICES
+                                $sql = "SELECT 
                                 id,
                                 invoice_no,
                                 receiver,
@@ -215,97 +196,88 @@
                             FROM single_units_invoice
                             ORDER BY id DESC";
 
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->execute();
-                ?>
-                  <table id="dataTable" class="table table-stripped shadow">
-                      <thead>
-                            <th>Invoice No</th>
-                            <th>Invoiced To</th>
-                            <th>Invoice Date</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            <th>Final Total</th>
-                            <th>Action</th>
-                      </thead>
-                      <tbody>
-                        <tr>
-                            <?php
-                                while($row = $stmt->fetch()){
-                                    ?>
-                                    <td><?= htmlspecialchars($row["invoice_no"]) ?></td>
-                                    <td><?= htmlspecialchars($row["receiver"]) ?></td>
-                                    <td><?= htmlspecialchars($row["invoice_date"]) ?></td>
-                                    <td><?= htmlspecialchars($row["due_date"]) ?></td>
-                                    <td>
-                                        <?php
-                                            if($row['payment_status'] == 'Paid') {
-                                                ?>
-                                                    <button class="btn btn-xs shadow" style="background-color:#28A745; color: #fff;">
-                                                        <i class="fa fa-check"></i> <?= htmlspecialchars($row["payment_status"]) ?>
-                                                    </button>
-                                                <?php
-                                            } else {
-                                                ?>
-                                                    <button class="btn btn-xs shadow" style="background-color:#cc0001; color: #fff;">
-                                                        <i class="fa fa-exclamation-circle"></i> <?= htmlspecialchars($row["payment_status"]) ?>
-                                                    </button>
-                                                <?php
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute();
+                                ?>
+                                <table id="dataTable" class="table table-stripped shadow">
+                                    <thead>
+                                        <th>Invoice No</th>
+                                        <th>Invoiced To</th>
+                                        <th>Invoice Date</th>
+                                        <th>Due Date</th>
+                                        <th>Status</th>
+                                        <th>Final Total</th>
+                                        <th>Action</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <?php
+                                            while ($row = $stmt->fetch()) {
+                                            ?>
+                                                <td><?= htmlspecialchars($row["invoice_no"]) ?></td>
+                                                <td><?= htmlspecialchars($row["receiver"]) ?></td>
+                                                <td><?= htmlspecialchars($row["invoice_date"]) ?></td>
+                                                <td><?= htmlspecialchars($row["due_date"]) ?></td>
+                                                <td>
+                                                    <?php
+                                                    if ($row['payment_status'] == 'Paid') {
+                                                    ?>
+                                                        <button class="btn btn-xs shadow" style="background-color:#28A745; color: #fff;">
+                                                            <i class="fa fa-check"></i> <?= htmlspecialchars($row["payment_status"]) ?>
+                                                        </button>
+                                                    <?php
+                                                    } else {
+                                                    ?>
+                                                        <button class="btn btn-xs shadow" style="background-color:#cc0001; color: #fff;">
+                                                            <i class="fa fa-exclamation-circle"></i> <?= htmlspecialchars($row["payment_status"]) ?>
+                                                        </button>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><strong><?= number_format($row["final_total"], 2) ?></strong></td>
+                                                <td>
+                                                    <a href="invoice_details.php?details=<?= htmlspecialchars(encryptor('encrypt', $row['id'])); ?>" class="btn btn-xs shadow" style="background-color:#00192D; color: #fff;">
+                                                        <i class="fa fa-eye"></i> Details
+
+                                                    </a>
+                                                </td>
+                                            <?php
                                             }
-                                        ?>
-                                    </td>
-                                    <td><strong><?= number_format($row["final_total"], 2) ?></strong></td>
-                                    <td>
-                                        <a href="invoice_details.php?details=<?= htmlspecialchars(encryptor('encrypt',$row['id']));?>" class="btn btn-xs shadow" style="background-color:#00192D; color: #fff;">
-                                            <i class="fa fa-eye"></i> Details
+                                            ?>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                                        </a>
-                                    </td>
-                                    <?php
-                                }
-                            ?>
-                        </tr>
-                  </tbody>
-                  </table>
-              </div>
-          </div>
-        </div>
-      </section>
-                                                
-            <!-- /.content -->
+                <!-- /.content -->
 
-            <!-- Help Pop Up Form -->
-  
-        </div>
-        <!-- /.content-wrapper -->
+                <!-- Help Pop Up Form -->
 
-        <!-- Footer -->
-    
+            </div>
+            <!-- /.content-wrapper -->
+
+            <!-- Footer -->
+
 
     </div>
     <!-- ./wrapper -->
     <!-- Required Scripts -->
-    <?php include_once '../includes/required_scripts.php';?>
+    <?php include_once '../includes/required_scripts.php'; ?>
     <!-- Meter Readings JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
- 
-            </div>
-        </main>
-        <!--end::App Main-->
-        <!--begin::Footer-->
-        <footer class="app-footer">
-            <!--begin::To the end-->
-            <div class="float-end d-none d-sm-inline">Anything you want</div>
-            <!--end::To the end-->
-            <!--begin::Copyright-->
-            <strong>
-                Copyright &copy; 2014-2024&nbsp;
-                <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
-            </strong>
-            All rights reserved.
-            <!--end::Copyright-->
-        </footer>
+
+    </div>
+    </main>
+    <!--end::App Main-->
+
+    <!--begin::Footer-->
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+    <!-- end footer -->
 
     </div>
     <!--end::App Wrapper-->

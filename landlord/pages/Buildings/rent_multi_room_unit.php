@@ -1,5 +1,5 @@
 <?php
- require_once "../db/connect.php";
+require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
 
@@ -18,28 +18,28 @@ $id = null;
 include_once 'processes/encrypt_decrypt_function.php';
 
 if (isset($_GET['rent']) && !empty($_GET['rent'])) {
-    $id = $_GET['rent'];
-    $id = encryptor('decrypt', $id);
+  $id = $_GET['rent'];
+  $id = encryptor('decrypt', $id);
 
-    try {
-        if (!empty($id)) {
-            $sql = "SELECT * FROM multi_rooms_units WHERE id = :id";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([':id' => $id]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($row) {
-                $id = $row['id'];
-                $unit_number = $row['unit_number'];
-                $location = $row['location'];
-                $building_link = $row['building_link'];
-                $purpose = $row['purpose'];
-                $unit_category = $row['unit_category'];
-                $occupancy_status = $row['occupancy_status'];
-            }
-        }
-    } catch (PDOException $e) {
-        // Handle exception here if needed
+  try {
+    if (!empty($id)) {
+      $sql = "SELECT * FROM multi_rooms_units WHERE id = :id";
+      $stmt = $pdo->prepare($sql);
+      $stmt->execute([':id' => $id]);
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      if ($row) {
+        $id = $row['id'];
+        $unit_number = $row['unit_number'];
+        $location = $row['location'];
+        $building_link = $row['building_link'];
+        $purpose = $row['purpose'];
+        $unit_category = $row['unit_category'];
+        $occupancy_status = $row['occupancy_status'];
+      }
     }
+  } catch (PDOException $e) {
+    // Handle exception here if needed
+  }
 }
 ?>
 
@@ -48,297 +48,279 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
 <!--begin::Head-->
 
 <head>
-    <?php if (isset($successMessage)) echo "<div class='alert alert-success'>$successMessage</div>"; ?>
-    <?php if (isset($errorMessage)) echo "<div class='alert alert-danger'>$errorMessage</div>"; ?>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE | Dashboard v2</title>
-    <!--begin::Primary Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" content="AdminLTE | Dashboard v2" />
-    <meta name="author" content="ColorlibHQ" />
-    <meta
-        name="description"
-        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-    <meta
-        name="keywords"
-        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
-    <!-- LINKS -->
+  <?php if (isset($successMessage)) echo "<div class='alert alert-success'>$successMessage</div>"; ?>
+  <?php if (isset($errorMessage)) echo "<div class='alert alert-danger'>$errorMessage</div>"; ?>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>AdminLTE | Dashboard v2</title>
+  <!--begin::Primary Meta Tags-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="title" content="AdminLTE | Dashboard v2" />
+  <meta name="author" content="ColorlibHQ" />
+  <meta
+    name="description"
+    content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
+  <meta
+    name="keywords"
+    content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
+  <!-- LINKS -->
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
-    <!--end::Primary Meta Tags-->
-    <!--begin::Fonts-->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
-        crossorigin="anonymous" />
-    <!--end::Fonts-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
+  <!--end::Primary Meta Tags-->
+  <!--begin::Fonts-->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+    integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
+    crossorigin="anonymous" />
+  <!--end::Fonts-->
 
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
-        crossorigin="anonymous" />
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-    <!--begin::Third Party Plugin(Bootstrap Icons)-->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
-        crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-
-    <!--end::Third Party Plugin(Bootstrap Icons)-->
-    <!--begin::Required Plugin(AdminLTE)-->
-        <link rel="stylesheet" href="../../assets/main.css" />
-    <!-- <link rel="stylesheet" href="text.css" /> -->
-    <!--end::Required Plugin(AdminLTE)-->
-    <!-- apexcharts -->
-
-    <!-- jquery link-->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-        crossorigin="anonymous" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="expenses.css">
-    <!-- scripts for data_table -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-    <!-- Pdf pluggin -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!--begin::Third Party Plugin(OverlayScrollbars)-->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
+    integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
+    crossorigin="anonymous" />
+  <!--end::Third Party Plugin(OverlayScrollbars)-->
+  <!--begin::Third Party Plugin(Bootstrap Icons)-->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
+    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 
-    <!--Tailwind CSS  -->
-    <style>
-        .app-wrapper {
-            background-color: rgba(128, 128, 128, 0.1);
-        }
+  <!--end::Third Party Plugin(Bootstrap Icons)-->
+  <!--begin::Required Plugin(AdminLTE)-->
+  <link rel="stylesheet" href="../../assets/main.css" />
+  <!-- <link rel="stylesheet" href="text.css" /> -->
+  <!--end::Required Plugin(AdminLTE)-->
+  <!-- apexcharts -->
 
-        .modal-backdrop.show {
-            opacity: 0.4 !important;
-            /* Adjust the value as needed */
-        }
+  <!-- jquery link-->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        .diagonal-paid-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            /* Centered and rotated */
-            background-color: rgba(0, 128, 0, 0.2);
-            /* Light green with transparency */
-            color: green;
-            font-weight: bold;
-            font-size: 24px;
-            padding: 15px 40px;
-            border: 2px solid green;
-            border-radius: 8px;
-            text-transform: uppercase;
-            pointer-events: none;
-            z-index: 10;
-            white-space: nowrap;
-        }
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+    integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
+    crossorigin="anonymous" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-        .diagonal-unpaid-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            /* Centered and rotated */
-            background-color: rgba(255, 0, 0, 0.2);
-            /* Red with transparency for "UNPAID" */
-            color: #ff4d4d;
-            /* Softer red text color */
-            font-weight: bold;
-            font-size: 24px;
-            padding: 15px 40px;
-            border: 2px solid red;
-            border-radius: 8px;
-            text-transform: uppercase;
-            pointer-events: none;
-            z-index: 10;
-            white-space: nowrap;
-        }
+  <link rel="stylesheet" href="expenses.css">
+  <!-- scripts for data_table -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
-        .diagonal-partially-paid-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            /* Centered and rotated */
-            background-color: rgba(255, 165, 0, 0.2);
-            /* Amber background with opacity */
-            color: #ff9900;
-            /* Amber or gold text */
-            font-weight: bold;
-            font-size: 24px;
-            padding: 15px 40px;
-            border: 2px solid #ff9900;
-            /* Amber border */
-            border-radius: 8px;
-            text-transform: uppercase;
-            pointer-events: none;
-            z-index: 10;
-            white-space: nowrap;
-        }
-    </style>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <!-- Pdf pluggin -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+  <!--Tailwind CSS  -->
+  <style>
+    .app-wrapper {
+      background-color: rgba(128, 128, 128, 0.1);
+    }
+
+    .modal-backdrop.show {
+      opacity: 0.4 !important;
+      /* Adjust the value as needed */
+    }
+
+    .diagonal-paid-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      /* Centered and rotated */
+      background-color: rgba(0, 128, 0, 0.2);
+      /* Light green with transparency */
+      color: green;
+      font-weight: bold;
+      font-size: 24px;
+      padding: 15px 40px;
+      border: 2px solid green;
+      border-radius: 8px;
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    .diagonal-unpaid-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      /* Centered and rotated */
+      background-color: rgba(255, 0, 0, 0.2);
+      /* Red with transparency for "UNPAID" */
+      color: #ff4d4d;
+      /* Softer red text color */
+      font-weight: bold;
+      font-size: 24px;
+      padding: 15px 40px;
+      border: 2px solid red;
+      border-radius: 8px;
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    .diagonal-partially-paid-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      /* Centered and rotated */
+      background-color: rgba(255, 165, 0, 0.2);
+      /* Amber background with opacity */
+      color: #ff9900;
+      /* Amber or gold text */
+      font-weight: bold;
+      font-size: 24px;
+      padding: 15px 40px;
+      border: 2px solid #ff9900;
+      /* Amber border */
+      border-radius: 8px;
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 10;
+      white-space: nowrap;
+    }
+  </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
-    <!--begin::App Wrapper-->
-    <div class="app-wrapper">
-        <!--begin::Header-->
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
-        <!--end::Header-->
-        <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <a href="./index.html" class="brand-link">
+  <!--begin::App Wrapper-->
+  <div class="app-wrapper">
+    <!--begin::Header-->
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
+    <!--end::Header-->
 
-                    <!--begin::Brand Text-->
-                    <span class="brand-text font-weight-light"><b class="p-2"
-                            style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-                            class="p-2"
-                            style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-                </a>
-                </span>
-                <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-            <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-            <!--end::Sidebar Wrapper-->
-        </aside>
-        <!--end::Sidebar-->
-        <!--begin::App Main-->
-        <main class="app-main mt-4">
-            <div class="content-wrapper">
-                <!-- Main content -->
-                <section class="content">
-        <div class="container-fluid">
-          <!-- if the Rent Single Unit Button is Clicked -->
-          <?php
-              include_once 'processes/encrypt_decrypt_function.php';
-              if(isset($_GET['rent']) && !empty($_GET['rent'])) {
-                $id = $_GET['rent'];
-                $id = encryptor('decrypt', $id);
-                  try{
-                    if(!empty($id)) {
-                      $sql = "SELECT * FROM multi_rooms_units WHERE id =:id";
-                      $stmt = $pdo->prepare($sql);
-                      $stmt->execute(array(':id' => $id));
-                      while ($row = $stmt->fetch()) {
-                        $id = $row['id'];
-                        $unit_number = $row['unit_number'];
-                        $location = $row['location'];
-                        $building_link = $row['building_link'];
-                        $purpose = $row['purpose'];
-                        $purpose = $row['purpose'];
-                        $unit_category = $row['unit_category'];
-                        $occupancy_status = $row['occupancy_status'];
-                      }
-                    }
-                  }catch(PDOException $e){
-                    //if the execution fails
+    <!--begin::Sidebar-->
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
+    <!--end::Sidebar-->
+
+    <!--begin::App Main-->
+    <main class="app-main mt-4">
+      <div class="content-wrapper">
+        <!-- Main content -->
+        <section class="content">
+          <div class="container-fluid">
+            <!-- if the Rent Single Unit Button is Clicked -->
+            <?php
+            include_once 'processes/encrypt_decrypt_function.php';
+            if (isset($_GET['rent']) && !empty($_GET['rent'])) {
+              $id = $_GET['rent'];
+              $id = encryptor('decrypt', $id);
+              try {
+                if (!empty($id)) {
+                  $sql = "SELECT * FROM multi_rooms_units WHERE id =:id";
+                  $stmt = $pdo->prepare($sql);
+                  $stmt->execute(array(':id' => $id));
+                  while ($row = $stmt->fetch()) {
+                    $id = $row['id'];
+                    $unit_number = $row['unit_number'];
+                    $location = $row['location'];
+                    $building_link = $row['building_link'];
+                    $purpose = $row['purpose'];
+                    $purpose = $row['purpose'];
+                    $unit_category = $row['unit_category'];
+                    $occupancy_status = $row['occupancy_status'];
                   }
+                }
+              } catch (PDOException $e) {
+                //if the execution fails
               }
+            }
             ?>
-          <!-- Get Some Details About the Unit and make Cards for it -->
-          <div class="card shadow-sm">
-            <div class="card-header">
-              <b>Overview</b>
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                    class="fas fa-minus"></i></button>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-3 col-sm-6 col-12">
-                  <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                    <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                        class="fas fa-home"></i></span>
-                    <div class="info-box-content">
-                      <span class="info-box-text">Unit No</span>
-                      <span class="info-box-number"><?= htmlspecialchars($unit_number); ?></span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                  <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                    <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                        class="fa fa-table"></i></span>
-                    <div class="info-box-content">
-                      <span class="info-box-text">Unit Floor</span>
-                      <span class="info-box-number"><?= htmlspecialchars($location);?></span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                  <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                    <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                        class="fas fa-building"></i></span>
-                    <div class="info-box-content">
-                      <span class="info-box-text">Building</span>
-                      <span class="info-box-number"><?= htmlspecialchars($building_link) ;?></span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                  <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                    <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                        class="fas fa-hotel"></i></span>
-                    <div class="info-box-content">
-                      <span class="info-box-text">Rental Purpose</span>
-                      <span class="info-box-number"><?= htmlspecialchars($purpose) ;?></span>
-                    </div>
-                  </div>
+            <!-- Get Some Details About the Unit and make Cards for it -->
+            <div class="card shadow-sm">
+              <div class="card-header">
+                <b>Overview</b>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                      class="fas fa-minus"></i></button>
                 </div>
               </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
+                      <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
+                          class="fas fa-home"></i></span>
+                      <div class="info-box-content">
+                        <span class="info-box-text">Unit No</span>
+                        <span class="info-box-number"><?= htmlspecialchars($unit_number); ?></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
+                      <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
+                          class="fa fa-table"></i></span>
+                      <div class="info-box-content">
+                        <span class="info-box-text">Unit Floor</span>
+                        <span class="info-box-number"><?= htmlspecialchars($location); ?></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
+                      <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
+                          class="fas fa-building"></i></span>
+                      <div class="info-box-content">
+                        <span class="info-box-text">Building</span>
+                        <span class="info-box-number"><?= htmlspecialchars($building_link); ?></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
+                      <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
+                          class="fas fa-hotel"></i></span>
+                      <div class="info-box-content">
+                        <span class="info-box-text">Rental Purpose</span>
+                        <span class="info-box-number"><?= htmlspecialchars($purpose); ?></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <!-- A Simple Callout telling you to type important information -->
-          <div class="callout callout-danger shadow" id="callOutSection">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true"
-              id="closeCallOut">&times;</button>
-            <p style="font-weight:bold;"><span
-                style="background-color:#cc0001; color:#fff; padding:3px; border-radius:4px;">Add Tenant!</span> Enter
-              All the Required Relevant Tenant Details in Order to Rent out this
-              Unit.</p>
-          </div>
-          <!-- Form Start -->
-          <!-- Form Start -->
-          <?php include_once '../includes/tenant_form.php';?>
+            <!-- A Simple Callout telling you to type important information -->
+            <div class="callout callout-danger shadow" id="callOutSection">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true"
+                id="closeCallOut">&times;</button>
+              <p style="font-weight:bold;"><span
+                  style="background-color:#cc0001; color:#fff; padding:3px; border-radius:4px;">Add Tenant!</span> Enter
+                All the Required Relevant Tenant Details in Order to Rent out this
+                Unit.</p>
+            </div>
+            <!-- Form Start -->
+            <!-- Form Start -->
+            <?php include_once '../includes/tenant_form.php'; ?>
 
-        </div>
-      </section>
-      <!-- /.content -->
-      <!-- php script to process the submission of the tenant details -->
-      <?php
-        if(isset($_POST['rent_unit'])) {
+          </div>
+        </section>
+        <!-- /.content -->
+        <!-- php script to process the submission of the tenant details -->
+        <?php
+        if (isset($_POST['rent_unit'])) {
           $tm = md5(time()); // Unique prefix for uploaded files
 
           //Files Uploads Handling
-          function uploadFile($fileKey, $tm) {
+          function uploadFile($fileKey, $tm)
+          {
             if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
               $name = basename($_FILES[$fileKey]['name']);
               $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $name); // sanitize
@@ -460,16 +442,16 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                    AND pass_no = :pass_no");
 
             $checkTenant->execute([
-           
-                ':tmain_contact' => $tmain_contact,
-                ':talt_contact'  => $talt_contact,
-                ':temail'        => $temail,
-                ':id_no'         => $id_no,
-                ':pass_no'       => $pass_no
+
+              ':tmain_contact' => $tmain_contact,
+              ':talt_contact'  => $talt_contact,
+              ':temail'        => $temail,
+              ':id_no'         => $id_no,
+              ':pass_no'       => $pass_no
             ]);
 
 
-            if($checkTenant->rowCount() > 0) {
+            if ($checkTenant->rowCount() > 0) {
               echo "
                 <script>
                   Swal.fire({
@@ -560,7 +542,6 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                     }, 800); // short delay to smooth transition from loader
                     </script>";
             }
-
           } catch (Exception $e) {
             echo "<script>
                   Swal.fire({
@@ -572,45 +553,36 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
               </script>";
           }
         }
-      ?>
-            </div>
-        </main>
-        <!--end::App Main-->
-        <!--begin::Footer-->
-        <footer class="app-footer">
-            <!--begin::To the end-->
-            <div class="float-end d-none d-sm-inline">Anything you want</div>
-            <!--end::To the end-->
-            <!--begin::Copyright-->
-            <strong>
-                Copyright &copy; 2014-2024&nbsp;
-                <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
-            </strong>
-            All rights reserved.
-            <!--end::Copyright-->
-        </footer>
+        ?>
+      </div>
+    </main>
+    <!--end::App Main-->
 
-    </div>
-    <!--end::App Wrapper-->
+    <!--begin::Footer-->
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+    <!-- end::footer -->
 
-    <!-- plugin for pdf -->
-    
+  </div>
+  <!--end::App Wrapper-->
 
-    <!-- Main Js File -->
-    <script src="../../js/adminlte.js"></script>
-    <script src="js/main.js"></script>
-    <!-- html2pdf depends on html2canvas and jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script type="module" src="./js/main.js"></script>
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
-    <!-- pdf download plugin -->
+  <!-- plugin for pdf -->
 
 
-    <!-- Scripts -->
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Main Js File -->
+  <script src="../../js/adminlte.js"></script>
+  <script src="js/main.js"></script>
+  <!-- html2pdf depends on html2canvas and jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script type="module" src="./js/main.js"></script>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
+  <!-- pdf download plugin -->
+
+
+  <!-- Scripts -->
+  <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 <!--end::Body-->
 

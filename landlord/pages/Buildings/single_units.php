@@ -545,15 +545,6 @@ require_once "../db/connect.php";
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
-                                            <?php
-                                            try {
-                                                // Fetch all units
-                                                $stmt = $pdo->query("SELECT * FROM building_units ORDER BY created_at DESC");
-                                                $units = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                            } catch (PDOException $e) {
-                                                die("❌ Database error: " . $e->getMessage());
-                                            }
-                                            ?>
                                             <table class="table table-hover" id="dataTable">
                                                 <thead>
                                                     <th>Unit No</th>
