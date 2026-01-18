@@ -28,7 +28,7 @@ try {
 
             GROUP_CONCAT(mp.photo_path) AS photo_paths,
 
-            mrp.provider_id,
+            mrp.service_provider_id,
             mrp.proposed_budget
 
         FROM maintenance_requests AS mr
@@ -66,8 +66,15 @@ try {
          Line: {$e->getLine()}"
     );
 
+    // Display detailed error (developer view, uncomment if an error occurs)
+    // echo "<h3>Developer Debug Info</h3>";
+    // echo "<p><strong>Message:</strong> {$e->getMessage()}</p>";
+    // echo "<p><strong>File:</strong> {$e->getFile()}</p>";
+    // echo "<p><strong>Line:</strong> {$e->getLine()}</p>";
+
     // Display safe message to users
-    echo "<h3>Something went wrong</h3>";
-    echo "<p>Please try again later.</p>";
+    // Redirect user to your error page
+    $redirectUrl = '/Jengopay/errorMessages/errorMessage1.php';
+    header("Location: $redirectUrl");
     exit;
 }

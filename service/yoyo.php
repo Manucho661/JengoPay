@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +24,7 @@
             background: linear-gradient(135deg, var(--primary-color) 0%, #003d5c 100%);
             color: white;
             padding: 1.5rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .header h1 {
@@ -41,7 +42,7 @@
         .navigation {
             background: white;
             padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             margin-bottom: 2rem;
         }
 
@@ -60,7 +61,8 @@
             font-weight: 500;
         }
 
-        .nav-links a:hover, .nav-links a.active {
+        .nav-links a:hover,
+        .nav-links a.active {
             background: var(--accent-color);
             color: var(--primary-color);
         }
@@ -71,7 +73,7 @@
             padding: 1.5rem;
             border-radius: 10px;
             margin-bottom: 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .filter-title {
@@ -86,13 +88,13 @@
             border-radius: 10px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .request-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
         }
 
         .request-header {
@@ -206,7 +208,7 @@
             border-radius: 10px;
             padding: 4rem 2rem;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             margin-bottom: 2rem;
         }
 
@@ -402,7 +404,7 @@
             padding: 1.5rem;
             border-radius: 10px;
             margin-bottom: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .sidebar-title {
@@ -412,7 +414,8 @@
             font-size: 1.1rem;
         }
 
-        .category-list, .location-list {
+        .category-list,
+        .location-list {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
@@ -547,7 +550,7 @@
             text-align: center;
             margin-top: 2rem;
             padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         @media (max-width: 768px) {
@@ -565,8 +568,124 @@
                 flex-direction: column;
             }
         }
+
+        /* ===== Modal Header ===== */
+        .modal-title {
+            font-weight: 600;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ===== Job Info Section ===== */
+        .modal-job-info {
+            background: #f8f9fa;
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-job-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-job-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .modal-job-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #6c757d;
+        }
+
+        /* ===== Budget / Duration Cards ===== */
+        .client-budget-display {
+            background: #0d6efd;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            height: 100%;
+        }
+
+        .client-budget-display .label {
+            font-size: 0.8rem;
+            opacity: 0.85;
+            margin-bottom: 0.25rem;
+        }
+
+        .client-budget-display .amount {
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        /* ===== Form Labels ===== */
+        .form-label {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* ===== Helper Text ===== */
+        .help-text {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+
+        /* ===== Inputs ===== */
+        .form-control,
+        .form-select {
+            border-radius: 0.375rem;
+        }
+
+        /* ===== Duration Options ===== */
+        .duration-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .duration-option {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            border: 1px solid #dee2e6;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .duration-option:hover {
+            background: #f1f3f5;
+        }
+
+        /* ===== Footer Buttons ===== */
+        .modal-footer .btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-submit-application {
+            background: #0d6efd;
+            color: #fff;
+        }
+
+        .btn-submit-application:hover {
+            background: #0b5ed7;
+        }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -755,7 +874,7 @@
                     ]
                 ];
 
-                
+
                 // Pagination logic
                 $itemsPerPage = 5;
                 $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -773,7 +892,7 @@
                         </div>
                         <h3>No Requests Available</h3>
                         <p>
-                            There are currently no job requests matching your criteria. 
+                            There are currently no job requests matching your criteria.
                             Try adjusting your filters or check back later for new opportunities.
                         </p>
                         <div class="empty-state-actions">
@@ -785,135 +904,137 @@
                             </a>
                         </div>
                     </div>
-                <?php else:
+                    <?php else:
                     foreach ($currentRequests as $request): ?>
-                <div class="request-card">
-                    <div class="request-header">
-                        <div>
-                            <h3 class="request-title"><?php echo $request['title']; ?></h3>
-                            <div class="property-info">
-                                <i class="fas fa-building"></i> <strong><?php echo $request['property']; ?></strong> - Unit <?php echo $request['unit']; ?>
+                        <div class="request-card">
+                            <div class="request-header">
+                                <div>
+                                    <h3 class="request-title"><?php echo $request['title']; ?></h3>
+                                    <div class="property-info">
+                                        <i class="fas fa-building"></i> <strong><?php echo $request['property']; ?></strong> - Unit <?php echo $request['unit']; ?>
+                                    </div>
+                                </div>
+                                <span class="category-badge"><?php echo $request['category']; ?></span>
                             </div>
-                        </div>
-                        <span class="category-badge"><?php echo $request['category']; ?></span>
-                    </div>
 
-                    <div class="request-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-calendar"></i>
-                            <span><?php echo date('M d, Y', strtotime($request['date'])); ?></span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-clock"></i>
-                            <span><?php echo $request['duration']; ?></span>
-                        </div>
-                    </div>
-
-                    <?php 
-                    $description = $request['description'];
-                    $shortDescription = strlen($description) > 100 ? substr($description, 0, 100) . '...' : $description;
-                    $needsToggle = strlen($description) > 100;
-                    $hasImages = !empty($request['images']);
-                    ?>
-                    
-                    <div class="request-description">
-                        <span class="description-short"><?php echo $shortDescription; ?></span>
-                        <?php if ($needsToggle): ?>
-                        <span class="description-full"><?php echo $description; ?></span>
-                        <button class="read-more-btn" onclick="toggleDescription(this)" data-has-images="<?php echo $hasImages ? 'true' : 'false'; ?>">
-                            <span class="more-text">Read More <i class="fas fa-chevron-down"></i></span>
-                            <span class="less-text" style="display: none;">Read Less <i class="fas fa-chevron-up"></i></span>
-                        </button>
-                        <?php endif; ?>
-                    </div>
-
-                    <?php if (!empty($request['images'])): ?>
-                    <div class="request-images images-hidden">
-                        <div class="image-slider" data-slider="<?php echo uniqid(); ?>">
-                            <?php foreach ($request['images'] as $index => $image): ?>
-                            <img src="https://via.placeholder.com/800x300" 
-                                 alt="Request image <?php echo $index + 1; ?>" 
-                                 class="slider-image <?php echo $index === 0 ? 'active' : ''; ?>">
-                            <?php endforeach; ?>
-                            
-                            <?php if (count($request['images']) > 1): ?>
-                            <!-- Navigation Buttons -->
-                            <button class="slider-btn prev" onclick="changeSlide(this, -1)">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button class="slider-btn next" onclick="changeSlide(this, 1)">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                            
-                            <!-- Image Counter -->
-                            <div class="slider-counter">
-                                <span class="current-slide">1</span> / <?php echo count($request['images']); ?>
+                            <div class="request-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span><?php echo date('M d, Y', strtotime($request['date'])); ?></span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span><?php echo $request['duration']; ?></span>
+                                </div>
                             </div>
-                            
-                            <!-- Indicators -->
-                            <div class="slider-indicators">
-                                <?php foreach ($request['images'] as $index => $image): ?>
-                                <span class="indicator-dot <?php echo $index === 0 ? 'active' : ''; ?>" 
-                                      onclick="goToSlide(this, <?php echo $index; ?>)"></span>
-                                <?php endforeach; ?>
+
+                            <?php
+                            $description = $request['description'];
+                            $shortDescription = strlen($description) > 100 ? substr($description, 0, 100) . '...' : $description;
+                            $needsToggle = strlen($description) > 100;
+                            $hasImages = !empty($request['images']);
+                            ?>
+
+                            <div class="request-description">
+                                <span class="description-short"><?php echo $shortDescription; ?></span>
+                                <?php if ($needsToggle): ?>
+                                    <span class="description-full"><?php echo $description; ?></span>
+                                    <button class="read-more-btn" onclick="toggleDescription(this)" data-has-images="<?php echo $hasImages ? 'true' : 'false'; ?>">
+                                        <span class="more-text">Read More <i class="fas fa-chevron-down"></i></span>
+                                        <span class="less-text" style="display: none;">Read Less <i class="fas fa-chevron-up"></i></span>
+                                    </button>
+                                <?php endif; ?>
                             </div>
+
+                            <?php if (!empty($request['images'])): ?>
+                                <div class="request-images images-hidden">
+                                    <div class="image-slider" data-slider="<?php echo uniqid(); ?>">
+                                        <?php foreach ($request['images'] as $index => $image): ?>
+                                            <img src="https://via.placeholder.com/800x300"
+                                                alt="Request image <?php echo $index + 1; ?>"
+                                                class="slider-image <?php echo $index === 0 ? 'active' : ''; ?>">
+                                        <?php endforeach; ?>
+
+                                        <?php if (count($request['images']) > 1): ?>
+                                            <!-- Navigation Buttons -->
+                                            <button class="slider-btn prev" onclick="changeSlide(this, -1)">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <button class="slider-btn next" onclick="changeSlide(this, 1)">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+
+                                            <!-- Image Counter -->
+                                            <div class="slider-counter">
+                                                <span class="current-slide">1</span> / <?php echo count($request['images']); ?>
+                                            </div>
+
+                                            <!-- Indicators -->
+                                            <div class="slider-indicators">
+                                                <?php foreach ($request['images'] as $index => $image): ?>
+                                                    <span class="indicator-dot <?php echo $index === 0 ? 'active' : ''; ?>"
+                                                        onclick="goToSlide(this, <?php echo $index; ?>)"></span>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             <?php endif; ?>
-                        </div>
-                    </div>
-                    <?php endif; ?>
 
-                    <div class="request-footer">
-                        <div class="budget-info">
-                            <i class="fas fa-money-bill-wave"></i> <?php echo $request['budget']; ?>
+                            <div class="request-footer">
+                                <div class="budget-info">
+                                    <i class="fas fa-money-bill-wave"></i> <?php echo $request['budget']; ?>
+                                </div>
+                                <button class="apply-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#applicationModal"
+                                    data-job-title="<?php echo htmlspecialchars($request['title']); ?>"
+                                    data-job-property="<?php echo htmlspecialchars($request['property']); ?>"
+                                    data-job-unit="<?php echo htmlspecialchars($request['unit']); ?>"
+                                    data-job-budget="<?php echo htmlspecialchars($request['budget']); ?>"
+                                    data-job-duration="<?php echo htmlspecialchars($request['duration']); ?>"
+                                    data-job-category="<?php echo htmlspecialchars($request['category']); ?>">
+                                    <i class="fas fa-paper-plane"></i> Apply Now
+                                </button>
+                            </div>
                         </div>
-                        <button class="apply-btn" 
-                                onclick="openApplicationModal('<?php echo addslashes($request['title']); ?>', 
-                                                              '<?php echo $request['property']; ?>', 
-                                                              '<?php echo $request['unit']; ?>', 
-                                                              '<?php echo $request['budget']; ?>',
-                                                              '<?php echo $request['duration']; ?>',
-                                                              '<?php echo $request['category']; ?>')">
-                            <i class="fas fa-paper-plane"></i> Apply Now
-                        </button>
-                    </div>
-                </div>
                 <?php endforeach;
                 endif; ?>
 
                 <!-- Pagination -->
                 <?php if ($totalPages > 1 && !empty($currentRequests)): ?>
-                <nav aria-label="Request pagination">
-                    <ul class="pagination justify-content-center">
-                        <!-- Previous Button -->
-                        <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
-                            <a class="page-link" href="?page=<?php echo $currentPage - 1; ?>" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
+                    <nav aria-label="Request pagination">
+                        <ul class="pagination justify-content-center">
+                            <!-- Previous Button -->
+                            <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
+                                <a class="page-link" href="?page=<?php echo $currentPage - 1; ?>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
 
-                        <!-- Page Numbers -->
-                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                        <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
-                            <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                        </li>
-                        <?php endfor; ?>
+                            <!-- Page Numbers -->
+                            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                                <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
+                                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php endfor; ?>
 
-                        <!-- Next Button -->
-                        <li class="page-item <?php echo $currentPage == $totalPages ? 'disabled' : ''; ?>">
-                            <a class="page-link" href="?page=<?php echo $currentPage + 1; ?>" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+                            <!-- Next Button -->
+                            <li class="page-item <?php echo $currentPage == $totalPages ? 'disabled' : ''; ?>">
+                                <a class="page-link" href="?page=<?php echo $currentPage + 1; ?>" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
 
-                <!-- Pagination Info -->
-                <div class="pagination-info text-center mb-4">
-                    <p class="text-muted">
-                        Showing <?php echo $offset + 1; ?> to <?php echo min($offset + $itemsPerPage, $totalItems); ?> 
-                        of <?php echo $totalItems; ?> requests
-                    </p>
-                </div>
+                    <!-- Pagination Info -->
+                    <div class="pagination-info text-center mb-4">
+                        <p class="text-muted">
+                            Showing <?php echo $offset + 1; ?> to <?php echo min($offset + $itemsPerPage, $totalItems); ?>
+                            of <?php echo $totalItems; ?> requests
+                        </p>
+                    </div>
                 <?php endif; ?>
             </div>
 
@@ -960,113 +1081,147 @@
         </div>
     </div>
 
-    <!-- Application Modal -->
-    <div id="applicationModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-paper-plane"></i> Submit Application</h3>
-                <button class="close-modal" onclick="closeApplicationModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Job Information -->
-                <div class="modal-job-info">
-                    <div class="modal-job-title" id="modalJobTitle"></div>
-                    <div class="modal-job-details">
-                        <div class="modal-job-detail">
-                            <i class="fas fa-building"></i>
-                            <span id="modalJobProperty"></span>
-                        </div>
-                        <div class="modal-job-detail">
-                            <i class="fas fa-tag"></i>
-                            <span id="modalJobCategory"></span>
-                        </div>
-                    </div>
+    <!-- Application Modal (Bootstrap) -->
+    <div class="modal fade" id="applicationModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-3 shadow">
+
+                <!-- Header -->
+                <div class="modal-header text-white"
+                    style="background-color:#00192D;">
+                    <h5 class="modal-title fw-semibold d-flex align-items-center gap-2">
+                        <i class="fas fa-paper-plane text-warning"></i>
+                        Submit Application
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"></button>
                 </div>
 
-                <!-- Client Budget Display -->
-                <div class="client-budget-display">
-                    <div class="label">Client's Budget</div>
-                    <div class="amount" id="modalClientBudget"></div>
-                </div>
+                <div class="modal-body">
 
-                <!-- Application Form -->
-                <form id="applicationForm">
-                    <!-- Your Proposed Budget -->
-                    <div class="form-group">
-                        <label for="proposedBudget">
-                            <i class="fas fa-money-bill-wave"></i> Your Proposed Budget (KES)
-                        </label>
-                        <input type="number" 
-                               id="proposedBudget" 
-                               name="proposedBudget" 
-                               placeholder="Enter your budget" 
-                               required
-                               min="0"
-                               step="100">
-                        <div class="help-text">Enter the amount you're willing to complete this job for</div>
-                    </div>
+                    <!-- Job Info -->
+                    <div class="p-3 rounded bg-light mb-4">
+                        <div class="fw-bold fs-6 mb-1" id="modalJobTitle"></div>
 
-                    <!-- Your Estimated Duration -->
-                    <div class="form-group">
-                        <label>
-                            <i class="fas fa-clock"></i> Your Estimated Duration
-                        </label>
-                        <input type="text" 
-                               id="customDuration" 
-                               name="duration" 
-                               placeholder="e.g., 2-3 hours, 1 day" 
-                               required>
-                        <div class="help-text">How long will it take you to complete this job?</div>
-                        
-                        <!-- Quick Duration Options -->
-                        <div class="duration-options">
-                            <div class="duration-option" onclick="selectDuration(this, '1-2 hours')">1-2 hours</div>
-                            <div class="duration-option" onclick="selectDuration(this, '3-4 hours')">3-4 hours</div>
-                            <div class="duration-option" onclick="selectDuration(this, '1 day')">1 day</div>
-                            <div class="duration-option" onclick="selectDuration(this, '2-3 days')">2-3 days</div>
+                        <div class="d-flex flex-wrap gap-3 small text-muted">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-building text-warning"></i>
+                                <span id="modalJobProperty"></span>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-tag text-warning"></i>
+                                <span id="modalJobCategory"></span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Cover Letter / Message -->
-                    <div class="form-group">
-                        <label for="coverLetter">
-                            <i class="fas fa-comment"></i> Cover Letter / Message
-                        </label>
-                        <textarea id="coverLetter" 
-                                  name="coverLetter" 
-                                  placeholder="Explain why you're the best fit for this job, your relevant experience, and any questions you may have..."
-                                  required></textarea>
-                        <div class="help-text">Tell the client why you're the perfect person for this job</div>
+                    <!-- Budget / Duration -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="p-3 rounded text-white h-100"
+                                style="background-color:#00192D;">
+                                <div class="small text-warning fw-semibold">
+                                    Client’s Budget
+                                </div>
+                                <div class="fs-4 fw-bold" id="modalClientBudget"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="p-3 rounded text-white h-100"
+                                style="background-color:#003d5c;">
+                                <div class="small text-warning fw-semibold">
+                                    Expected Duration
+                                </div>
+                                <div class="fs-5 fw-bold" id="modalClientDuration"></div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Availability -->
-                    <div class="form-group">
-                        <label for="availability">
-                            <i class="fas fa-calendar-check"></i> When Can You Start?
-                        </label>
-                        <select id="availability" name="availability" required>
-                            <option value="">Select availability</option>
-                            <option value="immediately">Immediately</option>
-                            <option value="within-24-hours">Within 24 hours</option>
-                            <option value="within-3-days">Within 3 days</option>
-                            <option value="within-week">Within a week</option>
-                            <option value="custom">Custom date (specify in message)</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="modal-btn cancel" onclick="closeApplicationModal()">
-                    <i class="fas fa-times"></i> Cancel
-                </button>
-                <button class="modal-btn submit" onclick="submitApplication()">
-                    <i class="fas fa-paper-plane"></i> Submit Application
-                </button>
+                    <!-- Form -->
+                    <form id="applicationForm">
+
+                        <!-- Budget -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold d-flex gap-2">
+                                <i class="fas fa-money-bill-wave text-warning"></i>
+                                Your Proposed Budget (KES)
+                            </label>
+                            <input type="number" class="form-control"
+                                placeholder="Enter your budget">
+                            <div class="small text-muted mt-1">
+                                Enter the amount you're willing to work for
+                            </div>
+                        </div>
+
+                        <!-- Duration -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold d-flex gap-2">
+                                <i class="fas fa-clock text-warning"></i>
+                                Estimated Duration
+                            </label>
+                            <input type="text" class="form-control"
+                                placeholder="e.g. 1–2 days">
+
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                <span class="badge rounded-pill border border-warning text-dark px-3 py-2">
+                                    1–2 hours
+                                </span>
+                                <span class="badge rounded-pill border border-warning text-dark px-3 py-2">
+                                    1 day
+                                </span>
+                                <span class="badge rounded-pill border border-warning text-dark px-3 py-2">
+                                    2–3 days
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Cover Letter -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold d-flex gap-2">
+                                <i class="fas fa-comment text-warning"></i>
+                                Cover Letter
+                            </label>
+                            <textarea class="form-control" rows="4"
+                                placeholder="Explain why you're a good fit..."></textarea>
+                            <div class="small text-muted mt-1">
+                                Keep it short, clear, and relevant
+                            </div>
+                        </div>
+
+                        <!-- Availability -->
+                        <div class="mb-2">
+                            <label class="form-label fw-semibold d-flex gap-2">
+                                <i class="fas fa-calendar-check text-warning"></i>
+                                Availability
+                            </label>
+                            <select class="form-select">
+                                <option>Immediately</option>
+                                <option>Within 24 hours</option>
+                                <option>Within 3 days</option>
+                            </select>
+                        </div>
+
+                    </form>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer border-0">
+                    <button class="btn btn-outline-secondary">
+                        Cancel
+                    </button>
+                    <button class="btn fw-semibold text-dark"
+                        style="background-color:#FFC107;">
+                        <i class="fas fa-paper-plane me-1"></i>
+                        Submit Application
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
+
 
     <!-- Footer -->
     <footer class="footer">
@@ -1113,90 +1268,51 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Application Modal Functions
-        function openApplicationModal(title, property, unit, budget, duration, category) {
-            const modal = document.getElementById('applicationModal');
-            
-            // Populate modal with job information
-            document.getElementById('modalJobTitle').textContent = title;
-            document.getElementById('modalJobProperty').textContent = property + ' - Unit ' + unit;
-            document.getElementById('modalJobCategory').textContent = category;
-            document.getElementById('modalClientBudget').textContent = budget;
-            
-            // Show modal
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
+        // Populate modal with job data when it opens
+        const applicationModal = document.getElementById('applicationModal');
+        applicationModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
 
-        function closeApplicationModal() {
-            const modal = document.getElementById('applicationModal');
-            modal.classList.remove('show');
-            document.body.style.overflow = 'auto';
-            
-            // Reset form
+            // Get job data from button attributes
+            const jobTitle = button.getAttribute('data-job-title');
+            const jobProperty = button.getAttribute('data-job-property');
+            const jobUnit = button.getAttribute('data-job-unit');
+            const jobBudget = button.getAttribute('data-job-budget');
+            const jobDuration = button.getAttribute('data-job-duration');
+            const jobCategory = button.getAttribute('data-job-category');
+
+            // Update modal display content
+            document.getElementById('modalJobTitle').textContent = jobTitle;
+            document.getElementById('modalJobProperty').textContent = jobProperty + ' - Unit ' + jobUnit;
+            document.getElementById('modalJobCategory').textContent = jobCategory;
+            document.getElementById('modalClientBudget').textContent = jobBudget;
+            document.getElementById('modalClientDuration').textContent = jobDuration;
+
+            // Update hidden form fields for PHP submission
+            document.getElementById('hiddenJobTitle').value = jobTitle;
+            document.getElementById('hiddenJobProperty').value = jobProperty;
+            document.getElementById('hiddenJobUnit').value = jobUnit;
+            document.getElementById('hiddenJobCategory').value = jobCategory;
+            document.getElementById('hiddenClientBudget').value = jobBudget;
+            document.getElementById('hiddenClientDuration').value = jobDuration;
+        });
+
+        // Reset form when modal is closed
+        applicationModal.addEventListener('hidden.bs.modal', function() {
             document.getElementById('applicationForm').reset();
-            
-            // Clear duration selection
             document.querySelectorAll('.duration-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
-        }
+        });
 
+        // Duration selection
         function selectDuration(element, duration) {
-            // Remove selected class from all options
             document.querySelectorAll('.duration-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
-            
-            // Add selected class to clicked option
             element.classList.add('selected');
-            
-            // Set the duration input value
             document.getElementById('customDuration').value = duration;
         }
-
-        function submitApplication() {
-            const form = document.getElementById('applicationForm');
-            
-            // Validate form
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
-            
-            // Get form data
-            const formData = {
-                jobTitle: document.getElementById('modalJobTitle').textContent,
-                proposedBudget: document.getElementById('proposedBudget').value,
-                duration: document.getElementById('customDuration').value,
-                coverLetter: document.getElementById('coverLetter').value,
-                availability: document.getElementById('availability').value
-            };
-            
-            // Here you would normally send the data to your server
-            console.log('Application submitted:', formData);
-            
-            // Show success message
-            alert('Application submitted successfully! The client will review your proposal and get back to you soon.');
-            
-            // Close modal
-            closeApplicationModal();
-        }
-
-        // Close modal when clicking outside
-        document.addEventListener('click', function(event) {
-            const modal = document.getElementById('applicationModal');
-            if (event.target === modal) {
-                closeApplicationModal();
-            }
-        });
-
-        // Close modal on Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeApplicationModal();
-            }
-        });
 
         // Image slider functions
         function changeSlide(button, direction) {
@@ -1204,40 +1320,40 @@
             const slides = slider.querySelectorAll('.slider-image');
             const indicators = slider.querySelectorAll('.indicator-dot');
             const counter = slider.querySelector('.current-slide');
-            
+
             let currentIndex = Array.from(slides).findIndex(slide => slide.classList.contains('active'));
             let newIndex = currentIndex + direction;
-            
+
             // Loop around
             if (newIndex >= slides.length) newIndex = 0;
             if (newIndex < 0) newIndex = slides.length - 1;
-            
+
             // Update slides
             slides[currentIndex].classList.remove('active');
             slides[newIndex].classList.add('active');
-            
+
             // Update indicators
             indicators[currentIndex].classList.remove('active');
             indicators[newIndex].classList.add('active');
-            
+
             // Update counter
             counter.textContent = newIndex + 1;
         }
-        
+
         function goToSlide(indicator, index) {
             const slider = indicator.closest('.image-slider');
             const slides = slider.querySelectorAll('.slider-image');
             const indicators = slider.querySelectorAll('.indicator-dot');
             const counter = slider.querySelector('.current-slide');
-            
+
             // Remove all active classes
             slides.forEach(slide => slide.classList.remove('active'));
             indicators.forEach(dot => dot.classList.remove('active'));
-            
+
             // Add active class to selected
             slides[index].classList.add('active');
             indicators[index].classList.add('active');
-            
+
             // Update counter
             counter.textContent = index + 1;
         }
@@ -1247,15 +1363,15 @@
             // Reset search input
             const searchInput = document.querySelector('.filter-section input[type="text"]');
             if (searchInput) searchInput.value = '';
-            
+
             // Reset category select
             const categorySelect = document.querySelector('.filter-section select');
             if (categorySelect) categorySelect.selectedIndex = 0;
-            
+
             // Remove active styling from filter buttons
             const filterButtons = document.querySelectorAll('.filter-btn');
             filterButtons.forEach(btn => btn.style.background = '');
-            
+
             alert('Filters cleared! Click search to refresh results.');
         }
 
@@ -1267,7 +1383,7 @@
             const moreText = button.querySelector('.more-text');
             const lessText = button.querySelector('.less-text');
             const hasImages = button.getAttribute('data-has-images') === 'true';
-            
+
             // Find the images section (next sibling after description)
             const requestCard = button.closest('.request-card');
             const imagesSection = requestCard.querySelector('.request-images');
@@ -1278,7 +1394,7 @@
                 shortText.classList.remove('hidden');
                 moreText.style.display = 'inline';
                 lessText.style.display = 'none';
-                
+
                 // Hide images
                 if (hasImages && imagesSection) {
                     imagesSection.classList.remove('images-visible');
@@ -1290,7 +1406,7 @@
                 shortText.classList.add('hidden');
                 moreText.style.display = 'none';
                 lessText.style.display = 'inline';
-                
+
                 // Show images
                 if (hasImages && imagesSection) {
                     imagesSection.classList.remove('images-hidden');
@@ -1331,4 +1447,5 @@
         });
     </script>
 </body>
+
 </html>

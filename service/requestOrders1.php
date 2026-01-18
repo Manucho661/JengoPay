@@ -5,6 +5,7 @@ session_start();
 // 🔌 Include your PDO database connection
 include '../db/connect.php';
 
+
 // 📥 Check if the user is logged in and their role is 'provider'
 if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') {
     // Get the full name from the session and capitalize the first name

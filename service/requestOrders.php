@@ -17,6 +17,9 @@ if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') 
 
 // dedicated file for fetching requests
 include './actions/getRequests1.php';
+
+// dedicated file to submit application request
+include_once './actions/submitApplication.php'
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +45,7 @@ include './actions/getRequests1.php';
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     /* background-color: var(--light-bg); */
-          background-color: #f4f6f9;
+    background-color: #f4f6f9;
 
   }
 
@@ -581,6 +584,15 @@ include './actions/getRequests1.php';
 </style>
 
 <body>
+
+  <!-- PHP Messages -->
+  <?php if (!empty($error)): ?>
+    <div class="alert alert-danger small"><?= htmlspecialchars($error) ?></div>
+  <?php endif; ?>
+  <?php if (!empty($success)): ?>
+    <div class="alert alert-success small"><?= htmlspecialchars($success) ?></div>
+  <?php endif; ?>
+  
   <div class="app-wrapper">
     <!--Start Header -->
     <?php
@@ -759,7 +771,14 @@ include './actions/getRequests1.php';
                       <button
                         class="apply-btn"
                         data-bs-toggle="modal"
-                        data-bs-target="#applyModal">
+                        data-bs-target="#applicationModal"
+                        data-job-id="<?php echo htmlspecialchars($request['id']); ?>"
+                        data-job-title="<?php echo htmlspecialchars($request['title']); ?>"
+                        data-job-property="<?php echo htmlspecialchars($request['building_name']); ?>"
+                        data-job-unit="<?php echo htmlspecialchars($request['unit_number']); ?>"
+                        data-job-budget="<?php echo htmlspecialchars($request['budget']); ?>"
+                        data-job-duration="<?php echo htmlspecialchars($request['duration']); ?>"
+                        data-job-category="<?php echo htmlspecialchars($request['category']); ?>">
                         <i class="fas fa-paper-plane"></i> Apply Now
                       </button>
 
@@ -897,79 +916,147 @@ include './actions/getRequests1.php';
 
     <!-- modals -->
 
-    <!-- Apply Modal -->
-    <div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-0 rounded-4 shadow-lg">
+    <!-- Application Modal (Bootstrap) -->
+    <div class="modal fade" id="applicationModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-3 shadow">
 
-          <!-- Modal Header -->
-          <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
-            <h5 class="modal-title d-flex align-items-center" id="applyModalLabel">
-              <i class="bi bi-briefcase-fill me-2"></i> Apply for Job
+          <!-- Header -->
+          <div class="modal-header text-white" style="background-color:#00192D;">
+            <h5 class="modal-title fw-semibold d-flex align-items-center gap-2">
+              <i class="fas fa-paper-plane text-warning"></i>
+              Submit Application
             </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
 
           <!-- Modal Body -->
           <div class="modal-body">
-            <form id="applyForm" class="px-2">
 
-              <input type="hidden" id="requestId" name="requestId" value="">
+            <!-- Job Info -->
+            <div class="p-3 rounded bg-light mb-4">
+              <div class="fw-bold fs-6 mb-1" id="modalJobTitle"></div>
+              <div class="d-flex flex-wrap gap-3 small text-muted">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fas fa-building text-warning"></i>
+                  <span id="modalJobProperty"></span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fas fa-tag text-warning"></i>
+                  <span id="modalJobCategory"></span>
+                </div>
+              </div>
+            </div>
 
-              <!-- Client Price (Plain Text) -->
-              <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-                <label class="form-label">
-                  <i class="bi bi-tags me-1" style="color: #00192D;"></i> Client Price
+            <!-- Budget / Duration Cards -->
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <div class="p-3 rounded text-white h-100" style="background-color:#00192D;">
+                  <div class="small text-warning fw-semibold">Client’s Budget</div>
+                  <div class="fs-4 fw-bold" id="modalClientBudget"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="p-3 rounded text-white h-100" style="background-color:#003d5c;">
+                  <div class="small text-warning fw-semibold">Expected Duration</div>
+                  <div class="fs-5 fw-bold" id="modalClientDuration"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Application Form -->
+            <form id="applicationForm" method="POST">
+
+              <!-- Hidden Inputs for Job Info -->
+              <input type="hidden" name="job_request_id" id="hiddenJobRequestId">
+
+              <!-- Your Proposed Budget -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold d-flex gap-2">
+                  <i class="fas fa-money-bill-wave text-warning"></i>
+                  Your Proposed Budget (KES)
                 </label>
-                <input type="hidden" name="client_price" value="5000">
-                <div class="form-control-plaintext ps-3" style="border: 1px solid #ced4da; border-radius: 50px; background-color: #f8f9fa;">
-                  5000
+                <input type="number" class="form-control" name="proposed_budget"
+                  placeholder="Enter your budget" required min="0" step="100">
+                <div class="small text-muted mt-1">
+                  Enter the amount you're willing to work for
                 </div>
               </div>
 
-              <!-- Your Price -->
-              <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-                <label for="yourPrice" class="form-label">
-                  <i class="bi bi-currency-dollar me-1" style="color: #00192D;"></i> Your Price
+              <!-- Estimated Duration -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold d-flex gap-2">
+                  <i class="fas fa-clock text-warning"></i>
+                  Estimated Duration
                 </label>
-                <input type="number" name="your_price" class="form-control rounded-pill" id="yourPrice" step="1" min="0" placeholder="4500" required>
+                <input type="text" class="form-control" name="proposed_duration"
+                  placeholder="e.g. 1–2 days" required>
+
+                <!-- Quick Duration Options -->
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                  <span class="badge rounded-pill border border-warning text-dark px-3 py-2"
+                    onclick="document.querySelector('[name=proposed_duration]').value='1–2 hours'">
+                    1–2 hours
+                  </span>
+                  <span class="badge rounded-pill border border-warning text-dark px-3 py-2"
+                    onclick="document.querySelector('[name=proposed_duration]').value='1 day'">
+                    1 day
+                  </span>
+                  <span class="badge rounded-pill border border-warning text-dark px-3 py-2"
+                    onclick="document.querySelector('[name=proposed_duration]').value='2–3 days'">
+                    2–3 days
+                  </span>
+                </div>
               </div>
 
-              <!-- Duration -->
-              <div class="mb-3" style="font-weight: bold; font-style: oblique;">
-                <label for="duration" class="form-label">
-                  <i class="bi bi-clock me-1" style="color: #00192D;"></i> Select Duration
+              <!-- Cover Letter -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold d-flex gap-2">
+                  <i class="fas fa-comment text-warning"></i>
+                  Cover Letter (optional)
                 </label>
-                <select class="form-select" name="duration" id="duration" onchange="handleDurationChange(this)" required>
-                  <option selected disabled value="">Select duration</option>
-                  <option value="less than 24hrs">Less than 24hrs</option>
-                  <option value="1 day">1 day</option>
-                  <option value="2 days">2 days</option>
-                  <option value="3 days">3 days</option>
-                  <option value="other">Other</option>
+                <textarea class="form-control" name="cover_letter" rows="4"
+                  placeholder="Explain why you're a good fit..."></textarea>
+                <div class="small text-muted mt-1">
+                  Keep it short, clear, and relevant
+                </div>
+              </div>
+
+              <!-- Availability -->
+              <div class="mb-2">
+                <label class="form-label fw-semibold d-flex gap-2">
+                  <i class="fas fa-calendar-check text-warning"></i>
+                  Availability
+                </label>
+                <select class="form-select" name="provider_availability" required>
+                  <option value="">Select availability</option>
+                  <option value="immediately">Immediately</option>
+                  <option value="within-24-hours">Within 24 hours</option>
+                  <option value="within-3-days">Within 3 days</option>
                 </select>
               </div>
 
-              <!-- Custom Duration -->
-              <div class="mb-3 d-none" id="customDurationDiv" style="font-weight: bold; font-style: oblique;">
-                <label for="customDuration" class="form-label">
-                  <i class="bi bi-calendar-plus me-1" style="color: #00192D;"></i> Specify Duration
-                </label>
-                <input type="text" name="custom_duration" class="form-control rounded-pill" id="customDuration" placeholder="e.g. 5 days">
-              </div>
-
-              <!-- Modal Footer -->
-              <div class="modal-footer justify-content-center" style="background-color: #f8f9fa;">
-                <button type="submit" class="btn rounded-pill px-4 py-2" style="background-color: #00192D; color: #FFC107;">
-                  <i class="bi bi-check2-circle me-1"></i> Submit Application
-                </button>
-              </div>
-
             </form>
+
           </div>
+
+          <!-- Footer -->
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button type="submit" name="submit_application" form="applicationForm"
+              class="btn fw-semibold text-dark" style="background-color:#FFC107;">
+              <i class="fas fa-paper-plane me-1"></i>
+              Submit Application
+            </button>
+          </div>
+
         </div>
       </div>
     </div>
+
+
 
   </div>
 
@@ -1096,6 +1183,50 @@ include './actions/getRequests1.php';
           imagesSection.classList.add('images-visible');
         }
       }
+    }
+
+
+    // Populate modal with job data when it opens
+    const applicationModal = document.getElementById('applicationModal');
+    applicationModal.addEventListener('show.bs.modal', function(event) {
+      const button = event.relatedTarget;
+
+      // Get job data from button attributes
+      const jobTitle = button.getAttribute('data-job-title');
+      const requestId = button.getAttribute('data-job-id');
+      const jobProperty = button.getAttribute('data-job-property');
+      const jobUnit = button.getAttribute('data-job-unit');
+      const jobBudget = button.getAttribute('data-job-budget');
+      const jobDuration = button.getAttribute('data-job-duration');
+      const jobCategory = button.getAttribute('data-job-category');
+
+      // Update modal display content
+      document.getElementById('modalJobTitle').textContent = jobTitle;
+      document.getElementById('modalJobTitle').textContent = jobTitle;
+      document.getElementById('modalJobProperty').textContent = jobProperty + ' - Unit ' + jobUnit;
+      document.getElementById('modalJobCategory').textContent = jobCategory;
+      document.getElementById('modalClientBudget').textContent = jobBudget;
+      document.getElementById('modalClientDuration').textContent = jobDuration;
+
+      // Update hidden form fields for PHP submission
+      document.getElementById('hiddenJobRequestId').value = requestId;
+    });
+
+    // Reset form when modal is closed
+    applicationModal.addEventListener('hidden.bs.modal', function() {
+      document.getElementById('applicationForm').reset();
+      document.querySelectorAll('.duration-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+    });
+
+    // Duration selection
+    function selectDuration(element, duration) {
+      document.querySelectorAll('.duration-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      element.classList.add('selected');
+      document.getElementById('customDuration').value = duration;
     }
   </script>
 

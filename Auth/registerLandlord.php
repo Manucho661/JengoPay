@@ -38,7 +38,7 @@
                             required>
 
                         <!-- Name -->
-                        <label for="userName" class="text-sm font-medium mb-1 block">Your name/Business name</label>
+                        <label for="userName" class="text-sm font-medium mb-1 block">Your name/Property name</label>
                         <input
                             type="text"
                             id="userName"

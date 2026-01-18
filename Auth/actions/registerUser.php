@@ -85,7 +85,7 @@ try {
             INSERT INTO landlords (user_id) VALUES (?)
         ");
         $landlordStmt->execute([$user_id]);
-    } elseif ($role === "service_provider") {
+    } elseif ($role === "provider") {
         $providerStmt = $pdo->prepare("
             INSERT INTO service_providers (user_id) VALUES (?)
         ");
