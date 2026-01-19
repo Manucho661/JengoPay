@@ -31,17 +31,21 @@ try {
 
     // Insert maintenance request
     // created by id
-    $userId = $_SESSION['user']['id'];
-    $role = $_SESSION['user']['role'];
+    // $userId = $_SESSION['user']['id'];
+    $userId = 1;
+    // $role = $_SESSION['user']['role'];
+    $role = "landlord";
+    $buildingId=1;
     $stmt = $pdo->prepare("
         INSERT INTO maintenance_requests 
-            (created_by_user_id, requester_role, title, description, category, created_at) 
-        VALUES (:created_by_user_id, :requester_role, :title, :description, :category, NOW())
+            (created_by_user_id, requester_role, building_id, title, description, category, created_at) 
+        VALUES (:created_by_user_id, :requester_role, :building_id, :title, :description, :category, NOW())
     ");
 
     $stmt->execute([
         ':created_by_user_id' => $userId,
         ':requester_role' => $role,
+        ':building_id' => $buildingId,
         ':title' => $title,
         ':description' => $description,
         ':category' => $category

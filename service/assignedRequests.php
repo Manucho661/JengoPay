@@ -17,9 +17,6 @@ if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') 
 
 // dedicated file for fetching requests
 include './actions/getRequests1.php';
-
-// dedicated file to submit application request
-include_once './actions/submitApplication.php'
 ?>
 
 <!DOCTYPE html>
@@ -44,18 +41,15 @@ include_once './actions/submitApplication.php'
 
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* background-color: var(--light-bg); */
-    background-color: #f4f6f9;
-
+    background-color: var(--light-bg);
   }
 
-  /* Header Styles */
-
+  
   /* Navigation */
   .navigation {
     background: white;
     padding: 1rem 0;
-    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     margin-bottom: 2rem;
   }
 
@@ -86,7 +80,7 @@ include_once './actions/submitApplication.php'
     padding: 1.5rem;
     border-radius: 10px;
     margin-bottom: 2rem;
-    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   .filter-title {
@@ -101,13 +95,13 @@ include_once './actions/submitApplication.php'
     border-radius: 10px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
-    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s, box-shadow 0.3s;
   }
 
   .request-card:hover {
     transform: translateY(-3px);
-    /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   }
 
   .request-header {
@@ -182,14 +176,6 @@ include_once './actions/submitApplication.php'
   }
 
   .description-full.visible {
-    display: block;
-  }
-
-  .images-hidden {
-    display: none;
-  }
-
-  .images-visible {
     display: block;
   }
 
@@ -285,100 +271,23 @@ include_once './actions/submitApplication.php'
   }
 
   .request-images {
-    position: relative;
-    width: 100%;
+    display: flex;
+    gap: 0.5rem;
     margin-bottom: 1rem;
-    border-radius: 10px;
-    overflow: hidden;
+    flex-wrap: wrap;
   }
 
-  .image-slider {
-    position: relative;
-    width: 100%;
-    height: 300px;
-    background: #f8f9fa;
-  }
-
-  .slider-image {
-    width: 100%;
-    height: 100%;
+  .request-images img {
+    width: 80px;
+    height: 80px;
     object-fit: cover;
-    display: none;
-  }
-
-  .slider-image.active {
-    display: block;
-  }
-
-  .slider-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 25, 45, 0.7);
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-    z-index: 10;
-  }
-
-  .slider-btn:hover {
-    background: var(--accent-color);
-    color: var(--primary-color);
-    transform: translateY(-50%) scale(1.1);
-  }
-
-  .slider-btn.prev {
-    left: 10px;
-  }
-
-  .slider-btn.next {
-    right: 10px;
-  }
-
-  .slider-indicators {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 10;
-  }
-
-  .indicator-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .indicator-dot.active {
-    background: var(--accent-color);
-    width: 25px;
     border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
   }
 
-  .slider-counter {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(0, 25, 45, 0.7);
-    color: white;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    z-index: 10;
+  .request-images img:hover {
+    transform: scale(1.05);
   }
 
   .request-footer {
@@ -584,15 +493,6 @@ include_once './actions/submitApplication.php'
 </style>
 
 <body>
-
-  <!-- PHP Messages -->
-  <?php if (!empty($error)): ?>
-    <div class="alert alert-danger small"><?= htmlspecialchars($error) ?></div>
-  <?php endif; ?>
-  <?php if (!empty($success)): ?>
-    <div class="alert alert-success small"><?= htmlspecialchars($success) ?></div>
-  <?php endif; ?>
-  
   <div class="app-wrapper">
     <!--Start Header -->
     <?php
@@ -606,9 +506,9 @@ include_once './actions/submitApplication.php'
       <nav class="navigation">
         <div class="container">
           <div class="nav-links">
-            <a href="" class="active"><i class="fas fa-search"></i> Find a Job</a>
+            <a href="requestOrders.php"><i class="fas fa-search"></i> Find a Job</a>
             <a href="yourApplications.php"><i class="fas fa-file-alt"></i> Your Applications</a>
-            <a href="assignedRequests.php"><i class="fas fa-briefcase"></i> Assigned Jobs</a>
+            <a href="" class="active"><i class="fas fa-briefcase"></i> Assigned Jobs</a>
             <a href="previousRequests.php"><i class="fas fa-history"></i> Previous Jobs</a>
           </div>
         </div>
@@ -620,7 +520,7 @@ include_once './actions/submitApplication.php'
           <div class="row">
 
             <!-- LEFT: Job Tabs and Listings -->
-            <div class="col-lg-8">
+            <div class="col-lg-9">
               <!-- Filter Section -->
               <div class="filter-section">
                 <h3 class="filter-title"><i class="fas fa-filter"></i> Filter & Search</h3>
@@ -648,7 +548,7 @@ include_once './actions/submitApplication.php'
               <!-- Request Cards -->
               <?php
               // Sample data - in real application, this would come from database
-
+            
 
               // Pagination logic
               $itemsPerPage = 5;
@@ -687,7 +587,7 @@ include_once './actions/submitApplication.php'
                       <div>
                         <h3 class="request-title"><?php echo $request['title']; ?></h3>
                         <div class="property-info">
-                          <i class="fas fa-building"></i> <strong><?php echo $request['building_name']; ?></strong> - Unit <?php echo $request['unit_number']; ?>
+                          <i class="fas fa-building"></i> <strong><?php echo $request['building_name']; ?></strong> - Unit <?php echo $request['unit']; ?>
                         </div>
                       </div>
                       <span class="category-badge"><?php echo $request['category']; ?></span>
@@ -696,7 +596,7 @@ include_once './actions/submitApplication.php'
                     <div class="request-meta">
                       <div class="meta-item">
                         <i class="fas fa-calendar"></i>
-                        <span><?php echo date('M d, Y', strtotime($request['created_at'])); ?></span>
+                        <span><?php echo date('M d, Y', strtotime($request['date'])); ?></span>
                       </div>
                       <div class="meta-item">
                         <i class="fas fa-clock"></i>
@@ -708,59 +608,24 @@ include_once './actions/submitApplication.php'
                     $description = $request['description'];
                     $shortDescription = strlen($description) > 100 ? substr($description, 0, 100) . '...' : $description;
                     $needsToggle = strlen($description) > 100;
-                    $hasImages = !empty($request['photo_paths']);
-
                     ?>
 
                     <div class="request-description">
                       <span class="description-short"><?php echo $shortDescription; ?></span>
                       <?php if ($needsToggle): ?>
                         <span class="description-full"><?php echo $description; ?></span>
-                        <button class="read-more-btn" onclick="toggleDescription(this)" data-has-images="<?php echo $hasImages ? 'true' : 'false'; ?>">
+                        <button class="read-more-btn" onclick="toggleDescription(this)">
                           <span class="more-text">Read More <i class="fas fa-chevron-down"></i></span>
                           <span class="less-text" style="display: none;">Read Less <i class="fas fa-chevron-up"></i></span>
                         </button>
                       <?php endif; ?>
                     </div>
 
-                    <!-- images section -->
-                    <?php if (!empty($request['photo_paths'])): ?>
-                      <div class="request-images images-hidden">
-                        <div class="image-slider" data-slider="<?php echo uniqid(); ?>">
-                          <?php
-                          $photoPaths = explode(',', $request['photo_paths']);
-                          foreach ($photoPaths as $photo_path):
-                          ?>
-                            <img
-                              src="/Jengopay/landlord/pages/maintenance/<?= htmlspecialchars($photo_path) ?>"
-                              alt="Request image"
-                              width="100%">
-                          <?php endforeach; ?>
-
-                          <?php if (count(explode(',', $request['photo_paths'])) > 1): ?>
-                            <!-- Navigation Buttons -->
-                            <!-- Navigation Buttons -->
-                            <button class="slider-btn prev" onclick="changeSlide(this, -1)">
-                              <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button class="slider-btn next" onclick="changeSlide(this, 1)">
-                              <i class="fas fa-chevron-right"></i>
-                            </button>
-
-                            <!-- Image Counter -->
-                            <div class="slider-counter">
-                              <span class="current-slide">1</span> / <?php echo count($request['images']); ?>
-                            </div>
-
-                            <!-- Indicators -->
-                            <div class="slider-indicators">
-                              <?php foreach ($request['images'] as $index => $image): ?>
-                                <span class="indicator-dot <?php echo $index === 0 ? 'active' : ''; ?>"
-                                  onclick="goToSlide(this, <?php echo $index; ?>)"></span>
-                              <?php endforeach; ?>
-                            </div>
-                          <?php endif; ?>
-                        </div>
+                    <?php if (!empty($request['images'])): ?>
+                      <div class="request-images">
+                        <?php foreach ($request['images'] as $image): ?>
+                          <img src="https://via.placeholder.com/80" alt="Request image">
+                        <?php endforeach; ?>
                       </div>
                     <?php endif; ?>
 
@@ -768,20 +633,9 @@ include_once './actions/submitApplication.php'
                       <div class="budget-info">
                         <i class="fas fa-money-bill-wave"></i> <?php echo $request['budget']; ?>
                       </div>
-                      <button
-                        class="apply-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#applicationModal"
-                        data-job-id="<?php echo htmlspecialchars($request['id']); ?>"
-                        data-job-title="<?php echo htmlspecialchars($request['title']); ?>"
-                        data-job-property="<?php echo htmlspecialchars($request['building_name']); ?>"
-                        data-job-unit="<?php echo htmlspecialchars($request['unit_number']); ?>"
-                        data-job-budget="<?php echo htmlspecialchars($request['budget']); ?>"
-                        data-job-duration="<?php echo htmlspecialchars($request['duration']); ?>"
-                        data-job-category="<?php echo htmlspecialchars($request['category']); ?>">
+                      <button class="apply-btn">
                         <i class="fas fa-paper-plane"></i> Apply Now
                       </button>
-
                     </div>
                   </div>
               <?php endforeach;
@@ -824,7 +678,7 @@ include_once './actions/submitApplication.php'
             </div>
 
             <!-- RIGHT: Sidebar -->
-            <div class="col-lg-4">
+            <div class="col-lg-3">
               <div class="position-sticky" style="top: 80px; max-height: calc(100vh - 80px); overflow-y: auto;">
                 <!-- Subscribe -->
                 <div class="p-4 mb-4 shadow-sm bg-white rounded border">
@@ -881,184 +735,37 @@ include_once './actions/submitApplication.php'
 
         </div> <!-- end .row -->
       </div> <!-- end .container -->
-    </div>
-    <!-- end main-->
-
-    <footer class="footer">
-      <div class="footer-container">
-        <div class="footer-section about">
-          <h2>Jengo Pay</h2>
-          <p>Jengo Pay is your trusted platform for managing properties, tenants, and service providers efficiently. Empowering real estate with smart tech.</p>
-        </div>
-
-        <div class="footer-section links">
-          <h3>Quick Links</h3>
-          <ul>
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Units</a></li>
-            <li><a href="#">Tenants</a></li>
-            <li><a href="#">Reports</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-section contact">
-          <h3>Contact Us</h3>
-          <p><i class="fas fa-phone-alt"></i> +254 712 345 678</p>
-          <p><i class="fas fa-envelope"></i> support@jengopay.co.ke</p>
-          <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>© 2025 Jengo Pay. All Rights Reserved.</p>
-      </div>
-    </footer>
-
-    <!-- modals -->
-
-    <!-- Application Modal (Bootstrap) -->
-    <div class="modal fade" id="applicationModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 rounded-3 shadow">
-
-          <!-- Header -->
-          <div class="modal-header text-white" style="background-color:#00192D;">
-            <h5 class="modal-title fw-semibold d-flex align-items-center gap-2">
-              <i class="fas fa-paper-plane text-warning"></i>
-              Submit Application
-            </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-
-          <!-- Modal Body -->
-          <div class="modal-body">
-
-            <!-- Job Info -->
-            <div class="p-3 rounded bg-light mb-4">
-              <div class="fw-bold fs-6 mb-1" id="modalJobTitle"></div>
-              <div class="d-flex flex-wrap gap-3 small text-muted">
-                <div class="d-flex align-items-center gap-2">
-                  <i class="fas fa-building text-warning"></i>
-                  <span id="modalJobProperty"></span>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                  <i class="fas fa-tag text-warning"></i>
-                  <span id="modalJobCategory"></span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Budget / Duration Cards -->
-            <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <div class="p-3 rounded text-white h-100" style="background-color:#00192D;">
-                  <div class="small text-warning fw-semibold">Client’s Budget</div>
-                  <div class="fs-4 fw-bold" id="modalClientBudget"></div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="p-3 rounded text-white h-100" style="background-color:#003d5c;">
-                  <div class="small text-warning fw-semibold">Expected Duration</div>
-                  <div class="fs-5 fw-bold" id="modalClientDuration"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Application Form -->
-            <form id="applicationForm" method="POST">
-
-              <!-- Hidden Inputs for Job Info -->
-              <input type="hidden" name="job_request_id" id="hiddenJobRequestId">
-
-              <!-- Your Proposed Budget -->
-              <div class="mb-3">
-                <label class="form-label fw-semibold d-flex gap-2">
-                  <i class="fas fa-money-bill-wave text-warning"></i>
-                  Your Proposed Budget (KES)
-                </label>
-                <input type="number" class="form-control" name="proposed_budget"
-                  placeholder="Enter your budget" required min="0" step="100">
-                <div class="small text-muted mt-1">
-                  Enter the amount you're willing to work for
-                </div>
-              </div>
-
-              <!-- Estimated Duration -->
-              <div class="mb-3">
-                <label class="form-label fw-semibold d-flex gap-2">
-                  <i class="fas fa-clock text-warning"></i>
-                  Estimated Duration
-                </label>
-                <input type="text" class="form-control" name="proposed_duration"
-                  placeholder="e.g. 1–2 days" required>
-
-                <!-- Quick Duration Options -->
-                <div class="d-flex flex-wrap gap-2 mt-2">
-                  <span class="badge rounded-pill border border-warning text-dark px-3 py-2"
-                    onclick="document.querySelector('[name=proposed_duration]').value='1–2 hours'">
-                    1–2 hours
-                  </span>
-                  <span class="badge rounded-pill border border-warning text-dark px-3 py-2"
-                    onclick="document.querySelector('[name=proposed_duration]').value='1 day'">
-                    1 day
-                  </span>
-                  <span class="badge rounded-pill border border-warning text-dark px-3 py-2"
-                    onclick="document.querySelector('[name=proposed_duration]').value='2–3 days'">
-                    2–3 days
-                  </span>
-                </div>
-              </div>
-
-              <!-- Cover Letter -->
-              <div class="mb-3">
-                <label class="form-label fw-semibold d-flex gap-2">
-                  <i class="fas fa-comment text-warning"></i>
-                  Cover Letter (optional)
-                </label>
-                <textarea class="form-control" name="cover_letter" rows="4"
-                  placeholder="Explain why you're a good fit..."></textarea>
-                <div class="small text-muted mt-1">
-                  Keep it short, clear, and relevant
-                </div>
-              </div>
-
-              <!-- Availability -->
-              <div class="mb-2">
-                <label class="form-label fw-semibold d-flex gap-2">
-                  <i class="fas fa-calendar-check text-warning"></i>
-                  Availability
-                </label>
-                <select class="form-select" name="provider_availability" required>
-                  <option value="">Select availability</option>
-                  <option value="immediately">Immediately</option>
-                  <option value="within-24-hours">Within 24 hours</option>
-                  <option value="within-3-days">Within 3 days</option>
-                </select>
-              </div>
-
-            </form>
-
-          </div>
-
-          <!-- Footer -->
-          <div class="modal-footer border-0">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-              Cancel
-            </button>
-            <button type="submit" name="submit_application" form="applicationForm"
-              class="btn fw-semibold text-dark" style="background-color:#FFC107;">
-              <i class="fas fa-paper-plane me-1"></i>
-              Submit Application
-            </button>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-
-
+    </div> <!-- end .container-fluid -->
   </div>
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section about">
+        <h2>Jengo Pay</h2>
+        <p>Jengo Pay is your trusted platform for managing properties, tenants, and service providers efficiently. Empowering real estate with smart tech.</p>
+      </div>
+
+      <div class="footer-section links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#">Dashboard</a></li>
+          <li><a href="#">Units</a></li>
+          <li><a href="#">Tenants</a></li>
+          <li><a href="#">Reports</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section contact">
+        <h3>Contact Us</h3>
+        <p><i class="fas fa-phone-alt"></i> +254 712 345 678</p>
+        <p><i class="fas fa-envelope"></i> support@jengopay.co.ke</p>
+        <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 Jengo Pay. All Rights Reserved.</p>
+    </div>
+  </footer>
 
   </div>
 
@@ -1127,9 +834,28 @@ include_once './actions/submitApplication.php'
   <script type="module" src="js/main.js"></script>
   <script>
     // Read more / less toggle
+    document.querySelectorAll('.job-description').forEach(function(desc) {
+      const fullText = desc.textContent.trim();
+      const maxLength = 200;
 
+      if (fullText.length > maxLength) {
+        const shortText = fullText.slice(0, maxLength).trim();
+        desc.setAttribute('data-full', fullText);
+        desc.setAttribute('data-short', shortText);
 
+        desc.innerHTML = `
+        ${shortText}... <span class="read-toggle" style="color: blue; cursor: pointer;">Read more</span>
+      `;
 
+        desc.querySelector('.read-toggle').addEventListener('click', function toggleHandler() {
+          const isShort = desc.textContent.trim().endsWith('Read more');
+          desc.innerHTML = isShort ?
+            `${fullText} <span class="read-toggle" style="color: blue; cursor: pointer;">Read less</span>` :
+            `${shortText}... <span class="read-toggle" style="color: blue; cursor: pointer;">Read more</span>`;
+          desc.querySelector('.read-toggle').addEventListener('click', toggleHandler);
+        });
+      }
+    });
 
     // Show/hide custom duration
     function handleDurationChange(select) {
@@ -1145,90 +871,6 @@ include_once './actions/submitApplication.php'
     // Form submission with validation
   </script>
 
-  <script>
-    function toggleDescription(button) {
-      const descriptionDiv = button.closest('.request-description');
-      const shortText = descriptionDiv.querySelector('.description-short');
-      const fullText = descriptionDiv.querySelector('.description-full');
-      const moreText = button.querySelector('.more-text');
-      const lessText = button.querySelector('.less-text');
-      const hasImages = button.getAttribute('data-has-images') === 'true';
-
-      // Find the images section (next sibling after description)
-      const requestCard = button.closest('.request-card');
-      const imagesSection = requestCard.querySelector('.request-images');
-
-      if (fullText.classList.contains('visible')) {
-        // Collapse
-        fullText.classList.remove('visible');
-        shortText.classList.remove('hidden');
-        moreText.style.display = 'inline';
-        lessText.style.display = 'none';
-
-        // Hide images
-        if (hasImages && imagesSection) {
-          imagesSection.classList.remove('images-visible');
-          imagesSection.classList.add('images-hidden');
-        }
-      } else {
-        // Expand
-        fullText.classList.add('visible');
-        shortText.classList.add('hidden');
-        moreText.style.display = 'none';
-        lessText.style.display = 'inline';
-
-        // Show images
-        if (hasImages && imagesSection) {
-          imagesSection.classList.remove('images-hidden');
-          imagesSection.classList.add('images-visible');
-        }
-      }
-    }
-
-
-    // Populate modal with job data when it opens
-    const applicationModal = document.getElementById('applicationModal');
-    applicationModal.addEventListener('show.bs.modal', function(event) {
-      const button = event.relatedTarget;
-
-      // Get job data from button attributes
-      const jobTitle = button.getAttribute('data-job-title');
-      const requestId = button.getAttribute('data-job-id');
-      const jobProperty = button.getAttribute('data-job-property');
-      const jobUnit = button.getAttribute('data-job-unit');
-      const jobBudget = button.getAttribute('data-job-budget');
-      const jobDuration = button.getAttribute('data-job-duration');
-      const jobCategory = button.getAttribute('data-job-category');
-
-      // Update modal display content
-      document.getElementById('modalJobTitle').textContent = jobTitle;
-      document.getElementById('modalJobTitle').textContent = jobTitle;
-      document.getElementById('modalJobProperty').textContent = jobProperty + ' - Unit ' + jobUnit;
-      document.getElementById('modalJobCategory').textContent = jobCategory;
-      document.getElementById('modalClientBudget').textContent = jobBudget;
-      document.getElementById('modalClientDuration').textContent = jobDuration;
-
-      // Update hidden form fields for PHP submission
-      document.getElementById('hiddenJobRequestId').value = requestId;
-    });
-
-    // Reset form when modal is closed
-    applicationModal.addEventListener('hidden.bs.modal', function() {
-      document.getElementById('applicationForm').reset();
-      document.querySelectorAll('.duration-option').forEach(opt => {
-        opt.classList.remove('selected');
-      });
-    });
-
-    // Duration selection
-    function selectDuration(element, duration) {
-      document.querySelectorAll('.duration-option').forEach(opt => {
-        opt.classList.remove('selected');
-      });
-      element.classList.add('selected');
-      document.getElementById('customDuration').value = duration;
-    }
-  </script>
 
 
 

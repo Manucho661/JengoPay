@@ -18,7 +18,7 @@ import { sendText } from "./api/sendText.js";
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     // ── 1️⃣ Initial Data Fetching ─────────────────────────
-    await get_requests();
+    // await get_requests();
     expandCollapseRequest();
 
     await getAssignedRequests();

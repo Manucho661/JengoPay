@@ -3,7 +3,9 @@
 require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
+<?php
 
+?>
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -174,85 +176,85 @@ require_once "../db/connect.php";
     <!--begin::App Main-->
     <main class="main">
 
-          <div class="container-fluid">
-            <div class="row align-items-center mb-3">
-              <div class="col-12 d-flex align-items-center">
-                <!-- Small colored bar on the left -->
-                <span style="width:5px; height:28px; background:#F5C518;" class="rounded"></span>
+      <div class="container-fluid">
+        <div class="row align-items-center mb-3">
+          <div class="col-12 d-flex align-items-center">
+            <!-- Small colored bar on the left -->
+            <span style="width:5px; height:28px; background:#F5C518;" class="rounded"></span>
 
-                <!-- Header text -->
-                <h3 class="mb-0 ms-3">Single Unit Tenants</h3>
-              </div>
-            </div>
+            <!-- Header text -->
+            <h3 class="mb-0 ms-3">Single Unit Tenants</h3>
+          </div>
+        </div>
 
+        <?php
+        $single_unit_tenants = "SELECT tenant_status, COUNT(*) AS total FROM tenants GROUP BY tenant_status";
+        $stmt = $pdo->prepare($single_unit_tenants);
+        $stmt->execute();
+
+        $counts = [
+          'Active'  => 0,
+          'Vacated' => 0
+        ];
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $counts[$row['tenant_status']] = $row['total'];
+        }
+
+        $icons = [
+          'Active'  => 'bi-person-check',
+          'Vacated' => 'bi-person-dash'
+        ];
+        ?>
+
+        <div class="row g-3">
+          <?php foreach ($counts as $type => $total): ?>
             <?php
-            $single_unit_tenants = "SELECT tenant_status, COUNT(*) AS total FROM tenants GROUP BY tenant_status";
-            $stmt = $pdo->prepare($single_unit_tenants);
-            $stmt->execute();
+            // Defaults
+            $iconColor  = 'text-warning';
+            $displayType = ucfirst($type);
+            $iconClass  = $icons[$type] ?? 'bi-people';
 
-            $counts = [
-              'Active'  => 0,
-              'Vacated' => 0
-            ];
-
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-              $counts[$row['tenant_status']] = $row['total'];
+            if ($type === 'Active') {
+              $iconColor   = 'text-success';
+              $displayType = 'Active Tenants';
+            } elseif ($type === 'Vacated') {
+              $iconColor   = 'text-secondary';
+              $displayType = 'Vacated Tenants';
             }
 
-            $icons = [
-              'Active'  => 'bi-person-check',
-              'Vacated' => 'bi-person-dash'
-            ];
+            // Fixed gold color for left bar
+            $barColor = '#F5C518';
             ?>
 
-            <div class="row g-3">
-              <?php foreach ($counts as $type => $total): ?>
-                <?php
-                // Defaults
-                $iconColor  = 'text-warning';
-                $displayType = ucfirst($type);
-                $iconClass  = $icons[$type] ?? 'bi-people';
+            <div class="col-lg-3 col-md-6 d-flex">
+              <div class="stat-card d-flex align-items-stretch rounded-2 p-3 w-100 shadow"
+                style="border:1px solid rgba(0,25,45,.2); background:#fff;">
 
-                if ($type === 'Active') {
-                  $iconColor   = 'text-success';
-                  $displayType = 'Active Tenants';
-                } elseif ($type === 'Vacated') {
-                  $iconColor   = 'text-secondary';
-                  $displayType = 'Vacated Tenants';
-                }
+                <!-- Left colored bar -->
+                <span class="me-3 rounded"
+                  style="width:5px; background:<?= $barColor ?>;"></span>
 
-                // Fixed gold color for left bar
-                $barColor = '#F5C518';
-                ?>
-
-                <div class="col-lg-3 col-md-6 d-flex">
-                  <div class="stat-card d-flex align-items-stretch rounded-2 p-3 w-100 shadow"
-                    style="border:1px solid rgba(0,25,45,.2); background:#fff;">
-
-                    <!-- Left colored bar -->
-                    <span class="me-3 rounded"
-                      style="width:5px; background:<?= $barColor ?>;"></span>
-
-                    <div class="d-flex align-items-center">
-                      <div class="me-3">
-                        <i class="bi <?= $iconClass ?> fs-2 <?= $iconColor ?>"></i>
-                      </div>
-                      <div>
-                        <p class="mb-0 fw-bold text-muted"><?= $displayType ?></p>
-                        <h5 class="mb-0 fw-bold"><?= $total ?></h5>
-                      </div>
-                    </div>
-
+                <div class="d-flex align-items-center">
+                  <div class="me-3">
+                    <i class="bi <?= $iconClass ?> fs-2 <?= $iconColor ?>"></i>
+                  </div>
+                  <div>
+                    <p class="mb-0 fw-bold text-muted"><?= $displayType ?></p>
+                    <h5 class="mb-0 fw-bold"><?= $total ?></h5>
                   </div>
                 </div>
-              <?php endforeach; ?>
+
+              </div>
             </div>
+          <?php endforeach; ?>
+        </div>
 
-            <b>
-              <hr>
-            </b>
+        <b>
+          <hr>
+        </b>
 
-            <!-- <div class="row mb-3 mt-3">
+        <!-- <div class="row mb-3 mt-3">
                     <div class="col-md-6 d-flex">
                         <input
                             type="text"
@@ -261,180 +263,194 @@ require_once "../db/connect.php";
                             style="border-radius: 25px 0 0 25px;">
 
                          Search Button -->
-            <!-- <button
+        <!-- <button
                             class="btn text-white"
                             style="border-radius: 0 25px 25px 0; background: linear-gradient(135deg, #00192D, #002B5B)">
                             Search
                         </button> -->
-          </div>
+      </div>
 
-          <br>
-          <div class="card shadow">
-            <div class="card-header" style="background-color:#00192D; color:#fff;"><b>All Single Unit Tenants</b></div>
-            <div class="card-body">
-              <table class="table table-striped" id="dataTable">
-                <thead>
-                  <tr> <!-- Added missing <tr> -->
-                    <th>Name</th>
-                    <th>Unit | Building</th>
-                    <th>Unit Category</th>
-                    <th>Contacts</th>
-                    <th>Identification</th>
-                    <th>Move In Date</th>
-                    <th>Added On</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  include_once '../processes/encrypt_decrypt_function.php';
+      <br>
+      <div class="card shadow">
+        <div class="card-header" style="background-color:#00192D; color:#fff;"><b>All Single Unit Tenants</b></div>
+        <div class="card-body">
+          <table class="table table-striped" id="dataTable">
+            <thead>
+              <tr> <!-- Added missing <tr> -->
+                <th>Name</th>
+                <th>Unit | Building</th>
+                <th>Contacts</th>
+                <th>Identification</th>
+                <th>Move In Date</th>
+                <th>Added On</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              include_once '../processes/encrypt_decrypt_function.php';
 
-                  // CORRECTED SQL QUERY - Based on your actual table structure
-                  $select = $pdo->prepare("
-                  SELECT 
-                  t.*,
-                  bu.unit_number,
-                  uc.category_name as unit_category_name,
-                  b.building_name
-              FROM tenants t
-              LEFT JOIN building_units bu 
-                  ON t.unit_id = bu.id
-              LEFT JOIN unit_categories uc 
-                  ON bu.unit_category_id = uc.id
-              LEFT JOIN buildings b 
-                  ON bu.building_id = b.id
-              WHERE t.tenant_status = 'Active'
-              ORDER BY t.created_at DESC
-          ");
-                  // $select->execute([
-                  //   ':unit_category' => 'single_unit'  // or whatever value indicates single units
-                  // ]);
+              // CORRECTED SQL QUERY - Based on your actual table structure
+              $sql = "
+                    SELECT 
+                        tenants.id AS id,
+                        tenants.first_name,
+                        tenants.middle_name,
+                        tenants.last_name,
+                        tenants.phone,
+                        tenants.email,
 
-                  $tenants = $select->fetchAll(PDO::FETCH_ASSOC);
+                        building_units.id AS unit_id,
+                        building_units.unit_number,
+
+                        tenancies.id AS tenancy_id,
+                        tenancies.account_no,
+                        tenancies.status,
+                        tenancies.move_in_date
+                    FROM tenants
+                    INNER JOIN tenancies 
+                        ON tenants.id = tenancies.tenant_id
+                        AND tenancies.status = 'Active'
+                    INNER JOIN building_units 
+                        ON tenancies.unit_id = building_units.id
+                    INNER JOIN unit_categories 
+                        ON building_units.unit_category_id = unit_categories.id
+                    WHERE unit_categories.category_name = :category
+                ";
+
+              $stmt = $pdo->prepare($sql);
+              $stmt->execute([
+                ':category' => 'single_unit'
+              ]);
+
+              // $singleUnitTenants = 
 
 
-                  if (count($tenants) > 0) {
-                    foreach ($tenants as $row) {
-                      $id = encryptor('encrypt', $row['id']);
-                  ?>
-                      <tr>
-                        <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']); ?></td>
-                        <td>
-                          <?=
-                          !empty($row['unit_number']) ? htmlspecialchars($row['unit_number']) : 'N/A';
-                          ?> |
-                          <?=
-                          !empty($row['building_name']) ? htmlspecialchars($row['building_name']) : (!empty($row['building_id']) ? htmlspecialchars($row['building_id']) : 'N/A');
-                          ?>
-                        </td>
-                        <td><?= htmlspecialchars($row['unit_category'] ?? 'N/A'); ?></td>
-                        <td>
-                          <?php if (!empty($row['main_contact'])): ?>
-                            <a href="tel:<?= htmlspecialchars($row['main_contact']); ?>">
-                              <i class="bi bi-telephone"></i> <?= htmlspecialchars($row['main_contact']); ?>
-                            </a><br>
-                          <?php endif; ?>
-                          <?php if (!empty($row['alt_contact'])): ?>
-                            <a href="tel:<?= htmlspecialchars($row['alt_contact']); ?>">
-                              <i class="bi bi-telephone"></i> <?= htmlspecialchars($row['alt_contact']); ?>
+              $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+              if (count($tenants) > 0) {
+                foreach ($tenants as $row) {
+                   $id = encryptor('encrypt', $row['id']);
+              ?>
+                  <tr>
+                    <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']); ?></td>
+                    <td>
+                      <?=
+                      !empty($row['unit_number']) ? htmlspecialchars($row['unit_number']) : 'N/A';
+                      ?> |
+                      <?=
+                      !empty($row['building_name']) ? htmlspecialchars($row['building_name']) : (!empty($row['building_id']) ? htmlspecialchars($row['building_id']) : 'N/A');
+                      ?>
+                    </td>
+                    
+                    <td>
+                      <?php if (!empty($row['main_contact'])): ?>
+                        <a href="tel:<?= htmlspecialchars($row['main_contact']); ?>">
+                          <i class="bi bi-telephone"></i> <?= htmlspecialchars($row['main_contact']); ?>
+                        </a><br>
+                      <?php endif; ?>
+                      <?php if (!empty($row['alt_contact'])): ?>
+                        <a href="tel:<?= htmlspecialchars($row['alt_contact']); ?>">
+                          <i class="bi bi-telephone"></i> <?= htmlspecialchars($row['alt_contact']); ?>
+                        </a>
+                      <?php endif; ?>
+                    </td>
+                    <td>
+                      <i class="bi bi-person-vcard"></i>
+                      <?=
+                      !empty($row['id_no']) ? htmlspecialchars($row['id_no']) : (!empty($row['national_id']) ? htmlspecialchars($row['national_id']) : 'N/A');
+                      ?>
+                      <?php if (!empty($row['idMode'])): ?>
+                        <br><small>(<?= htmlspecialchars(ucfirst($row['idMode'])); ?>)</small>
+                      <?php endif; ?>
+                    </td>
+                    <td>
+                      <?=
+                      !empty($row['move_in_date']) ? date('d/m/Y', strtotime($row['move_in_date'])) : 'N/A';
+                      ?>
+                    </td>
+                    <td>
+                      <?=
+                      !empty($row['created_at']) ? date('d/m/Y', strtotime($row['created_at'])) : 'N/A';
+                      ?>
+                    </td>
+                    <td>
+                      <?php if ($row['status'] == 'Active'): ?>
+                        <span class="badge bg-success">
+                          <i class="bi bi-person-check"></i> <?= $row['status']; ?>
+                        </span>
+                      <?php else: ?>
+                        <span class="badge bg-danger">
+                          <i class="bi bi-person-exclamation"></i> <?= $row['status']; ?>
+                        </span>
+                      <?php endif; ?>
+                    </td>
+                    <td>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                          Actions
+                        </button>
+                        <div class="dropdown-menu">
+                          <!-- WhatsApp -->
+                          <?php if (!empty($row['phone'])): ?>
+                            <a class="dropdown-item" href="https://wa.me/<?= $row['phone']; ?>?text=Hello <?= urlencode($row['first_name']); ?>" target="_blank">
+                              <i class="fab fa-whatsapp"></i> WhatsApp
                             </a>
                           <?php endif; ?>
-                        </td>
-                        <td>
-                          <i class="bi bi-person-vcard"></i>
-                          <?=
-                          !empty($row['id_no']) ? htmlspecialchars($row['id_no']) : (!empty($row['national_id']) ? htmlspecialchars($row['national_id']) : 'N/A');
-                          ?>
-                          <?php if (!empty($row['idMode'])): ?>
-                            <br><small>(<?= htmlspecialchars(ucfirst($row['idMode'])); ?>)</small>
+
+                          <!-- Email -->
+                          <?php if (!empty($row['email'])): ?>
+                            <a class="dropdown-item" href="mailto:<?= $row['email']; ?>">
+                              <i class="fas fa-envelope"></i> Email
+                            </a>
                           <?php endif; ?>
-                        </td>
-                        <td>
-                          <?=
-                          !empty($row['move_in_date']) ? date('d/m/Y', strtotime($row['move_in_date'])) : 'N/A';
-                          ?>
-                        </td>
-                        <td>
-                          <?=
-                          !empty($row['created_at']) ? date('d/m/Y', strtotime($row['created_at'])) : 'N/A';
-                          ?>
-                        </td>
-                        <td>
-                          <?php if ($row['tenant_status'] == 'Active'): ?>
-                            <span class="badge bg-success">
-                              <i class="bi bi-person-check"></i> <?= $row['tenant_status']; ?>
-                            </span>
-                          <?php else: ?>
-                            <span class="badge bg-danger">
-                              <i class="bi bi-person-exclamation"></i> <?= $row['tenant_status']; ?>
-                            </span>
-                          <?php endif; ?>
-                        </td>
-                        <td>
-                          <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                              Actions
-                            </button>
-                            <div class="dropdown-menu">
-                              <!-- WhatsApp -->
-                              <?php if (!empty($row['phone'])): ?>
-                                <a class="dropdown-item" href="https://wa.me/<?= $row['phone']; ?>?text=Hello <?= urlencode($row['first_name']); ?>" target="_blank">
-                                  <i class="fab fa-whatsapp"></i> WhatsApp
-                                </a>
-                              <?php endif; ?>
 
-                              <!-- Email -->
-                              <?php if (!empty($row['email'])): ?>
-                                <a class="dropdown-item" href="mailto:<?= $row['email']; ?>">
-                                  <i class="fas fa-envelope"></i> Email
-                                </a>
-                              <?php endif; ?>
+                          <!-- Profile -->
+                          <a class="dropdown-item" href="tenant_profile.php?profile=<?= $id; ?>">
+                            <i class="fas fa-user"></i> Profile
+                          </a>
 
-                              <!-- Profile -->
-                              <a class="dropdown-item" href="tenant_profile.php?profile=<?= $id; ?>">
-                                <i class="fas fa-user"></i> Profile
-                              </a>
+                          <!-- Edit -->
+                          <a class="dropdown-item" href="edit_tenant_info.php?edit_tenant=<?= $id; ?>">
+                            <i class="fas fa-edit"></i> Edit
+                          </a>
 
-                              <!-- Edit -->
-                              <a class="dropdown-item" href="edit_tenant_info.php?edit_tenant=<?= $id; ?>">
-                                <i class="fas fa-edit"></i> Edit
-                              </a>
+                          <!-- Invoice -->
+                          <a class="dropdown-item" href="single_unit_tenant_invoice.php?invoice=<?= $id; ?>">
+                            <i class="fas fa-file-invoice"></i> Invoice
+                          </a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+              <?php
+                }
+              } else {
+                echo '<tr><td colspan="9" class="text-center py-3">No single unit tenants found</td></tr>';
+              }
+              ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-                              <!-- Invoice -->
-                              <a class="dropdown-item" href="single_unit_tenant_invoice.php?invoice=<?= $id; ?>">
-                                <i class="fas fa-file-invoice"></i> Invoice
-                              </a>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                  <?php
-                    }
-                  } else {
-                    echo '<tr><td colspan="9" class="text-center py-3">No single unit tenants found</td></tr>';
-                  }
-                  ?>
-                </tbody>
-              </table>
-            </div>
-          </div>
+      <!-- /.content -->
 
-        <!-- /.content -->
+      <!-- Help Pop Up Form -->
+      <?php
+      // include_once 'includes/lower_right_popup_form.php'; 
+      ?>
 
-        <!-- Help Pop Up Form -->
-        <?php 
-        // include_once 'includes/lower_right_popup_form.php'; 
-        ?>
-      
       <!-- /.content-wrapper -->
-    
-        <!-- ./wrapper -->
-        <!-- Required Scripts -->
-        <?php 
-        // include_once 'includes/required_scripts.php'; 
-        
-        ?>
+
+      <!-- ./wrapper -->
+      <!-- Required Scripts -->
+      <?php
+      // include_once 'includes/required_scripts.php'; 
+
+      ?>
       <!-- Meter Readings JavaScript -->
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -444,7 +460,7 @@ require_once "../db/connect.php";
     <!--begin::Footer-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
     <!-- end footer -->
- 
+
   </div>
   <!--end::App Wrapper-->
 
