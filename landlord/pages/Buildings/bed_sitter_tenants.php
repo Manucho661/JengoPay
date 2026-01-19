@@ -297,12 +297,10 @@
 
               $stmt = $pdo->prepare($sql);
               $stmt->execute([
-                ':category' => 'single_unit'
+                ':category' => 'bed_sitter_unit'
               ]);
 
               // $singleUnitTenants = 
-
-
               $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
       
       if (count($tenants) > 0) {
