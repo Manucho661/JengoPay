@@ -14,14 +14,8 @@ if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') 
   $serviceProvider = ''; // Default if user is not logged in or not a provider
 }
 
-// 📥 Fetch maintenance requests using PDO
-try {
-  $stmt = $pdo->prepare("SELECT * FROM maintenance_requests WHERE availability = 'unavailable' ORDER BY created_at DESC");
-  $stmt->execute();
-  $requests = $stmt->fetchAll(PDO::FETCH_ASSOC); // 🎯 Fetch as associative array
-} catch (PDOException $e) {
-  die("Query failed: " . $e->getMessage());
-}
+// dedicated file for fetching requests
+include './actions/getApplications.php';
 ?>
 
 <!DOCTYPE html>
