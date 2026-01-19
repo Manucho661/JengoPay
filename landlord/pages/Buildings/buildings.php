@@ -212,7 +212,9 @@ require_once "../db/connect.php"
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
+        <?php 
+        include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; 
+        ?>
         <!--end::Header-->
 
         <!--begin::Sidebar-->
@@ -639,7 +641,7 @@ require_once "../db/connect.php"
                                                         </option>
                                                         <?php
                                                         try {
-                                                            $select_county = "SELECT * FROM county ORDER BY id ASC";
+                                                            $select_county = "SELECT * FROM counties ORDER BY id ASC";
                                                             $result = $pdo->prepare($select_county);
                                                             $result->execute();
 

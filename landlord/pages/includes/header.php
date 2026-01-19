@@ -1,5 +1,33 @@
 <!-- Header -->
+
+
 <header class="header">
+
+    <?php
+
+    set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+    });
+
+    try {
+        // Get the logged-in user's landlord ID
+        $userId = $_SESSION['user']['id'];
+        // Get the landlord's id based on the logged-in user
+        $stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        $landlord = $stmt->fetch();
+        $landlord_id = $landlord['id'];
+
+        // Count buildings that belong to this specific landlord
+        $stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM buildings WHERE landlord_id = ?");
+        $stmt->execute([$landlord_id]);
+
+        $totalBuildings = $stmt->fetchColumn(); // returns the count of buildings for this landlord
+    } catch (Throwable $e) {
+        // Handle the error appropriately
+        // echo $e->getMessage();
+    }
+    ?>
     <div style="display: flex; align-items: center; gap: 1rem;">
         <div class="hamburger" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
@@ -17,7 +45,7 @@
             <i class="fas fa-home" style="color: var(--accent-color);"></i>
             <div>
                 <div style="font-size: 0.75rem; color: #adb5bd;">Total Properties</div>
-                <div style="font-weight: 600; color: var(--main-color);" id="totalProperties"></div>
+                <div style="font-weight: 600; color: var(--main-color);" ><?= $totalBuildings ?></div>
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 0.5rem; color: #6c757d;">
@@ -47,7 +75,7 @@
 
         <span class="user-name">
             <?php
-        $fullName = isset($_SESSION['user']['name']) ? $_SESSION['user']['name'] : '';
+            $fullName = isset($_SESSION['user']['name']) ? $_SESSION['user']['name'] : '';
 
             // Get first name only
             $firstName = explode(" ", trim($fullName))[0];
