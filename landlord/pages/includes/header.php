@@ -4,6 +4,8 @@
 <header class="header">
 
     <?php
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/db/connect.php';
+
 
     set_error_handler(function ($errno, $errstr, $errfile, $errline) {
         throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
@@ -45,7 +47,7 @@
             <i class="fas fa-home" style="color: var(--accent-color);"></i>
             <div>
                 <div style="font-size: 0.75rem; color: #adb5bd;">Total Properties</div>
-                <div style="font-weight: 600; color: var(--main-color);" ><?= $totalBuildings ?></div>
+                <div style="font-weight: 600; color: var(--main-color);"><?= $totalBuildings ?></div>
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 0.5rem; color: #6c757d;">
