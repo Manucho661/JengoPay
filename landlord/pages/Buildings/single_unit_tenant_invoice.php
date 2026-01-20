@@ -157,8 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             include_once '../processes/encrypt_decrypt_function.php';
             // Initialize $tenant_info to prevent errors if 'invoice' GET param is not set
             $tenant_info = [
-                'tfirst_name' => '', 'tmiddle_name' => '', 'tlast_name' => '',
-                'tmain_contact' => '', 'talt_contact' => '', 'temail' => '',
+                'first_name' => '', 'middle_name' => '', 'last_name' => '',
+                'main_contact' => '', 'alt_contact' => '', 'email' => '',
                 'monthly_rent' => 0, 'final_bill' => 0
             ];
             $monthly_rent = 0;
@@ -186,7 +186,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                   });
                             </script>";
                         // Optionally, redirect or set default empty values again
-                        $tenant_info = [ /* ... empty defaults ... */ ];
+                        $tenant_info = [
+                            'first_name' => '', 'middle_name' => '', 'last_name' => '',
+                            'main_contact' => '', 'alt_contact' => '', 'email' => '',
+                            'monthly_rent' => 0, 'final_bill' => 0
+                        ];
                         } else {
                             $monthly_rent = $tenant_info['monthly_rent'] ?? 0;
                             $final_bill = $tenant_info['final_bill'] ?? 0; // Ensure it's not null
@@ -206,7 +210,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               text: 'Could not fetch tenant data. Please try again.'
                             });
                         </script>";
-                    $tenant_info = [ /* ... empty defaults ... */ ]; // Reset to avoid undefined variable errors
+                        $tenant_info = [
+                            'first_name' => '', 'middle_name' => '', 'last_name' => '',
+                            'main_contact' => '', 'alt_contact' => '', 'email' => '',
+                            'monthly_rent' => 0, 'final_bill' => 0
+                        ]; // Reset to avoid undefined variable errors
                     }
                 } else {
                   echo "<script>
@@ -216,58 +224,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               text: 'The provided tenant ID is invalid.'
                             });
                         </script>";
-                  $tenant_info = [ /* ... empty defaults ... */ ];
+                  $tenant_info = [
+                      'first_name' => '', 'middle_name' => '', 'last_name' => '',
+                      'main_contact' => '', 'alt_contact' => '', 'email' => '',
+                      'monthly_rent' => 0, 'final_bill' => 0
+                  ];
               }
             }
           ?>
               
 <div class="card shadow">
             <div class="card-header" style="background-color: #00192D; color: #fff;">
-              <b>Create Invoice for <?= htmlspecialchars($tenant_info['tfirst_name'].' '.($tenant_info['tmiddle_name']).' '.($tenant_info['tlast_name']));?></b>
+              <b>Create Invoice for <?= htmlspecialchars($tenant_info['first_name'].' '.($tenant_info['middle_name']).' '.($tenant_info['last_name']));?></b>
             </div>
             <form id="invoiceForm" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ;?>" enctype="multipart/form-data" autocomplete="off">
-                <div class="card-body">
-                    <!-- Tenant Info Section -->
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group mb-3">
-                                <label>Invoice Number:</label>
-                                <input type="text" id="invoiceNumber" name="invoice_no" required class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-3">
-                                <label>Invoice To:</label>
-                                <input type="text" name="receiver" required class="form-control" value="<?= htmlspecialchars($tenant_info['tfirst_name'].' '.$tenant_info['tmiddle_name'].' '.$tenant_info['tlast_name']);?>" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-3">
-                                <label>Main Contact</label>
-                                <input class="form-control" value="<?= htmlspecialchars($tenant_info['tmain_contact']);?>" readonly name="main_contact">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-3">
-                                <label>Alternative Contact</label>
-                                <input class="form-control" value="<?= htmlspecialchars($tenant_info['talt_contact']);?>" readonly name="alt_contact">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label>Email</label>
-                            <input class="form-control" value="<?= htmlspecialchars($tenant_info['temail']); ?>" readonly name="email">
-                        </div>
-                        <div class="col-md-4">
-                            <label>Invoice Date</label>
-                            <input type="date" id="invoiceDate" name="invoice_date" required class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            <label>Date Due</label>
-                            <input type="date" id="dateDue" name="due_date" required class="form-control" readonly>
-                        </div>
-                    </div>
+    <div class="card-body">
+        <!-- Tenant Info Section -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    <label>Invoice Number:</label>
+                    <input type="text" id="invoiceNumber" name="invoice_no" required class="form-control" readonly>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    <label>Invoice To:</label>
+                    <input type="text" name="receiver" required class="form-control" 
+                           value="<?= htmlspecialchars($tenant_info['first_name'].' '.$tenant_info['middle_name'].' '.$tenant_info['last_name']);?>" 
+                           readonly>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    <label>Main Contact</label>
+                    <input class="form-control" 
+                           value="<?= htmlspecialchars($tenant_info['main_contact']);?>" 
+                           readonly name="main_contact">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    <label>Alternative Contact</label>
+                    <input class="form-control" 
+                           value="<?= htmlspecialchars($tenant_info['alt_contact']);?>" 
+                           readonly name="alt_contact">
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Email</label>
+                <input class="form-control" 
+                       value="<?= htmlspecialchars($tenant_info['email']); ?>" 
+                       readonly name="email">
+            </div>
+            <div class="col-md-4">
+                <label>Invoice Date</label>
+                <input type="date" id="invoiceDate" name="invoice_date" required class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label>Date Due</label>
+                <input type="date" id="dateDue" name="due_date" required class="form-control" readonly>
+            </div>
+        </div>
 
                     <hr>
                     <input type="hidden" name="paymentStatus" value="Pending">
