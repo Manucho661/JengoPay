@@ -1,11 +1,7 @@
 // ─────────────────────────────────────────────
 // 📦 Imports
 // ─────────────────────────────────────────────
-import { get_requests } from "./api/getRequests.js";
-import { add_request_id } from "./modal.js";
 import { getAssignedRequests } from "./api/getAssignedJobs.js";
-import { submitProposal } from "./api/submitProposal.js";
-import { expandCollapseRequest, expandCollapseApplication } from "./uiControl.js";
 import { getApplications } from "./api/getYourApplications.js";
 import { sendResponse } from "./api/assignmentResponse.js";
 import { getTextMessages } from "./api/getTextMessages.js";
