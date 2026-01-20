@@ -5,6 +5,8 @@ session_start();
 // 🔌 Include your PDO database connection
 include '../db/connect.php';
 
+include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/service_provider_auth_check.php';
+
 
 // 📥 Check if the user is logged in and their role is 'provider'
 if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') {
@@ -15,11 +17,19 @@ if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') 
   $serviceProvider = ''; // Default if user is not logged in or not a provider
 }
 
+// dedicated file to submit application request
+include_once './actions/submitApplication.php';
 // dedicated file for fetching requests
 include './actions/getRequests1.php';
 
-// dedicated file to submit application request
-include_once './actions/submitApplication.php'
+// Pagination logic
+$itemsPerPage = 2;
+$currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$totalItems = count($requests);
+$totalPages = ceil($totalItems / $itemsPerPage);
+$offset = ($currentPage - 1) * $itemsPerPage;
+$currentRequests = array_slice($requests, $offset, $itemsPerPage);
+
 ?>
 
 <!DOCTYPE html>
@@ -592,7 +602,7 @@ include_once './actions/submitApplication.php'
   <?php if (!empty($success)): ?>
     <div class="alert alert-success small"><?= htmlspecialchars($success) ?></div>
   <?php endif; ?>
-  
+
   <div class="app-wrapper">
     <!--Start Header -->
     <?php
@@ -649,14 +659,6 @@ include_once './actions/submitApplication.php'
               <?php
               // Sample data - in real application, this would come from database
 
-
-              // Pagination logic
-              $itemsPerPage = 5;
-              $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-              $totalItems = count($requests);
-              $totalPages = ceil($totalItems / $itemsPerPage);
-              $offset = ($currentPage - 1) * $itemsPerPage;
-              $currentRequests = array_slice($requests, $offset, $itemsPerPage);
 
 
               // Check if there are any requests
@@ -766,10 +768,12 @@ include_once './actions/submitApplication.php'
 
                     <div class="request-footer">
                       <div class="budget-info">
-                        <i class="fas fa-money-bill-wave"></i> <?php echo $request['budget']; ?>
+                        <i class="fas fa-money-bill-wave"></i>
+                        <?php echo htmlspecialchars($request['budget']); ?>
                       </div>
+
                       <button
-                        class="apply-btn"
+                        class="apply-btn <?php echo $request['has_applied'] ? 'reapply' : ''; ?>"
                         data-bs-toggle="modal"
                         data-bs-target="#applicationModal"
                         data-job-id="<?php echo htmlspecialchars($request['id']); ?>"
@@ -779,10 +783,12 @@ include_once './actions/submitApplication.php'
                         data-job-budget="<?php echo htmlspecialchars($request['budget']); ?>"
                         data-job-duration="<?php echo htmlspecialchars($request['duration']); ?>"
                         data-job-category="<?php echo htmlspecialchars($request['category']); ?>">
-                        <i class="fas fa-paper-plane"></i> Apply Now
-                      </button>
 
+                        <i class="fas fa-paper-plane"></i>
+                        <?php echo $request['has_applied'] ? 'Reapply' : 'Apply Now'; ?>
+                      </button>
                     </div>
+
                   </div>
               <?php endforeach;
               endif; ?>
