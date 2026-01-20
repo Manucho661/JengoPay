@@ -14,6 +14,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+
+
+<?php
+require_once "../db/connect.php";
+// Assuming you have a PDO connection $pdo
+if(isset($_GET['tenant_id']) && !empty($_GET['tenant_id'])) {
+    $tenant_id = $_GET['tenant_id'];
+    
+    try {
+        $stmt = $pdo->prepare("
+            SELECT 
+                first_name, 
+                middle_name, 
+                last_name, 
+                main_contact, 
+                alt_contact, 
+                email,
+                idMode,
+                id_no,
+                pass_no,
+                leasing_period,
+                leasing_start_date,
+                leasing_end_date,
+                move_in_date,
+                move_out_date,
+                account_no,
+                unit_category,
+                id_upload,
+                tax_pin_copy,
+                rental_agreement,
+                income,
+                job_title,
+                job_location,
+                casual_job,
+                business_name,
+                business_location,
+                tenant_status,
+                tenant_occupancy_status,
+                building_link,
+                tenant_reg
+            FROM tenants 
+            WHERE id = ?
+        ");
+        
+        $stmt->execute([$tenant_id]);
+        $tenant_info = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if($tenant_info) {
+            // Use the fetched data in your form
+            $full_name = htmlspecialchars(
+                ($tenant_info['first_name'] ?? '') . ' ' . 
+                ($tenant_info['middle_name'] ?? '') . ' ' . 
+                ($tenant_info['last_name'] ?? '')
+            );
+            $main_contact = htmlspecialchars($tenant_info['main_contact'] ?? '');
+            $alt_contact = htmlspecialchars($tenant_info['alt_contact'] ?? '');
+            $email = htmlspecialchars($tenant_info['email'] ?? '');
+        } else {
+            // Handle no tenant found
+            $tenant_info = null;
+        }
+    } catch (PDOException $e) {
+        // Handle database error
+        error_log("Database error: " . $e->getMessage());
+        $tenant_info = null;
+    }
+}
+?>
+
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -144,130 +213,256 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!--begin::Header-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
-
         <!--begin::Sidebar-->
-            <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
+        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+            <!--begin::Sidebar Brand-->
+            <div class="sidebar-brand">
+                <!--begin::Brand Link-->
+                <a href="./index.html" class="brand-link">
+
+                    <!--begin::Brand Text-->
+                    <span class="brand-text font-weight-light"><b class="p-2"
+                            style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
+                            class="p-2"
+                            style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
+                </a>
+                </span>
+                <!--end::Brand Text-->
+                </a>
+                <!--end::Brand Link-->
+            </div>
+            <!--end::Sidebar Brand-->
+            <!--begin::Sidebar Wrapper-->
+            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+            <!--end::Sidebar Wrapper-->
+        </aside>
         <!--end::Sidebar-->
-        
         <!--begin::App Main-->
         <main class="app-main mt-4">
             <div class="content-wrapper">
                 <!-- Main content -->
                 <?php
-            include_once '../processes/encrypt_decrypt_function.php';
-            // Initialize $tenant_info to prevent errors if 'invoice' GET param is not set
-            $tenant_info = [
-                'tfirst_name' => '', 'tmiddle_name' => '', 'tlast_name' => '',
-                'tmain_contact' => '', 'talt_contact' => '', 'temail' => '',
-                'monthly_rent' => 0, 'final_bill' => 0
-            ];
-            $monthly_rent = 0;
-            $final_bill = 0;
-            $garbage_data = [];
+include_once '../processes/encrypt_decrypt_function.php';
 
-            // Fetch Tenant Information from the Database
-            if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
-                $id = $_GET['invoice'];
-                $decrypted_id = encryptor('decrypt', $id); // Assuming encryptor returns null/false on error
+// Initialize $tenant_info with all possible fields from tenants table
+$tenant_info = [
+    'first_name' => '', 'middle_name' => '', 'last_name' => '', 
+    'phone' => '', 'alt_phone' => '', 'email' => '',
+    'idMode' => '', 'id_no' => '', 'pass_no' => '',
+    'leasing_period' => '', 'leasing_start_date' => '', 'leasing_end_date' => '',
+    'move_in_date' => '', 'move_out_date' => '', 'account_no' => '',
+    'unit_category' => '', 'id_upload' => '', 'tax_pin_copy' => '',
+    'rental_agreement' => '', 'income' => '', 'job_title' => '',
+    'job_location' => '', 'casual_job' => '', 'business_name' => '',
+    'business_location' => '', 'tenant_status' => '', 
+    'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => ''
+];
 
-                if ($decrypted_id !== null && $decrypted_id !== false) {
-                    try {
-                        $tenant = $pdo->prepare("SELECT * FROM single_units WHERE id = ? ");
-                        $tenant->execute([$decrypted_id]); // Use decrypted_id here
-                        $tenant_info = $tenant->fetch(PDO::FETCH_ASSOC);
+$monthly_rent = 0;
+$final_bill = 0;
+$garbage_data = [];
 
-                        if(!$tenant_info) {
-                        // Use SweetAlert for feedback if no data found
-                        echo "<script>
-                                  Swal.fire({
-                                    icon: 'warning',
-                                    title: 'No Data',
-                                    text: 'No Active Tenant Data Found for the provided ID.'
-                                  });
-                            </script>";
-                        // Optionally, redirect or set default empty values again
-                        $tenant_info = [ /* ... empty defaults ... */ ];
-                        } else {
-                            $monthly_rent = $tenant_info['monthly_rent'] ?? 0;
-                            $final_bill = $tenant_info['final_bill'] ?? 0; // Ensure it's not null
-                            
-                            // FETCH GARBAGE DATA ONLY
-                            $garbage_stmt = $pdo->prepare("SELECT bill, qty, unit_price, subtotal FROM single_unit_bills WHERE unit_id = ? AND bill = 'Garbage'");
-                            $garbage_stmt->execute([$decrypted_id]);
-                            $garbage_data = $garbage_stmt->fetch(PDO::FETCH_ASSOC);
-                        }
-                    } catch (PDOException $e) {
-                        // Log the database error
-                        error_log("Database error fetching tenant info: " . $e->getMessage());
-                        echo "<script>
-                            Swal.fire({
-                              icon: 'error',
-                              title: 'Database Error',
-                              text: 'Could not fetch tenant data. Please try again.'
-                            });
-                        </script>";
-                    $tenant_info = [ /* ... empty defaults ... */ ]; // Reset to avoid undefined variable errors
-                    }
-                } else {
-                  echo "<script>
-                            Swal.fire({
-                              icon: 'error',
-                              title: 'Invalid ID',
-                              text: 'The provided tenant ID is invalid.'
-                            });
-                        </script>";
-                  $tenant_info = [ /* ... empty defaults ... */ ];
-              }
+// Fetch Tenant Information from the tenants table
+if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
+    $id = $_GET['invoice'];
+    $decrypted_id = encryptor('decrypt', $id);
+
+    if ($decrypted_id !== null && $decrypted_id !== false) {
+        try {
+            // Query the tenants table - Note: tenants table doesn't have monthly_rent field
+            // Based on your SQL dump, you need to check what field contains the rent amount
+            $tenant = $pdo->prepare("SELECT * FROM tenants WHERE id = ?");
+            $tenant->execute([$decrypted_id]);
+            $tenant_info = $tenant->fetch(PDO::FETCH_ASSOC);
+
+            if(!$tenant_info) {
+                // If not found in tenants table, show appropriate message
+                echo "<script>
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Tenant Found',
+                        text: 'No tenant data found for the provided ID.'
+                    });
+                </script>";
+                
+                // Reset to default empty values
+                $tenant_info = [
+                    'first_name' => '', 'middle_name' => '', 'last_name' => '', 
+                    'phone' => '', 'alt_phone' => '', 'email' => '',
+                    'idMode' => '', 'id_no' => '', 'pass_no' => '',
+                    'leasing_period' => '', 'leasing_start_date' => '', 'leasing_end_date' => '',
+                    'move_in_date' => '', 'move_out_date' => '', 'account_no' => '',
+                    'unit_category' => '', 'id_upload' => '', 'tax_pin_copy' => '',
+                    'rental_agreement' => '', 'income' => '', 'job_title' => '',
+                    'job_location' => '', 'casual_job' => '', 'business_name' => '',
+                    'business_location' => '', 'tenant_status' => '', 
+                    'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => ''
+                ];
+            } else {
+                // Ensure all keys exist in the array
+                $default_keys = [
+                    'first_name' => '', 'middle_name' => '', 'last_name' => '', 
+                    'phone' => '', 'alt_phone' => '', 'email' => '',
+                    'idMode' => '', 'id_no' => '', 'pass_no' => '',
+                    'leasing_period' => '', 'leasing_start_date' => '', 'leasing_end_date' => '',
+                    'move_in_date' => '', 'move_out_date' => '', 'account_no' => '',
+                    'unit_category' => '', 'id_upload' => '', 'tax_pin_copy' => '',
+                    'rental_agreement' => '', 'income' => '', 'job_title' => '',
+                    'job_location' => '', 'casual_job' => '', 'business_name' => '',
+                    'business_location' => '', 'tenant_status' => '', 
+                    'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => ''
+                ];
+                
+                // Merge with defaults to ensure all keys exist
+                $tenant_info = array_merge($default_keys, $tenant_info);
+                
+                // IMPORTANT: The tenants table from your SQL dump doesn't have monthly_rent field
+                // You need to check where the rent amount is stored
+                // For now, I'm setting it to 0 or you can fetch it from another table
+                $monthly_rent = 0; // You need to get this from the correct table/field
+                $final_bill = 0;
+                
+                // FETCH GARBAGE DATA - Check if there's a bills table for tenants
+                // Since tenants table doesn't have unit_id, you might need a different approach
+                try {
+                    // If you have a tenant_bills table or similar
+                    $garbage_stmt = $pdo->prepare("SELECT bill, qty, unit_price, subtotal FROM tenant_bills WHERE tenant_id = ? AND bill = 'Garbage'");
+                    $garbage_stmt->execute([$decrypted_id]);
+                    $garbage_data = $garbage_stmt->fetch(PDO::FETCH_ASSOC);
+                } catch (Exception $e) {
+                    // If table doesn't exist or query fails, set empty array
+                    $garbage_data = [];
+                }
+                
+                // Debug: Check what data we have
+                // echo "<pre>Tenant Info: " . print_r($tenant_info, true) . "</pre>";
             }
-          ?>
+        } catch (PDOException $e) {
+            error_log("Database error fetching tenant info: " . $e->getMessage());
+            echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Database Error',
+                    text: 'Could not fetch tenant data. Please try again.'
+                });
+            </script>";
+            
+            $tenant_info = [
+                'first_name' => '', 'middle_name' => '', 'last_name' => '', 
+                'phone' => '', 'alt_phone' => '', 'email' => '',
+                'idMode' => '', 'id_no' => '', 'pass_no' => '',
+                'leasing_period' => '', 'leasing_start_date' => '', 'leasing_end_date' => '',
+                'move_in_date' => '', 'move_out_date' => '', 'account_no' => '',
+                'unit_category' => '', 'id_upload' => '', 'tax_pin_copy' => '',
+                'rental_agreement' => '', 'income' => '', 'job_title' => '',
+                'job_location' => '', 'casual_job' => '', 'business_name' => '',
+                'business_location' => '', 'tenant_status' => '', 
+                'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => ''
+            ];
+        }
+    } else {
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid ID',
+                text: 'The provided tenant ID is invalid.'
+            });
+        </script>";
+        
+        $tenant_info = [
+            'first_name' => '', 'middle_name' => '', 'last_name' => '', 
+            'phone' => '', 'alt_phone' => '', 'email' => '',
+            'idMode' => '', 'id_no' => '', 'pass_no' => '',
+            'leasing_period' => '', 'leasing_start_date' => '', 'leasing_end_date' => '',
+            'move_in_date' => '', 'move_out_date' => '', 'account_no' => '',
+            'unit_category' => '', 'id_upload' => '', 'tax_pin_copy' => '',
+            'rental_agreement' => '', 'income' => '', 'job_title' => '',
+            'job_location' => '', 'casual_job' => '', 'business_name' => '',
+            'business_location' => '', 'tenant_status' => '', 
+            'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => ''
+        ];
+    }
+} else {
+    // No invoice parameter provided
+    echo "<script>
+        Swal.fire({
+            icon: 'info',
+            title: 'No ID Provided',
+            text: 'Please select a tenant to create an invoice.'
+        });
+    </script>";
+}
+?>
+          
               
 <div class="card shadow">
             <div class="card-header" style="background-color: #00192D; color: #fff;">
-              <b>Create Invoice for <?= htmlspecialchars($tenant_info['tfirst_name'].' '.($tenant_info['tmiddle_name']).' '.($tenant_info['tlast_name']));?></b>
+              <b>Create Invoice for Unit <?= htmlspecialchars($tenant_info['unit_number'] ?? 'N/A'); ?> - <?= htmlspecialchars(($tenant_info['tfirst_name'] ?? '') . ' ' . ($tenant_info['tmiddle_name'] ?? '') . ' ' . ($tenant_info['tlast_name'] ?? ''));?></b>
             </div>
             <form id="invoiceForm" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ;?>" enctype="multipart/form-data" autocomplete="off">
                 <div class="card-body">
                     <!-- Tenant Info Section -->
                     <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group mb-3">
-                                <label>Invoice Number:</label>
-                                <input type="text" id="invoiceNumber" name="invoice_no" required class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-3">
-                                <label>Invoice To:</label>
-                                <input type="text" name="receiver" required class="form-control" value="<?= htmlspecialchars($tenant_info['tfirst_name'].' '.$tenant_info['tmiddle_name'].' '.$tenant_info['tlast_name']);?>" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-3">
-                                <label>Main Contact</label>
-                                <input class="form-control" value="<?= htmlspecialchars($tenant_info['tmain_contact']);?>" readonly name="main_contact">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group mb-3">
-                                <label>Alternative Contact</label>
-                                <input class="form-control" value="<?= htmlspecialchars($tenant_info['talt_contact']);?>" readonly name="alt_contact">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label>Email</label>
-                            <input class="form-control" value="<?= htmlspecialchars($tenant_info['temail']); ?>" readonly name="email">
-                        </div>
-                        <div class="col-md-4">
-                            <label>Invoice Date</label>
-                            <input type="date" id="invoiceDate" name="invoice_date" required class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            <label>Date Due</label>
-                            <input type="date" id="dateDue" name="due_date" required class="form-control" readonly>
-                        </div>
-                    </div>
+    <div class="col-md-3">
+        <div class="form-group mb-3">
+            <label>Invoice Number:</label>
+            <input type="text" id="invoiceNumber" name="invoice_no" required class="form-control" readonly>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group mb-3">
+            <label>Invoice To:</label>
+            <input type="text" 
+                   name="receiver" 
+                   required 
+                   class="form-control" 
+                   value="<?= htmlspecialchars(($tenant_info['first_name'] ?? '') . ' ' . ($tenant_info['middle_name'] ?? '') . ' ' . ($tenant_info['last_name'] ?? '')); ?>" 
+                   readonly>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group mb-3">
+            <label>Main Contact</label>
+            <input class="form-control" 
+                   value="<?= htmlspecialchars($tenant_info['phone'] ?? ''); ?>" 
+                   readonly 
+                   name="phone">
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group mb-3">
+            <label>Alternative Contact</label>
+            <input class="form-control" 
+                   value="<?= htmlspecialchars($tenant_info['alt_phone'] ?? ''); ?>" 
+                   readonly 
+                   name="alt_phone">
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <label>Email</label>
+        <input class="form-control" 
+               value="<?= htmlspecialchars($tenant_info['email'] ?? ''); ?>" 
+               readonly 
+               name="email">
+    </div>
+
+    <div class="col-md-4">
+        <label>Invoice Date</label>
+        <input type="date" id="invoiceDate" name="invoice_date" required class="form-control">
+    </div>
+
+    <div class="col-md-4">
+        <label>Date Due</label>
+        <input type="date" id="dateDue" name="due_date" required class="form-control" readonly>
+    </div>
+</div>
+
 
                     <hr>
                     <input type="hidden" name="paymentStatus" value="Pending">
@@ -291,50 +486,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </thead>
                         <tbody id="invoiceBody">
                         <?php
-// First, display all regular rows (excluding garbage)
-// ... your existing code for other rows here ...
-
-// Then, display garbage row if exists (always last)
-// Then, display garbage row if exists (always last)
-if (!empty($garbage_data)) {
-    $unitPrice = floatval($garbage_data['unit_price']);
-    $quantity = intval($garbage_data['qty']);
-    $totalPrice = floatval($garbage_data['subtotal']);
-    
-    // If subtotal is not provided, calculate from unit price and quantity
-    if ($totalPrice <= 0) {
-        $totalPrice = $unitPrice * $quantity;
-    }
-    
-    $taxType = 'VAT Inclusive';
-    
-    // For VAT Inclusive (16%), the tax calculation should be:
-    // totalPrice = price_including_tax
-    // taxAmount = totalPrice * (16/116)
-    // netPrice = totalPrice - taxAmount
-    $taxAmount = round($totalPrice * (16/116), 2);
-    
-    // The unit price should be the net price (without tax)
-    $netPrice = $totalPrice - $taxAmount;
-    $unitPrice = $quantity > 0 ? $netPrice / $quantity : 0;
-    
-    echo "<tr id='rowGarbage'>";
-    echo "<td>Garbage</td>";
-    echo "<td>Garbage Collection Fee</td>";
-    echo "<td class='unit-price'>" . number_format($unitPrice, 2) . "</td>";
-    echo "<td class='quantity'>" . $quantity . "</td>";
-    echo "<td class='tax-type'>" . $taxType . "</td>";
-    echo "<td class='tax-amount'>" . number_format($taxAmount, 2) . "</td>";
-    echo "<td class='total-price'>" . number_format($totalPrice, 2) . "</td>";
-    echo "<td>";
-    echo "<button type='button' class='btn btn-sm btn-danger' onclick='removeRow(\"rowGarbage\")'>";
-    echo "<i class='fa fa-trash'></i>";
-    echo "</button>";
-    echo "</td>";
-    echo "</tr>";
-}
-?>
-</tbody>
+                        // First, display Rent row automatically since it's in monthly_rent
+                        if ($monthly_rent > 0) {
+                            $rentUnitPrice = $monthly_rent;
+                            $rentQuantity = 1;
+                            $rentTaxType = 'VAT Inclusive';
+                            $rentTotalPrice = $monthly_rent;
+                            $rentTaxAmount = round($rentTotalPrice * (16/116), 2);
+                            $rentNetPrice = $rentTotalPrice - $rentTaxAmount;
+                            
+                            echo "<tr id='rowRent'>";
+                            echo "<td>Rent</td>";
+                            echo "<td>Monthly Rental Payment for Unit " . htmlspecialchars($tenant_info['unit_number'] ?? '') . "</td>";
+                            echo "<td class='unit-price'>" . number_format($rentNetPrice, 2) . "</td>";
+                            echo "<td class='quantity'>" . $rentQuantity . "</td>";
+                            echo "<td class='tax-type'>" . $rentTaxType . "</td>";
+                            echo "<td class='tax-amount'>" . number_format($rentTaxAmount, 2) . "</td>";
+                            echo "<td class='total-price'>" . number_format($rentTotalPrice, 2) . "</td>";
+                            echo "<td>";
+                            echo "<button type='button' class='btn btn-sm btn-danger' onclick='removeRow(\"rowRent\")'>";
+                            echo "<i class='fa fa-trash'></i>";
+                            echo "</button>";
+                            echo "</td>";
+                            echo "</tr>";
+                        }
+                        
+                        // Display garbage row if exists
+                        if (!empty($garbage_data)) {
+                            $unitPrice = floatval($garbage_data['unit_price'] ?? 0);
+                            $quantity = intval($garbage_data['qty'] ?? 0);
+                            $totalPrice = floatval($garbage_data['subtotal'] ?? 0);
+                            
+                            // If subtotal is not provided, calculate from unit price and quantity
+                            if ($totalPrice <= 0) {
+                                $totalPrice = $unitPrice * $quantity;
+                            }
+                            
+                            $taxType = 'VAT Inclusive';
+                            
+                            // For VAT Inclusive (16%), the tax calculation should be:
+                            // totalPrice = price_including_tax
+                            // taxAmount = totalPrice * (16/116)
+                            // netPrice = totalPrice - taxAmount
+                            $taxAmount = round($totalPrice * (16/116), 2);
+                            
+                            // The unit price should be the net price (without tax)
+                            $netPrice = $totalPrice - $taxAmount;
+                            $unitPrice = $quantity > 0 ? $netPrice / $quantity : 0;
+                            
+                            echo "<tr id='rowGarbage'>";
+                            echo "<td>Garbage</td>";
+                            echo "<td>Garbage Collection Fee</td>";
+                            echo "<td class='unit-price'>" . number_format($unitPrice, 2) . "</td>";
+                            echo "<td class='quantity'>" . $quantity . "</td>";
+                            echo "<td class='tax-type'>" . $taxType . "</td>";
+                            echo "<td class='tax-amount'>" . number_format($taxAmount, 2) . "</td>";
+                            echo "<td class='total-price'>" . number_format($totalPrice, 2) . "</td>";
+                            echo "<td>";
+                            echo "<button type='button' class='btn btn-sm btn-danger' onclick='removeRow(\"rowGarbage\")'>";
+                            echo "<i class='fa fa-trash'></i>";
+                            echo "</button>";
+                            echo "</td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                        </tbody>
                         <tfoot>
                             <tr><td colspan="6" class="text-end">Subtotal:</td><td id="subtotal" class="text-end">0.00</td><td></td></tr>
                             <tr><td colspan="6" class="text-end">Total Tax:</td><td id="totalTax" class="text-end">0.00</td><td></td></tr>
@@ -612,55 +828,54 @@ if (!empty($garbage_data)) {
     </script>
     
     <script>
-    letfunction calculateRowTotal(row) {
-    let unitPrice = parseFloat($(row).find('.unit-price').text()) || 0;
-    let quantity = parseFloat($(row).find('.quantity').text()) || 0;
-    let taxType = $(row).find('.tax-type').text().trim();
-    
-    let netTotal = unitPrice * quantity;
-    let taxAmount = 0;
-    let totalPrice = 0;
-    
-    if (taxType === 'VAT Inclusive') {
-        // For VAT Inclusive: total = netTotal * 1.16
-        totalPrice = netTotal * 1.16;
-        taxAmount = totalPrice * (16/116);
-    } else if (taxType === 'VAT Exclusive') {
-        // For VAT Exclusive: tax = netTotal * 0.16, total = netTotal + tax
-        taxAmount = netTotal * 0.16;
-        totalPrice = netTotal + taxAmount;
-    } else {
-        // No tax
-        totalPrice = netTotal;
-        taxAmount = 0;
-    }
-    
-    // Update the row
-    $(row).find('.tax-amount').text(taxAmount.toFixed(2));
-    $(row).find('.total-price').text(totalPrice.toFixed(2));
-    
-    return { netTotal, taxAmount, totalPrice };
-}
-
-function updateTotals() {
-    let subtotal = 0;
-    let totalTax = 0;
-    let finalTotal = 0;
-    
-    $('#invoiceBody tr').each(function() {
-        let rowTotal = parseFloat($(this).find('.total-price').text()) || 0;
-        let rowTax = parseFloat($(this).find('.tax-amount').text()) || 0;
+    function calculateRowTotal(row) {
+        let unitPrice = parseFloat($(row).find('.unit-price').text()) || 0;
+        let quantity = parseFloat($(row).find('.quantity').text()) || 0;
+        let taxType = $(row).find('.tax-type').text().trim();
         
-        finalTotal += rowTotal;
-        totalTax += rowTax;
-        subtotal = finalTotal - totalTax;
-    });
-    
-    $('#subtotal').text(subtotal.toFixed(2));
-    $('#totalTax').text(totalTax.toFixed(2));
-    $('#finalTotal').text(finalTotal.toFixed(2));
-}
-}
+        let netTotal = unitPrice * quantity;
+        let taxAmount = 0;
+        let totalPrice = 0;
+        
+        if (taxType === 'VAT Inclusive') {
+            // For VAT Inclusive: total = netTotal * 1.16
+            totalPrice = netTotal * 1.16;
+            taxAmount = totalPrice * (16/116);
+        } else if (taxType === 'VAT Exclusive') {
+            // For VAT Exclusive: tax = netTotal * 0.16, total = netTotal + tax
+            taxAmount = netTotal * 0.16;
+            totalPrice = netTotal + taxAmount;
+        } else {
+            // No tax
+            totalPrice = netTotal;
+            taxAmount = 0;
+        }
+        
+        // Update the row
+        $(row).find('.tax-amount').text(taxAmount.toFixed(2));
+        $(row).find('.total-price').text(totalPrice.toFixed(2));
+        
+        return { netTotal, taxAmount, totalPrice };
+    }
+
+    function updateTotals() {
+        let subtotal = 0;
+        let totalTax = 0;
+        let finalTotal = 0;
+        
+        $('#invoiceBody tr').each(function() {
+            let rowTotal = parseFloat($(this).find('.total-price').text()) || 0;
+            let rowTax = parseFloat($(this).find('.tax-amount').text()) || 0;
+            
+            finalTotal += rowTotal;
+            totalTax += rowTax;
+            subtotal = finalTotal - totalTax;
+        });
+        
+        $('#subtotal').text(subtotal.toFixed(2));
+        $('#totalTax').text(totalTax.toFixed(2));
+        $('#finalTotal').text(finalTotal.toFixed(2));
+    }
     </script>
 
     <!-- Main Js File -->
