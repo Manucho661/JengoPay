@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once '../../db/connect.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
+
 include_once 'actions/getSuppliers.php';
 $expenses = [];
 $monthlyTotals = array_fill(1, 12, 0);
@@ -11,8 +13,8 @@ require_once 'actions/getExpenses.php';
 require_once 'actions/getExpenseAccounts.php';
 // include buildings
 require_once 'actions/getBuildings.php';
-
-// var_dump($buildings);
+// create expenses script
+require_once 'actions/createExpense.php';
 ?>
 
 <!doctype html>
@@ -163,11 +165,14 @@ require_once 'actions/getBuildings.php';
             <!--begin:: Main Container-->
             <div class="container-fluid">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb" style="">
-                        <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Home</a></li>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Home</a>
+                        </li>
                         <li class="breadcrumb-item active">Expenses</li>
                     </ol>
                 </nav>
+
                 <!--begin::first Row-->
                 <div class="row align-items-center mb-3">
                     <div class="col-12 d-flex align-items-center">
@@ -176,86 +181,111 @@ require_once 'actions/getBuildings.php';
                     </div>
                 </div>
 
-                <!-- Second row: some action buttons -->
-                <div class="row mb-4">
-                    <div class="col-md-12 d-flex flex-column justify-content-center">
-                        <div class="d-flex justify-content-between">
-                            <div class="text-muted mt-0">
-                                Manage your expenses
-                            </div>
+                <!-- Second row: action buttons -->
+                <div class="d-flex align-items-center justify-content-between gap-2 flex-nowrap">
 
-                            <div class="d-flex" style="vertical-align: middle;">
-                                <button class="btn shadow-none text-white" id="supplier-list-open-btn"
-                                    style="background: linear-gradient(135deg, #00192D, #002B5B); margin-right:2px;">
+                    <!-- Left text -->
+                    <div class="text-muted">
+                        Manage your expenses
+                    </div>
+
+                    <!-- Desktop buttons -->
+                    <div class="d-none d-md-flex gap-2">
+                        <button class="btn bg-warning text-white seTAvailable fw-bold rounded-4"
+                            id="supplier-list-open-btn"
+                            style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+                            Registered Suppliers
+                        </button>
+
+                        <button class="btn bg-warning text-white seTAvailable fw-bold rounded-4"
+                            id="addSupplier"
+                            style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+                            Register Supplier
+                        </button>
+                    </div>
+
+                    <!-- Mobile dropdown menu -->
+                    <div class="dropdown d-md-none ms-auto">
+                        <button class="btn btn-light border d-flex align-items-center justify-content-center rounded-4"
+                            id="mobileActionsMenu"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            style="width:38px;height:38px;border-radius:8px;">
+                            <i class="bi bi-three-dots text-dark"></i>
+                        </button>
+
+
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm mt-2"
+                            aria-labelledby="mobileActionsMenu">
+                            <li>
+                                <button class="dropdown-item" type="button" id="supplier-list-open-btn-mobile">
                                     Registered Suppliers
                                 </button>
-                                <button class="btn shadow-none text-white" id="addSupplier"
-                                    style="background: linear-gradient(135deg, #00192D, #002B5B);">
+                            </li>
+                            <li>
+                                <button class="dropdown-item" type="button" id="addSupplier-mobile">
                                     Register Supplier
                                 </button>
-                                <!-- Dropdown on small screens -->
-                                <div class="mobile-nav-container">
-                                    <button id="menu-toggle"
-                                        class="btn menu-icon"
-                                        style="border-radius: 10%; border: 1px solid #00192D;">
-                                        &#8942;
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                            </li>
+                        </ul>
                     </div>
+
                 </div>
 
                 <!-- Third row: stats -->
-                <div class="row mt-2 mb-2">
-                    <div class="col-md-3">
-                        <div class="summary-info-card bg-white p-3 rounded">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="fa fa-box icon"></i>
-                                <div>
-                                    <div class="summary-info-card-label">Total Items</div>
-                                    <b id="items" class="summary-info-card-value"><?php echo $expenseItemsNumber ?> Pieces</b>
-                                </div>
+                <div class="row g-3 mt-2 mb-4">
+                    <!-- Total Items Card -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="fa fa-box fs-1 me-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Total Items</p>
+                                <b><?php echo $expenseItemsNumber ?> Pieces</b>
                             </div>
                         </div>
                     </div>
-                    <!-- Phone Card -->
-                    <div class="col-md-3">
-                        <div class="summary-info-card bg-white p-3 rounded">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="fa fa-calendar-alt icon"></i>
-                                <div>
-                                    <div class="summary-info-card-label">Totals</div>
-                                    <b id="duration" class="summary-info-card-value"> KSH <?php echo $totalAmount ?>.00 </b>
-                                </div>
+
+                    <!-- Totals Card -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="fa fa-calendar-alt fs-1 me-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Total Amount</p>
+                                <b>KSH <?php echo number_format($totalAmount, 2) ?></b>
                             </div>
                         </div>
                     </div>
-                    <!-- ID Card -->
-                    <div class="col-md-3">
-                        <div class="summary-info-card bg-white p-3 rounded">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="fa fa-check-circle icon"></i>
-                                <div>
-                                    <div class="summary-info-card-label">Paid</div>
-                                    <b id="paid" class="summary-info-card-value"> KSH <?php echo $totalAmountSend ?></b>
-                                </div>
+
+                    <!-- Paid Card -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="fa fa-check-circle fs-1 me-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Paid</p>
+                                <b>KSH <?php echo number_format($totalAmountSend, 2) ?></b>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="summary-info-card bg-white p-3 rounded">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="fa fa-hourglass-half icon"></i>
-                                <div>
-                                    <div class="summary-info-card-label">Pending </div>
-                                    <b id="pending" class="summary-info-card-value">KSH <?php echo $TotalRemaining; ?></b>
-                                </div>
+
+                    <!-- Pending Card -->
+                    <div class="col-md-6 col-lg-3">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="fa fa-hourglass-half fs-1 me-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Pending</p>
+                                <b>KSH <?php echo number_format($TotalRemaining, 2) ?></b>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <!-- Fourth Row: add expense -->
                 <div class="row mb-2">
                     <div class="col-md-12 mb-2">
@@ -447,7 +477,7 @@ require_once 'actions/getBuildings.php';
                                                     <div class="col-md-12 d-flex justify-content-between">
                                                         <button type="button" class="btn btn-outline-warning text-dark shadow-none" onclick="addRow()">➕ Add More</button>
                                                         <!-- <button type="submit" class="btn btn-secondary shadow-none">✕ Close</button> -->
-                                                        <button type="submit" class="btn btn-outline-warning text-dark shadow-none">✅ Submit</button>
+                                                        <button type="submit" name="create_expense" class="btn btn-outline-warning text-dark shadow-none">✅ Submit</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -1337,7 +1367,17 @@ require_once 'actions/getBuildings.php';
 
     <!-- select wrapper -->
 
+    <!--  for dropdwon menu, the suppliers and register supplier buttons-->
+    <script>
+        // Reuse your existing desktop button handlers by triggering them from mobile menu
+        document.getElementById('supplier-list-open-btn-mobile')?.addEventListener('click', () => {
+            document.getElementById('supplier-list-open-btn')?.click();
+        });
 
+        document.getElementById('addSupplier-mobile')?.addEventListener('click', () => {
+            document.getElementById('addSupplier')?.click();
+        });
+    </script>
     <!-- Scripts -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

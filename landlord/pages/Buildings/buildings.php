@@ -171,44 +171,6 @@ include_once './actions/addBuilding.php'
             /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); */
         }
 
-        .stat-card .icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .stat-card.properties .icon {
-            background-color: rgba(0, 25, 45, 0.1);
-            color: var(--main-color);
-        }
-
-        .stat-card.tenants .icon {
-            background-color: rgba(255, 193, 7, 0.2);
-            color: #d39e00;
-        }
-
-        .stat-card.revenue .icon {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: #28a745;
-        }
-
-        .stat-card.maintenance .icon {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-        }
-
-        .stat-card h3 {
-            color: var(--main-color);
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 10px 0 5px 0;
-        }
-
         .stat-card p {
             color: #6c757d;
             margin: 0;
@@ -249,49 +211,76 @@ include_once './actions/addBuilding.php'
                 </div>
 
                 <!-- Statistics Cards -->
+                <?php
+                $count_buildings = "SELECT building_type, COUNT(*) AS total FROM buildings GROUP BY building_type";
+                $result = $pdo->prepare($count_buildings);
+                $result->execute();
+
+                // Initialize the countings for all the buildings
+                $counts = [
+                    'Residential' => 0,
+                    'Commercial'   => 0,
+                    'Industrial'   => 0,
+                    'Mixed-Use'    => 0,
+                ];
+
+                while ($row = $result->fetch()) {
+                    $counts[$row['building_type']] = $row['total'];
+                }
+                ?>
+
                 <div class="row g-3">
-                    <!-- Properties -->
-                    <?php
-                    $count_buildings = "SELECT building_type, COUNT(*) AS total FROM buildings GROUP BY building_type";
-                    $result = $pdo->prepare($count_buildings);
-                    $result->execute();
-                    //Initialize the countings for all the buildings
-                    $counts = [
-                        'Residential' => 0,
-                        'Commercial'   => 0,
-                        'Industrial'   => 0,
-                        'Mixed-Use'    => 0,
-                        // 'Ware House'   => 0
-                    ];
-                    while ($row = $result->fetch()) {
-                        $counts[$row['building_type']] = $row['total'];
-                    }
-
-                    // Assign icons for each building type
-                    $icons = [
-                        'Residential' => 'bi-house-door-fill',
-                        'Commercial'   => 'bi-shop',
-                        'Industrial'   => 'bi-building-gear',
-                        'Mixed-Use'    => 'bi-buildings',
-                        // 'Ware House'   => 'bi-box-seam'
-                    ];
-                    ?>
-                    <?php foreach ($counts as $type => $total): ?>
-                        <div class="col-lg-3 col-md-6 d-flex">
-                            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
-                                <div>
-                                    <i class="bi  <?php echo $icons[$type]; ?> fs-1 me-3 text-warning"></i>
-                                    <!-- <i class="bi bi-building fs-1 me-3 text-warning"></i> -->
-                                </div>
-                                <div>
-                                    <p class="mb-0" style="font-weight: bold;"><?php echo $type; ?></p>
-                                    <b><?php echo $total; ?></b>
-                                </div>
+                    <!-- Residential Card -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="bi bi-house-door-fill fs-1 me-3 text-warning"></i>
                             </div>
-
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Residential</p>
+                                <b><?php echo $counts['Residential']; ?></b>
+                            </div>
                         </div>
-                    <?php endforeach; ?>
+                    </div>
 
+                    <!-- Commercial Card -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="bi bi-shop fs-1 me-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Commercial</p>
+                                <b><?php echo $counts['Commercial']; ?></b>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Industrial Card -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="bi bi-building-gear fs-1 me-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Industrial</p>
+                                <b><?php echo $counts['Industrial']; ?></b>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mixed-Use Card -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+                            <div>
+                                <i class="bi bi-buildings fs-1 me-3 text-warning"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0" style="font-weight: bold;">Mixed-Use</p>
+                                <b><?php echo $counts['Mixed-Use']; ?></b>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <hr style="border: 1px solid #000;">

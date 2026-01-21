@@ -140,27 +140,6 @@ require_once "../../../auth/auth_check.php";   // Protect this page
       font-size: 1.5rem;
       margin-bottom: 10px;
     }
-
-    .stat-card.properties .icon {
-      background-color: rgba(0, 25, 45, 0.1);
-      color: var(--main-color);
-    }
-
-    .stat-card.tenants .icon {
-      background-color: rgba(255, 193, 7, 0.2);
-      color: #d39e00;
-    }
-
-    .stat-card.revenue .icon {
-      background-color: rgba(40, 167, 69, 0.1);
-      color: #28a745;
-    }
-
-    .stat-card.maintenance .icon {
-      background-color: rgba(220, 53, 69, 0.1);
-      color: #dc3545;
-    }
-
     .stat-card h3 {
       color: var(--main-color);
       font-size: 1.8rem;
