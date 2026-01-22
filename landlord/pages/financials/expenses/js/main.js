@@ -3,7 +3,6 @@ import { initSupplierModal, payExpenseModal } from "./modals.js";
 import { setupExpenseCalculator } from "./calculateExpense.js";
 import { vldtSupplierReg, checkPayment } from "./validations.js";
 import { downloadExpPDF } from "./downloadPdf.js";
-import { createExpense } from "./APIs/createExpense.js";
 import { payExpense } from "./APIs/payExpense.js";
 import { registerSupplier } from "./APIs/registerSupplier.js";
 import { editSupplier } from "./APIs/editSupplier.js";
@@ -21,13 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const invalidFields = new Set();
   // Expense features
   setupExpenseCalculator();
-
-
-  // Create expense
-  document.getElementById("expenseForm").addEventListener('submit', (e) => {
-    e.preventDefault();
-    createExpense(e.target);
-  });
 
 
   // PAYMENTS

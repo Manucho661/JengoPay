@@ -1,9 +1,12 @@
 <?php
-include '../../../db/connect.php';
 // expense journal
-include './journals/expenseJournal.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/expenses/actions/journals/expenseJournal.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+$error = '';
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_expense'])) {
     try {
         // Show errors during development
         ini_set('display_errors', 1);
