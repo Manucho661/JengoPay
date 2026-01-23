@@ -1,7 +1,6 @@
+<?php session_start()?>
 <?php
-session_start();
 require_once "../db/connect.php";
-
 ?>
 
 <!doctype html>
