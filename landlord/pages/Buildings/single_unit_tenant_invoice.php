@@ -65,6 +65,89 @@ if(isset($_GET['tenant_id']) && !empty($_GET['tenant_id'])) {
     }
 }
 ?>
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+
+    $pdo->beginTransaction();
+
+    try {
+        $invoice_no   = $_POST['invoice_no'];
+        $receiver     = $_POST['receiver'];
+        $phone        = $_POST['phone'];
+        $email        = $_POST['email'];
+        $invoice_date = $_POST['invoice_date'];
+        $due_date     = $_POST['due_date'];
+        $notes        = $_POST['notes'];
+        $subtotal     = $_POST['subtotalValue'];
+        $total_tax    = $_POST['totalTaxValue'];
+        $final_total  = $_POST['finalTotalValue'];
+
+        // Insert invoice
+        $stmt = $pdo->prepare("
+            INSERT INTO invoice 
+            (invoice_no, receiver, phone, email, invoice_date, due_date, notes, subtotal, taxes, total)
+            VALUES (?,?,?,?,?,?,?,?,?,?)
+        ");
+        $stmt->execute([
+            $invoice_no, $receiver, $phone, $email,
+            $invoice_date, $due_date, $notes,
+            $subtotal, $total_tax, $final_total
+        ]);
+
+        $invoice_id = $pdo->lastInsertId();
+
+        // Insert invoice items
+        $items = json_decode($_POST['invoice_items'], true);
+
+        $itemStmt = $pdo->prepare("
+            INSERT INTO invoice_items
+            (invoice_id, paid_for, description, unit_price, quantity, tax_type, tax_amount, total_price)
+            VALUES (?,?,?,?,?,?,?,?)
+        ");
+
+        foreach ($items as $item) {
+            $itemStmt->execute([
+                $invoice_id,
+                $item['paid_for'],
+                $item['description'],
+                $item['unit_price'],
+                $item['quantity'],
+                $item['tax_type'],
+                $item['tax_amount'],
+                $item['total_price']
+            ]);
+        }
+
+        $pdo->commit();
+
+        // ✅ redirect to invoice.php
+        header("Location: /jengopay/landlord/pages/financials/invoices/invoice.php?success=1");
+exit;
+
+        // header("Location: invoice.php?success=1");
+        // exit;
+
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        die("Error saving invoice: " . $e->getMessage());
+    }
+}
+?>
+
+<?php
+require_once "../db/connect.php";
+$stmt = $pdo->prepare("
+    SELECT account_code, account_name
+    FROM chart_of_accounts
+    WHERE financial_statement = 'Income Statement'
+      AND account_type = 'Revenue'
+    ORDER BY account_code ASC
+");
+$stmt->execute();
+$accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+?>
 <?php
 require_once "../db/connect.php";
 include_once '../processes/encrypt_decrypt_function.php';
@@ -329,28 +412,10 @@ try {
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
         <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <a href="./index.html" class="brand-link">
-
-                    <!--begin::Brand Text-->
-                    <span class="brand-text font-weight-light"><b class="p-2"
-                            style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b><b
-                            class="p-2"
-                            style=" border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b></span>
-                </a>
-                </span>
-                <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
+        
             <!--begin::Sidebar Wrapper-->
-            <div> <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
-            <!--end::Sidebar Wrapper-->
-        </aside>
+            <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> 
+           
         <!--end::Sidebar-->
         <!--begin::App Main-->
         <main class="app-main mt-4">
@@ -754,17 +819,17 @@ if (!empty($tenant_info['unit_id'])) {
             <form id="addItemForm">
                 <div class="mb-3">
                     <label for="drawerItemName" class="form-label">Paid For <span class="text-danger">*</span></label>
-                    <select class="form-control" id="drawerItemName" onchange="checkDrawerOthersInput(this)" required>
-                        <option value="Rent">Rent</option>
-                        <option value="Water">Water</option>
-                        <option value="Garbage">Garbage</option>
-                        <option value="Electricity">Electricity</option>
-                        <option value="Maintenance">Maintenance</option>
-                        <option value="Parking">Parking</option>
-                        <option value="Internet">Internet</option>
-                        <option value="Security">Security</option>
-                        <option value="Other">Other</option>
-                    </select>
+                 <select class="form-control" id="drawerItemName" onchange="checkDrawerOthersInput(this)" required>
+    <option value="">-- Select Item --</option>
+
+    <?php foreach ($accounts as $account): ?>
+        <option value="<?= htmlspecialchars($account['account_name']) ?>">
+            <?= htmlspecialchars($account['account_name']) ?>
+        </option>
+    <?php endforeach; ?>
+
+</select>
+
                     <input type="text" class="form-control mt-2 d-none" id="drawerOtherInput" placeholder="Please specify">
                 </div>
                 <div class="mb-3">
@@ -1030,6 +1095,70 @@ if (!empty($tenant_info['unit_id'])) {
         $('#finalTotal').text(finalTotal.toFixed(2));
     }
     </script> -->
+<script>
+function calculateInvoiceTotals() {
+    let subtotal = 0;
+    let totalTax = 0;
+    let finalTotal = 0;
+
+    document.querySelectorAll("#invoiceBody tr").forEach(row => {
+        let unitPrice = parseFloat(row.querySelector(".unit-price")?.innerText.replace(/,/g, "")) || 0;
+        let quantity  = parseFloat(row.querySelector(".quantity")?.innerText.replace(/,/g, "")) || 0;
+        let taxAmount = parseFloat(row.querySelector(".tax-amount")?.innerText.replace(/,/g, "")) || 0;
+        let totalPrice= parseFloat(row.querySelector(".total-price")?.innerText.replace(/,/g, "")) || 0;
+
+        subtotal += unitPrice * quantity;
+        totalTax += taxAmount;
+        finalTotal += totalPrice;
+    });
+
+    document.getElementById("subtotal").innerText = subtotal.toFixed(2);
+    document.getElementById("totalTax").innerText = totalTax.toFixed(2);
+    document.getElementById("finalTotal").innerText = finalTotal.toFixed(2);
+}
+
+// Remove row and recalc
+function removeRow(rowId) {
+    const row = document.getElementById(rowId);
+    if (row) row.remove();
+    calculateInvoiceTotals();
+}
+
+// Run on page load
+document.addEventListener("DOMContentLoaded", calculateInvoiceTotals);
+</script>
+
+<script>
+function prepareInvoiceData() {
+    let items = [];
+
+    document.querySelectorAll("#invoiceBody tr").forEach(row => {
+        let item = {
+            paid_for: row.children[0].innerText.trim(),
+            description: row.children[1].innerText.trim(),
+            unit_price: row.querySelector(".unit-price").innerText.replace(/,/g,''),
+            quantity: row.querySelector(".quantity").innerText,
+            tax_type: row.querySelector(".tax-type").innerText,
+            tax_amount: row.querySelector(".tax-amount").innerText.replace(/,/g,''),
+            total_price: row.querySelector(".total-price").innerText.replace(/,/g,'')
+        };
+        items.push(item);
+    });
+
+    if (items.length === 0) {
+        alert("Invoice must have at least one item");
+        return false;
+    }
+
+    document.getElementById("invoiceItems").value = JSON.stringify(items);
+
+    document.getElementById("subtotalValue").value = document.getElementById("subtotal").innerText;
+    document.getElementById("totalTaxValue").value = document.getElementById("totalTax").innerText;
+    document.getElementById("finalTotalValue").value = document.getElementById("finalTotal").innerText;
+
+    return true; // allow submit
+}
+</script>
 
     <!-- Main Js File -->
     <script src="../../js/adminlte.js"></script>

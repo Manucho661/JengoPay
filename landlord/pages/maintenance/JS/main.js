@@ -1,13 +1,7 @@
 import { otherRequest } from "./uiControl.js";
-import { submitRequest } from "./api/submitRequest.js";
 
-import { fetchRequests} from "./api/getRequests.js";
+// import { fetchRequests} from "./api/getRequests.js";
 document.addEventListener("DOMContentLoaded", () => {
-
-  // Load Requests
-  let page = 1;
-
-  fetchRequests(page);
 
   const modalEl = document.getElementById('requestModal');
   const modal = new bootstrap.Modal(modalEl);
@@ -18,11 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // handle create request
-  // document.getElementById('otherRequestBtn').addEventListener('click', otherRequest);
-
-  document.getElementById('submitBtn').addEventListener('click', (e) => {
-    submitRequest(e, modal);  // pass modal instance
-  });
+   document.getElementById('otherRequestBtn').addEventListener('click', otherRequest);
 
 
 

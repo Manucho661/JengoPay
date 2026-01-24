@@ -2,7 +2,7 @@
 include '../../../db/connect.php';
 
 // Pay Expense journal
-include './journals/payExpenseJournal.php';
+include './journalHelpers/payExpenseJournal.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {

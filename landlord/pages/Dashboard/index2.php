@@ -323,7 +323,7 @@ require_once "../../../auth/auth_check.php";   // Protect this page
                   </div>
                   <div>
                     <p class="mb-0" style="font-weight: bold;">Total Properties</p>
-                    <b>24</b>
+                    <b>0</b>
                   </div>
                 </div>
               </div>
@@ -336,7 +336,7 @@ require_once "../../../auth/auth_check.php";   // Protect this page
                   </div>
                   <div>
                     <p class="mb-0" style="font-weight: bold;">Active Tenants</p>
-                    <b>300</b>
+                    <b>0</b>
                   </div>
                 </div>
               </div>
@@ -349,7 +349,7 @@ require_once "../../../auth/auth_check.php";   // Protect this page
                   </div>
                   <div>
                     <p class="mb-0" style="font-weight: bold;">Monthly Revenue</p>
-                    <b>KSH 48,250</b>
+                    <b>0</b>
                   </div>
                 </div>
               </div>
@@ -362,7 +362,7 @@ require_once "../../../auth/auth_check.php";   // Protect this page
                   </div>
                   <div>
                     <p class="mb-0" style="font-weight: bold;">Pending Requests</p>
-                    <b>8</b>
+                    <b>0</b>
                   </div>
                 </div>
               </div>

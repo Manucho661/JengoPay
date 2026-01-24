@@ -4,20 +4,20 @@ include '../db/connect.php'; // adjust path
 
 try {
   $sql = "
-        SELECT id AS id, entity_name AS building_name, 'bedsitter_units' AS source_table
-        FROM bedsitter_units
+        SELECT id AS id, entity_name AS building_name, 'building_units' AS source_table
+        FROM building_units
         GROUP BY entity_name
 
         UNION
 
-        SELECT id AS id, entity_name AS building_name, 'single_units' AS source_table
-        FROM single_units
+        SELECT id AS id, entity_name AS building_name, 'building_units' AS source_table
+        FROM building_units
         GROUP BY entity_name
 
         UNION
 
-        SELECT id AS id, entity_name AS building_name, 'multi_rooms_units' AS source_table
-        FROM multi_rooms_units
+        SELECT id AS id, entity_name AS building_name, 'building_units' AS source_table
+        FROM building_units
         GROUP BY entity_name
     ";
 
@@ -943,86 +943,85 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <!-- PopUp Scripts -->
 
-  <!-- new text popup -->
   <div class="newtextpopup-overlay" id="newtextPopup">
-    <div class="card" style="margin-top: 20px;">
-      <div class="card-header new-message-header">
-        New Message
-        <button class="close-btn" onclick="closenewtextPopup()">×</button>
-      </div>
-      <div class="card-body new-message-body">
+  <div class="card" style="margin-top: 20px;">
+    
+    <div class="card-header new-message-header">
+      New Message
+      <button type="button" class="close-btn" onclick="closenewtextPopup()">×</button>
+    </div>
+
+    <div class="card-body new-message-body">
+      <form action="texts.php" method="POST" id="messageForm" enctype="multipart/form-data">
+
         <div class="row">
-          <form action="texts.php" method="POST" id="messageForm" enctype="multipart/form-data">
-            <div class="col-md-12" style="display: flex;">
+          <div class="col-md-12" style="display: flex; gap:10px;">
 
-              <div id="field-group-first" class="field-group first">
-                <label for="recipient" style="color: black;">Recepient<i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i> Building</label>
-                <select name="building_id" id="recipient" onchange="fetchUnits(this.value)" class="recipient">
-                  <option value="">-- Select Building --</option>
-                  <?php foreach ($buildings as $b): ?>
-                    <option value="<?= htmlspecialchars($b['id']) ?>">
-                      <?= htmlspecialchars($b['building_name']) ?>
-                    </option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-
-              <div id="field-group-second" class="field-group second" style="display:block">
-                <label for="recipient-units">Unit</label>
-                <select name="unit_id" id="unit-select">
-                  <option value="">-- Select Unit --</option>
-                </select>
-              </div>
-
-
-
-              <div id="field-group-third" class="field-group third" style="display:none">
-                <label for="tenant">Tenant</label>
-                <select name="tenant" id="Tenant" onchange="toggleShrink2()" class="tenant">
-                  <option value="">Joseph</option>
-
-                </select>
-              </div>
-
+            <!-- Building -->
+            <div id="field-group-first" class="field-group first">
+              <label for="building_id" style="color: black;">
+                Recipient <i class="fas fa-mouse-pointer title-icon" style="transform: rotate(110deg);"></i> Building
+              </label>
+              <select name="building_id" id="building_id" onchange="fetchUnits(this.value)" class="recipient">
+                <option value="">-- Select Building --</option>
+                <?php foreach ($buildings as $b): ?>
+                  <option value="<?= htmlspecialchars($b['id']) ?>">
+                    <?= htmlspecialchars($b['building_name']) ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
             </div>
 
+            <!-- Unit -->
+            <div id="field-group-second" class="field-group second">
+              <label for="unit_id">Unit</label>
+              <select name="unit_id" id="unit_id">
+                <option value="">-- Select Unit --</option>
+              </select>
+            </div>
+
+            <!-- Tenant -->
+            <div id="field-group-third" class="field-group third" style="display:none;">
+              <label for="tenant">Tenant</label>
+              <select name="tenant" id="tenant" onchange="toggleShrink2()" class="tenant">
+                <option value="">Joseph</option>
+              </select>
+            </div>
+
+          </div>
         </div>
 
-        <!-- <div class="field-group">
-                          <label for="subject new-message">Subject (optional)</label>
-                          <input name="subject" type="text" id="subject" class="subject" placeholder="Enter subject..." />
-                        </div> -->
-
+        <!-- Title -->
         <div class="field-group">
           <label for="title">Title</label>
           <input name="title" type="text" id="title" class="title" placeholder="Enter title..." />
         </div>
 
-
+        <!-- Message -->
         <div class="field-group">
           <label for="message">Message</label>
           <textarea name="message" id="message" placeholder="Type your message here..."></textarea>
         </div>
-        <!-- File input for multiple file types -->
 
+        <!-- File upload -->
         <div style="padding-bottom: 2%;">
           <input name="files[]" type="file" id="fileInput" onchange="handleFiles(event)" class="form-control" multiple>
-
-          <!-- Section to display selected files' previews and sizes -->
           <div id="filePreviews"></div>
         </div>
 
-        <div class="actions d-flex justify-content-end">
-          <button class="draft-btn text-danger btn">Cancel</button>
-          <button class="draft-btn btn">Save Draft</button>
+        <!-- Actions -->
+        <div class="actions d-flex justify-content-end gap-2">
+          <button type="button" class="draft-btn text-danger btn">Cancel</button>
+          <button type="button" class="draft-btn btn">Save Draft</button>
           <button type="submit" class="send-btn btn">Send</button>
         </div>
-        </form>
-      </div>
 
+      </form>
     </div>
 
   </div>
+</div>
+
 
 
   <!-- End NewText popup -->

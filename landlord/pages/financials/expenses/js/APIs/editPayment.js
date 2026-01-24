@@ -5,7 +5,7 @@ export async function edit_submittedPayments(form) {
   const formData = new FormData(form);
 
   try {
-    const response = await fetch("./actions/editPayments.php", {
+    const response = await fetch("./actions/editExpensePayment.php", {
       method: "POST",
       body: formData
     });

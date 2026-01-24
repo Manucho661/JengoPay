@@ -1,10 +1,10 @@
-import { combobox } from "./combobox.js";
+
 import { initSupplierModal, payExpenseModal } from "./modals.js";
 import { setupExpenseCalculator } from "./calculateExpense.js";
 import { vldtSupplierReg, checkPayment } from "./validations.js";
 import { downloadExpPDF } from "./downloadPdf.js";
-import { payExpense } from "./APIs/payExpense.js";
-import { registerSupplier } from "./APIs/registerSupplier.js";
+import { payExpense } from "./payExpense.js";
+import { registerSupplier } from "./registerSupplier.js";
 import { editSupplier } from "./APIs/editSupplier.js";
 import { get_payment_details } from "./APIs/getPaymentDetails.js";
 import { edit_submittedPayments } from "./APIs/editPayment.js";
@@ -12,10 +12,6 @@ import { initSupplierListModal } from "./modals.js";
 
 
 document.addEventListener("DOMContentLoaded", () => {
-
-  // UI setup
-  combobox();
-  // document.querySelectorAll(".custom-select-wrapper").forEach(initializeCustomSelect);
   // Track invalid fields for forms
   const invalidFields = new Set();
   // Expense features

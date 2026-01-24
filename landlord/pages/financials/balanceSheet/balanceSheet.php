@@ -1,14 +1,12 @@
 <?php
-require_once 'actions/getLiabilities.php';
-require_once 'actions/getRetainedEarnings.php';
+session_start();
+require_once '../../db/connect.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 
-// formating negative numbers
-function formatAccounting($amount)
-{
-  return $amount < 0
-    ? '(' . number_format(abs($amount), 2) . ')'
-    : number_format($amount, 2);
-}
+// require_once 'actions/getLiabilities.php';
+// require_once 'actions/getRetainedEarnings.php';
+
+
 ?>
 
 <!doctype html>
@@ -252,7 +250,7 @@ function formatAccounting($amount)
             </div>
           </div>
           <!-- /end row -->
-           <div class="row">
+          <div class="row">
             <!-- Start col -->
             <div class="container balancesheet">
               <div>
@@ -265,6 +263,9 @@ function formatAccounting($amount)
                       </tr>
                     </thead>
                     <tbody>
+                      <tr></tr>
+                      <tr></tr>
+                      <tr></tr>
 
                     </tbody>
                   </table>

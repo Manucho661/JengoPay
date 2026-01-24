@@ -1,6 +1,8 @@
 <?php
 session_start();
+include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 include '../../db/connect.php';
+
 
 /* -----------------------------
    FETCH REVENUE ACCOUNTS
@@ -27,16 +29,16 @@ $prefix  = $isDraft ? 'DFT' : 'INV';
 
 try {
   $stmt = $pdo->prepare("
-        SELECT invoice_number 
-        FROM invoice 
-        WHERE invoice_number LIKE ? 
+        SELECT invoice_no
+        FROM invoice
+        WHERE invoice_no LIKE ? 
         ORDER BY id DESC 
         LIMIT 1
     ");
   $stmt->execute([$prefix . '%']);
   $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-  if ($row && preg_match('/' . $prefix . '(\d+)/', $row['invoice_number'], $matches)) {
+  if ($row && preg_match('/' . $prefix . '(\d+)/', $row['invoice_no'], $matches)) {
     $lastNumber = (int)$matches[1];
     $newNumber  = $lastNumber + 1;
   } else {
@@ -1194,10 +1196,10 @@ try {
               $stmt = $pdo->query("
               SELECT
                   i.id,
-                  i.invoice_number,
+                  i.invoice_no,
                   i.invoice_date,
                   i.due_date,
-                  COALESCE(i.sub_total, 0) AS sub_total,
+                  COALESCE(i.subtotal, 0) AS subtotal,
                   COALESCE(i.total, 0) AS total,
                   COALESCE(i.taxes, 0) AS taxes,
                   i.status,
@@ -1213,22 +1215,22 @@ try {
                   i.building_id,
                   i.account_item,
                   i.description,
-                  (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS sub_total,
-                  (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS taxes,
-                  (SELECT COALESCE(SUM(total), 0) FROM invoice_items WHERE invoice_number = i.invoice_number) AS total,
+                  (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_no = i.invoice_no) AS subtotal,
+                  (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_no = i.invoice_no) AS taxes,
+                  (SELECT COALESCE(SUM(total), 0) FROM invoice_items WHERE invoice_no = i.invoice_no) AS total,
                   CASE
-                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
-                      THEN (SELECT SUM(unit_price * quantity) FROM invoice_items WHERE invoice_number = i.invoice_number)
-                      ELSE i.sub_total
-                  END AS display_sub_total,
+                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_no = i.invoice_no)
+                      THEN (SELECT SUM(unit_price * quantity) FROM invoice_items WHERE invoice_no = i.invoice_no)
+                      ELSE i.subtotal
+                  END AS display_subtotal,
                   CASE
-                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
-                      THEN (SELECT SUM(taxes) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_no = i.invoice_no)
+                      THEN (SELECT SUM(taxes) FROM invoice_items WHERE invoice_no = i.invoice_no)
                       ELSE i.taxes
                   END AS display_taxes,
                   CASE
-                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_number = i.invoice_number)
-                      THEN (SELECT SUM(total) FROM invoice_items WHERE invoice_number = i.invoice_number)
+                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_no = i.invoice_no)
+                      THEN (SELECT SUM(total) FROM invoice_items WHERE invoice_no = i.invoice_no)
                       ELSE i.total
                   END AS display_total
               FROM invoice i
@@ -1254,7 +1256,7 @@ try {
 
                   $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
                   $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
-                  $subtotalFormatted = number_format($invoice['sub_total'], 2);
+                  $subtotalFormatted = number_format($invoice['subtotal'], 2);
                   $totalAmount = number_format($invoice['total'], 2);
                   $taxFormatted = $invoice['taxes'] ?: '0.00';
                   $paidAmount = number_format($invoice['paid_amount'], 2);
@@ -1325,7 +1327,7 @@ try {
                           <input type="checkbox" onclick="event.stopPropagation()">
                         </div>';
 
-                  echo '<div class="invoice-number col-number">' . htmlspecialchars($invoice['invoice_number']) . '</div>';
+                  echo '<div class="invoice-number col-number">' . htmlspecialchars($invoice['invoice_no']) . '</div>';
 
                   echo '<div class="invoice-customer col-customer" title="' . htmlspecialchars($invoice['description']) . '">'
                     . htmlspecialchars($tenantName) . '
@@ -1335,7 +1337,7 @@ try {
 
                   echo '<div class="invoice-date col-due-date' . ($isOverdue ? ' text-danger' : '') . '">' . $dueDate . '</div>';
 
-                  echo '<div class="invoice-sub-total col-sub-total">' . number_format($invoice['sub_total'], 2) . '</div>';
+                  echo '<div class="invoice-sub-total col-sub-total">' . number_format($invoice['subtotal'], 2) . '</div>';
 
                   echo '<div class="invoice-taxes col-taxes">' . htmlspecialchars($invoice['taxes'] ?: '0.00') . '</div>';
 
@@ -1485,7 +1487,7 @@ try {
                       class="form-control"
                       readonly>
                     <input type="hidden"
-                      name="invoice_number"
+                      name="invoice_no"
                       value="<?= $invoiceNumber ?>">
                   </div>
 

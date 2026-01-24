@@ -1,6 +1,14 @@
 <?php
 include '../../../db/connect.php';
 
+
+// Session variables to use
+$userId = $_SESSION['user']['id'];
+$stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
+$stmt->execute([$userId]);
+$landlord = $stmt->fetch();
+$landlord_id = $landlord['id'];
+
 set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
@@ -28,12 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // 2. Insert new supplier
         $stmt = $pdo->prepare("
-            INSERT INTO suppliers (kra_pin, supplier_name, email, phone, address, time_stamp) 
-            VALUES (:kra, :supplier_name, :email, :phone, :address, NOW())
+            INSERT INTO suppliers (kra_pin, landlord_id, supplier_name, email, phone, address) 
+            VALUES (:kra, :supplier_name, :email, :phone, :address)
         ");
 
         $stmt->execute([
             ':kra'           => $kra,
+            ':landlord_id'   => $landlord_id,
             ':supplier_name' => $name,
             ':email'         => $email,
             ':phone'         => $phone,

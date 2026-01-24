@@ -1,5 +1,22 @@
 <?php
 session_start();
+require_once '../../db/connect.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
+
+$error   = $_SESSION['error'] ?? '';
+$success = $_SESSION['success'] ?? '';
+
+unset($_SESSION['error'], $_SESSION['success']);
+
+// Actions
+// submit request
+require_once "actions/submitRequest.php";
+// get requests
+require_once 'actions/getRequests.php';
+// include buildings
+require_once 'actions/getBuildings.php';
+
+// pagination
 ?>
 
 <!doctype html>
@@ -19,9 +36,41 @@ session_start();
   <link rel="stylesheet" href="maintenance.css">
 
   <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+
+    <?php if (!empty($error)): ?>
+      <div id="flashToastError"
+        class="toast align-items-center text-bg-danger border-0"
+        role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body small">
+            <?= htmlspecialchars($error) ?>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <?php endif; ?>
+
+    <?php if (!empty($success)): ?>
+      <div id="flashToastSuccess"
+        class="toast align-items-center text-bg-success border-0"
+        role="alert" aria-live="polite" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body small">
+            <?= htmlspecialchars($success) ?>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <?php endif; ?>
+
+  </div>
   <!--begin::App Wrapper-->
   <div class="app-wrapper" style="height: 100 vh; ">
 
@@ -67,7 +116,7 @@ session_start();
               </div>
               <div>
                 <p class="mb-0" style="font-weight: bold;">Scheduled</p>
-                <h3>400</h3>
+                <h3>0</h3>
               </div>
             </div>
           </div>
@@ -79,7 +128,7 @@ session_start();
               </div>
               <div>
                 <p class="mb-0" style="font-weight: bold;">Completed</p>
-                <h3>300</h3>
+                <h3>0</h3>
               </div>
             </div>
           </div>
@@ -91,7 +140,7 @@ session_start();
               </div>
               <div>
                 <p class="mb-0" style="font-weight: bold;">In Progress</p>
-                <h3>24</h3>
+                <h3>0</h3>
               </div>
             </div>
           </div>
@@ -104,7 +153,7 @@ session_start();
               </div>
               <div>
                 <p class="mb-0" style="font-weight: bold;">Incomplete</p>
-                <h3>20</h3>
+                <h3>0</h3>
               </div>
             </div>
           </div>
@@ -112,7 +161,8 @@ session_start();
 
         <hr>
         <!-- Fourth Row: search and main call to action buttons -->
-        <div class="row mb-3">
+        <div class="row mb-4">
+          <!-- Search -->
           <div class="col-md-6 d-flex">
             <input
               type="text"
@@ -120,7 +170,6 @@ session_start();
               placeholder="Search requests..."
               style="border-radius: 25px 0 0 25px;">
 
-            <!-- Search Button -->
             <button
               class="btn text-white"
               style="border-radius: 0 25px 25px 0; background: linear-gradient(135deg, #00192D, #002B5B)">
@@ -128,20 +177,32 @@ session_start();
             </button>
           </div>
 
-          <div class="col-md-6 d-flex justify-content-end">
+          <!-- Action buttons -->
+          <div class="col-md-6 d-flex justify-content-end gap-2">
             <button
               type="button"
-              class="btn bg-warning text-white seTAvailable fw-bold rounded-4"
-              style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+              class="btn text-white fw-bold rounded-4"
+              style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;"
+              data-bs-toggle="modal"
+              data-bs-target="#requestModal">
               Create request
             </button>
 
-            <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4" style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">Set all available</button>
+            <button
+              type="button"
+              class="btn text-white fw-bold rounded-4"
+              style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;">
+              Set all available
+            </button>
 
-            <button type="button" class="btn bg-warning text-white seTAvailable fw-bold bg-danger border-0 rounded-4" style="color:white; width:100%; white-space: nowrap;">Cancel all equests</button>
+            <button
+              type="button"
+              class="btn text-white fw-bold bg-danger border-0 rounded-4"
+              style="white-space: nowrap;">
+              Cancel all requests
+            </button>
           </div>
         </div>
-
 
         <!-- Fifth row filters -->
         <div class="row g-3 mb-4 align-items-center">
@@ -187,19 +248,17 @@ session_start();
             <div class="Table-section bg-white p-2 rounded-2">
               <div class="table-section-header rounded d-flex py-2" style="background-color: #00192D; color:#FFA000;">
                 <div class="filtered-items text-white mx-3">
-                  Manucho |
+                  All Requests
                 </div>
-                <div class="entries">
-                  Showing <span id="showing-start">0</span> to <span id="showing-end">0</span> of <span id="total-records">0</span> records
-                </div>
+
               </div>
               <div style="overflow: auto;">
-                <table id="requests-table" class=" display requests-table">
+                <table id="requests-table" class="display requests-table">
                   <thead class="mb-2">
                     <tr>
                       <th>REQUEST Date</th>
                       <th>PROPERTY + UNIT</th>
-                      <th>CATEGORY + DESCRIPTION </th>
+                      <th>CATEGORY + DESCRIPTION</th>
                       <th>PROVIDER</th>
                       <th>PRIORITY</th>
                       <th>STATUS</th>
@@ -207,13 +266,91 @@ session_start();
                       <th>ACTIONS</th>
                     </tr>
                   </thead>
+
                   <tbody id="maintenanceRequestsTableBod">
+                    <?php if (!empty($requestsError ?? null)): ?>
+                      <tr>
+                        <td colspan="8"><?= htmlspecialchars($requestsError) ?></td>
+                      </tr>
+
+                    <?php elseif (empty($requests)): ?>
+                      <tr>
+                        <td colspan="8">No requests found</td>
+                      </tr>
+
+                    <?php else: ?>
+                      <?php foreach ($requests as $req): ?>
+                        <tr
+                          onclick="window.location.href='request_details.php?id=<?= urlencode($req['id']) ?>'"
+                          style="cursor:pointer;">
+                          <td class="text-muted small">
+                            <?=
+                            !empty($req['created_at'])
+                              ? htmlspecialchars(date('M j', strtotime($req['created_at'])))
+                              : ''
+                            ?>
+                          </td>
+
+                          <td>
+                            <div><?= htmlspecialchars($req['building_name'] ?? '') ?></div>
+                            <div style="color: green;"><?= htmlspecialchars($req['unit'] ?? '') ?></div>
+                          </td>
+
+                          <td>
+                            <div><?= htmlspecialchars($req['category'] ?? '') ?></div>
+                            <div style="color:green; border:none; width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                              <?= htmlspecialchars($req['description'] ?? '') ?>
+                            </div>
+                          </td>
+
+                          <td>
+                            <div>
+                              <?= !empty(trim($req['provider_name'] ?? ''))
+                                ? htmlspecialchars($req['provider_name'])
+                                : 'Not assigned' ?>
+                            </div>
+                          </td>
+
+                          <td><?= htmlspecialchars($req['priority'] ?? '') ?></td>
+
+                          <td style="color: <?= !empty($req['status']) ? 'green' : '#b93232ff' ?>;">
+                            <?= htmlspecialchars($req['status'] ?? 'Not assigned') ?>
+                          </td>
+
+                          <td>
+                            <?php if (($req['payment_status'] ?? '') === 'Paid'): ?>
+                              <div class="Paid"><i class="bi bi-check-circle-fill"></i> Paid</div>
+                            <?php else: ?>
+                              <div class="Pending"><i class="bi bi-hourglass-split"></i> Pending</div>
+                            <?php endif; ?>
+                          </td>
+
+                          <td style="vertical-align: middle;">
+                            <div style="display:flex; gap:8px; align-items:center; height:100%;">
+                              <button
+                                type="button"
+                                onclick="event.stopPropagation(); window.location.href='request_details.php?id=<?= urlencode($req['id']) ?>'"
+                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                style="background-color:#00192D; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
+                                <i class="bi bi-eye-fill"></i> View
+                              </button>
+
+                              <button
+                                type="button"
+                                onclick="event.stopPropagation(); /* delete handler here */"
+                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                style="background-color:#ec5b53; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
+                                <i class="bi bi-trash-fill"></i> Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      <?php endforeach; ?>
+                    <?php endif; ?>
                   </tbody>
                 </table>
-                <div class="pagination mt-2 d-flex justify-content-end" id="pagination">
-
-                </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -245,7 +382,11 @@ session_start();
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form id="requestForm">
+            <form
+              id="requestForm"
+              method="POST"
+              action=""
+              enctype="multipart/form-data">
               <!-- Category -->
               <div class="mb-3">
                 <label for="category" class="form-label">Category</label>
@@ -279,8 +420,11 @@ session_start();
                   <select class="form-select" id="building" name="building" required>
                     <option value="">Select Building</option>
                     <!-- Dynamically load buildings -->
-                    <option value="1">Building A</option>
-                    <option value="2">Building B</option>
+                    <?php foreach ($buildings as $building): ?>
+                      <option value="<?= (int)$building['id'] ?>">
+                        <?= htmlspecialchars($building['building_name']) ?>
+                      </option>
+                    <?php endforeach; ?>
                   </select>
                 </div>
 
@@ -320,7 +464,14 @@ session_start();
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" id="submitBtn">Submit Request</button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              name="submitRequest"
+              form="requestForm">
+              Submit Request
+            </button>
+
           </div>
         </div>
       </div>
@@ -330,13 +481,32 @@ session_start();
     <!-- Scripts -->
     <script src="../../assets/main.js"></script>
     <script type="module" src="js/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-      crossorigin="anonymous"></script>
+
+    <!-- Toast message script-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Toast message -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const successEl = document.getElementById("flashToastSuccess");
+        const errorEl = document.getElementById("flashToastError");
+
+        if (successEl && window.bootstrap) {
+          new bootstrap.Toast(successEl, {
+            delay: 8000,
+            autohide: true
+          }).show();
+        }
+
+        if (errorEl && window.bootstrap) {
+          new bootstrap.Toast(errorEl, {
+            delay: 10000,
+            autohide: true
+          }).show();
+        }
+      });
+    </script>
 
 </body>
 <!--end::Body-->
