@@ -3,6 +3,140 @@ session_start();
 require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
+
+<?php
+require_once "../db/connect.php";
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_unit'])) {
+    try {
+        // Start transaction
+        $pdo->beginTransaction();
+        
+        // 1. Insert into building_units table
+        $unitStmt = $pdo->prepare("
+            INSERT INTO building_units (
+                building_id, unit_category_id, unit_number, 
+                number_of_rooms, number_of_washrooms, number_of_doors,
+                purpose, water_meter, monthly_rent, location, 
+                price, occupancy_status, created_at
+            ) VALUES (
+                :building_id, :unit_category_id, :unit_number,
+                :number_of_rooms, :number_of_washrooms, :number_of_doors,
+                :purpose, :water_meter, :monthly_rent, :location,
+                :price, :occupancy_status, NOW()
+            )
+        ");
+        
+        // Get building_id from building_link (you need to adjust this based on your logic)
+        $building_id = 1; // This should come from your form or session
+        
+        // Get unit_category_id based on purpose
+        $purpose = $_POST['purpose'];
+        $unit_category_id = 1; // Default - adjust based on your categories
+        
+        if ($purpose == 'Residential') $unit_category_id = 1;
+        elseif ($purpose == 'Office') $unit_category_id = 2;
+        elseif ($purpose == 'Business') $unit_category_id = 3;
+        elseif ($purpose == 'Store') $unit_category_id = 4;
+        
+        $unitStmt->execute([
+            ':building_id' => $building_id,
+            ':unit_category_id' => $unit_category_id,
+            ':unit_number' => $_POST['unit_number'],
+            ':number_of_rooms' => NULL, // Add these to your form if needed
+            ':number_of_washrooms' => NULL,
+            ':number_of_doors' => NULL,
+            ':purpose' => $purpose,
+            ':water_meter' => NULL, // Add to form if needed
+            ':monthly_rent' => $_POST['monthly_rent'],
+            ':location' => $_POST['location'],
+            ':price' => NULL, // Add to form if needed
+            ':occupancy_status' => $_POST['occupancy_status']
+        ]);
+        
+        // Get the last inserted unit ID
+        $building_unit_id = $pdo->lastInsertId();
+        
+        // 2. Insert recurring bills into bills table
+        if (isset($_POST['bill_name']) && is_array($_POST['bill_name'])) {
+            $billStmt = $pdo->prepare("
+                INSERT INTO bills (
+                    building_unit_id, bill_name, quantity, 
+                    unit_price, sub_total, created_at
+                ) VALUES (
+                    :building_unit_id, :bill_name, :quantity,
+                    :unit_price, :sub_total, NOW()
+                )
+            ");
+            
+            // Process each bill row
+            for ($i = 0; $i < count($_POST['bill_name']); $i++) {
+                $bill_name = $_POST['bill_name'][$i];
+                
+                // If bill is "Other", use the other input
+                if ($bill_name === 'Other' && isset($_POST['bill_name_other'][$i])) {
+                    $bill_name = $_POST['bill_name_other'][$i];
+                }
+                
+                // Convert bill_name to appropriate value for your table
+                // Since your bills table has bill_name as INT, you might need to map it
+                // For now, I'll store it as string - you may need to adjust
+                $bill_name_value = $bill_name; // You might need to convert this to INT
+                
+                $quantity = intval($_POST['quantity'][$i]);
+                $unit_price = floatval($_POST['unit_price'][$i]);
+                $sub_total = $quantity * $unit_price;
+                
+                $billStmt->execute([
+                    ':building_unit_id' => $building_unit_id,
+                    ':bill_name' => $bill_name, // Note: This needs to match your table structure
+                    ':quantity' => $quantity,
+                    ':unit_price' => $unit_price * 100, // Convert to cents if needed
+                    ':sub_total' => $sub_total * 100 // Convert to cents if needed
+                ]);
+            }
+        }
+        
+        // Commit transaction
+        $pdo->commit();
+        
+        // Success message
+        $_SESSION['success_message'] = "Unit and recurring bills added successfully!";
+        
+        // Redirect or show success
+        echo "<script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Unit and recurring bills have been saved successfully.',
+                showConfirmButton: true,
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'units.php'; // Redirect to units listing
+                }
+            });
+        </script>";
+        
+    } catch (Exception $e) {
+        // Rollback transaction on error
+        $pdo->rollBack();
+        
+        // Error message
+        error_log("Error adding unit: " . $e->getMessage());
+        
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'An error occurred while saving the unit. Please try again.',
+                showConfirmButton: true,
+                confirmButtonText: 'OK'
+            });
+        </script>";
+    }
+}
+?>
 <?php
 
 // Function to create journal entry
@@ -687,108 +821,169 @@ function getAccountName($pdo, $account_code)
                     <div class="col-md-12">
                         <div class="card shadow">
 
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
-                                <input type="hidden" name="structure_type" value="<?= htmlspecialchars($structure_type); ?>">
-                                <input type="hidden" name="first_name" value="<?= htmlspecialchars($first_name); ?>">
-                                <input type="hidden" name="last_name" value="<?= htmlspecialchars($last_name); ?>">
-                                <input type="hidden" name="owner_email" value="<?= htmlspecialchars($owner_email); ?>">
-                                <input type="hidden" name="entity_name" value="<?= htmlspecialchars($entity_name); ?>">
-                                <input type="hidden" name="entity_phone" value="<?= htmlspecialchars($entity_phone); ?>">
-                                <input type="hidden" name="entity_phoneother" value="<?= htmlspecialchars($entity_phoneother); ?>">
-                                <input type="hidden" name="entity_email" value="<?= htmlspecialchars($entity_email); ?>">
-                                <div class="card-body">
-                                    <div class="card shadow" id="firstSection" style="border:1px solid rgb(0,25,45,.2);">
-                                        <div class="card-header" style="background-color: #00192D; color:#fff;">
-                                            <b class="text-warning">Unit Identification</b>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Unit Number</label>
-                                                        <input type="text" name="unit_number" required class="form-control" id="unit_number" placeholder="Unit Number">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="">Purpose</label>
-                                                        <select name="purpose" id="purpose" class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;">
-                                                            <option value="" selected hidden>-- Select Option -- </option>
-                                                            <option value="Office">Office</option>
-                                                            <option value="Residential">Residential</option>
-                                                            <option value="Business">Business</option>
-                                                            <option value="Store">Store</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="">Link to the Building</label>
-                                                        <input type="text" name="building_link" class="form-control" value="<?= htmlspecialchars($building_name); ?>" readonly>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="">Location with in the Building</label>
-                                                        <input name="location" type="text" class="form-control" id="location" placeholder="Location e.g.Second Floor">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer text-right">
-                                            <button type="button" class="btn btn-sm next-btn" id="firstSectionNexttBtn">Next</button>
-                                        </div>
-                                    </div>
+                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="structure_type" value="<?= htmlspecialchars($structure_type); ?>">
+    <input type="hidden" name="first_name" value="<?= htmlspecialchars($first_name); ?>">
+    <input type="hidden" name="last_name" value="<?= htmlspecialchars($last_name); ?>">
+    <input type="hidden" name="owner_email" value="<?= htmlspecialchars($owner_email); ?>">
+    <input type="hidden" name="entity_name" value="<?= htmlspecialchars($entity_name); ?>">
+    <input type="hidden" name="entity_phone" value="<?= htmlspecialchars($entity_phone); ?>">
+    <input type="hidden" name="entity_phoneother" value="<?= htmlspecialchars($entity_phoneother); ?>">
+    <input type="hidden" name="entity_email" value="<?= htmlspecialchars($entity_email); ?>">
+    
+    <?php
+    // Fetch the Rental Income account from chart_of_accounts
+    $rental_account_name = "Rental Income";
+    $rental_account_code = 500;
+    
+    try {
+        require_once "../db/connect.php"; // Make sure this path is correct
+        $chartStmt = $pdo->prepare("SELECT account_name, account_code FROM chart_of_accounts WHERE account_code = 500");
+        $chartStmt->execute();
+        $rentalAccount = $chartStmt->fetch(PDO::FETCH_ASSOC);
+        
+        if($rentalAccount) {
+            $rental_account_name = $rentalAccount['account_name'];
+            $rental_account_code = $rentalAccount['account_code'];
+        }
+    } catch (Exception $e) {
+        error_log("Error fetching chart of accounts: " . $e->getMessage());
+        // Use default values if fetch fails
+    }
+    ?>
+    
+    <div class="card-body">
+        <div class="card shadow" id="firstSection" style="border:1px solid rgb(0,25,45,.2);">
+            <div class="card-header" style="background-color: #00192D; color:#fff;">
+                <b class="text-warning">Unit Identification</b>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Unit Number</label>
+                            <input type="text" name="unit_number" required class="form-control" id="unit_number" placeholder="Unit Number">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Purpose</label>
+                            <select name="purpose" id="purpose" class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;">
+                                <option value="" selected hidden>-- Select Option -- </option>
+                                <option value="Office">Office</option>
+                                <option value="Residential">Residential</option>
+                                <option value="Business">Business</option>
+                                <option value="Store">Store</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Link to the Building</label>
+                            <input type="text" name="building_link" class="form-control" value="<?= htmlspecialchars($building_name); ?>" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Location with in the Building</label>
+                            <input name="location" type="text" class="form-control" id="location" placeholder="Location e.g.Second Floor">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-right">
+                <button type="button" class="btn btn-sm next-btn" id="firstSectionNexttBtn">Next</button>
+            </div>
+        </div>
 
-                                    <div class="card shadow" id="secondSection" style="border:1px solid rgb(0,25,45,.2); display:none;">
-                                        <div class="card-header" style="background-color: #00192D; color:#fff;">
-                                            <b>Financials and Other Information</b>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <label>Monthly Rent</label>
-                                                <input type="number" class="form-control" id="monthly_rent" name="monthly_rent" placeholder="Monthly Rent">
-                                            </div>
-                                            <div class="card shadow">
-                                                <div class="card-header" style="background-color:#00192D; color: #fff;">Recurring Bills</div>
-                                                <div class="card-body">
-                                                    <table id="expensesTable" class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Bill</th>
-                                                                <th>Qty</th>
-                                                                <th>Unit Price</th>
-                                                                <th>Subtotal</th>
-                                                                <th>Options</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <!-- Rows will be added here dynamically -->
-                                                        </tbody>
-                                                        <tfoot>
-                                                            <tr>
-                                                                <td>Total</td>
-                                                                <td id="totalQty">0</td>
-                                                                <td id="totalUnitPrice">0.00</td>
-                                                                <td id="totalSubtotal">0.00</td>
-                                                                <td></td>
-                                                            </tr>
-                                                        </tfoot>
-                                                    </table>
-                                                    <button type="button" class="btn btn-sm shadow" style="border:1px solid #00192D; color:#00192D;" onclick="addRow()">+ Add Row</button>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Occupancy Status</label>
-                                                <select name="occupancy_status" id="occupancy_status" required class="form-control">
-                                                    <option value="" selected hidden>-- Select Status --</option>
-                                                    <option value="Occupied">Occupied</option>
-                                                    <option value="Vacant">Vacant</option>
-                                                    <option value="Under Maintenance">Under Maintenance</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer text-right">
-                                            <button class="btn btn-sm" id="secondSectionBackBtn" type="button" style="background-color:#00192D; color:#fff;">Go Back</button>
-                                            <button class="btn btn-sm" type="submit" name="submit_unit" style="background-color:#00192D; color: #fff;"><i class="bi bi-send"></i> Submit</button
-                                                </div>
-                                        </div>
+        <div class="card shadow" id="secondSection" style="border:1px solid rgb(0,25,45,.2); display:none;">
+            <div class="card-header" style="background-color: #00192D; color:#fff;">
+                <b>Financials and Other Information</b>
+            </div>
+            <div class="card-body">
+                <!-- Updated Monthly Rent Section -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Monthly Rent <span class="text-muted small">(Linked to Chart of Accounts)</span></label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="monthly_rent" 
+                                   name="monthly_rent" 
+                                   placeholder="Enter Monthly Rent"
+                                   min="0"
+                                   step="0.01"
+                                   required>
+                            <small class="text-muted">This amount will be recorded as "<?= htmlspecialchars($rental_account_name) ?>" in your accounting</small>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Chart of Accounts Reference</label>
+                            <div class="card" style="border: 1px solid #dee2e6;">
+                                <div class="card-body p-2">
+                                    <h6 class="card-title mb-1" style="font-size: 0.9rem;">Account Reference:</h6>
+                                    <p class="card-text mb-1" style="font-size: 0.8rem;">
+                                        <strong>Account:</strong> <?= htmlspecialchars($rental_account_name) ?>
+                                    </p>
+                                    <p class="card-text mb-0" style="font-size: 0.8rem;">
+                                        <strong>Code:</strong> <?= htmlspecialchars($rental_account_code) ?>
+                                    </p>
+                                    <p class="card-text mb-0" style="font-size: 0.8rem;">
+                                        <strong>Type:</strong> Revenue - Rental Revenue
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow">
+                    <div class="card-header" style="background-color:#00192D; color: #fff;">Recurring Bills</div>
+                    <div class="card-body">
+                        <table id="expensesTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Bill</th>
+                                    <th>Qty</th>
+                                    <th>Unit Price</th>
+                                    <th>Subtotal</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be added here dynamically -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>Total</td>
+                                    <td id="totalQty">0</td>
+                                    <td id="totalUnitPrice">0.00</td>
+                                    <td id="totalSubtotal">0.00</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <button type="button" class="btn btn-sm shadow" style="border:1px solid #00192D; color:#00192D;" onclick="addRow()">+ Add Row</button>
+                    </div>
+                </div>
+                
+                <div class="form-group mt-3">
+                    <label>Occupancy Status</label>
+                    <select name="occupancy_status" id="occupancy_status" required class="form-control">
+                        <option value="" selected hidden>-- Select Status --</option>
+                        <option value="Occupied">Occupied</option>
+                        <option value="Vacant">Vacant</option>
+                        <option value="Under Maintenance">Under Maintenance</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-footer text-right">
+                <button class="btn btn-sm" id="secondSectionBackBtn" type="button" style="background-color:#00192D; color:#fff;">Go Back</button>
+                <button class="btn btn-sm" type="submit" name="submit_unit" style="background-color:#00192D; color: #fff;">
+                    <i class="bi bi-send"></i> Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
                             </form>
                         </div>
                     </div>
@@ -805,6 +1000,190 @@ function getAccountName($pdo, $account_code)
 
     <!-- plugin for pdf -->
 
+    <script>
+// Dynamic rows for expenses table
+let rowCount = 0;
+
+function addRow() {
+    rowCount++;
+    const tableBody = document.querySelector('#expensesTable tbody');
+    const newRow = document.createElement('tr');
+    newRow.id = 'row-' + rowCount;
+    newRow.innerHTML = `
+        <td>
+            <select name="bill_name[]" class="form-control form-control-sm bill-select" required>
+                <option value="" selected hidden>Select Bill</option>
+                <option value="Water">Water</option>
+                <option value="Garbage">Garbage</option>
+                <option value="Electricity">Electricity</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Internet">Internet</option>
+                <option value="Security">Security</option>
+                <option value="Parking">Parking</option>
+                <option value="Other">Other</option>
+            </select>
+            <input type="text" name="bill_name_other[]" class="form-control form-control-sm mt-1 d-none" placeholder="Specify other bill">
+        </td>
+        <td><input type="number" name="quantity[]" class="form-control form-control-sm qty-input" min="1" value="1" required></td>
+        <td><input type="number" name="unit_price[]" class="form-control form-control-sm price-input" min="0" step="0.01" value="0" required></td>
+        <td class="subtotal-cell">0.00</td>
+        <td>
+            <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(${rowCount})">
+                <i class="fa fa-trash"></i>
+            </button>
+        </td>
+    `;
+    tableBody.appendChild(newRow);
+    
+    // Add event listeners for calculations
+    const qtyInput = newRow.querySelector('.qty-input');
+    const priceInput = newRow.querySelector('.price-input');
+    const billSelect = newRow.querySelector('.bill-select');
+    
+    qtyInput.addEventListener('input', calculateTotals);
+    priceInput.addEventListener('input', calculateTotals);
+    billSelect.addEventListener('change', function() {
+        const otherInput = this.closest('td').querySelector('[name="bill_name_other[]"]');
+        if (this.value === 'Other') {
+            otherInput.classList.remove('d-none');
+            otherInput.required = true;
+        } else {
+            otherInput.classList.add('d-none');
+            otherInput.required = false;
+        }
+    });
+    
+    calculateTotals();
+}
+
+function removeRow(rowId) {
+    const row = document.getElementById('row-' + rowId);
+    if (row) {
+        row.remove();
+        calculateTotals();
+    }
+}
+
+function calculateTotals() {
+    let totalQty = 0;
+    let totalUnitPrice = 0;
+    let totalSubtotal = 0;
+    
+    const rows = document.querySelectorAll('#expensesTable tbody tr');
+    rows.forEach(row => {
+        const qtyInput = row.querySelector('.qty-input');
+        const priceInput = row.querySelector('.price-input');
+        const subtotalCell = row.querySelector('.subtotal-cell');
+        
+        if (qtyInput && priceInput && subtotalCell) {
+            const qty = parseFloat(qtyInput.value) || 0;
+            const price = parseFloat(priceInput.value) || 0;
+            const subtotal = qty * price;
+            
+            subtotalCell.textContent = subtotal.toFixed(2);
+            
+            totalQty += qty;
+            totalUnitPrice += price;
+            totalSubtotal += subtotal;
+        }
+    });
+    
+    // Update footer totals
+    document.getElementById('totalQty').textContent = totalQty;
+    document.getElementById('totalUnitPrice').textContent = totalUnitPrice.toFixed(2);
+    document.getElementById('totalSubtotal').textContent = totalSubtotal.toFixed(2);
+}
+
+// Initialize with one row when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    addRow();
+    
+    // Form validation before submission
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        // Validate that at least one bill row exists
+        const billRows = document.querySelectorAll('#expensesTable tbody tr');
+        if (billRows.length === 0) {
+            e.preventDefault();
+            alert('Please add at least one recurring bill or remove the entire recurring bills section.');
+            return false;
+        }
+        
+        // Validate each bill row
+        let isValid = true;
+        billRows.forEach(row => {
+            const billSelect = row.querySelector('.bill-select');
+            const qtyInput = row.querySelector('.qty-input');
+            const priceInput = row.querySelector('.price-input');
+            
+            if (!billSelect.value || !qtyInput.value || !priceInput.value) {
+                isValid = false;
+            }
+            
+            // Check for "Other" bill with empty specification
+            if (billSelect.value === 'Other') {
+                const otherInput = row.querySelector('[name="bill_name_other[]"]');
+                if (!otherInput.value.trim()) {
+                    isValid = false;
+                    otherInput.classList.add('is-invalid');
+                }
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please fill in all required fields for recurring bills.');
+            return false;
+        }
+        
+        return true;
+    });
+});
+</script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Validate monthly rent input
+    const monthlyRentInput = document.getElementById('monthly_rent');
+    if(monthlyRentInput) {
+        monthlyRentInput.addEventListener('blur', function() {
+            const value = parseFloat(this.value);
+            if (value < 0) {
+                alert('Monthly rent cannot be negative');
+                this.value = '';
+                this.focus();
+            }
+        });
+        
+        // Format the input to 2 decimal places
+        monthlyRentInput.addEventListener('change', function() {
+            if(this.value) {
+                this.value = parseFloat(this.value).toFixed(2);
+            }
+        });
+    }
+    
+    // Form submission validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const monthlyRent = parseFloat(monthlyRentInput.value);
+        if (!monthlyRent || monthlyRent <= 0) {
+            e.preventDefault();
+            alert('Please enter a valid monthly rent amount');
+            monthlyRentInput.focus();
+            return false;
+        }
+        
+        // Add chart of accounts reference to form data
+        const coaInput = document.createElement('input');
+        coaInput.type = 'hidden';
+        coaInput.name = 'chart_of_accounts_ref';
+        coaInput.value = '<?= $rental_account_code ?>';
+        this.appendChild(coaInput);
+        
+        return true;
+    });
+});
+</script>
 
     <!-- Main Js File -->
     <script src="../../js/adminlte.js"></script>

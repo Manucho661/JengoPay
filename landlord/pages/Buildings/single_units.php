@@ -3,6 +3,48 @@
 require_once "../db/connect.php";
 ?>
 
+<?php
+require_once "../db/connect.php"; // your PDO connection
+
+if (isset($_POST['submit_reading'])) {
+    // Sanitize and fetch POST data
+    $building_unit_id = intval($_POST['id']); // id hidden field
+    $meter_type = $_POST['meter_type'];       // 'Water' or 'Electricity'
+    $units_consumed = floatval($_POST['units_consumed']);
+    $cost_per_unit = floatval($_POST['cost_per_unit']);
+    $final_bill = floatval($_POST['final_bill']);
+
+    // Map meter_type to bill_name (you can define your own codes)
+    // For example: Water = 1, Electricity = 2
+    $bill_name = ($meter_type === 'Water') ? 1 : 2;
+
+    $created_at = date('Y-m-d H:i:s');
+
+    try {
+        $stmt = $pdo->prepare("INSERT INTO bills (building_unit_id, bill_name, quantity, unit_price, sub_total, created_at) 
+                               VALUES (:building_unit_id, :bill_name, :quantity, :unit_price, :sub_total, :created_at)");
+
+        $stmt->execute([
+            ':building_unit_id' => $building_unit_id,
+            ':bill_name' => $bill_name,
+            ':quantity' => $units_consumed,
+            ':unit_price' => $cost_per_unit,
+            ':sub_total' => $final_bill,
+            ':created_at' => $created_at
+        ]);
+
+        // Success message or redirect
+        echo "<script>
+        alert('Meter reading added successfully!');
+        window.location.href = 'single_units.php';
+    </script>";
+        } catch (PDOException $e) {
+        echo "<script>alert('Error: " . $e->getMessage() . "');</script>";
+    }
+}
+?>
+
+
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -672,84 +714,91 @@ require_once "../db/connect.php";
                                                                 </td>
                                                             </tr>
                                                             <!-- Meter Readings Modal -->
-                                                            <div class="modal fade shadow" id="meterReadingModal<?= $id; ?>">
-                                                                <div class="modal-dialog modal-md">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header" style="background-color:#00192D; color: #fff;">
-                                                                            <b>Add Meter Reading for Unit <?= $unit_number; ?></b>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <form action="" method="POST" enctype="multipart/form-data" autocomplete="off">
-                                                                            <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>">
-                                                                            <div class="modal-body">
-                                                                                <div class="form-group">
-                                                                                    <label>Reading Date</label>
-                                                                                    <input type="date" class="form-control" name="reading_date" id="reading_date" required>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <div class="col-md-12">
-                                                                                        <div class="form-group">
-                                                                                            <label>Meter Type</label>
-                                                                                            <select class="form-control meter_type" name="meter_type" required>
-                                                                                                <option value="" selected hidden> Meter Type</option>
-                                                                                                <option value="Water">Water</option>
-                                                                                                <option value="Electricity">Electricity</option>
-                                                                                            </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <hr>
-                                                                                <div class="row">
-                                                                                    <div class="col-md-6">
-                                                                                        <div class="form-group">
-                                                                                            <label>Current Reading:</label>
-                                                                                            <input type="number" name="current_reading" placeholder="Current Reading" required class="form-control" id="current_reading">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-md-6">
-                                                                                        <div class="form-group">
-                                                                                            <label>Previous Reading:</label>
-                                                                                            <input type="number" name="previous_reading" placeholder="Previous Reading" class="form-control" id="previous_reading">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <hr>
+                                                          <div class="modal fade shadow" id="meterReadingModal<?= htmlspecialchars($id); ?>">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#00192D; color: #fff;">
+                <b>Add Meter Reading for Unit <?= htmlspecialchars($unit_number); ?></b>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
 
-                                                                                <fieldset class="border p-1">
-                                                                                    <legend class="w-auto" style="font-size: 18px; font-weight: bold; padding: 3px;">
-                                                                                        Calculations</legend>
-                                                                                    <div class="row">
-                                                                                        <div class="col-md-6">
-                                                                                            <div class="form-group">
-                                                                                                <label>Units Consumed:</label>
-                                                                                                <input class="form-control" id="units_consumed" name="units_consumed" readonly>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="col-md-6">
-                                                                                            <div class="form-group">
-                                                                                                <label>Cost Per Unit:</label>
-                                                                                                <input class="form-control" id="cost_per_unit" type="text" name="cost_per_unit">
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="form-group">
-                                                                                        <label>Bill</label>
-                                                                                        <input class="form-control" id="final_bill" name="final_bill" readonly type="text">
-                                                                                    </div>
-                                                                                </fieldset>
-                                                                            </div>
-                                                                            <div class="modal-footer text-right">
-                                                                                <button type="submit" name="submit_reading" class="btn btn-sm" style="border:1px solid #00192D;">
-                                                                                    <i class="bi bi-send"></i> Submit
-                                                                                </button>
-                                                                            </div>
-                                                                        </form>
+            <form action="" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <!-- Use htmlspecialchars to prevent XSS -->
+                <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>">
 
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="reading_date_<?= htmlspecialchars($id); ?>">Reading Date</label>
+                        <input type="date" class="form-control" name="reading_date" id="reading_date_<?= htmlspecialchars($id); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="meter_type_<?= htmlspecialchars($id); ?>">Meter Type</label>
+                        <select class="form-control meter_type" name="meter_type" id="meter_type_<?= htmlspecialchars($id); ?>" required>
+                            <option value="" selected hidden>Meter Type</option>
+                            <option value="Water">Water</option>
+                            <option value="Electricity">Electricity</option>
+                        </select>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="current_reading_<?= htmlspecialchars($id); ?>">Current Reading</label>
+                                <input type="number" name="current_reading" id="current_reading_<?= htmlspecialchars($id); ?>" placeholder="Current Reading" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="previous_reading_<?= htmlspecialchars($id); ?>">Previous Reading</label>
+                                <input type="number" name="previous_reading" id="previous_reading_<?= htmlspecialchars($id); ?>" placeholder="Previous Reading" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <fieldset class="border p-1">
+                        <legend class="w-auto" style="font-size: 18px; font-weight: bold; padding: 3px;">Calculations</legend>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="units_consumed_<?= htmlspecialchars($id); ?>">Units Consumed</label>
+                                    <input type="number" class="form-control" name="units_consumed" id="units_consumed_<?= htmlspecialchars($id); ?>" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="cost_per_unit_<?= htmlspecialchars($id); ?>">Cost Per Unit</label>
+                                    <input type="number" class="form-control" name="cost_per_unit" id="cost_per_unit_<?= htmlspecialchars($id); ?>" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="final_bill_<?= htmlspecialchars($id); ?>">Bill</label>
+                            <input type="number" class="form-control" name="final_bill" id="final_bill_<?= htmlspecialchars($id); ?>" readonly>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="modal-footer text-right">
+                    <button type="submit" name="submit_reading" class="btn btn-sm btn-outline-dark">
+                        <i class="bi bi-send"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
                                                             <!-- Mark as Vacant Modal -->
                                                             <div class="modal fade shadow" id="markAsVacant<?php echo $id; ?>">
@@ -865,29 +914,46 @@ require_once "../db/connect.php";
 
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
 
-            function calculateBill() {
-                let current = parseFloat(document.getElementById("current_reading").value) || 0;
-                let previous = parseFloat(document.getElementById("previous_reading").value) || 0;
-                let cost = parseFloat(document.getElementById("cost_per_unit").value) || 0;
+    // Function to calculate bill for a specific modal
+    function calculateBill(modalId) {
+        const currentEl = document.getElementById(`current_reading_${modalId}`);
+        const previousEl = document.getElementById(`previous_reading_${modalId}`);
+        const costEl = document.getElementById(`cost_per_unit_${modalId}`);
+        const unitsEl = document.getElementById(`units_consumed_${modalId}`);
+        const finalEl = document.getElementById(`final_bill_${modalId}`);
 
-                // Calculate Units Consumed
-                let units = current - previous;
-                document.getElementById("units_consumed").value = units > 0 ? units : 0;
+        if (!currentEl || !previousEl || !costEl || !unitsEl || !finalEl) return;
 
-                // Final Bill
-                let finalBill = units * cost;
-                document.getElementById("final_bill").value = finalBill.toFixed(2);
+        let current = parseFloat(currentEl.value) || 0;
+        let previous = parseFloat(previousEl.value) || 0;
+        let cost = parseFloat(costEl.value) || 0;
+
+        // Calculate Units Consumed
+        let units = current - previous;
+        unitsEl.value = units > 0 ? units : 0;
+
+        // Calculate Final Bill
+        let finalBill = units * cost;
+        finalEl.value = finalBill.toFixed(2);
+    }
+
+    // Attach event listeners to all modals
+    document.querySelectorAll('.modal').forEach(modal => {
+        const modalId = modal.id.split('meterReadingModal')[1]; // Extract ID from modal
+
+        ['current_reading_', 'previous_reading_', 'cost_per_unit_'].forEach(prefix => {
+            const el = document.getElementById(`${prefix}${modalId}`);
+            if (el) {
+                el.addEventListener('input', () => calculateBill(modalId));
             }
-
-            // Trigger calculation when values change
-            document.getElementById("current_reading").addEventListener("input", calculateBill);
-            document.getElementById("previous_reading").addEventListener("input", calculateBill);
-            document.getElementById("cost_per_unit").addEventListener("input", calculateBill);
-
         });
-    </script>
+    });
+
+});
+</script>
+
 
     <!-- plugin for pdf -->
     <!-- Main Js File -->

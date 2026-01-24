@@ -1,4 +1,3 @@
-<?php ?>
 <?php
 session_start(); 
 require_once "../db/connect.php";
@@ -63,6 +62,138 @@ if(isset($_GET['tenant_id']) && !empty($_GET['tenant_id'])) {
         // Handle database error
         error_log("Database error: " . $e->getMessage());
         $tenant_info = null;
+    }
+}
+?>
+<?php
+require_once "../db/connect.php";
+include_once '../processes/encrypt_decrypt_function.php';
+
+$tenant_info = [];
+$monthly_rent = 0;
+$final_bill = 0;
+$garbage_data = [];
+
+if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
+    $id = $_GET['invoice'];
+    $decrypted_id = encryptor('decrypt', $id);
+
+    if ($decrypted_id !== null && $decrypted_id !== false) {
+        try {
+            // Fetch tenant info
+            $stmt = $pdo->prepare("SELECT * FROM tenants WHERE id = ?");
+            $stmt->execute([$decrypted_id]);
+            $tenant_info = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+            // Fetch tenant's active unit monthly rent dynamically
+         // Fetch tenant's active unit monthly rent dynamically
+if(!empty($decrypted_id)) {
+    // First, get the unit_id from tenancies table
+    $unitStmt = $pdo->prepare("
+        SELECT t.unit_id, bu.monthly_rent
+        FROM tenancies t
+        JOIN building_units bu ON t.unit_id = bu.id
+        WHERE t.tenant_id = ? AND t.status = 'Active'
+        ORDER BY t.id DESC
+        LIMIT 1
+    ");
+    $unitStmt->execute([$decrypted_id]);
+    $unitResult = $unitStmt->fetch(PDO::FETCH_ASSOC);
+    
+    if($unitResult) {
+        // Store unit_id and monthly_rent
+        $tenant_info['unit_id'] = $unitResult['unit_id'];
+        $monthly_rent = floatval($unitResult['monthly_rent']);
+        $final_bill = $monthly_rent;
+    }
+}
+
+
+// Fetch rental income account from chart_of_accounts
+try {
+    $chartStmt = $pdo->prepare("SELECT account_name, account_code FROM chart_of_accounts WHERE account_code = 500");
+    $chartStmt->execute();
+    $rentalAccount = $chartStmt->fetch(PDO::FETCH_ASSOC);
+    
+    if($rentalAccount) {
+        // You can use this information if needed
+        $rental_account_name = $rentalAccount['account_name'];
+        $rental_account_code = $rentalAccount['account_code'];
+    }
+} catch (Exception $e) {
+    error_log("Error fetching chart of accounts: " . $e->getMessage());
+    $rental_account_name = "Rental Income";
+    $rental_account_code = 500;
+}
+
+            // Fetch garbage/other charges if exists
+            try {
+                $garbageStmt = $pdo->prepare("SELECT bill, qty, unit_price, subtotal FROM bills WHERE tenant_id = ? AND bill = 'Garbage'");
+                $garbageStmt->execute([$decrypted_id]);
+                $garbage_data = $garbageStmt->fetch(PDO::FETCH_ASSOC) ?: [];
+            } catch(Exception $e) {
+                $garbage_data = [];
+            }
+
+            // If water bills are stored in the bills table
+// Fetch water bill data for current month
+try {
+    if(isset($tenant_info['unit_id']) && !empty($tenant_info['unit_id'])) {
+        // Get current month's water bills
+        $waterStmt = $pdo->prepare("
+            SELECT 
+                b.id AS bill_id,
+                b.building_unit_id,
+                t.account_no,
+                CONCAT(ten.first_name, ' ', ten.last_name) AS tenant_name,
+                b.quantity,
+                b.unit_price,
+                b.sub_total,
+                b.created_at,
+                MONTH(b.created_at) AS billing_month,
+                YEAR(b.created_at) AS billing_year
+            FROM bills b
+            INNER JOIN tenancies t ON b.building_unit_id = t.unit_id
+            INNER JOIN tenants ten ON t.tenant_id = ten.id
+            WHERE b.building_unit_id = ?
+                AND b.bill_name = 0
+                AND MONTH(b.created_at) = MONTH(CURRENT_DATE())
+                AND YEAR(b.created_at) = YEAR(CURRENT_DATE())
+                AND t.status = 'Active'
+            ORDER BY b.created_at DESC
+        ");
+        $waterStmt->execute([$tenant_info['unit_id']]);
+        $water_data = $waterStmt->fetch(PDO::FETCH_ASSOC);
+        
+        if($water_data) {
+            // Process water data for display
+            $water_quantity = $water_data['quantity'] ?? 0;
+            $water_unit_price = $water_data['unit_price'] ?? 0;
+            $water_total = $water_data['sub_total'] ?? 0;
+            
+            // Store in session or variable for use
+            $_SESSION['water_bill_data'] = $water_data;
+        } else {
+            $water_data = [];
+            $water_quantity = 0;
+            $water_unit_price = 0;
+            $water_total = 0;
+        }
+    }
+} catch(Exception $e) {
+    error_log("Error fetching water bill: " . $e->getMessage());
+    $water_data = [];
+    $water_quantity = 0;
+    $water_unit_price = 0;
+    $water_total = 0;
+}
+
+
+        } catch(PDOException $e) {
+            error_log("Database error: ".$e->getMessage());
+            $tenant_info = [];
+            $monthly_rent = 0;
+        }
     }
 }
 ?>
@@ -228,7 +359,6 @@ if(isset($_GET['tenant_id']) && !empty($_GET['tenant_id'])) {
                 <?php
 include_once '../processes/encrypt_decrypt_function.php';
 
-// Initialize $tenant_info with all possible fields from tenants table
 $tenant_info = [
     'first_name' => '', 'middle_name' => '', 'last_name' => '', 
     'phone' => '', 'alt_phone' => '', 'email' => '',
@@ -239,12 +369,14 @@ $tenant_info = [
     'rental_agreement' => '', 'income' => '', 'job_title' => '',
     'job_location' => '', 'casual_job' => '', 'business_name' => '',
     'business_location' => '', 'tenant_status' => '', 
-    'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => ''
+    'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => '',
+    'unit_id' => '' // Added unit_id
 ];
 
 $monthly_rent = 0;
 $final_bill = 0;
 $garbage_data = [];
+$unit_number = ''; // New variable for unit number
 
 // Fetch Tenant Information from the tenants table
 if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
@@ -253,14 +385,12 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
 
     if ($decrypted_id !== null && $decrypted_id !== false) {
         try {
-            // Query the tenants table - Note: tenants table doesn't have monthly_rent field
-            // Based on your SQL dump, you need to check what field contains the rent amount
+            // First, get tenant info from tenants table
             $tenant = $pdo->prepare("SELECT * FROM tenants WHERE id = ?");
             $tenant->execute([$decrypted_id]);
             $tenant_info = $tenant->fetch(PDO::FETCH_ASSOC);
 
             if(!$tenant_info) {
-                // If not found in tenants table, show appropriate message
                 echo "<script>
                     Swal.fire({
                         icon: 'warning',
@@ -280,10 +410,11 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                     'rental_agreement' => '', 'income' => '', 'job_title' => '',
                     'job_location' => '', 'casual_job' => '', 'business_name' => '',
                     'business_location' => '', 'tenant_status' => '', 
-                    'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => ''
+                    'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => '',
+                    'unit_id' => ''
                 ];
             } else {
-                // Ensure all keys exist in the array
+                // Merge with defaults to ensure all keys exist
                 $default_keys = [
                     'first_name' => '', 'middle_name' => '', 'last_name' => '', 
                     'phone' => '', 'alt_phone' => '', 'email' => '',
@@ -294,32 +425,39 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                     'rental_agreement' => '', 'income' => '', 'job_title' => '',
                     'job_location' => '', 'casual_job' => '', 'business_name' => '',
                     'business_location' => '', 'tenant_status' => '', 
-                    'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => ''
+                    'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => '',
+                    'unit_id' => ''
                 ];
                 
-                // Merge with defaults to ensure all keys exist
                 $tenant_info = array_merge($default_keys, $tenant_info);
                 
-                // IMPORTANT: The tenants table from your SQL dump doesn't have monthly_rent field
-                // You need to check where the rent amount is stored
-                // For now, I'm setting it to 0 or you can fetch it from another table
-                $monthly_rent = 0; // You need to get this from the correct table/field
-                $final_bill = 0;
+                // Now fetch unit_id and monthly_rent from tenancies and building_units tables
+                $unitStmt = $pdo->prepare("
+                    SELECT t.unit_id, bu.monthly_rent, bu.unit_number
+                    FROM tenancies t
+                    JOIN building_units bu ON t.unit_id = bu.id
+                    WHERE t.tenant_id = ? AND t.status = 'Active'
+                    ORDER BY t.id DESC
+                    LIMIT 1
+                ");
+                $unitStmt->execute([$decrypted_id]);
+                $unitResult = $unitStmt->fetch(PDO::FETCH_ASSOC);
                 
-                // FETCH GARBAGE DATA - Check if there's a bills table for tenants
-                // Since tenants table doesn't have unit_id, you might need a different approach
+                if($unitResult) {
+                    $tenant_info['unit_id'] = $unitResult['unit_id'];
+                    $monthly_rent = floatval($unitResult['monthly_rent']);
+                    $unit_number = htmlspecialchars($unitResult['unit_number'] ?? '');
+                    $final_bill = $monthly_rent;
+                }
+                
+                // FETCH GARBAGE DATA
                 try {
-                    // If you have a tenant_bills table or similar
                     $garbage_stmt = $pdo->prepare("SELECT bill, qty, unit_price, subtotal FROM tenant_bills WHERE tenant_id = ? AND bill = 'Garbage'");
                     $garbage_stmt->execute([$decrypted_id]);
                     $garbage_data = $garbage_stmt->fetch(PDO::FETCH_ASSOC);
                 } catch (Exception $e) {
-                    // If table doesn't exist or query fails, set empty array
                     $garbage_data = [];
                 }
-                
-                // Debug: Check what data we have
-                // echo "<pre>Tenant Info: " . print_r($tenant_info, true) . "</pre>";
             }
         } catch (PDOException $e) {
             error_log("Database error fetching tenant info: " . $e->getMessage());
@@ -341,7 +479,8 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                 'rental_agreement' => '', 'income' => '', 'job_title' => '',
                 'job_location' => '', 'casual_job' => '', 'business_name' => '',
                 'business_location' => '', 'tenant_status' => '', 
-                'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => ''
+                'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => '',
+                'unit_id' => ''
             ];
         }
     } else {
@@ -363,11 +502,11 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
             'rental_agreement' => '', 'income' => '', 'job_title' => '',
             'job_location' => '', 'casual_job' => '', 'business_name' => '',
             'business_location' => '', 'tenant_status' => '', 
-            'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => ''
+            'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => '',
+            'unit_id' => ''
         ];
     }
 } else {
-    // No invoice parameter provided
     echo "<script>
         Swal.fire({
             icon: 'info',
@@ -380,9 +519,9 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
           
               
 <div class="card shadow">
-            <div class="card-header" style="background-color: #00192D; color: #fff;">
-              <b>Create Invoice for Unit <?= htmlspecialchars($tenant_info['unit_number'] ?? 'N/A'); ?> - <?= htmlspecialchars(($tenant_info['tfirst_name'] ?? '') . ' ' . ($tenant_info['tmiddle_name'] ?? '') . ' ' . ($tenant_info['tlast_name'] ?? ''));?></b>
-            </div>
+<div class="card-header" style="background-color: #00192D; color: #fff;">
+    <b>Create Invoice for Unit <?= $unit_number ?: 'N/A'; ?> - <?= htmlspecialchars(($tenant_info['first_name'] ?? '') . ' ' . ($tenant_info['middle_name'] ?? '') . ' ' . ($tenant_info['last_name'] ?? ''));?></b>
+</div>
             <form id="invoiceForm" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ;?>" enctype="multipart/form-data" autocomplete="off">
                 <div class="card-body">
                     <!-- Tenant Info Section -->
@@ -449,12 +588,12 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
 
 
                     <hr>
-                    <input type="hidden" name="paymentStatus" value="Pending">
+                    <!-- <input type="hidden" name="paymentStatus" value="Pending">
                     <input type="hidden" name="monthly_rent" id="monthlyRent" value="<?= htmlspecialchars($monthly_rent); ?>">
-                    <input type="hidden" name="final_bill" id="finalBill" value="<?= htmlspecialchars($final_bill); ?>">
+                    <input type="hidden" name="final_bill" id="finalBill" value="<?= htmlspecialchars($final_bill); ?>"> -->
 
-                    <!-- Invoice Items Table -->
-                    <h5 class="mb-3">Invoice Items</h5>
+                                       <!-- Invoice Items Table -->
+                                       <h5 class="mb-3">Invoice Items</h5>
                     <table id="invoiceTable" class="table table-bordered table-striped shadow">
                         <thead class="table-dark">
                             <tr>
@@ -470,7 +609,7 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                         </thead>
                         <tbody id="invoiceBody">
                         <?php
-                        // First, display Rent row automatically since it's in monthly_rent
+                        // Display Rent row automatically since it's in monthly_rent
                         if ($monthly_rent > 0) {
                             $rentUnitPrice = $monthly_rent;
                             $rentQuantity = 1;
@@ -481,7 +620,7 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                             
                             echo "<tr id='rowRent'>";
                             echo "<td>Rent</td>";
-                            echo "<td>Monthly Rental Payment for Unit " . htmlspecialchars($tenant_info['unit_number'] ?? '') . "</td>";
+                            echo "<td>Monthly Rental Payment</td>";
                             echo "<td class='unit-price'>" . number_format($rentNetPrice, 2) . "</td>";
                             echo "<td class='quantity'>" . $rentQuantity . "</td>";
                             echo "<td class='tax-type'>" . $rentTaxType . "</td>";
@@ -533,6 +672,37 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                             echo "</td>";
                             echo "</tr>";
                         }
+
+                        // Display water bill row if exists (add this after the garbage display code)
+if (!empty($tenant_info['unit_id'])) {
+    try {
+        $waterStmt = $pdo->prepare("
+            SELECT
+                quantity,
+                unit_price,
+                sub_total,
+                created_at
+            FROM bills
+            WHERE building_unit_id = ?
+              AND bill_name = 0
+              AND MONTH(created_at) = MONTH(CURRENT_DATE())
+              AND YEAR(created_at) = YEAR(CURRENT_DATE())
+            ORDER BY created_at DESC
+            LIMIT 1
+        ");
+        $waterStmt->execute([$tenant_info['unit_id']]);
+        $water_data = $waterStmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($water_data) {
+            $water_quantity   = (int)$water_data['quantity'];
+            $water_unit_price = (float)$water_data['unit_price'];
+            $water_total      = (float)$water_data['sub_total'];
+        }
+    } catch (PDOException $e) {
+        error_log("Water bill error: " . $e->getMessage());
+    }
+}
+
                         ?>
                         </tbody>
                         <tfoot>
@@ -541,7 +711,6 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                             <tr><td colspan="6" class="text-end"><strong>Final Total:</strong></td><td id="finalTotal" class="text-end">0.00</td><td></td></tr>
                         </tfoot>
                     </table>
-
                     <hr>
                     <!-- Changed addRow() to open the drawer -->
                     <button type="button" onclick="openAddItemDrawer()" class="btn btn-sm shadow text-white" style="background-color:#00192D;">
