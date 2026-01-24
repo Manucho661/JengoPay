@@ -32,7 +32,6 @@ try {
     $expense_no    = $_POST['expense_no'] ?? null;
     $building_id   = $_POST['building_id'] ?? null;
     $supplier_id   = $_POST['supplier_id'] ?? null;
-    $supplier_name = $_POST['supplier_name'] ?? null;
 
     $untaxedAmount = (float)($_POST['untaxedAmount'] ?? 0);
     $totalTax      = (float)($_POST['totalTax'] ?? 0);
@@ -47,7 +46,7 @@ try {
      * ----------------------------- */
     $stmt = $pdo->prepare("
         INSERT INTO expenses (
-            supplier_id, building_id, landlord_id, expense_date, expense_no, supplier,
+            supplier_id, building_id, landlord_id, expense_date, expense_no,
             untaxed_amount, total_taxes, total
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
@@ -58,7 +57,6 @@ try {
         $landlord_id,
         $expense_date,
         $expense_no,
-        $supplier_name,
         $untaxedAmount,
         $totalTax,
         $total
