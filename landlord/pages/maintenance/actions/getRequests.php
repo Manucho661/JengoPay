@@ -1,90 +1,50 @@
-                                                                                                                              <?php
-header('Content-Type: application/json');
+<?php
+// actions/getRequestsData.php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-session_start();
-
-require_once '../../db/connect.php';
+require_once __DIR__ . '/../../db/connect.php';
 
 try {
+    $stmt = $pdo->prepare("
+    SELECT
+        mr.*,
+        b.building_name,
+        ra.id AS assignment_id,
+        ra.status,
+        p.name AS provider_name,
+        p.email AS provider_email,
+        p.phone AS provider_phone
+    FROM maintenance_requests mr
 
-    // Get page number and limit from query parameters
-            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-            $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 5;
-            // Calculate offset
-            $offset = ($page - 1) * $limit;
+    /* Join buildings to get building_name */
+    LEFT JOIN buildings b
+        ON mr.building_id = b.id
 
-            // Get total number of records
-            $countQuery = $pdo->prepare("
-            SELECT COUNT(*) AS total
-            FROM maintenance_requests mr
-            LEFT JOIN (
-                SELECT 
-                    ra.*, 
-                    ROW_NUMBER() OVER (PARTITION BY ra.maintenance_request_id ORDER BY ra.created_at DESC) AS row_num
-                FROM maintenance_request_assignments ra
-            ) ra ON mr.id = ra.maintenance_request_id AND ra.row_num = 1
-            LEFT JOIN maintenance_request_photos mp ON mp.maintenance_request_id = mr.id
-            LEFT JOIN service_providers p ON ra.provider_id = p.id
-        ");
+    /* Get latest assignment per request */
+    LEFT JOIN (
+        SELECT 
+            ra.*, 
+            ROW_NUMBER() OVER (
+                PARTITION BY ra.maintenance_request_id 
+                ORDER BY ra.created_at DESC
+            ) AS row_num
+        FROM maintenance_request_assignments ra
+    ) ra 
+        ON mr.id = ra.maintenance_request_id
+       AND ra.row_num = 1
 
-        $countQuery->execute();
-        $totalRecords = $countQuery->fetch(PDO::FETCH_ASSOC)['total'];
-        // Calculate total pages
-        $totalPages = ceil($totalRecords / $limit);
+    /* Provider info */
+    LEFT JOIN service_providers p 
+        ON ra.provider_id = p.id
 
+    ORDER BY mr.created_at DESC
+");
 
-        // Fetch maintenance requests along with provider details
-            $stmt = $pdo->prepare("
-            SELECT
-                mr.*,
-                ra.id AS assignment_id,
-                ra.status,
-                p.name AS provider_name,
-                p.email AS provider_email,
-                p.phone AS provider_phone,
-                mp.photo_path
-            FROM
-                maintenance_requests mr
-            LEFT JOIN (
-                SELECT 
-                    ra.*, 
-                    ROW_NUMBER() OVER (PARTITION BY ra.maintenance_request_id ORDER BY ra.created_at DESC) AS row_num
-                FROM
-                    maintenance_request_assignments ra
-            ) ra ON mr.id = ra.maintenance_request_id AND ra.row_num = 1
-            LEFT JOIN maintenance_request_photos mp ON mp.maintenance_request_id = mr.id
-            LEFT JOIN service_providers p ON ra.provider_id = p.id
-            LIMIT ? OFFSET ?
-        ");
-    $stmt->execute([$limit, $offset]);
     $stmt->execute();
     $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Calculate start and end record numbers for display
-    $start = $totalRecords > 0 ? $offset + 1 : 0;
-    $end = min($offset + $limit, $totalRecords);
-
-    // data for the graph
-    $stmt1 = $pdo ->prepare("SELECT created_at FROM maintenance_requests");
-    $stmt1->execute();
-    $graphData= $stmt1->fetchAll(PDO::FETCH_ASSOC);
-
-
-    echo json_encode([
-        'success' => true,
-        'data' => $requests,
-        'totalRecords' => (int)$totalRecords,
-        'total_pages' => $totalPages,
-        'current_page' => $page,
-        'per_page' => $limit,
-        'start' => $start,
-        'end' => $end,
-        'graphData' => $graphData
-    ]);
-} catch (PDOException $e) {
-    echo json_encode([
-        'success' => false,
-        'error' => $e->getMessage()
-    ]);
+} catch (Throwable $e) {
+    $requests = [];
+    $requestsError = $e->getMessage();
 }
-?>

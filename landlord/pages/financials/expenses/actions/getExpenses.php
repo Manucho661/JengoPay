@@ -1,29 +1,69 @@
 <?php
+declare(strict_types=1);
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$expenses = [];
+$monthlyTotals = [];
+$errorMessage = null;
 
 try {
-    // Fetch all expenses and include the paid amount (if any)
-    $stmt = $pdo->prepare("
-    SELECT 
-        expenses.*,
-        COALESCE(SUM(expense_payments.amount_paid), 0) AS total_paid
-    FROM expenses
-    LEFT JOIN expense_payments 
-        ON expenses.id = expense_payments.expense_id
-    GROUP BY expenses.id
-    ORDER BY expenses.created_at DESC
-");
-
-    $stmt->execute();
-    $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // For summary section
-    $expenseItemsNumber = count($expenses);
-    $totalAmount = 0;
-    foreach ($expenses as $exp) {
-        $totalAmount += $exp['total_paid'];
+    /* -------------------------------------------------
+       1) Auth check
+    ------------------------------------------------- */
+    if (!isset($_SESSION['user']['id'])) {
+        throw new Exception('User not authenticated.');
     }
 
+    $userId = (int) $_SESSION['user']['id'];
+
+    /* -------------------------------------------------
+       2) Resolve landlord_id for this user
+    ------------------------------------------------- */
+    $stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ? LIMIT 1");
+    $stmt->execute([$userId]);
+    $landlord = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$landlord) {
+        throw new Exception('Landlord record not found.');
+    }
+
+    $landlordId = (int) $landlord['id'];
+
+    /* -------------------------------------------------
+       3) Fetch expenses for this landlord (with total_paid per expense)
+       Assumption: expenses has landlord_id
+    ------------------------------------------------- */
+    $stmt = $pdo->prepare("
+        SELECT 
+            e.*,
+            COALESCE(SUM(ep.amount_paid), 0) AS total_paid
+        FROM expenses e
+        LEFT JOIN expense_payments ep 
+            ON e.id = ep.expense_id
+        WHERE e.landlord_id = ?
+        GROUP BY e.id
+        ORDER BY e.created_at DESC
+    ");
+    $stmt->execute([$landlordId]);
+    $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    /* -------------------------------------------------
+       4) Summary values
+    ------------------------------------------------- */
+    $expenseItemsNumber = count($expenses);
+
+    // Sum of paid amounts across the fetched expenses
+    $totalAmount = 0.0;
+    foreach ($expenses as $exp) {
+        $totalAmount += (float) ($exp['total_paid'] ?? 0);
+    }
+
+    /* -------------------------------------------------
+       5) Totals by status (filtered by landlord)
+    ------------------------------------------------- */
     $stmt = $pdo->prepare("
         SELECT
             SUM(CASE WHEN status = 'paid' THEN total ELSE 0 END) AS total_paid,
@@ -31,111 +71,88 @@ try {
             SUM(CASE WHEN status = 'overpaid' THEN total ELSE 0 END) AS total_overpaid,
             SUM(CASE WHEN status = 'partially paid' THEN total ELSE 0 END) AS partially_paid
         FROM expenses
+        WHERE landlord_id = ?
     ");
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->execute([$landlordId]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
-    $fullyPaidExact = $row['total_paid'] ?? 0; // Exactly paid
-    $fullyPaidOver = $row['total_overpaid'] ?? 0; // Paid with extra
-    $unpaidTotal = $row['total_unpaid'] ?? 0;
-    $partiallyPaidTotal = $row['partially_paid'] ?? 0;
+    $fullyPaidExact       = (float) ($row['total_paid'] ?? 0);
+    $fullyPaidOver        = (float) ($row['total_overpaid'] ?? 0);
+    $unpaidTotal          = (float) ($row['total_unpaid'] ?? 0);
+    $partiallyPaidTotal   = (float) ($row['partially_paid'] ?? 0);
 
-    $pendingTotal = $unpaidTotal + $partiallyPaidTotal;
+    /* -------------------------------------------------
+       6) Total amount paid (sum of all payments tied to this landlord's expenses)
+    ------------------------------------------------- */
+    $stmt = $pdo->prepare("
+        SELECT COALESCE(SUM(ep.amount_paid), 0) AS total_paid
+        FROM expense_payments ep
+        INNER JOIN expenses e ON e.id = ep.expense_id
+        WHERE e.landlord_id = ?
+    ");
+    $stmt->execute([$landlordId]);
+    $totalAmountPaid = (float) (($stmt->fetch(PDO::FETCH_ASSOC)['total_paid']) ?? 0);
 
+    /* -------------------------------------------------
+       7) Excess paid for overpaid expenses (single query)
+       excess = sum(payments) - total, for each overpaid expense, summed and clipped at 0
+    ------------------------------------------------- */
+    $stmt = $pdo->prepare("
+        SELECT COALESCE(SUM(GREATEST(paid_sum - total, 0)), 0) AS excess_amount
+        FROM (
+            SELECT e.id, e.total, COALESCE(SUM(ep.amount_paid), 0) AS paid_sum
+            FROM expenses e
+            LEFT JOIN expense_payments ep ON ep.expense_id = e.id
+            WHERE e.landlord_id = ?
+              AND e.status = 'overpaid'
+            GROUP BY e.id
+        ) t
+    ");
+    $stmt->execute([$landlordId]);
+    $excess_amount = (float) (($stmt->fetch(PDO::FETCH_ASSOC)['excess_amount']) ?? 0);
 
-    // Total paid
-    $totalAmountPaid = 0;
-    try {
-        // Prepare and execute the query
-        $stmt = $pdo->prepare("SELECT SUM(amount_paid) AS total_paid FROM expense_payments");
-        $stmt->execute();
+    $totalAmountSend = $totalAmountPaid + $excess_amount;
 
-        // Fetch the result
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $totalAmountPaid = $row['total_paid'] ?? 0;
+    /* -------------------------------------------------
+       8) Pending total for partially paid (single query)
+       pending = total - sum(payments) for partially paid expenses (only positive)
+    ------------------------------------------------- */
+    $stmt = $pdo->prepare("
+        SELECT COALESCE(SUM(GREATEST(total - paid_sum, 0)), 0) AS pending_total
+        FROM (
+            SELECT e.id, e.total, COALESCE(SUM(ep.amount_paid), 0) AS paid_sum
+            FROM expenses e
+            LEFT JOIN expense_payments ep ON ep.expense_id = e.id
+            WHERE e.landlord_id = ?
+              AND e.status = 'partially paid'
+            GROUP BY e.id
+        ) t
+    ");
+    $stmt->execute([$landlordId]);
+    $pendingTotal = (float) (($stmt->fetch(PDO::FETCH_ASSOC)['pending_total']) ?? 0);
 
-    } catch (PDOException $e) {
-        echo "❌ Error fetching total paid: " . $e->getMessage();
-    }
-
-    // extra amount paid
-    $excess_amount = 0;
-    try {
-        // Step 1: Get all expenses marked as 'overpaid'
-        $stmt = $pdo->prepare("SELECT id, total FROM expenses WHERE status = 'overpaid'");
-        $stmt->execute();
-        $overpaidExpenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($overpaidExpenses as $expense) {
-            $expenseId = $expense['id'];
-            $total = $expense['total'];
-
-            // Step 2: Get the amount_paid from expense_payments
-            $payStmt = $pdo->prepare("SELECT amount_paid FROM expense_payments WHERE expense_id = :expense_id LIMIT 1");
-            $payStmt->execute(['expense_id' => $expenseId]);
-            $payment = $payStmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($payment) {
-                $amountPaid = $payment['amount_paid'];
-                $overpaidAmount = $amountPaid - $total;
-
-                if ($overpaidAmount > 0) {
-                    $excess_amount += $overpaidAmount;
-                }
-            }
-        }
-    } catch (PDOException $e) {
-        echo "❌ Error calculating overpaid amounts: " . $e->getMessage();
-    }
-
-    // total Money send to suppliers
-    $totalAmountSend = $totalAmountPaid + $excess_amount; // Net total actually received
-
-    // pending payment
-    $pendingTotal =0; 
-try {
-        // Step 1: Get all expenses marked as 'overpaid'
-        $stmt = $pdo->prepare("SELECT id, total FROM expenses WHERE status = 'partially paid'");
-        $stmt->execute();
-        $partiallyPaidExpenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($partiallyPaidExpenses as $expense) {
-            $expenseId = $expense['id'];
-            $expectedAmount = $expense['total'];
-
-            // Step 2: Get the amount_paid from expense_payments
-            $payStmt = $pdo->prepare("SELECT amount_paid FROM expense_payments WHERE expense_id = :expense_id LIMIT 1");
-            $payStmt->execute(['expense_id' => $expenseId]);
-            $payment = $payStmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($payment) {
-                $amountPaid = $payment['amount_paid'];
-                $pendingAmount = $expectedAmount - $amountPaid;
-
-                if ($pendingAmount > 0) {
-                    $pendingTotal += $pendingAmount;
-                }
-            }
-        }
-    } catch (PDOException $e) {
-        echo "❌ Error calculating overpaid amounts: " . $e->getMessage();
-    }
-
-    // total remaining amount
-
+    /* -------------------------------------------------
+       9) Total remaining
+    ------------------------------------------------- */
     $TotalRemaining = $unpaidTotal + $pendingTotal;
-    // Monthly totals
+
+    /* -------------------------------------------------
+       10) Monthly totals (filtered by landlord)
+    ------------------------------------------------- */
     $stmt = $pdo->prepare("
         SELECT
-            MONTH(expense_date) as month,
-            SUM(total) as total
+            MONTH(expense_date) AS month,
+            SUM(total) AS total
         FROM expenses
+        WHERE landlord_id = ?
         GROUP BY MONTH(expense_date)
     ");
-    $stmt->execute();
+    $stmt->execute([$landlordId]);
+
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $monthlyTotals[(int)$row['month']] = (float)$row['total'];
+        $monthlyTotals[(int) $row['month']] = (float) $row['total'];
     }
-} catch (PDOException $e) {
+
+} catch (Throwable $e) {
     $errorMessage = "❌ Failed to fetch expenses: " . $e->getMessage();
 }

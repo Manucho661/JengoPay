@@ -59,7 +59,7 @@ try {
         FROM 
             maintenance_request_proposals p
         JOIN 
-            service_providers pr ON p.provider_id = pr.id
+            service_providers pr ON p.service_provider_id = pr.id
         WHERE 
             p.maintenance_request_id = :id
     ");

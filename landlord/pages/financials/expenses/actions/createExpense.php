@@ -1,127 +1,200 @@
 <?php
-// expense journal
-include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/expenses/actions/journals/expenseJournal.php';
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+// Session variables to use
+$userId = $_SESSION['user']['id'];
+$stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
+$stmt->execute([$userId]);
+$landlord = $stmt->fetch();
+$landlord_id = $landlord['id'];
 
-$error = '';
-$success = '';
+// Expense journal helpers
+require_once $_SERVER['DOCUMENT_ROOT']
+    . '/Jengopay/landlord/pages/financials/expenses/actions/journalHelpers/expenseJournal.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_expense'])) {
-    try {
-        // Show errors during development
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
-        $pdo->beginTransaction();
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['create_expense'])) {
+    return; // do nothing on GET
+}
 
-        $expense_date = $_POST['date'] ?? null;
-        $expense_no = $_POST['expense_no'] ?? null;
-        $building_id = $_POST['building_id'] ?? null;
-        $supplier_name = $_POST['supplier_name'] ?? null;
-        $supplier_id = $_POST['supplier_id'] ?? null;
-        $untaxedAmount = $_POST['untaxedAmount'] ?? 0.00;
-        $totalTax = $_POST['totalTax'] ?? 0.00;
-        $total = $_POST['total'] ?? 0.00;
+try {
+    // DEV ONLY — remove in production
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
 
-        // Step 1: Insert into expenses
-        $stmt = $pdo->prepare("INSERT INTO expenses (
-            supplier_id, building_id, expense_date, expense_no, supplier,
+    $pdo->beginTransaction();
+
+    /* -----------------------------
+     * 1. Read & validate input
+     * ----------------------------- */
+    $expense_date  = $_POST['date'] ?? null;
+    $expense_no    = $_POST['expense_no'] ?? null;
+    $building_id   = $_POST['building_id'] ?? null;
+    $supplier_id   = $_POST['supplier_id'] ?? null;
+    $supplier_name = $_POST['supplier_name'] ?? null;
+
+    $untaxedAmount = (float)($_POST['untaxedAmount'] ?? 0);
+    $totalTax      = (float)($_POST['totalTax'] ?? 0);
+    $total         = (float)($_POST['total'] ?? 0);
+
+    if (!$expense_date || !$expense_no || !$building_id) {
+        throw new Exception('Missing required expense details.');
+    }
+
+    /* -----------------------------
+     * 2. Insert expense
+     * ----------------------------- */
+    $stmt = $pdo->prepare("
+        INSERT INTO expenses (
+            supplier_id, building_id, landlord_id, expense_date, expense_no, supplier,
             untaxed_amount, total_taxes, total
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ");
 
-        $stmt->execute([
-            $supplier_id,
-            $building_id,
-            $expense_date,
-            $expense_no,
-            $supplier_name, // save visible name too (redundantly stored in 'supplier' column)
-            $untaxedAmount,
-            $totalTax,
-            $total
-        ]);
+    $stmt->execute([
+        $supplier_id,
+        $building_id,
+        $landlord_id,
+        $expense_date,
+        $expense_no,
+        $supplier_name,
+        $untaxedAmount,
+        $totalTax,
+        $total
+    ]);
 
-        $expense_id = $pdo->lastInsertId();
+    $expense_id = (int)$pdo->lastInsertId();
 
-        // Step 3: Insert expense items
-        $item_account_codes = $_POST['item_account_code'] ?? [];
-        $descriptions = $_POST['description'] ?? [];
-        $quantities = $_POST['qty'] ?? [];
-        $unit_prices = $_POST['unit_price'] ?? [];
-        $taxes = $_POST['taxes'] ?? [];
-        $item_totals = $_POST['item_totalForStorage'] ?? [];
-        $discounts = $_POST['discount'] ?? [];
+    /* -----------------------------
+     * 3. Insert expense items
+     * ----------------------------- */
+    $item_account_codes = $_POST['item_account_code'] ?? [];
+    $descriptions       = $_POST['description'] ?? [];
+    $quantities         = $_POST['qty'] ?? [];
+    $unit_prices        = $_POST['unit_price'] ?? [];
+    $taxes              = $_POST['taxes'] ?? [];
+    $item_totals        = $_POST['item_totalForStorage'] ?? [];
+    $discounts          = $_POST['discount'] ?? [];
 
-        var_dump($item_totals);
-        // exit;
+    if (count($item_account_codes) === 0) {
+        throw new Exception('Please add at least one expense item.');
+    }
 
-        $stmtItem = $pdo->prepare("INSERT INTO expense_items (
+    $stmtItem = $pdo->prepare("
+        INSERT INTO expense_items (
             item_account_code, expense_id, building_id, description, qty,
             unit_price, item_untaxed_amount, taxes, item_total, discount
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ");
 
-        for ($i = 0; $i < count($item_account_codes); $i++) {
-            $item_untaxed_amount = $quantities[$i] * $unit_prices[$i];
+    for ($i = 0; $i < count($item_account_codes); $i++) {
+        $qty        = (float)($quantities[$i] ?? 0);
+        $unit_price = (float)($unit_prices[$i] ?? 0);
+        $discount   = (float)($discounts[$i] ?? 0);
 
-            $stmtItem->execute([
-                $item_account_codes[$i],
-                $expense_id,
-                $building_id,
-                $descriptions[$i],
-                $quantities[$i],
-                $unit_prices[$i],
-                $item_untaxed_amount,
-                $taxes[$i],
-                $item_totals[$i],
-                $discounts[$i]
-            ]);
-        }
+        $item_untaxed_amount = $qty * $unit_price;
 
-        // 4. Create journal entry
-        $journalId = createJournalEntry($pdo, [
-            'description'   => "Expense Transaction",
-            'reference'     => $expense_no,
-            'date'          => $expense_date,
-            'source_table'  => 'expenses',
-            'source_id'     => $expense_id
+        $stmtItem->execute([
+            $item_account_codes[$i],
+            $expense_id,
+            $building_id,
+            $descriptions[$i] ?? '',
+            $qty,
+            $unit_price,
+            $item_untaxed_amount,
+            $taxes[$i] ?? '',
+            (float)($item_totals[$i] ?? 0),
+            $discount
         ]);
+    }
 
-        // 5. Journal lines
-        for ($i = 0; $i < count($item_account_codes); $i++) {
-            $item_untaxed_amount = $quantities[$i] * $unit_prices[$i];
-            $tax_type = strtolower($taxes[$i]); // normalize for safety
+    /* -----------------------------
+     * 4. Create journal entry
+     * ----------------------------- */
+    $journalId = createJournalEntry($pdo, [
+        'description'  => 'Expense Transaction',
+        'reference'    => $expense_no,
+        'date'         => $expense_date,
+        'source_table' => 'expenses',
+        'source_id'    => $expense_id
+    ]);
 
-            $tax_amount = 0.00;
-            $amount = $item_untaxed_amount;
+    /* -----------------------------
+     * 5. Journal lines
+     * ----------------------------- */
+    for ($i = 0; $i < count($item_account_codes); $i++) {
+        $qty        = (float)($quantities[$i] ?? 0);
+        $unit_price = (float)($unit_prices[$i] ?? 0);
+        $tax_type   = strtolower(trim((string)($taxes[$i] ?? '')));
 
-            if ($tax_type === 'exclusive') {
-                $tax_amount = $item_untaxed_amount * 0.16;
-                $amount = $item_untaxed_amount; // expense is untaxed
-            } elseif ($tax_type === 'inclusive') {
-                $tax_amount = $item_untaxed_amount * (16 / 116);
-                $amount = $item_untaxed_amount - $tax_amount; // net of VAT
-            } elseif ($tax_type === 'zero rated' || $tax_type === 'exempted') {
-                $tax_amount = 0.00;
-                $amount = $item_untaxed_amount; // whole amount is expense
-            }
+        $item_untaxed_amount = $qty * $unit_price;
 
-            // Debit expense
-            addJournalLine($pdo, $journalId, $item_account_codes[$i], $amount, 0.00, 'expenses', $expense_id);
+        $tax_amount = 0.0;
+        $amount     = $item_untaxed_amount;
 
-            // Credit Accounts Payable (gross)
-            addJournalLine($pdo, $journalId, 300, 0.00, $amount + $tax_amount, 'expenses', $expense_id);
-
-            // Debit VAT payable (only if tax exists)
-            if ($tax_amount > 0) {
-                addJournalLine($pdo, $journalId, 325, $tax_amount, 0.00, 'expenses', $expense_id);
-            }
-            echo $tax_amount;
+        if ($tax_type === 'exclusive') {
+            $tax_amount = $item_untaxed_amount * 0.16;
+        } elseif ($tax_type === 'inclusive') {
+            $tax_amount = $item_untaxed_amount * (16 / 116);
+            $amount -= $tax_amount;
         }
 
+        // Debit expense
+        addJournalLine(
+            $pdo,
+            $journalId,
+            $item_account_codes[$i],
+            $amount,
+            0.0,
+            'expenses',
+            $expense_id
+        );
 
-        $pdo->commit();
-        echo "Inserted successfully with Expense ID: $expense_id";
-    
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        echo "Error: " . $e->getMessage();
+        // Credit accounts payable
+        addJournalLine(
+            $pdo,
+            $journalId,
+            300,
+            0.0,
+            $amount + $tax_amount,
+            'expenses',
+            $expense_id
+        );
+
+        // VAT
+        if ($tax_amount > 0) {
+            addJournalLine(
+                $pdo,
+                $journalId,
+                325,
+                $tax_amount,
+                0.0,
+                'expenses',
+                $expense_id
+            );
+        }
     }
+
+    /* -----------------------------
+     * 6. Commit + flash success
+     * ----------------------------- */
+    $pdo->commit();
+
+    $_SESSION['success'] =
+        "Expense created successfully (Expense No: {$expense_no}).";
+
+    header('Location: /Jengopay/landlord/pages/financials/expenses/expenses.php');
+    exit;
+} catch (Throwable $e) {
+
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+
+    $_SESSION['error'] =
+        'Failed to create expense: ' . $e->getMessage();
+
+    header('Location: /Jengopay/landlord/pages/financials/expenses/expenses.php');
+    exit;
 }

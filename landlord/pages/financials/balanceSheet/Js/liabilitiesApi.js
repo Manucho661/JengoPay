@@ -53,7 +53,7 @@ export function addTbodyNonCurrentLiabilities(nonCrtliabilities, total, totalLia
 
         // Name cell
         const nameCell = document.createElement("td");
-        nameCell.innerHTML = `${liability.liability_name} &nbsp;&nbsp;<span class="text-warning" style=""><i class="fa fa-ellipsis-v fs-8"></i></span>`;
+        nameCell.innerHTML = `${liability.account_name} &nbsp;&nbsp;<span class="text-warning" style=""><i class="fa fa-ellipsis-v fs-8"></i></span>`;
         row.appendChild(nameCell);
 
         // Amount cell with a div inside
@@ -229,7 +229,7 @@ export function addTbodyCurrentLiabilities(currentLiabilities, total) {
         row.style.cursor = "pointer"; // Make cursor a pointer on hover
         // Name cell
         const nameCell = document.createElement("td");
-        nameCell.innerHTML = ` ${currentLiability.liability_name} &nbsp;&nbsp;<span class="text-warning" style=""><i class="fa fa-ellipsis-v fs-8"></i></span>`;
+        nameCell.innerHTML = ` ${currentLiability.account_name} &nbsp;&nbsp;<span class="text-warning" style=""><i class="fa fa-ellipsis-v fs-8"></i></span>`;
         row.appendChild(nameCell);
 
         // Amount cell with a div inside

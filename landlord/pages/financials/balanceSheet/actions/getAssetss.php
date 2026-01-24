@@ -9,52 +9,52 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 
 try {
     // ✅ Get assets balances directly from journal_lines & chart_of_accounts
-    $sql = "
-        SELECT 
-            coa.account_name AS name,
-            coa.account_type AS category,
-            coa.account_code AS account_id, 
-            SUM(jl.debit) - SUM(jl.credit) AS amount,
-            MAX(je.entry_date) AS created_at
-        FROM journal_lines jl
-        JOIN chart_of_accounts coa ON jl.account_id = coa.account_code
-        JOIN journal_entries je ON jl.journal_entry_id = je.id
-        WHERE coa.account_type LIKE '%Assets%'
-        GROUP BY coa.account_name, coa.account_type
-        ORDER BY amount DESC, coa.account_type, coa.account_code
-    ";
+    $sqlCurrent = "
+  SELECT
+    coa.account_code AS account_id,
+    coa.account_name AS name,
+    COALESCE(SUM(jl.debit),0) - COALESCE(SUM(jl.credit),0) AS amount
+  FROM journal_lines jl
+  JOIN chart_of_accounts coa ON coa.account_code = jl.account_id
+  WHERE coa.account_type = 'Current Assets'
+  GROUP BY coa.account_code, coa.account_name
+  ORDER BY coa.account_name
+";
 
-    $stmt = $pdo->prepare($sql);
+    $sqlNonCurrent = "
+  SELECT
+    coa.account_code AS account_id,
+    coa.account_name AS name,
+    COALESCE(SUM(jl.debit),0) - COALESCE(SUM(jl.credit),0) AS amount
+  FROM journal_lines jl
+  JOIN chart_of_accounts coa ON coa.account_code = jl.account_id
+  WHERE coa.account_type = 'Non-Current Assets'
+  GROUP BY coa.account_code, coa.account_name
+  ORDER BY coa.account_name
+";
+
+    $stmt = $pdo->prepare($sqlCurrent);
     $stmt->execute();
+    $currentAssets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Non-Current Assets
+    $stmt = $pdo->prepare($sqlNonCurrent);
+    $stmt->execute();
+    $nonCurrentAssets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Separate into categories
-    $currentAssets = [];
-    $nonCurrentAssets = [];
+    // Totals (force numeric)
+    $totalCurrent = 0;
+    foreach ($currentAssets as $a) $totalCurrent += (float)$a['amount'];
 
-    foreach ($assets as $asset) {
-        if ($asset['category'] === 'Current Assets') {
-            $currentAssets[] = $asset;
-        } else {
-            $nonCurrentAssets[] = $asset;
-        }
-    }
-
-    $totalCurrent = array_sum(array_column($currentAssets, 'amount'));
-    $totalNonCurrent = array_sum(array_column($nonCurrentAssets, 'amount'));
-    $totalAssets = $totalCurrent + $totalNonCurrent;
-
-    // var_dump($currentAssets);
-    // Items that must be displayed on the balance sheet.
-    $mustDisplayedCurrentAssets = array('Accounts Receivable', 'M-pesa', 'Cash', 'Bank', 'Tenant Security Deposits (Held)', 'Prepayment');
+    $totalNonCurrent = 0;
+    foreach ($nonCurrentAssets as $a) $totalNonCurrent += (float)$a['amount'];
 
     echo json_encode([
-        'nonCurrentAssets' => $nonCurrentAssets,
         'currentAssets' => $currentAssets,
-        'totalNonCurrent' => $totalNonCurrent,
+        'nonCurrentAssets' => $nonCurrentAssets,
         'totalCurrent' => $totalCurrent,
-        'totalAssets' => $totalAssets
+        'totalNonCurrent' => $totalNonCurrent,
+        'totalAssets' => $totalCurrent + $totalNonCurrent
     ]);
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();

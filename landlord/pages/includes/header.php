@@ -54,14 +54,14 @@
             <i class="fas fa-door-open" style="color: var(--accent-color);"></i>
             <div>
                 <div style="font-size: 0.75rem; color: #adb5bd;">Occupied</div>
-                <div style="font-weight: 600; color: var(--main-color);">186/195</div>
+                <div style="font-weight: 600; color: var(--main-color);">0/0</div>
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 0.5rem; color: #6c757d;">
             <i class="fas fa-chart-line" style="color: var(--accent-color);"></i>
             <div>
                 <div style="font-size: 0.75rem; color: #adb5bd;">Monthly Revenue</div>
-                <div style="font-weight: 600; color: var(--main-color);">$124.5K</div>
+                <div style="font-weight: 600; color: var(--main-color);">KSH 0.00K</div>
             </div>
         </div>
     </div>

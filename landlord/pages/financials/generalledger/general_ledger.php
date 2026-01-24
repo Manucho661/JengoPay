@@ -1,4 +1,6 @@
 <?php
+session_start();
+include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 include '../../db/connect.php';
 
 // Capture filters
@@ -96,6 +98,7 @@ $runningBalance = 0;
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
   <link rel="stylesheet" href="../../../../landlord/assets/main.css" />
+
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
   <link

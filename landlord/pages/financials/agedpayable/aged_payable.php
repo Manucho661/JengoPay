@@ -1,3 +1,9 @@
+<?
+session_start();
+require_once '../../db/connect.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
+?>
+
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->

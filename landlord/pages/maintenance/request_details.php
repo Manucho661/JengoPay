@@ -1,5 +1,6 @@
 <?php
 session_start(); // Must be called before any HTML output
+include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 
 if (isset($_GET['id'])) {
   $id = $_GET['id'];          // get the ID from the URL
@@ -218,26 +219,37 @@ if (isset($_GET['id'])) {
       </nav>
 
       <!-- Page Title & Actions -->
-      <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div class="d-flex align-items-center">
           <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
           <h3 class="mb-0 ms-3">Requests details</h3>
         </div>
-        <div class="d-flex">
-          <button type="button" id="availabilityBtn" class="btn seTAvailable text-white fw-bold bg-warning rounded-4"
-            style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+
+        <div class="d-flex gap-2 flex-wrap justify-content-end">
+          <button
+            type="button"
+            id="availabilityBtn"
+            class="btn seTAvailable text-white fw-bold rounded-4"
+            style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;">
             Set Available
           </button>
-          <button type="button" class="btn bg-danger text-white seTAvailable fw-bold rounded-4"
-            style="width:100%; white-space: nowrap;">
+
+          <button
+            type="button"
+            class="btn bg-danger text-white seTAvailable fw-bold rounded-4"
+            style="white-space: nowrap;">
             Cancel Request
           </button>
-          <button type="button" class="btn bg-warning text-white seTAvailable fw-bold rounded-4"
-            style="background: linear-gradient(135deg, #00192D, #002B5B); color:dark; width:100%; white-space: nowrap;">
+
+          <button
+            type="button"
+            class="btn seTAvailable text-white fw-bold rounded-4"
+            style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;">
             All Requests
           </button>
         </div>
       </div>
+
 
       <div class="container-fluid">
         <div class="row">
@@ -306,34 +318,34 @@ if (isset($_GET['id'])) {
             </div>
             <div class="content-card">
               <h5 class="card-header">Provider Details</h5>
-                <div class="text-center mb-3">
-                  <img src="https://ui-avatars.com/api/?name=QuickFix+Plumbing&size=80&background=3498db&color=fff" alt="Provider" class="rounded-circle mb-2">
-                  <h6 class="mb-0">QuickFix Plumbing Services</h6>
-                  <small class="text-muted">Licensed Plumber</small>
-                </div>
-                <div class="info-row">
-                  <span class="info-label">Contact:</span>
-                  <span>+254 712 345 678</span>
-                </div>
-                <div class="info-row">
-                  <span class="info-label">Email:</span>
-                  <span>info@quickfix.ke</span>
-                </div>
-                <div class="info-row">
-                  <span class="info-label">Response:</span>
-                  <span><span class="badge bg-success">Accepted</span></span>
-                </div>
-                <div class="info-row">
-                  <span class="info-label">Rating:</span>
-                  <span>
-                    <i class="fas fa-star text-warning"></i>
-                    <i class="fas fa-star text-warning"></i>
-                    <i class="fas fa-star text-warning"></i>
-                    <i class="fas fa-star text-warning"></i>
-                    <i class="fas fa-star-half-alt text-warning"></i>
-                    (4.5)
-                  </span>
-                </div>
+              <div class="text-center mb-3">
+                <img src="https://ui-avatars.com/api/?name=QuickFix+Plumbing&size=80&background=3498db&color=fff" alt="Provider" class="rounded-circle mb-2">
+                <h6 class="mb-0">QuickFix Plumbing Services</h6>
+                <small class="text-muted">Licensed Plumber</small>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Contact:</span>
+                <span>+254 712 345 678</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Email:</span>
+                <span>info@quickfix.ke</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Response:</span>
+                <span><span class="badge bg-success">Accepted</span></span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Rating:</span>
+                <span>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star text-warning"></i>
+                  <i class="fas fa-star-half-alt text-warning"></i>
+                  (4.5)
+                </span>
+              </div>
             </div>
           </div>
         </div>

@@ -3,18 +3,35 @@ session_start();
 require_once '../../db/connect.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 
-include_once 'actions/getSuppliers.php';
+$error   = $_SESSION['error'] ?? '';
+$success = $_SESSION['success'] ?? '';
+
+unset($_SESSION['error'], $_SESSION['success']);
+
+
 $expenses = [];
 $monthlyTotals = array_fill(1, 12, 0);
 
+// get suppliers
+require_once 'actions/getSuppliers.php';
+// create expenses script
+require_once 'actions/createExpense.php';
+// pay expense script
 //Include expense Batches
 require_once 'actions/getExpenses.php';
 // Include expense accounts
 require_once 'actions/getExpenseAccounts.php';
 // include buildings
 require_once 'actions/getBuildings.php';
-// create expenses script
-require_once 'actions/createExpense.php';
+
+
+// Pagination logic
+$itemsPerPage = 6;
+$currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$totalItems = count($expenses);
+$totalPages = ceil($totalItems / $itemsPerPage);
+$offset = ($currentPage - 1) * $itemsPerPage;
+$currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
 ?>
 
 <!doctype html>
@@ -22,8 +39,6 @@ require_once 'actions/createExpense.php';
 <!--begin::Head-->
 
 <head>
-    <?php if (isset($successMessage)) echo "<div class='alert alert-success'>$successMessage</div>"; ?>
-    <?php if (isset($errorMessage)) echo "<div class='alert alert-danger'>$errorMessage</div>"; ?>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>AdminLTE | Dashboard v2</title>
     <!--begin::Primary Meta Tags-->
@@ -62,11 +77,9 @@ require_once 'actions/createExpense.php';
     <link rel="stylesheet" href="expenses.css">
     <!-- scripts for data_table -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <!-- Pdf pluggin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -145,10 +158,81 @@ require_once 'actions/createExpense.php';
             z-index: 10;
             white-space: nowrap;
         }
+
+        /* pagination styles */
+        /* Pagination */
+        .pagination {
+            margin: 2rem 0;
+        }
+
+        .pagination .page-link {
+            color: var(--primary-color);
+            border: 1px solid #dee2e6;
+            padding: 0.5rem 0.75rem;
+            margin: 0 0.2rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .pagination .page-link:hover {
+            background: #FFC107;
+            color: #00192D;
+            border-color: #FFC107;
+        }
+
+        .pagination .page-item.active .page-link {
+            background: #00192D;
+            border-color: #00192D;
+            color: white;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            background: #fff;
+        }
+
+        .pagination-info {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 
 <body class="" style="">
+
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+
+        <?php if (!empty($error)): ?>
+            <div id="flashToastError"
+                class="toast align-items-center text-bg-danger border-0"
+                role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body small">
+                        <?= htmlspecialchars($error) ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($success)): ?>
+            <div id="flashToastSuccess"
+                class="toast align-items-center text-bg-success border-0"
+                role="alert" aria-live="polite" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body small">
+                        <?= htmlspecialchars($success) ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        <?php endif; ?>
+
+    </div>
+
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
 
@@ -292,7 +376,7 @@ require_once 'actions/createExpense.php';
                         <div class="card border-0">
                             <div class="bg-white p-1 rounded-2 border-0">
                                 <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #e9ecef;">
-                                    <a class="text-white fw-bold text-decoration-none text-dark" data-bs-toggle="collapse" href="#addExpense" role="button" aria-expanded="false" aria-controls="addExpense" onclick="toggleIcon(this)">
+                                    <a class="fw-bold text-decoration-none text-dark" data-bs-toggle="collapse" href="#addExpense" role="button" aria-expanded="false" aria-controls="addExpense" onclick="toggleIcon(this)">
                                         <span id="toggleIcon">➕</span> Click Here to Add an Expense
                                     </a>
                                 </div>
@@ -308,41 +392,43 @@ require_once 'actions/createExpense.php';
                                             <form method="POST" id="expenseForm">
                                                 <div class="row g-3">
                                                     <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label class="form-label fw-bold" for="building">Building</label>
-                                                            <select class="form-control shadow-sm" id="building" name="building_id" required>
-                                                                <option value="">Select Building</option>
-                                                                <?php foreach ($buildings as $building): ?>
-                                                                    <option value="<?= htmlspecialchars($building['id']) ?>">
-                                                                        <?= htmlspecialchars($building['building_name']) ?>
-                                                                    </option>
-                                                                <?php endforeach; ?>
-                                                            </select>
-                                                        </div>
+                                                        <label class="form-label fw-bold">Building</label>
+                                                        <select class="form-control shadow-sm" name="building_id" required>
+                                                            <option value="">Select Building</option>
+                                                            <?php foreach ($buildings as $building): ?>
+                                                                <option value="<?= (int)$building['id'] ?>">
+                                                                    <?= htmlspecialchars($building['building_name']) ?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
 
-                                                    </div>
                                                     <div class="col-md-3">
-                                                        <label class="form-label fw-bold">Date&nbsp;:</label>
-                                                        <input type="date" id="dateInput" class="form-control rounded-1 shadow-none" name="date" placeholder="">
+                                                        <label class="form-label fw-bold">Date</label>
+                                                        <input type="date" class="form-control rounded-1 shadow-none" name="date">
                                                     </div>
+
                                                     <div class="col-md-3">
                                                         <label class="form-label fw-bold">Expense No</label>
-                                                        <input type="text" name="expense_no" class="form-control rounded-1 shadow-none" placeholder="KRA000100039628">
+                                                        <input type="text" class="form-control rounded-1 shadow-none"
+                                                            name="expense_no" placeholder="KRA000100039628">
                                                     </div>
+
                                                     <div class="col-md-3">
                                                         <label class="form-label fw-bold">Supplier</label>
-                                                        <div class="combo-box">
-                                                            <input type="text" class="form-control rounded-1 shadow-none combo-input" name="supplier_name" placeholder="Search or select...">
-                                                            <button class="combo-button">▼</button>
-                                                            <ul class="combo-options">
-                                                                <?php foreach ($suppliers as $supplier): ?>
-                                                                    <li class="combo-option" data-value="<?= htmlspecialchars($supplier['id']) ?>">
-                                                                        <?= htmlspecialchars($supplier['supplier_name']) ?>
-                                                                    </li>
-                                                                <?php endforeach; ?>
-                                                            </ul>
-                                                            <input type="hidden" class="supplier-hidden-input" name="supplier_id">
-                                                        </div>
+                                                        <input class="form-control rounded-1 shadow-none"
+                                                            list="supplierList"
+                                                            name="supplier_name"
+                                                            placeholder="Search or select supplier">
+                                                        <datalist id="supplierList">
+                                                            <?php foreach ($suppliers as $supplier): ?>
+                                                                <option
+                                                                    value="<?= htmlspecialchars($supplier['supplier_name']) ?>"
+                                                                    data-id="<?= htmlspecialchars($supplier['id']) ?>">
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        </datalist>
+                                                        <input type="hidden" name="supplier_id" id="supplier_id">
                                                     </div>
                                                 </div>
                                                 <!-- Hidden total -->
@@ -530,331 +616,147 @@ require_once 'actions/createExpense.php';
                 <div class="row mt-2 mb-5">
                     <div class="col-md-12">
                         <div class="details-container bg-white p-2 rounded Content">
-                            <h3 class="details-container_header text-start"> <span id="displayed_building">All Expenses</span> &nbsp; |&nbsp; <span style="color:#FFC107"> <span id="enteries">3</span> enteries</span></h3>
-                            <div class="table-responsive" style="overflow-x: auto;">
-                                <div id="top-bar" class="filter-pdf-excel mb-2">
-                                    <div class="d-flex" style="gap: 10px;">
-                                        <div id="custom-search">
-                                            <input type="text" id="searchInput" placeholder="Search Expense...">
-                                        </div>
-                                    </div>
+                            <h3 class="details-container_header text-start">
+                                <span id="displayed_building">All Expenses</span> &nbsp; |&nbsp;
+                                <span style="color:#FFC107"> <span id="enteries"><?= count($currentExpenses) ?></span> entries</span>
+                            </h3>
 
-                                    <div class="d-flex">
-                                        <div id="custom-buttons"></div>
+                            <?php if (empty($currentExpenses)): ?>
+                                <!-- Empty State Message -->
+                                <div class="text-center py-5" style="margin: 3rem 0;">
+                                    <div style="background-color: #f8f9fa; border-radius: 16px; padding: 3rem 2rem; max-width: 500px; margin: 0 auto;">
+                                        <div style="font-size: 4rem; color: #00192D; margin-bottom: 1rem;">
+                                            <i class="bi bi-receipt"></i>
+                                        </div>
+                                        <h4 style="color: #00192D; font-weight: 600; margin-bottom: 1rem;">
+                                            No Expense Items Found
+                                        </h4>
+                                        <p style="color: #6c757d; font-size: 1rem; margin-bottom: 1.5rem;">
+                                            Start tracking your finances by adding your first expense
+                                        </p>
+                                        
                                     </div>
                                 </div>
-                                <table id="expensesTable" class="expensesTable" style="width: 100%; min-width: 600px;">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Supplier</th>
-                                            <th>Expense No</th>
-                                            <th>Totals <span style="text-transform: lowercase;">Vs</span> paid</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($expenses as $exp): ?>
+                            <?php else: ?>
+                                <!-- Expenses Table -->
+                                <div class="table-responsive" style="overflow-x: auto;">
+                                    <table id="expensesTable" class="expensesTable" style="width: 100%; min-width: 600px;">
+                                        <thead>
                                             <tr>
-                                                <td><?= htmlspecialchars(date('d M Y', strtotime($exp['created_at']))) ?></td>
-                                                <td><?= htmlspecialchars($exp['supplier']) ?></td>
-                                                <td>
-                                                    <div style="color:#28a745;"><?= htmlspecialchars($exp['expense_no']) ?></div>
-                                                </td>
-                                                <td style="background-color: #f8f9fa; padding: 0.75rem; border-radius: 8px;">
-                                                    <div style="font-weight: 600; color: #00192D; font-size: 1rem;">
-                                                        KSH <?= number_format($exp['total'], 2) ?>
-                                                    </div>
-                                                    <div class="paid_amount" style="color: #007B8A; font-size: 0.9rem; margin-top: 4px;">
-                                                        KSH <?= number_format($exp['total_paid'] ?? 0, 2) ?>
-                                                    </div>
-                                                </td>
-
-                                                <td>
-                                                    <?php
-                                                    $status = strtolower($exp['status']);
-                                                    $statusLabel = '';
-                                                    $editButton = '<span class="edit-payment-btn"'
-                                                        . ' style="background-color: #00192D; color: #FFC107; padding: 6px 10px; border-radius: 50%; cursor: pointer;"'
-                                                        . ' data-bs-toggle="modal" data-amount="' . number_format($exp['id']) . '" data-bs-target="#editPaymentModal">'
-                                                        . '<i class="bi bi-pencil"></i>'
-                                                        . '</span>';
-
-                                                    if ($status === 'paid') {
-                                                        $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Paid</span> ' . $editButton;
-                                                    } elseif ($status === 'overpaid') {
-                                                        $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Overpaid</span> ' . $editButton;
-                                                    } elseif ($status === 'partially paid') {
-                                                        $statusLabel = '<span style="background-color: #17a2b8; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Partially Paid</span> ' . $editButton;
-                                                    } elseif ($status === 'unpaid') {
-                                                        $statusLabel = '<span style="background-color: #FFC107; color: #00192D; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Unpaid</span>';
-                                                    } else {
-                                                        $statusLabel = '<span class="text-muted">' . htmlspecialchars($exp['status']) . '</span>';
-                                                    }
-
-                                                    echo $statusLabel;
-                                                    ?>
-
-                                                    <?php if ($status === 'unpaid' || $status === 'partially paid'): ?>
-                                                        <br>
-                                                        <button
-                                                            class="btn btn-sm d-inline-flex align-items-center gap-1 mt-2"
-                                                            style="background-color: #00192D; color: #FFC107; border: none; border-radius: 8px; padding: 6px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
-                                                            data-action="pay-expense"
-                                                            data-expense-id="<?= (int)$exp['id'] ?>"
-                                                            data-expected-amount="<?= htmlspecialchars($exp['total'], ENT_QUOTES, 'UTF-8') ?>">
-                                                            <i class="bi bi-credit-card-fill"></i>
-                                                            Pay
-                                                        </button>
-                                                    <?php endif; ?>
-                                                </td>
-
-                                                <td>
-                                                    <button
-                                                        class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
-                                                        style="background-color: #00192D; color: white; border: none; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
-                                                        onclick="openExpenseModal(<?= $exp['id'] ?>)">
-                                                        <i class="bi bi-eye-fill"></i> View
-                                                    </button>
-                                                </td>
+                                                <th>Date</th>
+                                                <th>Supplier</th>
+                                                <th>Expense No</th>
+                                                <th>Totals <span style="text-transform: lowercase;">Vs</span> paid</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
                                             </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                                <!-- payment modal -->
-                                <div class="modal fade" id="payExpenseModal" tabindex="-1" aria-labelledby="payExpenseLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content" style="border-radius: 12px; border: 1px solid #00192D;">
-                                            <div class="modal-header" style="background-color: #00192D; color: white;">
-                                                <h5 class="modal-title" id="payExpenseLabel">Pay Expense</h5>
-                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-
-                                            <div class="modal-body">
-                                                <form id="payExpenseForm">
-                                                    <!-- id -->
-                                                    <input type="hidden" name="expense_id" id="expenseId">
-                                                    <!-- total amount -->
-                                                    <input type="hidden" name="expected_amount" id="expectedAmount">
-
-                                                    <div class="mb-3">
-                                                        <label for="amount" class="form-label">Amount to Pay(KSH)</label>
-                                                        <input type="number" step="0.01" class="form-control shadow-none rounded-1" id="amountToPay" style="font-weight: 600;" name="amountToPay" value="1200" required>
-                                                    </div>
-
-                                                    <div class="mb-3">
-                                                        <label for="paymentDate" class="form-label shadow-none ">Payment Date</label>
-                                                        <input type="date" class="form-control shadow-none rounded-1" id="paymentDate" name="payment_date" required>
-                                                        <small id="paymentMsg" style="color:red;"></small> <!-- error/success message -->
-                                                    </div>
-
-                                                    <div class="mb-3">
-                                                        <label for="paymentMethod" class="form-label">Payment Method</label>
-                                                        <select class="form-select shadow-none rounded-1" id="paymentMethod" name="payment_account_id" required>
-                                                            <option value="100">Cash</option>
-                                                            <option value="110">M-Pesa</option>
-                                                            <option value="120">Bank Transfer</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="mb-3">
-                                                        <label for="reference" class="form-label">Reference / Memo</label>
-                                                        <input type="text" class="form-control shadow-none rounded-1" id="reference" name="reference">
-                                                    </div>
-                                                </form>
-                                            </div>
-
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                <button type="submit" form="payExpenseForm" class="btn" style="background-color: #FFC107; color: #00192D;">
-                                                    <i class="bi bi-credit-card"></i> Confirm Payment
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Edit Payment Modal -->
-                                <div class="modal fade" id="editPaymentModal" tabindex="-1" aria-labelledby="editPaymentLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                                        <div class="modal-content rounded-2 bg-white" style=" border: 1px solid #00192D;">
-
-                                            <!-- Header -->
-                                            <div class="modal-header border-bottom align-items-center" style="padding: 0.75rem 1rem; background-color: #EAF0F4;">
-                                                <h3 class="modal-title m-0" id="editPaymentLabel"
-                                                    style="font-size: 1.25rem; font-weight: 600; color: #00192D;">
-                                                    <i class="bi bi-pencil" style="margin-right: 6px; color: #00192D;"></i>
-                                                    Edit Payments
-                                                    <span style="font-weight: 400; font-size: 1rem; color: #6c757d;">
-                                                        KRACU0100039628
-                                                    </span>
-                                                </h3>
-                                                <button type="button" class="btn btn-sm" style="background-color: #FFC107; color: #00192D;" data-bs-dismiss="modal" title="Close">
-                                                    <i class="bi bi-x-lg"></i>
-                                                </button>
-                                            </div>
-
-                                            <!-- Body -->
-                                            <div class="modal-body p-4">
-                                                <!-- Forms from js-->
-                                            </div>
-
-                                            <!-- Footer -->
-                                            <div class="modal-footer p-4">
-                                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- View Expense Modal -->
-                                <div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-                                        <div class="modal-content expense bg-light">
-                                            <div class="d-flex justify-content-between align-items-center p-2" style="background-color: #EAF0F4; border-bottom: 1px solid #CCC; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-                                                <button class="btn btn-sm me-2" style="background-color: #00192D; color: #FFC107;" title="Download PDF" id="downloadExpPdf">
-                                                    <i class="bi bi-download"></i>
-                                                </button>
-                                                <button class="btn btn-sm me-2" style="background-color: #00192D; color: #FFC107;" title="Print">
-                                                    <i class="bi bi-printer"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-sm" style="background-color: #FFC107; color: #00192D;" data-bs-dismiss="modal" title="Close">
-                                                    <i class="bi bi-x-lg"></i>
-                                                </button>
-                                            </div>
-
-                                            <div class="modal-body bg-light" id="expenseModalBody">
-
-                                                <!-- 🔒 DO NOT TOUCH CARD BELOW -->
-                                                <div class="expense-card" id="expenseCard">
-                                                    <!-- Header -->
-                                                    <div class="d-flex justify-content-between align-items-stretch mb-3 position-relative" style="overflow: hidden;">
-                                                        <div>
-                                                            <img id="expenseLogo" src="images/expensePdfLogo.png" alt="JengoPay Logo" class="expense-logo">
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($currentExpenses as $exp): ?>
+                                                <tr>
+                                                    <td><?= htmlspecialchars(date('d M Y', strtotime($exp['created_at']))) ?></td>
+                                                    <td><?= htmlspecialchars($exp['supplier']) ?></td>
+                                                    <td>
+                                                        <div style="color:#28a745;"><?= htmlspecialchars($exp['expense_no']) ?></div>
+                                                    </td>
+                                                    <td style="background-color: #f8f9fa; padding: 0.75rem; border-radius: 8px;">
+                                                        <div style="font-weight: 600; color: #00192D; font-size: 1rem;">
+                                                            KSH <?= number_format($exp['total'], 2) ?>
                                                         </div>
-
-                                                        <!-- Diagonal PAID Label centered in the container -->
-                                                        <!-- <div class="diagonal-paid-label">PAID</div> -->
-                                                        <div class="diagonal-unpaid-label" id="expenseModalPaymentStatus">UNPAID</div>
-                                                        <div class="address text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
-                                                            <strong>Silver Spoon Towers</strong><br>
-                                                            50303 Nairobi, Kenya<br>
-                                                            silver@gmail.com<br>
-                                                            +254 700 123456
+                                                        <div class="paid_amount" style="color: #007B8A; font-size: 0.9rem; margin-top: 4px;">
+                                                            KSH <?= number_format($exp['total_paid'] ?? 0, 2) ?>
                                                         </div>
-                                                    </div>
+                                                    </td>
 
+                                                    <td>
+                                                        <?php
+                                                        $status = strtolower($exp['status']);
+                                                        $statusLabel = '';
+                                                        $editButton = '<span class="edit-payment-btn"'
+                                                            . ' style="background-color: #00192D; color: #FFC107; padding: 6px 10px; border-radius: 50%; cursor: pointer;"'
+                                                            . ' data-bs-toggle="modal" data-amount="' . number_format($exp['id']) . '" data-bs-target="#editPaymentModal">'
+                                                            . '<i class="bi bi-pencil"></i>'
+                                                            . '</span>';
 
-                                                    <!-- expense Info -->
-                                                    <div class="d-flex justify-content-between">
-                                                        <h6 class="mb-0" id="expenseModalSupplierName">Josephat Koech</h6>
-                                                        <div class="text-end">
-                                                            <h3 id="expenseModalInvoiceNo"> INV001</h3><br>
-                                                        </div>
-                                                    </div>
+                                                        if ($status === 'paid') {
+                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Paid</span> ' . $editButton;
+                                                        } elseif ($status === 'overpaid') {
+                                                            $statusLabel = '<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Overpaid</span> ' . $editButton;
+                                                        } elseif ($status === 'partially paid') {
+                                                            $statusLabel = '<span style="background-color: #17a2b8; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Partially Paid</span> ' . $editButton;
+                                                        } elseif ($status === 'unpaid') {
+                                                            $statusLabel = '<span style="background-color: #FFC107; color: #00192D; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">Unpaid</span>';
+                                                        } else {
+                                                            $statusLabel = '<span class="text-muted">' . htmlspecialchars($exp['status']) . '</span>';
+                                                        }
 
-                                                    <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
-                                                        style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
-                                                        <div class="d-flex flex-column expense-date m-0">
-                                                            <span class="m-0"><b>Expense Date</b></span>
-                                                            <p class="m-0">24/6/2025</p>
-                                                        </div>
-                                                        <div class="d-flex flex-column due-date m-0">
-                                                            <span class="m-0"><b>Due Date</b></span>
-                                                            <p class="m-0">24/6/2025</p>
-                                                        </div>
-                                                        <div></div>
-                                                    </div>
+                                                        echo $statusLabel;
+                                                        ?>
 
-                                                    <!-- Items Table -->
-                                                    <div class="table-responsive ">
-                                                        <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
-                                                            <thead class="table">
-                                                                <tr class="custom-th text-dark">
-                                                                    <th>Description</th>
-                                                                    <th class="text-end">Qty</th>
-                                                                    <th class="text-end">Unit Price</th>
-                                                                    <th class="text-end">Taxes</th>
-                                                                    <th class="text-end">Discount</th>
-                                                                    <th class="text-end">Total</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody id="expenseItemsTableBody">
-                                                                <tr>
-                                                                    <td>Web Design</td>
-                                                                    <td class="text-end">1</td>
-                                                                    <td class="text-end">KES 25,000</td>
-                                                                    <td class="text-end">Inclusive</td>
-                                                                    <td class="text-end">KES 25,000</td>
-                                                                    <td class="text-end">KES 25,000</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Hosting (1 year)</td>
-                                                                    <td class="text-end">1</td>
-                                                                    <td class="text-end">KES 5,000</td>
-                                                                    <td class="text-end">Exclusive</td>
-                                                                    <td class="text-end">KES 25,000</td>
-                                                                    <td class="text-end">KES 5,000</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-
-                                                    <!-- Totals and Terms -->
-                                                    <div class="row">
-                                                        <div class="col-6 terms-box">
-                                                            <strong>Note:</strong><br>
-                                                            This Expense Note Belongs to.<br>
-                                                            Silver Spoon Towers
+                                                        <?php if ($status === 'unpaid' || $status === 'partially paid'): ?>
                                                             <br>
-                                                            <br>
-                                                            <div class="overPaymentNote" id="overPaymentNote" style="display:none">
-                                                                <p class="text-dark mb-0" style="">Paid:- <span class="text-dark" id="overPaidAmount"></span></p>
-                                                                <p class="text-dark mb-0">Prepaid:- <b><span id="prepaidAmount" class="text-success"></span></b> </p>
-                                                            </div>
-                                                            <div id="patialPaymentNote" style="display:none">
-                                                                <p class="text-dark mb-0" id="patialPaymentNote" style="">Paid:- <span class="text-dark" id="partalPaidAmount"></span></p>
-                                                                <p class="text-dark mb-0">Balance:- <b><span id="balanceAmount" class="text-danger"></span></b></p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <table class="table table-borderless table-sm text-end mb-0">
-                                                                <tr>
-                                                                    <th>Untaxed Amount:</th>
-                                                                    <td>
-                                                                        <div id="expenseModalUntaxedAmount">KES 30,000</div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th>VAT (16%):</th>
-                                                                    <td>
-                                                                        <div id="expenseModalTaxAmount">KES 4,800</div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <th>Total Amount:</th>
-                                                                    <td><strong id="expenseModalTotalAmount">KES 34,800</strong></td>
-                                                                </tr>
-                                                            </table>
-                                                        </div>
-                                                    </div>
+                                                            <button
+                                                                class="btn btn-sm d-inline-flex align-items-center gap-1 mt-2"
+                                                                style="background-color: #00192D; color: #FFC107; border: none; border-radius: 8px; padding: 6px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
+                                                                data-action="pay-expense"
+                                                                data-expense-id="<?= (int)$exp['id'] ?>"
+                                                                data-expected-amount="<?= htmlspecialchars($exp['total'], ENT_QUOTES, 'UTF-8') ?>">
+                                                                <i class="bi bi-credit-card-fill"></i>
+                                                                Pay
+                                                            </button>
+                                                        <?php endif; ?>
+                                                    </td>
 
-                                                    <hr>
-                                                    <div class="text-center small text-muted" style="border-top: 1px solid #e0e0e0; padding-top: 10px;">
-                                                        Thank you for your business!
-                                                    </div>
-                                                </div>
-                                                <!-- 🔚 END CARD -->
-                                            </div>
+                                                    <td>
+                                                        <button
+                                                            class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                                            style="background-color: #00192D; color: white; border: none; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
+                                                            onclick="openExpenseModal(<?= $exp['id'] ?>)">
+                                                            <i class="bi bi-eye-fill"></i> View
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+
+                                    <!-- Pagination -->
+                                    <?php if ($totalPages > 1): ?>
+                                        <nav aria-label="Expense pagination">
+                                            <ul class="pagination justify-content-center mt-2">
+                                                <!-- Previous Button -->
+                                                <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
+                                                    <a class="page-link" href="?page=<?php echo $currentPage - 1; ?>" aria-label="Previous">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+
+                                                <!-- Page Numbers -->
+                                                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                                                    <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
+                                                        <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                                    </li>
+                                                <?php endfor; ?>
+
+                                                <!-- Next Button -->
+                                                <li class="page-item <?php echo $currentPage == $totalPages ? 'disabled' : ''; ?>">
+                                                    <a class="page-link" href="?page=<?php echo $currentPage + 1; ?>" aria-label="Next">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+
+                                        <!-- Pagination Info -->
+                                        <div class="pagination-info text-center mb-4">
+                                            <p class="text-muted">
+                                                Showing <?php echo $offset + 1; ?> to <?php echo min($offset + $itemsPerPage, $totalItems); ?>
+                                                of <?php echo $totalItems; ?> requests
+                                            </p>
                                         </div>
-                                    </div>
+                                    <?php endif; ?>
                                 </div>
-                                <!-- for expense pdf -->
-                                <!-- for pdf -->
-                                <div id="printArea"></div>
-                            </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -891,9 +793,241 @@ require_once 'actions/createExpense.php';
         <!--begin::Footer-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
         <!--end::Footer-->
-
-
         <!-- Modals -->
+
+        <!-- View Expense Modal -->
+        <div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                <div class="modal-content expense bg-light">
+                    <div class="d-flex justify-content-between align-items-center p-2" style="background-color: #EAF0F4; border-bottom: 1px solid #CCC; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+                        <button class="btn btn-sm me-2" style="background-color: #00192D; color: #FFC107;" title="Download PDF" id="downloadExpPdf">
+                            <i class="bi bi-download"></i>
+                        </button>
+                        <button class="btn btn-sm me-2" style="background-color: #00192D; color: #FFC107;" title="Print">
+                            <i class="bi bi-printer"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm" style="background-color: #FFC107; color: #00192D;" data-bs-dismiss="modal" title="Close">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+
+                    <div class="modal-body bg-light" id="expenseModalBody">
+
+                        <!-- 🔒 DO NOT TOUCH CARD BELOW -->
+                        <div class="expense-card" id="expenseCard">
+                            <!-- Header -->
+                            <div class="d-flex justify-content-between align-items-stretch mb-3 position-relative" style="overflow: hidden;">
+                                <div>
+                                    <img id="expenseLogo" src="images/expensePdfLogo.png" alt="JengoPay Logo" class="expense-logo">
+                                </div>
+
+                                <!-- Diagonal PAID Label centered in the container -->
+                                <!-- <div class="diagonal-paid-label">PAID</div> -->
+                                <div class="diagonal-unpaid-label" id="expenseModalPaymentStatus">UNPAID</div>
+                                <div class="address text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
+                                    <strong>Silver Spoon Towers</strong><br>
+                                    50303 Nairobi, Kenya<br>
+                                    silver@gmail.com<br>
+                                    +254 700 123456
+                                </div>
+                            </div>
+
+
+                            <!-- expense Info -->
+                            <div class="d-flex justify-content-between">
+                                <h6 class="mb-0" id="expenseModalSupplierName">Josephat Koech</h6>
+                                <div class="text-end">
+                                    <h3 id="expenseModalInvoiceNo"> INV001</h3><br>
+                                </div>
+                            </div>
+
+                            <div class="mb-1 rounded-2 d-flex justify-content-between align-items-center"
+                                style="border: 1px solid #FFC107; padding: 4px 8px; background-color: #FFF4CC;">
+                                <div class="d-flex flex-column expense-date m-0">
+                                    <span class="m-0"><b>Expense Date</b></span>
+                                    <p class="m-0">24/6/2025</p>
+                                </div>
+                                <div class="d-flex flex-column due-date m-0">
+                                    <span class="m-0"><b>Due Date</b></span>
+                                    <p class="m-0">24/6/2025</p>
+                                </div>
+                                <div></div>
+                            </div>
+
+                            <!-- Items Table -->
+                            <div class="table-responsive ">
+                                <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
+                                    <thead class="table">
+                                        <tr class="custom-th text-dark">
+                                            <th>Description</th>
+                                            <th class="text-end">Qty</th>
+                                            <th class="text-end">Unit Price</th>
+                                            <th class="text-end">Taxes</th>
+                                            <th class="text-end">Discount</th>
+                                            <th class="text-end">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="expenseItemsTableBody">
+                                        <tr>
+                                            <td>Web Design</td>
+                                            <td class="text-end">1</td>
+                                            <td class="text-end">KES 25,000</td>
+                                            <td class="text-end">Inclusive</td>
+                                            <td class="text-end">KES 25,000</td>
+                                            <td class="text-end">KES 25,000</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Hosting (1 year)</td>
+                                            <td class="text-end">1</td>
+                                            <td class="text-end">KES 5,000</td>
+                                            <td class="text-end">Exclusive</td>
+                                            <td class="text-end">KES 25,000</td>
+                                            <td class="text-end">KES 5,000</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Totals and Terms -->
+                            <div class="row">
+                                <div class="col-6 terms-box">
+                                    <strong>Note:</strong><br>
+                                    This Expense Note Belongs to.<br>
+                                    Silver Spoon Towers
+                                    <br>
+                                    <br>
+                                    <div class="overPaymentNote" id="overPaymentNote" style="display:none">
+                                        <p class="text-dark mb-0" style="">Paid:- <span class="text-dark" id="overPaidAmount"></span></p>
+                                        <p class="text-dark mb-0">Prepaid:- <b><span id="prepaidAmount" class="text-success"></span></b> </p>
+                                    </div>
+                                    <div id="patialPaymentNote" style="display:none">
+                                        <p class="text-dark mb-0" id="patialPaymentNote" style="">Paid:- <span class="text-dark" id="partalPaidAmount"></span></p>
+                                        <p class="text-dark mb-0">Balance:- <b><span id="balanceAmount" class="text-danger"></span></b></p>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <table class="table table-borderless table-sm text-end mb-0">
+                                        <tr>
+                                            <th>Untaxed Amount:</th>
+                                            <td>
+                                                <div id="expenseModalUntaxedAmount">KES 30,000</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>VAT (16%):</th>
+                                            <td>
+                                                <div id="expenseModalTaxAmount">KES 4,800</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total Amount:</th>
+                                            <td><strong id="expenseModalTotalAmount">KES 34,800</strong></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="text-center small text-muted" style="border-top: 1px solid #e0e0e0; padding-top: 10px;">
+                                Thank you for your business!
+                            </div>
+                        </div>
+                        <!-- 🔚 END CARD -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- for expense pdf -->
+        <!-- for pdf -->
+        <div id="printArea"></div>
+
+        <!-- Edit Payment Modal -->
+        <div class="modal fade" id="editPaymentModal" tabindex="-1" aria-labelledby="editPaymentLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content rounded-2 bg-white" style=" border: 1px solid #00192D;">
+
+                    <!-- Header -->
+                    <div class="modal-header border-bottom align-items-center" style="padding: 0.75rem 1rem; background-color: #EAF0F4;">
+                        <h3 class="modal-title m-0" id="editPaymentLabel"
+                            style="font-size: 1.25rem; font-weight: 600; color: #00192D;">
+                            <i class="bi bi-pencil" style="margin-right: 6px; color: #00192D;"></i>
+                            Edit Payments
+                            <span style="font-weight: 400; font-size: 1rem; color: #6c757d;">
+                                KRACU0100039628
+                            </span>
+                        </h3>
+                        <button type="button" class="btn btn-sm" style="background-color: #FFC107; color: #00192D;" title="Close" id="closePaymentEditModalHeader">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="modal-body p-4">
+                        <!-- Forms from js-->
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="modal-footer p-4">
+                        <button type="button" class="btn btn-secondary btn-sm" id="closePaymentEditModalFooter">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- payment modal -->
+        <div class="modal fade" id="payExpenseModal" tabindex="-1" aria-labelledby="payExpenseLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border-radius: 12px; border: 1px solid #00192D;">
+                    <div class="modal-header" style="background-color: #00192D; color: white;">
+                        <h5 class="modal-title" id="payExpenseLabel">Pay Expense</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="payExpenseForm">
+                            <!-- id -->
+                            <input type="hidden" name="expense_id" id="expenseId">
+                            <!-- total amount -->
+                            <input type="hidden" name="expected_amount" id="expectedAmount">
+
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Amount to Pay(KSH)</label>
+                                <input type="number" step="0.01" class="form-control shadow-none rounded-1" id="amountToPay" style="font-weight: 600;" name="amountToPay" value="1200" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="paymentDate" class="form-label shadow-none ">Payment Date</label>
+                                <input type="date" class="form-control shadow-none rounded-1" id="paymentDate" name="payment_date" required>
+                                <small id="paymentMsg" style="color:red;"></small> <!-- error/success message -->
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="paymentMethod" class="form-label">Payment Method</label>
+                                <select class="form-select shadow-none rounded-1" id="paymentMethod" name="payment_account_id" required>
+                                    <option value="100">Cash</option>
+                                    <option value="110">M-Pesa</option>
+                                    <option value="120">Bank Transfer</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="reference" class="form-label">Reference / Memo</label>
+                                <input type="text" class="form-control shadow-none rounded-1" id="reference" name="reference">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" form="payExpenseForm" class="btn" style="background-color: #FFC107; color: #00192D;">
+                            <i class="bi bi-credit-card"></i> Confirm Payment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Previous year date warning -->
         <div class="modal fade" id="fyWarningModal" tabindex="-1" aria-labelledby="fyWarningLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -1074,31 +1208,10 @@ require_once 'actions/createExpense.php';
 
 
     <!-- J  A V A S C R I PT -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-        crossorigin="anonymous">
-    </script>
-    <script
-        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous">
-    </script>
-    <!-- links for dataTaable buttons -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-    <!--end::OverlayScrollbars Configure-->
 
-    <!-- OPTIONAL SCRIPTS -->
+
+    <!-- links for dataTaable buttons -->
+
     <!-- apexcharts -->
     <script
         src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
@@ -1274,95 +1387,141 @@ require_once 'actions/createExpense.php';
             });
         });
     </script>
+
     <!-- Expense modal -->
     <script>
-        function openExpenseModal(expenseId) {
-            fetch(`actions/getExpenseBatch.php?id=${expenseId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch data");
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (!data.length) {
-                        console.warn("No expense data found.");
-                        return;
-                    }
+        // -------- helpers --------
+        const $ = (id) => document.getElementById(id);
 
-                    const expense = data[0]; // Get the first (and likely only) row
+        const money = (n) => `KES ${Number(n || 0).toLocaleString()}`;
 
-                    // Map values to HTML elements
-                    document.getElementById('expenseModalSupplierName').textContent = expense.supplier || '—';
-                    document.getElementById('expenseModalInvoiceNo').textContent = expense.expense_no || '—';
-                    document.getElementById('expenseModalTotalAmount').textContent = `KES ${parseFloat(expense.total || 0).toLocaleString()}`;
-                    document.getElementById('expenseModalTaxAmount').textContent = `KES ${parseFloat(expense.total_taxes || 0).toLocaleString()}`;
-                    document.getElementById('expenseModalUntaxedAmount').textContent = `KES ${parseFloat(expense.untaxed_amount || 0).toLocaleString()}`;
-                    // Payment status
+        function setText(id, value, fallback = '—') {
+            $(id).textContent = (value ?? '') !== '' ? value : fallback;
+        }
 
-                    const status = expense.status || 'paid'; // Defaulting to 'paid' if status is not available
-                    const statusLabelElement = document.getElementById('expenseModalPaymentStatus'); // ID instead of class
-                    // Check the status and apply the appropriate class and text
-                    if (expense.status === "Paid") {
-                        statusLabelElement.textContent = "PAID";
-                        statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
-                        statusLabelElement.classList.add("diagonal-paid-label");
-                    } else if (expense.status === "Overpaid") {
-                        statusLabelElement.textContent = "PAID";
-                        statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
-                        statusLabelElement.classList.add("diagonal-paid-label");
-                        document.getElementById("overPaymentNote").style.display = "block";
-                        document.getElementById("overPaidAmount").textContent = `KES ${parseFloat(expense.amount_paid || 0).toLocaleString()}`;
-                        const total = parseFloat(expense.total || 0);
-                        const paid = parseFloat(expense.amount_paid || 0);
-                        const prepaid = paid - total;
-                        document.getElementById("prepaidAmount").textContent =
-                            `KES ${prepaid.toLocaleString()}`;
+        function show(id) {
+            $(id).style.display = 'block';
+        }
 
-                        console.log(prepaid);
+        function hide(id) {
+            $(id).style.display = 'none';
+        }
 
-                    } else if (expense.status === "partially paid") {
-                        statusLabelElement.textContent = "PARTIAl";
-                        statusLabelElement.classList.remove("diagonal-unpaid-label"); // Remove the unpaid
-                        statusLabelElement.classList.add("diagonal-partially-paid-label");
-                        document.getElementById("patialPaymentNote").style.display = "block";
-                        document.getElementById("partalPaidAmount").textContent = `KES ${parseFloat(expense.amount_paid || 0).toLocaleString()}`;
-                        const total = parseFloat(expense.total || 0);
-                        const paid = parseFloat(expense.amount_paid || 0);
-                        const balance = total - paid;
+        function resetPaymentNotes() {
+            hide('overPaymentNote');
+            hide('patialPaymentNote');
+            setText('overPaidAmount', '');
+            setText('prepaidAmount', '');
+            setText('partalPaidAmount', '');
+            setText('balanceAmount', '');
+        }
 
-                        document.getElementById("balanceAmount").textContent =
-                            `KES ${balance.toLocaleString()}`;
+        function setStatusBadge(statusRaw, expense) {
+            const el = $('expenseModalPaymentStatus');
 
-                        // patialPaymentNote
+            // reset classes
+            el.classList.remove('diagonal-paid-label', 'diagonal-unpaid-label', 'diagonal-partially-paid-label');
+            resetPaymentNotes();
 
-                    } else {
-                        statusLabelElement.textContent = "UNPAID";
-                    }
-                    console.log(expense.status)
-                    const tableBody = document.getElementById('expenseItemsTableBody');
-                    tableBody.innerHTML = "";
-                    data.forEach((item) => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${item.description || '—'}</td>
-                            <td class="text-end">${item.qty || 0}</td>
-                            <td class="text-end">KES ${parseFloat(item.unit_price || 0).toLocaleString()}</td>
-                            <td class="text-end">${item.taxes || '—'}</td>
-                            <td class="text-end">${item.discount || '—'}%</td> <!-- Update if you have discount data -->
-                            <td class="text-end">KES ${parseFloat(item.item_total || 0).toLocaleString()} </td>
-                        `;
-                        tableBody.appendChild(row);
-                    });
-                    // Show the modal
-                    const expenseModal = new bootstrap.Modal(document.getElementById('expenseModal'));
-                    expenseModal.show();
-                })
-                .catch(error => {
-                    console.error("Error loading expense:", error);
-                });
+            const status = String(statusRaw || '').trim().toLowerCase();
+
+            if (status === 'paid') {
+                el.textContent = 'PAID';
+                el.classList.add('diagonal-paid-label');
+                return;
+            }
+
+            if (status === 'overpaid') {
+                el.textContent = 'PAID';
+                el.classList.add('diagonal-paid-label');
+
+                show('overPaymentNote');
+                const total = Number(expense.total || 0);
+                const paid = Number(expense.amount_paid || 0);
+                const prepaid = paid - total;
+
+                $('overPaidAmount').textContent = money(paid);
+                $('prepaidAmount').textContent = money(prepaid);
+                return;
+            }
+
+            if (status === 'partially paid' || status === 'partial' || status === 'partially_paid') {
+                el.textContent = 'PARTIAL';
+                el.classList.add('diagonal-partially-paid-label');
+
+                show('patialPaymentNote');
+                const total = Number(expense.total || 0);
+                const paid = Number(expense.amount_paid || 0);
+                const balance = total - paid;
+
+                $('partalPaidAmount').textContent = money(paid);
+                $('balanceAmount').textContent = money(balance);
+                return;
+            }
+
+            // default unpaid
+            el.textContent = 'UNPAID';
+            el.classList.add('diagonal-unpaid-label');
+        }
+
+        function renderExpenseHeader(expense) {
+            setText('expenseModalSupplierName', expense.supplier);
+            setText('expenseModalInvoiceNo', expense.expense_no);
+
+            $('expenseModalTotalAmount').textContent = money(expense.total);
+            $('expenseModalTaxAmount').textContent = money(expense.total_taxes);
+            $('expenseModalUntaxedAmount').textContent = money(expense.untaxed_amount);
+
+            setStatusBadge(expense.status, expense);
+        }
+
+        function renderExpenseItems(items) {
+            const tableBody = $('expenseItemsTableBody');
+            tableBody.innerHTML = '';
+
+            const rowsHtml = items.map((item) => `
+      <tr>
+        <td>${item.description ?? '—'}</td>
+        <td class="text-end">${item.qty ?? 0}</td>
+        <td class="text-end">${money(item.unit_price)}</td>
+        <td class="text-end">${item.taxes ?? '—'}</td>
+        <td class="text-end">${item.discount ?? '—'}%</td>
+        <td class="text-end">${money(item.item_total)}</td>
+      </tr>
+    `).join('');
+
+            tableBody.innerHTML = rowsHtml;
+        }
+
+        async function fetchExpense(expenseId) {
+            const res = await fetch(`actions/getExpenseItems.php?id=${encodeURIComponent(expenseId)}`);
+            if (!res.ok) throw new Error('Failed to fetch data');
+            const data = await res.json();
+            if (!Array.isArray(data) || data.length === 0) return null;
+            return data;
+        }
+
+        // -------- main --------
+        async function openExpenseModal(expenseId) {
+            try {
+                const data = await fetchExpense(expenseId);
+                if (!data) {
+                    console.warn('No expense data found.');
+                    return;
+                }
+
+                const expense = data[0]; // header fields come from first row
+                renderExpenseHeader(expense);
+                renderExpenseItems(data);
+
+                const modal = bootstrap.Modal.getOrCreateInstance($('expenseModal'));
+                modal.show();
+            } catch (err) {
+                console.error('Error loading expense:', err);
+            }
         }
     </script>
+
 
 
     <!-- select wrapper -->
@@ -1378,9 +1537,60 @@ require_once 'actions/createExpense.php';
             document.getElementById('addSupplier')?.click();
         });
     </script>
-    <!-- Scripts -->
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- capture supplier id -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const supplierInput = document.querySelector('[list="supplierList"]');
+            const supplierIdInput = document.getElementById('supplier_id');
+
+            supplierInput.addEventListener('input', function() {
+                const option = document.querySelector(
+                    `#supplierList option[value="${CSS.escape(this.value)}"]`
+                );
+
+                supplierIdInput.value = option ? option.dataset.id : '';
+            });
+        });
+    </script>
+
+    <!--light weight script tasks  -->
+    <script>
+        document.getElementById('closePaymentEditModalFooter')
+            ?.addEventListener('click', function() {
+                location.reload();
+            });
+
+        document.getElementById('closePaymentEditModalHeader')
+            ?.addEventListener('click', function() {
+                location.reload();
+            });
+    </script>
+
+
+    <!-- Toast message script-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Toast message -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const successEl = document.getElementById("flashToastSuccess");
+            const errorEl = document.getElementById("flashToastError");
+
+            if (successEl && window.bootstrap) {
+                new bootstrap.Toast(successEl, {
+                    delay: 8000,
+                    autohide: true
+                }).show();
+            }
+
+            if (errorEl && window.bootstrap) {
+                new bootstrap.Toast(errorEl, {
+                    delay: 10000,
+                    autohide: true
+                }).show();
+            }
+        });
+    </script>
 
 </body>
 <!--end::Body-->
