@@ -157,42 +157,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_unit'])) {
 
         $building_unit_id = $pdo->lastInsertId();
 
-       /*
-|--------------------------------------------------------------------------
-| INSERT RECURRING BILLS (USING ACCOUNT CODE ONLY)
-|--------------------------------------------------------------------------
-*/
-if (!empty($_POST['account_code']) && is_array($_POST['account_code'])) {
+        /*
+        |--------------------------------------------------------------------------
+        | INSERT RECURRING BILLS
+        |--------------------------------------------------------------------------
+        */
+        if (!empty($_POST['bill_name']) && is_array($_POST['bill_name'])) {
 
-    $billStmt = $pdo->prepare("
-        INSERT INTO recurring_bills
-        (unit_id, bill_name, account_code, bill_name_other, quantity, unit_price, subtotal, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-    ");
+            $billStmt = $pdo->prepare("
+                INSERT INTO recurring_bills
+                (building_unit_id, bill_name, bill_name_other, quantity, unit_price, subtotal, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, NOW())
+            ");
 
-    foreach ($_POST['account_code'] as $i => $accountCode) {
+            foreach ($_POST['bill_name'] as $i => $billName) {
 
-        if (empty($accountCode)) continue;
+                $billOther = $_POST['bill_name_other'][$i] ?? '';
+                if ($billName === 'Other' && $billOther) {
+                    $billName = $billOther;
+                }
 
-        $billOther = $_POST['bill_name_other'][$i] ?? null;
-        $qty       = floatval($_POST['quantity'][$i] ?? 0);
-        $price     = floatval($_POST['unit_price'][$i] ?? 0);
+                $qty = floatval($_POST['quantity'][$i] ?? 0);
+                $price = floatval($_POST['unit_price'][$i] ?? 0);
+                if ($qty <= 0 || $price <= 0) continue;
 
-        if ($qty <= 0 || $price <= 0) continue;
-
-        $subtotal = $qty * $price;
-
-        $billStmt->execute([
-            $unit_id,
-            $accountCode,   // 👈 bill_name now stores account_code
-            $accountCode,   // 👈 account_code
-            $billOther,
-            $qty,
-            $price,
-            $subtotal
-        ]);
-    }
-}
+                $billStmt->execute([
+                    $building_unit_id,
+                    $billName,
+                    $billOther,
+                    $qty,
+                    $price,
+                    $qty * $price
+                ]);
+            }
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -570,69 +568,51 @@ if (!empty($_POST['account_code']) && is_array($_POST['account_code'])) {
                         ]);
                 
                         $unitId = $pdo->lastInsertId();
-                /* =====================================================
-   INSERT RECURRING BILLS (ACCOUNT CODE GUARANTEED)
-===================================================== */
-if (!empty($_POST['account_code']) && is_array($_POST['account_code'])) {
-
-    $billStmt = $pdo->prepare("
-        INSERT INTO recurring_bills (
-            unit_id,
-            bill_name,
-            account_code,
-            bill_name_other,
-            quantity,
-            unit_price,
-            subtotal,
-            created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-    ");
-
-    foreach ($_POST['account_code'] as $i => $accountCode) {
-
-        if (empty($accountCode)) {
-            continue;
-        }
-
-        $qty   = floatval($_POST['quantity'][$i] ?? 0);
-        $price = floatval($_POST['unit_price'][$i] ?? 0);
-
-        if ($qty <= 0 || $price <= 0) {
-            continue;
-        }
-
-        $billNameOther = $_POST['bill_name_other'][$i] ?? null;
-
-        /* --------------------------------------------
-           Resolve bill_name from account_code
-        --------------------------------------------- */
-        if ($accountCode === '9999') {
-            // OTHER
-            $billName = $billNameOther ?: 'Other';
-        } else {
-            $nameStmt = $pdo->prepare("
-                SELECT account_name 
-                FROM chart_of_accounts 
-                WHERE account_code = ?
-            ");
-            $nameStmt->execute([$accountCode]);
-            $billName = $nameStmt->fetchColumn() ?: 'Unknown Bill';
-        }
-
-        $subtotal = $qty * $price;
-
-        $billStmt->execute([
-            $unitId,          // unit_id
-            $billName,        // bill_name
-            $accountCode,     // ✅ account_code (THIS IS THE KEY FIX)
-            $billNameOther,   // bill_name_other
-            $qty,
-            $price,
-            $subtotal
-        ]);
-    }
-}
-
+                
+                        /* =====================================================
+                           4. INSERT RECURRING BILLS (LINKED TO UNIT)
+                        ===================================================== */
+                        if (!empty($_POST['bill_name'])) {
+                
+                            $billStmt = $pdo->prepare("
+                                INSERT INTO recurring_bills (
+                                    building_unit_id,
+                                    bill_name,
+                                    bill_name_other,
+                                    quantity,
+                                    unit_price,
+                                    subtotal,
+                                    created_at
+                                ) VALUES (?, ?, ?, ?, ?, ?, NOW())
+                            ");
+                
+                            foreach ($_POST['bill_name'] as $i => $billName) {
+                
+                                $billNameOther = $_POST['bill_name_other'][$i] ?? '';
+                                $qty           = floatval($_POST['quantity'][$i] ?? 0);
+                                $price         = floatval($_POST['unit_price'][$i] ?? 0);
+                
+                                if ($billName === '' || $qty <= 0 || $price <= 0) {
+                                    continue;
+                                }
+                
+                                if ($billName === 'Other' && $billNameOther !== '') {
+                                    $billName = $billNameOther;
+                                }
+                
+                                $subtotal = $qty * $price;
+                
+                                $billStmt->execute([
+                                    $unitId,
+                                    $billName,
+                                    $billNameOther,
+                                    $qty,
+                                    $price,
+                                    $subtotal
+                                ]);
+                            }
+                        }
+                
                         /* =====================================================
                            5. COMMIT
                         ===================================================== */
@@ -913,6 +893,8 @@ if (!empty($_POST['account_code']) && is_array($_POST['account_code'])) {
     
     <script>
 let rowCount = 0;
+
+// Pass PHP CoA array to JavaScript
 const coaOptions = <?php echo json_encode($coaList); ?>;
 
 function addRow() {
@@ -921,69 +903,48 @@ function addRow() {
     const newRow = document.createElement('tr');
     newRow.id = 'row-' + rowCount;
 
-    const billOptions = coaOptions
-        .map(opt => `<option value="${opt.account_code}">${opt.account_name}</option>`)
-        .join('');
+    const billOptions = coaOptions.map(opt => `<option value="${opt.account_name}" data-code="${opt.account_code}">${opt.account_name}</option>`).join('');
 
     newRow.innerHTML = `
-        <td>
-            <select name="account_code[]" class="form-control form-control-sm bill-select" required>
-                <option value="" selected hidden>Select Bill</option>
-                ${billOptions}
-                <option value="9999">Other</option>
-            </select>
-
-            <input type="text"
-                   name="bill_name_other[]"
-                   class="form-control form-control-sm mt-1 d-none"
-                   placeholder="Specify other bill">
-        </td>
-
-        <td>
-            <input type="number"
-                   name="quantity[]"
-                   class="form-control form-control-sm qty-input"
-                   min="1"
-                   value="1"
-                   required>
-        </td>
-
-        <td>
-            <input type="number"
-                   name="unit_price[]"
-                   class="form-control form-control-sm price-input"
-                   min="0"
-                   step="0.01"
-                   value="0"
-                   required>
-        </td>
-
-        <td class="subtotal-cell">0.00</td>
-
-        <td>
-            <button type="button"
-                    class="btn btn-danger btn-sm"
-                    onclick="removeRow(${rowCount})">
-                <i class="fa fa-trash"></i>
-            </button>
-        </td>
-    `;
+    <td>
+        <select name="bill_name[]" class="form-control form-control-sm bill-select" required>
+            <option value="" selected hidden>Select Bill</option>
+            ${billOptions}
+            <option value="Other">Other</option>
+        </select>
+        <input type="text" name="bill_name_other[]" class="form-control form-control-sm mt-1 d-none" placeholder="Specify other bill">
+    </td>
+    <td><input type="number" name="quantity[]" class="form-control form-control-sm qty-input" min="1" value="1" required></td>
+    <td><input type="number" name="unit_price[]" class="form-control form-control-sm price-input" min="0" step="0.01" value="0" required></td>
+    <td class="subtotal-cell">0.00</td>
+    <td>
+        <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(${rowCount})">
+            <i class="fa fa-trash"></i>
+        </button>
+    </td>
+`;
 
     tableBody.appendChild(newRow);
 
-    newRow.querySelector('.qty-input').addEventListener('input', calculateTotals);
-    newRow.querySelector('.price-input').addEventListener('input', calculateTotals);
+    const qtyInput = newRow.querySelector('.qty-input');
+    const priceInput = newRow.querySelector('.price-input');
+    const billSelect = newRow.querySelector('.bill-select');
+    const coaInput = newRow.querySelector('.coa-input');
 
-    newRow.querySelector('.bill-select').addEventListener('change', function () {
-        const otherInput = newRow.querySelector('[name="bill_name_other[]"]');
+    qtyInput.addEventListener('input', calculateTotals);
+    priceInput.addEventListener('input', calculateTotals);
 
-        if (this.value === '9999') {
+    billSelect.addEventListener('change', function() {
+        const selectedOption = this.selectedOptions[0];
+        coaInput.value = selectedOption.getAttribute('data-code');
+
+        const otherInput = this.closest('td').querySelector('[name="bill_name_other[]"]');
+        if (this.value === 'Other') {
             otherInput.classList.remove('d-none');
             otherInput.required = true;
         } else {
             otherInput.classList.add('d-none');
             otherInput.required = false;
-            otherInput.value = '';
         }
     });
 
@@ -1020,9 +981,9 @@ function calculateTotals() {
     document.getElementById('totalSubtotal').textContent = totalSubtotal.toFixed(2);
 }
 
+// Initialize first row
 document.addEventListener('DOMContentLoaded', addRow);
 </script>
-
 
     <!-- <script>
 let coaAccounts = [];
