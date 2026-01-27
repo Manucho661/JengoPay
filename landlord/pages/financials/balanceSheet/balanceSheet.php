@@ -6,6 +6,9 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 // require_once 'actions/getLiabilities.php';
 // require_once 'actions/getRetainedEarnings.php';
 
+// actions
+require_once './actions/getCurrentAssets.php';
+
 
 ?>
 
@@ -174,6 +177,11 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
   .more:hover {
     color: #00192D !important;
   }
+
+  .stat-card {
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
 </style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -264,8 +272,16 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
                     </thead>
                     <tbody>
                       <tr>Non-current Assets</tr>
-                      <tr><td>yoyo</td> <td>haha</td></tr>
-                      <tr><td>yoyo</td> <td>haha</td></tr>
+                      <?php foreach ($nonCurrentAssets as $nonCurrentAsset): ?>
+                        <tr>
+                          <td><?= htmlspecialchars($nonCurrentAsset['name']) ?></td>
+                          <td><?= htmlspecialchars($nonCurrentAsset['amount']) ?></td>
+                        </tr>
+                      <?php endforeach; ?>
+                      <tr>
+                        <td>Total</td>
+                        <td><?= htmlspecialchars($totalNonCurrentAssets) ?></td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>

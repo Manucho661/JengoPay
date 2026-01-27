@@ -12,11 +12,13 @@ unset($_SESSION['error'], $_SESSION['success']);
 $expenses = [];
 $monthlyTotals = array_fill(1, 12, 0);
 
+
+// register supplier
+require_once 'actions/registerSupplier.php';
 // get suppliers
 require_once 'actions/getSuppliers.php';
 // create expenses script
 require_once 'actions/createExpense.php';
-// pay expense script
 //Include expense Batches
 require_once 'actions/getExpenses.php';
 // Include expense accounts
@@ -77,9 +79,6 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
     <link rel="stylesheet" href="expenses.css">
     <!-- scripts for data_table -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
-
 
     <!-- Pdf pluggin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -281,11 +280,17 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                             Registered Suppliers
                         </button>
 
-                        <button class="btn bg-warning text-white seTAvailable fw-bold rounded-4"
-                            id="addSupplier"
-                            style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+                        <button
+                            type="button"
+                            class="btn fw-bold rounded-4 text-white"
+                            style="background: linear-gradient(135deg, #00192D, #002B5B); width:100%; white-space: nowrap;"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#supplierOffcanvas"
+                            aria-controls="supplierOffcanvas">
                             Register Supplier
                         </button>
+
+
                     </div>
 
                     <!-- Mobile dropdown menu -->
@@ -634,7 +639,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                         <p style="color: #6c757d; font-size: 1rem; margin-bottom: 1.5rem;">
                                             Start tracking your finances by adding your first expense
                                         </p>
-                                        
+
                                     </div>
                                 </div>
                             <?php else: ?>
@@ -1049,40 +1054,63 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
         </div>
 
         <!-- Create new supplier -->
-        <div class="supplier-modal-overlay" id="supplierOverlay"></div>
-        <div class="supplier-modal" id="supplierModal">
-            <button class="supplier-close-btn" id="supplierCloseBtn">X</button>
-            <div class="d-flex">
-                <h4>
-                    <i class="fas fa-user-plus"></i> Register New Supplier
-                </h4>
+        <!-- Offcanvas (RIGHT SIDE, FULL HEIGHT, 1/4 WIDTH) -->
+        <div
+            class="offcanvas offcanvas-end"
+            tabindex="-1"
+            id="supplierOffcanvas"
+            aria-labelledby="supplierOffcanvasLabel"
+            style="width: 25vw; min-width: 320px;">
+            <!-- Header -->
+            <div class="offcanvas-header border-bottom">
+                <h5 class="offcanvas-title" id="supplierOffcanvasLabel">
+                    Register New Supplier
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
 
-            <form id="supplierForm" class="supplier-form">
-                <div id="submitMsg" style="color: red; margin-top: 5px;"></div>
+            <!-- Body -->
+            <div class="offcanvas-body">
+                <form action="" method="POST">
+                    <div id="submitMsg" class="text-danger mb-2"></div>
 
-                <label for="supplierName">Supplier Name</label>
-                <input type="text" id="supplierName" name="name" required>
-                <small id="supplierNameMsg" style="color:red;"></small> <!-- error/success message -->
+                    <div class="mb-3">
+                        <label class="form-label" for="supplierName">Supplier Name</label>
+                        <input type="text" class="form-control" id="supplierName" name="name" required>
+                        <small id="supplierNameMsg" class="text-danger"></small>
+                    </div>
 
-                <label for="supplierEmail">Email</label>
-                <input type="email" id="supplierEmail" name="email" required>
+                    <div class="mb-3">
+                        <label class="form-label" for="supplierEmail">Email</label>
+                        <input type="email" class="form-control" id="supplierEmail" name="email" required>
+                    </div>
 
-                <label for="supplierPhone">Phone</label>
-                <input type="text" id="supplierPhone" name="phone">
+                    <div class="mb-3">
+                        <label class="form-label" for="supplierPhone">Phone</label>
+                        <input type="text" class="form-control" id="supplierPhone" name="phone">
+                    </div>
 
-                <label for="supplierKra">KRA Number</label>
-                <input type="text" id="supplierKra" name="kra" required>
-                <small id="supplierKraMsg" style="color:red;"></small> <!-- error/success message -->
+                    <div class="mb-3">
+                        <label class="form-label" for="supplierKra">KRA Number</label>
+                        <input type="text" class="form-control" id="supplierKra" name="kra" required>
+                        <small id="supplierKraMsg" class="text-danger"></small>
+                    </div>
 
-                <label for="supplierAddress">Address</label>
-                <input type="text" id="supplierAddress" name="address">
+                    <div class="mb-3">
+                        <label class="form-label" for="supplierAddress">Address</label>
+                        <input type="text" class="form-control" id="supplierAddress" name="address">
+                    </div>
 
-                <div class="supplier-form-actions">
-                    <button type="submit" class="supplier-submit-btn" id="registerBtn">Save</button>
-                    <button type="button" class="supplier-cancel-btn" id="supplierCancelBtn">Cancel</button>
-                </div>
-            </form>
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn text-white bg-secondary" data-bs-dismiss="offcanvas">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn text-white" style="background: linear-gradient(135deg, #00192D, #002B5B); width:100%; white-space: nowrap;" name="register_supplier">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- Edit Supplier details -->

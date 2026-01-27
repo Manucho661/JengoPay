@@ -31,6 +31,11 @@ require_once 'actions/getBuildings.php';
   <!--begin::(Icons)-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
+  <!-- Bootstrap Icons -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet">
+
   <!--Main css file-->
   <link rel="stylesheet" href="../../../landlord/assets/main.css" />
   <link rel="stylesheet" href="maintenance.css">
@@ -108,55 +113,60 @@ require_once 'actions/getBuildings.php';
         </div>
 
         <!-- Third Row: stats -->
-        <div class="row">
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="stat-card d-flex align-items-center rounded-2 p-1">
+        <div class="row g-3">
+
+          <!-- Total Requests -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
               <div>
-                <i class="fas fa-clipboard-check me-3 text-warning"></i>
+                <i class="bi bi-clipboard-check fs-1 me-3 text-warning"></i>
               </div>
               <div>
-                <p class="mb-0" style="font-weight: bold;">Scheduled</p>
-                <h3>0</h3>
+                <p class="mb-0" style="font-weight: bold;">Total Requests</p>
+                <b>0</b>
               </div>
             </div>
           </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="stat-card d-flex align-items-center rounded-2 p-1">
+          <!-- Open -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
               <div>
-                <i class="fas fa-check-circle me-3 text-warning"></i>
+                <i class="bi bi-hourglass-split fs-1 me-3 text-warning"></i>
+              </div>
+              <div>
+                <p class="mb-0" style="font-weight: bold;">Open</p>
+                <b>0</b>
+              </div>
+            </div>
+          </div>
+
+          <!-- Completed -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+              <div>
+                <i class="bi bi-check-circle-fill fs-1 me-3 text-warning"></i>
               </div>
               <div>
                 <p class="mb-0" style="font-weight: bold;">Completed</p>
-                <h3>0</h3>
+                <b>0</b>
               </div>
             </div>
           </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="stat-card d-flex align-items-center rounded-2 p-1">
+          <!-- Closed -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
               <div>
-                <i class="fas fa-spinner fa-spin me-3 text-warning"></i>
+                <i class="bi bi-x-circle-fill fs-1 me-3 text-warning"></i>
               </div>
               <div>
-                <p class="mb-0" style="font-weight: bold;">In Progress</p>
-                <h3>0</h3>
+                <p class="mb-0" style="font-weight: bold;">Closed</p>
+                <b>0</b>
               </div>
             </div>
           </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
-
-            <div class="stat-card d-flex align-items-center rounded-2 p-1">
-              <div>
-                <i class="fas fa-question-circle me-3 text-warning"></i>
-              </div>
-              <div>
-                <p class="mb-0" style="font-weight: bold;">Incomplete</p>
-                <h3>0</h3>
-              </div>
-            </div>
-          </div>
         </div>
 
         <hr>

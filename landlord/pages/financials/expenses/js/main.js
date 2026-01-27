@@ -73,20 +73,20 @@ document.addEventListener("DOMContentLoaded", () => {
   initSupplierListModal();
 
   // Open supplier create modal on click
-  document.addEventListener("click", (e) => {
-    if (e.target && (e.target.id === "registerSupplierButton" || e.target.id === "addSupplier")) {
-      e.preventDefault();
-      console.log("create supplier button clicked");
+  // document.addEventListener("click", (e) => {
+  //   if (e.target && (e.target.id === "registerSupplierButton" || e.target.id === "addSupplier")) {
+  //     e.preventDefault();
+  //     console.log("create supplier button clicked");
 
-      const supplierOverlay = document.getElementById("supplierOverlay");
-      const supplierModal = document.getElementById("supplierModal");
+  //     const supplierOverlay = document.getElementById("supplierOverlay");
+  //     const supplierModal = document.getElementById("supplierModal");
 
-      if (supplierOverlay && supplierModal) {
-        supplierOverlay.classList.add("active");
-        supplierModal.classList.add("active");
-      }
-    }
-  });
+  //     if (supplierOverlay && supplierModal) {
+  //       supplierOverlay.classList.add("active");
+  //       supplierModal.classList.add("active");
+  //     }
+  //   }
+  // });
 
   // Open supplier list modal on click
   document.addEventListener("click", (e) => {
