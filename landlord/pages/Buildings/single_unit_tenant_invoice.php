@@ -66,6 +66,7 @@ if(isset($_GET['tenant_id']) && !empty($_GET['tenant_id'])) {
 }
 ?>
 
+
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
@@ -738,33 +739,52 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                             echo "</tr>";
                         }
 
-                        // Display water bill row if exists (add this after the garbage display code)
+
+// DISPLAY WATER BILL ROW (SUMMED PER UNIT – CURRENT MONTH)
 if (!empty($tenant_info['unit_id'])) {
     try {
         $waterStmt = $pdo->prepare("
-            SELECT
-                quantity,
-                unit_price,
-                sub_total,
-                created_at
+            SELECT 
+                SUM(quantity)   AS total_qty,
+                SUM(sub_total)  AS total_amount
             FROM bills
-            WHERE building_unit_id = ?
-              AND bill_name = 0
+            WHERE unit_id = ?
+              AND bill_name = 'Water'
               AND MONTH(created_at) = MONTH(CURRENT_DATE())
               AND YEAR(created_at) = YEAR(CURRENT_DATE())
-            ORDER BY created_at DESC
-            LIMIT 1
         ");
         $waterStmt->execute([$tenant_info['unit_id']]);
-        $water_data = $waterStmt->fetch(PDO::FETCH_ASSOC);
+        $water = $waterStmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($water_data) {
-            $water_quantity   = (int)$water_data['quantity'];
-            $water_unit_price = (float)$water_data['unit_price'];
-            $water_total      = (float)$water_data['sub_total'];
+        if ($water && $water['total_amount'] > 0) {
+
+            $qty   = (float) $water['total_qty'];
+            $total = (float) $water['total_amount'];
+
+            // VAT Inclusive (16%)
+            $taxAmount = round($total * (16 / 116), 2);
+            $netTotal  = $total - $taxAmount;
+            $unitPrice = $qty > 0 ? $netTotal / $qty : 0;
+            ?>
+            <tr id="rowWater">
+                <td>Water</td>
+                <td>Water Consumption (Monthly)</td>
+                <td class="unit-price"><?= number_format($unitPrice, 2) ?></td>
+                <td class="quantity"><?= $qty ?></td>
+                <td class="tax-type">VAT Inclusive</td>
+                <td class="tax-amount"><?= number_format($taxAmount, 2) ?></td>
+                <td class="total-price"><?= number_format($total, 2) ?></td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger"
+                        onclick="removeRow('rowWater')">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            <?php
         }
     } catch (PDOException $e) {
-        error_log("Water bill error: " . $e->getMessage());
+        error_log("Water bill fetch error: " . $e->getMessage());
     }
 }
 

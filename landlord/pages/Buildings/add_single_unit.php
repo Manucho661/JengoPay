@@ -3,6 +3,14 @@ session_start();
 require_once "../db/connect.php";
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
+<?php
+require_once "../db/connect.php";
+
+// Fetch all accounts relevant for recurring bills (Expenses)
+$stmt = $pdo->prepare("SELECT account_name, account_code FROM chart_of_accounts WHERE account_type='Expenses' ORDER BY account_name ASC");
+$stmt->execute();
+$coaList = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
 <?php
 require_once "../db/connect.php";
@@ -137,8 +145,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_unit'])) {
     }
 }
 ?>
-<?php
 
+<?php
+require_once "../db/connect.php";
+
+// Make sure $unit_id, $tenant_id, $building_id are defined before this point
+// For example, from your form or selection
+// $unit_id = $_POST['unit_id'];
+// $tenant_id = $_POST['tenant_id'];
+// $building_id = $_POST['building_id'];
+
+foreach ($_POST['bill_name'] as $i => $bill) {
+    $stmt = $pdo->prepare("
+        INSERT INTO recurring_bills 
+        (building_id, unit_id, tenant_id, account_code, bill_name, qty, unit_price, subtotal) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ");
+    $stmt->execute([
+        $building_id,                             // The building this bill belongs to
+        $unit_id,                                 // The unit this bill belongs to
+        $tenant_id,                               // The tenant in the unit
+        $_POST['account_code'][$i],               // Chart of account
+        $_POST['bill_name'][$i],
+        $_POST['qty'][$i],
+        $_POST['unit_price'][$i],
+        $_POST['qty'][$i] * $_POST['unit_price'][$i] // subtotal
+    ]);
+}
+?>
+
+<?php
 // Function to create journal entry
 function createJournalEntry($pdo, $date, $description, $entries)
 {
@@ -948,7 +984,7 @@ function getAccountName($pdo, $account_code)
                                     <th>Options</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="expensesBody"></tbody>
                                 <!-- Rows will be added here dynamically -->
                             </tbody>
                             <tfoot>
@@ -998,9 +1034,173 @@ function getAccountName($pdo, $account_code)
     </div>
     <!--end::App Wrapper-->
 
-    <!-- plugin for pdf -->
-
+    
     <script>
+let rowCount = 0;
+
+// Pass PHP CoA array to JavaScript
+const coaOptions = <?php echo json_encode($coaList); ?>;
+
+function addRow() {
+    rowCount++;
+    const tableBody = document.querySelector('#expensesTable tbody');
+    const newRow = document.createElement('tr');
+    newRow.id = 'row-' + rowCount;
+
+    const billOptions = coaOptions.map(opt => `<option value="${opt.account_name}" data-code="${opt.account_code}">${opt.account_name}</option>`).join('');
+
+    newRow.innerHTML = `
+        <td>
+            <select name="bill_name[]" class="form-control form-control-sm bill-select" required>
+                <option value="" selected hidden>Select Bill</option>
+                ${billOptions}
+                <option value="Other" data-code="9999">Other</option>
+            </select>
+            <input type="text" name="bill_name_other[]" class="form-control form-control-sm mt-1 d-none" placeholder="Specify other bill">
+        </td>
+        <td>
+            <input type="text" name="account_code[]" class="form-control form-control-sm coa-input" readonly>
+        </td>
+        <td><input type="number" name="quantity[]" class="form-control form-control-sm qty-input" min="1" value="1" required></td>
+        <td><input type="number" name="unit_price[]" class="form-control form-control-sm price-input" min="0" step="0.01" value="0" required></td>
+        <td class="subtotal-cell">0.00</td>
+        <td>
+            <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(${rowCount})">
+                <i class="fa fa-trash"></i>
+            </button>
+        </td>
+    `;
+
+    tableBody.appendChild(newRow);
+
+    const qtyInput = newRow.querySelector('.qty-input');
+    const priceInput = newRow.querySelector('.price-input');
+    const billSelect = newRow.querySelector('.bill-select');
+    const coaInput = newRow.querySelector('.coa-input');
+
+    qtyInput.addEventListener('input', calculateTotals);
+    priceInput.addEventListener('input', calculateTotals);
+
+    billSelect.addEventListener('change', function() {
+        const selectedOption = this.selectedOptions[0];
+        coaInput.value = selectedOption.getAttribute('data-code');
+
+        const otherInput = this.closest('td').querySelector('[name="bill_name_other[]"]');
+        if (this.value === 'Other') {
+            otherInput.classList.remove('d-none');
+            otherInput.required = true;
+        } else {
+            otherInput.classList.add('d-none');
+            otherInput.required = false;
+        }
+    });
+
+    calculateTotals();
+}
+
+function removeRow(rowId) {
+    const row = document.getElementById('row-' + rowId);
+    if (row) {
+        row.remove();
+        calculateTotals();
+    }
+}
+
+function calculateTotals() {
+    let totalQty = 0;
+    let totalUnitPrice = 0;
+    let totalSubtotal = 0;
+
+    document.querySelectorAll('#expensesTable tbody tr').forEach(row => {
+        const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
+        const price = parseFloat(row.querySelector('.price-input').value) || 0;
+        const subtotal = qty * price;
+
+        row.querySelector('.subtotal-cell').textContent = subtotal.toFixed(2);
+
+        totalQty += qty;
+        totalUnitPrice += price;
+        totalSubtotal += subtotal;
+    });
+
+    document.getElementById('totalQty').textContent = totalQty;
+    document.getElementById('totalUnitPrice').textContent = totalUnitPrice.toFixed(2);
+    document.getElementById('totalSubtotal').textContent = totalSubtotal.toFixed(2);
+}
+
+// Initialize first row
+document.addEventListener('DOMContentLoaded', addRow);
+</script>
+
+    <!-- <script>
+let coaAccounts = [];
+
+// Fetch COA expenses on page load
+fetch('fetch_coa_revenue.php')
+    .then(res => res.json())
+    .then(data => {
+        coaAccounts = data;
+    });
+
+function addRow() {
+    const tbody = document.getElementById('expensesBody');
+
+    let coaOptions = `<option value="">Select Bill</option>`;
+    coaAccounts.forEach(acc => {
+        coaOptions += `<option value="${acc.account_code}">${acc.account_name}</option>`;
+    });
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>
+            <select class="form-control form-control-sm bill">
+                ${coaOptions}
+            </select>
+        </td>
+        <td>
+            <input type="number" class="form-control form-control-sm qty" value="1" min="1" oninput="calculateRow(this)">
+        </td>
+        <td>
+            <input type="number" class="form-control form-control-sm price" value="0" min="0" step="0.01" oninput="calculateRow(this)">
+        </td>
+        <td class="subtotal">0.00</td>
+        <td>
+            <button class="btn btn-sm btn-danger" onclick="this.closest('tr').remove(); calculateTotals();">✕</button>
+        </td>
+    `;
+    tbody.appendChild(row);
+}
+</script>
+
+<script>
+function calculateRow(el) {
+    const row = el.closest('tr');
+    const qty = parseFloat(row.querySelector('.qty').value) || 0;
+    const price = parseFloat(row.querySelector('.price').value) || 0;
+
+    const subtotal = qty * price;
+    row.querySelector('.subtotal').innerText = subtotal.toFixed(2);
+
+    calculateTotals();
+}
+
+function calculateTotals() {
+    let totalQty = 0;
+    let totalSubtotal = 0;
+
+    document.querySelectorAll('#expensesBody tr').forEach(row => {
+        totalQty += parseFloat(row.querySelector('.qty').value) || 0;
+        totalSubtotal += parseFloat(row.querySelector('.subtotal').innerText) || 0;
+    });
+
+    document.getElementById('totalQty').innerText = totalQty;
+    document.getElementById('totalSubtotal').innerText = totalSubtotal.toFixed(2);
+    document.getElementById('totalUnitPrice').innerText = '—';
+}
+</script> -->
+
+
+    <!-- <script>
 // Dynamic rows for expenses table
 let rowCount = 0;
 
@@ -1139,7 +1339,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     });
 });
-</script>
+</script> -->
     <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Validate monthly rent input

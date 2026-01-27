@@ -4,45 +4,79 @@ require_once "../db/connect.php";
 ?>
 
 <?php
-require_once "../db/connect.php"; // your PDO connection
-
 if (isset($_POST['submit_reading'])) {
-    // Sanitize and fetch POST data
-    $building_unit_id = intval($_POST['id']); // id hidden field
-    $meter_type = $_POST['meter_type'];       // 'Water' or 'Electricity'
-    $units_consumed = floatval($_POST['units_consumed']);
-    $cost_per_unit = floatval($_POST['cost_per_unit']);
-    $final_bill = floatval($_POST['final_bill']);
 
-    // Map meter_type to bill_name (you can define your own codes)
-    // For example: Water = 1, Electricity = 2
-    $bill_name = ($meter_type === 'Water') ? 1 : 2;
+    require_once '../db/connect.php';
 
-    $created_at = date('Y-m-d H:i:s');
+    // 🔐 Sanitize & collect inputs
+    $unit_id          = (int) $_POST['id'];
+    $reading_date     = $_POST['reading_date'];
+    $meter_type       = $_POST['meter_type']; // Water / Electricity
+    $current_reading  = (float) $_POST['current_reading'];
+    $previous_reading = (float) ($_POST['previous_reading'] ?? 0);
+    $units_consumed   = (float) $_POST['units_consumed'];
+    $cost_per_unit    = (float) $_POST['cost_per_unit'];
+    $final_bill       = (float) $_POST['final_bill'];
 
-    try {
-        $stmt = $pdo->prepare("INSERT INTO bills (building_unit_id, bill_name, quantity, unit_price, sub_total, created_at) 
-                               VALUES (:building_unit_id, :bill_name, :quantity, :unit_price, :sub_total, :created_at)");
+    // OPTIONAL: resolve tenant_id if unit is occupied
+    $tenant_id = 0;
+    $tenantStmt = $pdo->prepare("
+        SELECT id FROM tenants 
+        WHERE unit_id = ? AND tenant_status = 'Active'
+        LIMIT 1
+    ");
+    $tenantStmt->execute([$unit_id]);
+    if ($tenant = $tenantStmt->fetch()) {
+        $tenant_id = $tenant['id'];
+    }
 
-        $stmt->execute([
-            ':building_unit_id' => $building_unit_id,
-            ':bill_name' => $bill_name,
-            ':quantity' => $units_consumed,
-            ':unit_price' => $cost_per_unit,
-            ':sub_total' => $final_bill,
-            ':created_at' => $created_at
-        ]);
+    // 🛡️ Safety check
+    if (!in_array($meter_type, ['Water', 'Electricity'])) {
+        die('Invalid meter type');
+    }
 
-        // Success message or redirect
-        echo "<script>
-        alert('Meter reading added successfully!');
+    // ✅ INSERT INTO bills
+    $stmt = $pdo->prepare("
+        INSERT INTO bills (
+            unit_id,
+            tenant_id,
+            bill_name,
+            quantity,
+            unit_price,
+            meter_type,
+            sub_total,
+            created_at
+        ) VALUES (
+            :unit_id,
+            :tenant_id,
+            :bill_name,
+            :quantity,
+            :unit_price,
+            :meter_type,
+            :sub_total,
+            :created_at
+        )
+    ");
+
+    $stmt->execute([
+        ':unit_id'    => $unit_id,
+        ':tenant_id'  => $tenant_id,
+        ':bill_name'  => $meter_type,        // 👈 IMPORTANT
+        ':quantity'   => $units_consumed,
+        ':unit_price' => $cost_per_unit,
+        ':meter_type' => $meter_type,
+        ':sub_total'  => $final_bill,
+        ':created_at' => $reading_date
+    ]);
+
+    // ✅ Success feedback
+    echo "<script>
+        alert('Meter reading saved successfully');
         window.location.href = 'single_units.php';
     </script>";
-        } catch (PDOException $e) {
-        echo "<script>alert('Error: " . $e->getMessage() . "');</script>";
-    }
 }
 ?>
+
 
 
 <!doctype html>
