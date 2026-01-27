@@ -65,13 +65,10 @@ if(isset($_GET['tenant_id']) && !empty($_GET['tenant_id'])) {
     }
 }
 ?>
-
-
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
-
     $pdo->beginTransaction();
-
+    
     try {
         $invoice_no   = $_POST['invoice_no'];
         $receiver     = $_POST['receiver'];
@@ -83,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $subtotal     = $_POST['subtotalValue'];
         $total_tax    = $_POST['totalTaxValue'];
         $final_total  = $_POST['finalTotalValue'];
-
+        
         // Insert invoice
         $stmt = $pdo->prepare("
             INSERT INTO invoice 
@@ -95,47 +92,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             $invoice_date, $due_date, $notes,
             $subtotal, $total_tax, $final_total
         ]);
-
+        
         $invoice_id = $pdo->lastInsertId();
-
-        // Insert invoice items
+        
+        // Insert invoice items with account_code
         $items = json_decode($_POST['invoice_items'], true);
-
+        
         $itemStmt = $pdo->prepare("
             INSERT INTO invoice_items
-            (invoice_id, paid_for, description, unit_price, quantity, tax_type, tax_amount, total_price)
-            VALUES (?,?,?,?,?,?,?,?)
+            (invoice_id, account_code, paid_for, description, unit_price, quantity, tax_type, tax_amount, total_price)
+            VALUES (?,?,?,?,?,?,?,?,?)
         ");
-
+        
         foreach ($items as $item) {
+            // Debug: Check what data you're receiving
+            error_log("Item data: " . print_r($item, true));
+            
+            // Validate account_code
+            $account_code = !empty($item['account_code']) ? $item['account_code'] : null;
+            
+            // If account_code is empty but paid_for is Rent, use 500
+            if (empty($account_code) && stripos($item['paid_for'], 'rent') !== false) {
+                $account_code = 500; // Rental Income
+            }
+            // If account_code is empty but paid_for is Water, use 510
+            elseif (empty($account_code) && stripos($item['paid_for'], 'water') !== false) {
+                $account_code = 510; // Water Charges
+            }
+            // If account_code is empty but paid_for is Garbage, use 515
+            elseif (empty($account_code) && stripos($item['paid_for'], 'garbage') !== false) {
+                $account_code = 515; // Garbage Collection
+            }
+            
             $itemStmt->execute([
                 $invoice_id,
-                $item['paid_for'],
-                $item['description'],
-                $item['unit_price'],
-                $item['quantity'],
-                $item['tax_type'],
-                $item['tax_amount'],
-                $item['total_price']
+                $account_code,
+                $item['paid_for'] ?? '',
+                $item['description'] ?? '',
+                $item['unit_price'] ?? 0,
+                $item['quantity'] ?? 1,
+                $item['tax_type'] ?? 'VAT Inclusive',
+                $item['tax_amount'] ?? 0,
+                $item['total_price'] ?? 0
             ]);
         }
-
+        
         $pdo->commit();
-
-        // ✅ redirect to invoice.php
+        
         header("Location: /jengopay/landlord/pages/financials/invoices/invoice.php?success=1");
-exit;
-
-        // header("Location: invoice.php?success=1");
-        // exit;
-
+        exit;
+        
     } catch (Exception $e) {
         $pdo->rollBack();
-        die("Error saving invoice: " . $e->getMessage());
+        // More detailed error message
+        die("Error saving invoice: " . $e->getMessage() . "\n" . 
+            "Items data: " . print_r($items, true));
     }
 }
 ?>
-
 <?php
 require_once "../db/connect.php";
 $stmt = $pdo->prepare("
@@ -271,6 +285,28 @@ try {
     $water_unit_price = 0;
     $water_total = 0;
 }
+
+
+$recurringBills = [];
+
+if (!empty($tenant_info['unit_id'])) {
+    $stmt = $pdo->prepare("
+        SELECT 
+            unit_id,
+            bill_name,
+            account_code,
+            quantity,
+            unit_price,
+            subtotal
+        FROM recurring_bills
+        WHERE unit_id = ?
+          AND MONTH(created_at) = MONTH(CURRENT_DATE())
+          AND YEAR(created_at) = YEAR(CURRENT_DATE())
+    ");
+    $stmt->execute([$tenant_info['unit_id']]);
+    $recurringBills = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 
         } catch(PDOException $e) {
@@ -660,142 +696,138 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
 
                                        <!-- Invoice Items Table -->
                                        <h5 class="mb-3">Invoice Items</h5>
-                    <table id="invoiceTable" class="table table-bordered table-striped shadow">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Paid For</th>
-                                <th>Description</th>
-                                <th>Unit Price</th>
-                                <th>Quantity</th>
-                                <th>Taxation</th>
-                                <th>Tax Amount</th>
-                                <th>Total Price</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="invoiceBody">
-                        <?php
-                        // Display Rent row automatically since it's in monthly_rent
-                        if ($monthly_rent > 0) {
-                            $rentUnitPrice = $monthly_rent;
-                            $rentQuantity = 1;
-                            $rentTaxType = 'VAT Inclusive';
-                            $rentTotalPrice = $monthly_rent;
-                            $rentTaxAmount = round($rentTotalPrice * (16/116), 2);
-                            $rentNetPrice = $rentTotalPrice - $rentTaxAmount;
-                            
-                            echo "<tr id='rowRent'>";
-                            echo "<td>Rent</td>";
-                            echo "<td>Monthly Rental Payment</td>";
-                            echo "<td class='unit-price'>" . number_format($rentNetPrice, 2) . "</td>";
-                            echo "<td class='quantity'>" . $rentQuantity . "</td>";
-                            echo "<td class='tax-type'>" . $rentTaxType . "</td>";
-                            echo "<td class='tax-amount'>" . number_format($rentTaxAmount, 2) . "</td>";
-                            echo "<td class='total-price'>" . number_format($rentTotalPrice, 2) . "</td>";
-                            echo "<td>";
-                            echo "<button type='button' class='btn btn-sm btn-danger' onclick='removeRow(\"rowRent\")'>";
-                            echo "<i class='fa fa-trash'></i>";
-                            echo "</button>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                        
-                        // Display garbage row if exists
-                        if (!empty($garbage_data)) {
-                            $unitPrice = floatval($garbage_data['unit_price'] ?? 0);
-                            $quantity = intval($garbage_data['qty'] ?? 0);
-                            $totalPrice = floatval($garbage_data['subtotal'] ?? 0);
-                            
-                            // If subtotal is not provided, calculate from unit price and quantity
-                            if ($totalPrice <= 0) {
-                                $totalPrice = $unitPrice * $quantity;
-                            }
-                            
-                            $taxType = 'VAT Inclusive';
-                            
-                            // For VAT Inclusive (16%), the tax calculation should be:
-                            // totalPrice = price_including_tax
-                            // taxAmount = totalPrice * (16/116)
-                            // netPrice = totalPrice - taxAmount
-                            $taxAmount = round($totalPrice * (16/116), 2);
-                            
-                            // The unit price should be the net price (without tax)
-                            $netPrice = $totalPrice - $taxAmount;
-                            $unitPrice = $quantity > 0 ? $netPrice / $quantity : 0;
-                            
-                            echo "<tr id='rowGarbage'>";
-                            echo "<td>Garbage</td>";
-                            echo "<td>Garbage Collection Fee</td>";
-                            echo "<td class='unit-price'>" . number_format($unitPrice, 2) . "</td>";
-                            echo "<td class='quantity'>" . $quantity . "</td>";
-                            echo "<td class='tax-type'>" . $taxType . "</td>";
-                            echo "<td class='tax-amount'>" . number_format($taxAmount, 2) . "</td>";
-                            echo "<td class='total-price'>" . number_format($totalPrice, 2) . "</td>";
-                            echo "<td>";
-                            echo "<button type='button' class='btn btn-sm btn-danger' onclick='removeRow(\"rowGarbage\")'>";
-                            echo "<i class='fa fa-trash'></i>";
-                            echo "</button>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-
-
-// DISPLAY WATER BILL ROW (SUMMED PER UNIT – CURRENT MONTH)
-if (!empty($tenant_info['unit_id'])) {
-    try {
-        $waterStmt = $pdo->prepare("
-            SELECT 
-                SUM(quantity)   AS total_qty,
-                SUM(sub_total)  AS total_amount
-            FROM bills
-            WHERE unit_id = ?
-              AND bill_name = 'Water'
-              AND MONTH(created_at) = MONTH(CURRENT_DATE())
-              AND YEAR(created_at) = YEAR(CURRENT_DATE())
-        ");
-        $waterStmt->execute([$tenant_info['unit_id']]);
-        $water = $waterStmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($water && $water['total_amount'] > 0) {
-
-            $qty   = (float) $water['total_qty'];
-            $total = (float) $water['total_amount'];
-
-            // VAT Inclusive (16%)
-            $taxAmount = round($total * (16 / 116), 2);
-            $netTotal  = $total - $taxAmount;
-            $unitPrice = $qty > 0 ? $netTotal / $qty : 0;
-            ?>
-            <tr id="rowWater">
-                <td>Water</td>
-                <td>Water Consumption (Monthly)</td>
-                <td class="unit-price"><?= number_format($unitPrice, 2) ?></td>
-                <td class="quantity"><?= $qty ?></td>
-                <td class="tax-type">VAT Inclusive</td>
-                <td class="tax-amount"><?= number_format($taxAmount, 2) ?></td>
-                <td class="total-price"><?= number_format($total, 2) ?></td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-danger"
-                        onclick="removeRow('rowWater')">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-            <?php
+                                       <table id="invoiceTable" class="table table-bordered table-striped shadow">
+    <thead class="table-dark">
+    <tr>
+    <th>Paid For</th>
+    <th>Account Code</th> <!-- This should be column 2 -->
+    <th>Description</th>  <!-- This should be column 3 -->
+    <th>Unit Price</th>   <!-- This should be column 4 -->
+    <th>Quantity</th>     <!-- This should be column 5 -->
+    <th>Taxation</th>     <!-- This should be column 6 -->
+    <th>Tax Amount</th>   <!-- This should be column 7 -->
+    <th>Total Price</th>  <!-- This should be column 8 -->
+    <th>Action</th>       <!-- This should be column 9 -->
+</tr>
+    </thead>
+    <tbody id="invoiceBody">
+        <?php
+        // Display Rent row automatically since it's in monthly_rent
+        if ($monthly_rent > 0) {
+            // Get account code for Rent (500)
+            $rentAccountCode = 500;
+            $rentAccountName = "Rental Income";
+            $rentUnitPrice = $monthly_rent;
+            $rentQuantity = 1;
+            $rentTaxType = 'VAT Inclusive';
+            $rentTotalPrice = $monthly_rent;
+            $rentTaxAmount = round($rentTotalPrice * (16/116), 2);
+            $rentNetPrice = $rentTotalPrice - $rentTaxAmount;
+            
+            echo "<tr id='rowRent'>";
+            echo "<td>" . htmlspecialchars($rentAccountName) . "</td>";
+            echo "<td class='account-code'>" . htmlspecialchars($rentAccountCode) . "</td>";
+            echo "<td>Monthly Rental Payment</td>";
+            echo "<td class='unit-price'>" . number_format($rentNetPrice, 2) . "</td>";
+            echo "<td class='quantity'>" . $rentQuantity . "</td>";
+            echo "<td class='tax-type'>" . $rentTaxType . "</td>";
+            echo "<td class='tax-amount'>" . number_format($rentTaxAmount, 2) . "</td>";
+            echo "<td class='total-price'>" . number_format($rentTotalPrice, 2) . "</td>";
+            echo "<td>";
+            echo "<button type='button' class='btn btn-sm btn-danger' onclick='removeRow(\"rowRent\")'>";
+            echo "<i class='fa fa-trash'></i>";
+            echo "</button>";
+            echo "</td>";
+            echo "</tr>";
         }
-    } catch (PDOException $e) {
-        error_log("Water bill fetch error: " . $e->getMessage());
-    }
-}
-
-                        ?>
-                        </tbody>
-                        <tfoot>
-                            <tr><td colspan="6" class="text-end">Subtotal:</td><td id="subtotal" class="text-end">0.00</td><td></td></tr>
-                            <tr><td colspan="6" class="text-end">Total Tax:</td><td id="totalTax" class="text-end">0.00</td><td></td></tr>
-                            <tr><td colspan="6" class="text-end"><strong>Final Total:</strong></td><td id="finalTotal" class="text-end">0.00</td><td></td></tr>
-                        </tfoot>
-                    </table>
+        
+        // For water bill (use account code 510)
+        if (!empty($tenant_info['unit_id'])) {
+            try {
+                $waterStmt = $pdo->prepare("
+                    SELECT 
+                        SUM(quantity)   AS total_qty,
+                        SUM(sub_total)  AS total_amount
+                    FROM bills
+                    WHERE unit_id = ?
+                      AND bill_name = 'Water'
+                      AND MONTH(created_at) = MONTH(CURRENT_DATE())
+                      AND YEAR(created_at) = YEAR(CURRENT_DATE())
+                ");
+                $waterStmt->execute([$tenant_info['unit_id']]);
+                $water = $waterStmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($water && $water['total_amount'] > 0) {
+                    $waterAccountCode = 510;
+                    $waterAccountName = "Water Charges (Revenue)";
+                    $qty   = (float) $water['total_qty'];
+                    $total = (float) $water['total_amount'];
+                    $taxAmount = round($total * (16 / 116), 2);
+                    $netTotal  = $total - $taxAmount;
+                    $unitPrice = $qty > 0 ? $netTotal / $qty : 0;
+                    ?>
+                    <tr id="rowWater">
+                        <td><?= htmlspecialchars($waterAccountName) ?></td>
+                        <td class="account-code"><?= htmlspecialchars($waterAccountCode) ?></td>
+                        <td>Water Consumption (Monthly)</td>
+                        <td class="unit-price"><?= number_format($unitPrice, 2) ?></td>
+                        <td class="quantity"><?= $qty ?></td>
+                        <td class="tax-type">VAT Inclusive</td>
+                        <td class="tax-amount"><?= number_format($taxAmount, 2) ?></td>
+                        <td class="total-price"><?= number_format($total, 2) ?></td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger"
+                                onclick="removeRow('rowWater')">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <?php
+                }
+            } catch (PDOException $e) {
+                error_log("Water bill fetch error: " . $e->getMessage());
+            }
+        }
+        
+        // For garbage bills (use account code 515)
+        if (!empty($recurringBills)) {
+            foreach ($recurringBills as $index => $bill) {
+                $garbageAccountCode = 515;
+                $garbageAccountName = "Garbage Collection Fees (Revenue)";
+                $qty        = (int) ($bill['quantity'] ?? 1);
+                $total      = (float) ($bill['subtotal'] ?? 0);
+                $billName   = $bill['bill_name'];
+                $rowId      = 'rowRecurring' . $index;
+                
+                if ($total <= 0) continue;
+                
+                $taxAmount = round($total * (16 / 116), 2);
+                $netTotal  = $total - $taxAmount;
+                $unitPrice = $qty > 0 ? $netTotal / $qty : 0;
+                ?>
+                <tr id="<?= $rowId ?>">
+                    <td><?= htmlspecialchars($garbageAccountName) ?></td>
+                    <td class="account-code"><?= htmlspecialchars($garbageAccountCode) ?></td>
+                    <td><?= htmlspecialchars($billName) ?></td>
+                    <td class="unit-price"><?= number_format($unitPrice, 2) ?></td>
+                    <td class="quantity"><?= $qty ?></td>
+                    <td class="tax-type">VAT Inclusive</td>
+                    <td class="tax-amount"><?= number_format($taxAmount, 2) ?></td>
+                    <td class="total-price"><?= number_format($total, 2) ?></td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-sm btn-danger"
+                                onclick="removeRow('<?= $rowId ?>')">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <?php
+            }
+        }
+        ?>
+    </tbody>
+</table>
                     <hr>
                     <!-- Changed addRow() to open the drawer -->
                     <button type="button" onclick="openAddItemDrawer()" class="btn btn-sm shadow text-white" style="background-color:#00192D;">
@@ -839,15 +871,14 @@ if (!empty($tenant_info['unit_id'])) {
             <form id="addItemForm">
                 <div class="mb-3">
                     <label for="drawerItemName" class="form-label">Paid For <span class="text-danger">*</span></label>
-                 <select class="form-control" id="drawerItemName" onchange="checkDrawerOthersInput(this)" required>
+                    <select class="form-control" id="drawerItemName" onchange="checkDrawerOthersInput(this)" required>
     <option value="">-- Select Item --</option>
-
     <?php foreach ($accounts as $account): ?>
-        <option value="<?= htmlspecialchars($account['account_name']) ?>">
-            <?= htmlspecialchars($account['account_name']) ?>
+        <option value="<?= htmlspecialchars($account['account_name']) ?>" 
+                data-account-code="<?= htmlspecialchars($account['account_code']) ?>">
+            <?= htmlspecialchars($account['account_name']) ?> (<?= htmlspecialchars($account['account_code']) ?>)
         </option>
     <?php endforeach; ?>
-
 </select>
 
                     <input type="text" class="form-control mt-2 d-none" id="drawerOtherInput" placeholder="Please specify">
@@ -955,36 +986,49 @@ if (!empty($tenant_info['unit_id'])) {
         }
     }
 
-    function prepareInvoiceData() {
-        // Gather all invoice items data
-        const items = [];
-        const rows = document.querySelectorAll('#invoiceBody tr');
-        
-        rows.forEach((row, index) => {
-            const cells = row.querySelectorAll('td');
-            if (cells.length >= 7) {
-                const item = {
-                    paidFor: cells[0].textContent.trim(),
-                    description: cells[1].textContent.trim(),
-                    unitPrice: parseFloat(cells[2].textContent.replace(/,/g, '')) || 0,
-                    quantity: parseInt(cells[3].textContent) || 1,
-                    taxType: cells[4].textContent.trim(),
-                    taxAmount: parseFloat(cells[5].textContent.replace(/,/g, '')) || 0,
-                    totalPrice: parseFloat(cells[6].textContent.replace(/,/g, '')) || 0
-                };
-                items.push(item);
-            }
-        });
-        
-        // Store in hidden field as JSON
-        document.getElementById('invoiceItems').value = JSON.stringify(items);
-        
-        // Calculate final values
-        calculateTotals();
-        
-        return true; // Allow form submission
+// Update prepareInvoiceData function
+function prepareInvoiceData() {
+    const items = [];
+    const rows = document.querySelectorAll('#invoiceBody tr');
+    
+    rows.forEach((row) => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 8) {
+            // Get account_code - it might be in a different column
+            const accountCodeCell = row.querySelector('.account-code');
+            const account_code = accountCodeCell ? accountCodeCell.textContent.trim() : '';
+            
+            const item = {
+                paid_for: cells[0].textContent.trim(),
+                account_code: account_code,
+                description: cells[2] ? cells[2].textContent.trim() : '',
+                unit_price: parseFloat(cells[3] ? cells[3].textContent.replace(/,/g, '') : 0) || 0,
+                quantity: parseInt(cells[4] ? cells[4].textContent : 1) || 1,
+                tax_type: cells[5] ? cells[5].textContent.trim() : 'VAT Inclusive',
+                tax_amount: parseFloat(cells[6] ? cells[6].textContent.replace(/,/g, '') : 0) || 0,
+                total_price: parseFloat(cells[7] ? cells[7].textContent.replace(/,/g, '') : 0) || 0
+            };
+            items.push(item);
+            
+            console.log("Item prepared:", item); // For debugging
+        }
+    });
+    
+    if (items.length === 0) {
+        alert("No items to invoice!");
+        return false;
     }
-
+    
+    console.log("All items:", items); // For debugging
+    
+    document.getElementById('invoiceItems').value = JSON.stringify(items);
+    calculateTotals();
+    
+    // Debug: Show what's being submitted
+    console.log("Submitting:", document.getElementById('invoiceItems').value);
+    
+    return true;
+}
     // Functions for the add item drawer
     function openAddItemDrawer() {
         document.getElementById('addItemDrawer').classList.add('show');

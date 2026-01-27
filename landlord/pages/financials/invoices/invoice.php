@@ -1190,225 +1190,253 @@ try {
               </div>
 
               <?php
-              // ----------------------------------------------------
-              // 1) Fetch invoices with tenant details and payment summary - CORRECTED
-              // ----------------------------------------------------
-              $stmt = $pdo->query("
-              SELECT
-                  i.id,
-                  i.invoice_no,
-                  i.invoice_date,
-                  i.due_date,
-                  COALESCE(i.subtotal, 0) AS subtotal,
-                  COALESCE(i.total, 0) AS total,
-                  COALESCE(i.taxes, 0) AS taxes,
-                  i.status,
-                  i.payment_status,
-                  -- Get tenant name from tenants table
-                  CONCAT(t.first_name, ' ', COALESCE(t.middle_name, ''), ' ', t.last_name) AS tenant_name,
-                  t.email AS tenant_email,
-                  t.main_contact AS tenant_phone,
-                  t.account_no,
-                  (SELECT COALESCE(SUM(p.amount), 0)
-                  FROM payments p
-                  WHERE p.invoice_id = i.id) AS paid_amount,
-                  i.building_id,
-                  i.account_item,
-                  i.description,
-                  (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_no = i.invoice_no) AS subtotal,
-                  (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_no = i.invoice_no) AS taxes,
-                  (SELECT COALESCE(SUM(total), 0) FROM invoice_items WHERE invoice_no = i.invoice_no) AS total,
-                  CASE
-                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_no = i.invoice_no)
-                      THEN (SELECT SUM(unit_price * quantity) FROM invoice_items WHERE invoice_no = i.invoice_no)
-                      ELSE i.subtotal
-                  END AS display_subtotal,
-                  CASE
-                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_no = i.invoice_no)
-                      THEN (SELECT SUM(taxes) FROM invoice_items WHERE invoice_no = i.invoice_no)
-                      ELSE i.taxes
-                  END AS display_taxes,
-                  CASE
-                      WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_no = i.invoice_no)
-                      THEN (SELECT SUM(total) FROM invoice_items WHERE invoice_no = i.invoice_no)
-                      ELSE i.total
-                  END AS display_total
-              FROM invoice i
-              LEFT JOIN tenants t ON t.id = i.tenant  -- CHANGED: Join with tenants table
-              ORDER BY i.created_at DESC
-          ");
-              $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// ----------------------------------------------------
+// 1) Fetch invoices with tenant details and payment summary - CORRECTED
+// ----------------------------------------------------
+$stmt = $pdo->query("
+    SELECT
+        i.id,
+        i.invoice_no,
+        i.receiver AS tenant_name,
+        i.phone AS tenant_phone,
+        i.email AS tenant_email,
+        i.invoice_date,
+        i.due_date,
+        i.notes AS description,
+        COALESCE(i.subtotal, 0) AS subtotal,
+        COALESCE(i.total, 0) AS total,
+        COALESCE(i.taxes, 0) AS taxes,
+        i.status,
+        i.payment_status,
+        -- Try to find tenant account_no from other sources
+        NULL AS account_no,  -- Since this doesn't exist in invoice table
+        
+        -- Payment calculations
+        (SELECT COALESCE(SUM(p.amount), 0)
+         FROM payments p
+         WHERE p.invoice_id = i.id) AS paid_amount,
+        
+        -- Invoice items totals (alternative calculation)
+        (SELECT COALESCE(SUM(unit_price * quantity), 0) 
+         FROM invoice_items 
+         WHERE invoice_id = i.id) AS items_subtotal,
+        
+        (SELECT COALESCE(SUM(tax_amount), 0) 
+         FROM invoice_items 
+         WHERE invoice_id = i.id) AS items_taxes,
+        
+        (SELECT COALESCE(SUM(total_price), 0) 
+         FROM invoice_items 
+         WHERE invoice_id = i.id) AS items_total,
+        
+        -- Final display values (use items if they exist, otherwise use invoice totals)
+        CASE
+            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = i.id)
+            THEN (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_id = i.id)
+            ELSE i.subtotal
+        END AS display_subtotal,
+        
+        CASE
+            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = i.id)
+            THEN (SELECT COALESCE(SUM(tax_amount), 0) FROM invoice_items WHERE invoice_id = i.id)
+            ELSE i.taxes
+        END AS display_taxes,
+        
+        CASE
+            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = i.id)
+            THEN (SELECT COALESCE(SUM(total_price), 0) FROM invoice_items WHERE invoice_id = i.id)
+            ELSE i.total
+        END AS display_total
+        
+    FROM invoice i
+    ORDER BY i.created_at DESC
+");
+$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-              if (empty($invoices)) {
-                echo '<div class="invoice-item text-center py-4">
-                      <div class="col-12"><b>No invoice found!</b></div>
-                    </div>';
-              } else {
-                // ----------------------------------------------------
-                // 2) Output each invoice item
-                // ----------------------------------------------------
-                foreach ($invoices as $invoice) {
-                  // Build tenant name safely
-                  $tenantName = 'Unknown Tenant';
-                  if (!empty($invoice['tenant_name'])) {
-                    $tenantName = trim($invoice['tenant_name']);
-                  }
-
-                  $invoiceDate = $invoice['invoice_date'] == '0000-00-00' ? 'Draft' : date('M d, Y', strtotime($invoice['invoice_date']));
-                  $dueDate = $invoice['due_date'] == '0000-00-00' ? 'Not set' : date('M d, Y', strtotime($invoice['due_date']));
-                  $subtotalFormatted = number_format($invoice['subtotal'], 2);
-                  $totalAmount = number_format($invoice['total'], 2);
-                  $taxFormatted = $invoice['taxes'] ?: '0.00';
-                  $paidAmount = number_format($invoice['paid_amount'], 2);
-                  $balance = $invoice['total'] - $invoice['paid_amount'];
-                  $balanceFormatted = number_format($balance, 2);
-
-                  // Calculate overdue status
-                  $isOverdue = false;
-                  $overdueDays = 0;
-                  if ($invoice['due_date'] != '0000-00-00' && $invoice['status'] != 'paid' && $invoice['status'] != 'cancelled') {
-                    $today = new DateTime();
-                    $dueDateObj = new DateTime($invoice['due_date']);
-                    if ($today > $dueDateObj) {
-                      $isOverdue = true;
-                      $overdueDays = $today->diff($dueDateObj)->days;
-                    }
-                  }
-
-                  // Determine status badge
-                  $statusClass = 'badge-';
-                  $statusText = ucfirst($invoice['status']);
-
-                  switch ($invoice['status']) {
-                    case 'draft':
-                      $statusClass .= 'draft';
-                      break;
-                    case 'sent':
-                      $statusClass .= $isOverdue ? 'overdue' : 'sent';
-                      $statusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Sent';
-                      break;
-                    case 'paid':
-                      $statusClass .= 'paid';
-                      break;
-                    case 'cancelled':
-                      $statusClass .= 'cancelled';
-                      break;
-                    default:
-                      $statusClass .= 'draft';
-                  }
-
-                  // Payment status with amounts - updated logic
-                  $paymentStatusClass = 'badge-';
-                  $paymentStatusText = '';
-
-                  // First check if any payment has been made
-                  if ($invoice['paid_amount'] > 0) {
-                    if ($invoice['paid_amount'] >= $invoice['total']) {
-                      // Fully paid
-                      $paymentStatusClass .= 'paid';
-                      $paymentStatusText = 'Paid (KES ' . $paidAmount . ')';
-                      $invoice['payment_status'] = 'paid'; // Update status in case it wasn't synced
-                    } else {
-                      // Partial payment
-                      $paymentStatusClass .= 'partial';
-                      $paymentStatusText = 'Partial (KES ' . $paidAmount . ' of ' . $totalAmount . ')';
-                      $invoice['payment_status'] = 'partial'; // Update status in case it wasn't synced
-                    }
-                  } else {
-                    // No payments made
-                    $paymentStatusClass .= 'unpaid';
-                    $paymentStatusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Unpaid';
-                    $invoice['payment_status'] = 'unpaid'; // Update status in case it wasn't synced
-                  }
-
-                  echo '<div class="invoice-item" onclick="openInvoiceDetails(' . $invoice['id'] . ')">';
-
-                  echo '<div class="invoice-checkbox col-checkbox">
-                          <input type="checkbox" onclick="event.stopPropagation()">
-                        </div>';
-
-                  echo '<div class="invoice-number col-number">' . htmlspecialchars($invoice['invoice_no']) . '</div>';
-
-                  echo '<div class="invoice-customer col-customer" title="' . htmlspecialchars($invoice['description']) . '">'
-                    . htmlspecialchars($tenantName) . '
-                        </div>';
-
-                  echo '<div class="invoice-date col-date">' . $invoiceDate . '</div>';
-
-                  echo '<div class="invoice-date col-due-date' . ($isOverdue ? ' text-danger' : '') . '">' . $dueDate . '</div>';
-
-                  echo '<div class="invoice-sub-total col-sub-total">' . number_format($invoice['subtotal'], 2) . '</div>';
-
-                  echo '<div class="invoice-taxes col-taxes">' . htmlspecialchars($invoice['taxes'] ?: '0.00') . '</div>';
-
-                  echo '<div class="invoice-amount col-amount">' . number_format($invoice['total'], 2) . '</div>';
-
-                  echo '<div class="invoice-status col-status">
-                          <span class="status-badge ' . $statusClass . '">' . $statusText . '</span>
-                        </div>';
-
-                  echo '<div class="invoice-status col-payment-status">
-                          <span class="status-badge ' . $paymentStatusClass . '">' . $paymentStatusText . '</span>';
-
-                  // Show payment button if applicable - updated logic
-                  if ($invoice['status'] !== 'draft' && $invoice['status'] !== 'cancelled' && $invoice['paid_amount'] < $invoice['total']) {
-                    $buttonText = $invoice['paid_amount'] > 0 ? 'Add Payment' : 'Pay';
-                    $balance = $invoice['total'] - $invoice['paid_amount'];
-
-                    echo '<br>
-                      <button class="btn pay-btn btn-sm mt-1"
-                          onclick="event.stopPropagation(); openPayModal(this)"
-                          data-invoice-id="' . $invoice['id'] . '"
-                          data-tenant="' . htmlspecialchars($tenantName) . '"
-                          data-total="' . $invoice['total'] . '"
-                          data-paid="' . $invoice['paid_amount'] . '"
-                          data-balance="' . $balance . '"
-                          data-account-item="' . htmlspecialchars($invoice['account_item']) . '"
-                          data-description="' . htmlspecialchars($invoice['description']) . '">
-                          <i class="fas fa-credit-card me-1"></i>
-                          ' . $buttonText . '
-                      </button>';
-                  }
-
-                  echo '</div>
-                  <div class="invoice-actions col-actions dropdown">
-                      <button class="action-btn dropdown-toggle" onclick="event.stopPropagation()" data-bs-toggle="dropdown">
-                          <i class="fas fa-ellipsis-v"></i>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-end">
-                          <li><a class="dropdown-item" href="#" onclick="viewInvoice(' . $invoice['id'] . ')">
-                              <i class="fas fa-eye me-2"></i>View Details
-                          </a></li>';
-                  if ($invoice['status'] === 'draft' || ($invoice['status'] === 'sent' && $invoice['paid_amount'] == 0)) {
-                    echo '<li><a class="dropdown-item" href="/Jengopay/landlord/pages/financials/invoices/invoice_edit.php?id=' . $invoice['id'] . '">
-                          <i class="fas fa-edit me-2"></i>Edit Invoice
-                      </a></li>';
-                  }
-                  echo '<li><hr class="dropdown-divider"></li>';
-                  // Delete option - only for drafts and cancelled invoices
-                  if ($invoice['status'] === 'draft' || $invoice['status'] === 'cancelled') {
-                    echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
-                          <i class="fas fa-trash-alt me-2"></i>Delete Invoice
-                      </a></li>';
-                  }
-
-                  // Cancel/Restore options
-                  if ($invoice['status'] !== 'cancelled' && $invoice['status'] !== 'paid') {
-                    echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmCancelInvoice(' . $invoice['id'] . ')">
-                          <i class="fas fa-ban me-2"></i>Cancel Invoice
-                      </a></li>';
-                  } else if ($invoice['status'] === 'cancelled') {
-                    echo '<li><a class="dropdown-item" href="#" onclick="restoreInvoice(' . $invoice['id'] . ')">
-                          <i class="fas fa-undo me-2"></i>Restore Invoice
-                      </a></li>';
-                  }
-
-                  echo '</ul>
-                  </div>
+if (empty($invoices)) {
+    echo '<div class="invoice-item text-center py-4">
+            <div class="col-12"><b>No invoice found!</b></div>
+          </div>';
+} else {
+    // ----------------------------------------------------
+    // 2) Output each invoice item
+    // ----------------------------------------------------
+    foreach ($invoices as $invoice) {
+        // Use receiver as tenant name
+        $tenantName = !empty($invoice['tenant_name']) ? $invoice['tenant_name'] : 'Unknown Tenant';
+        
+        // Format dates
+        $invoiceDate = 'Draft';
+        $dueDate = 'Not set';
+        
+        if (!empty($invoice['invoice_date']) && $invoice['invoice_date'] != '0000-00-00') {
+            $invoiceDate = date('M d, Y', strtotime($invoice['invoice_date']));
+        }
+        
+        if (!empty($invoice['due_date']) && $invoice['due_date'] != '0000-00-00') {
+            $dueDate = date('M d, Y', strtotime($invoice['due_date']));
+        }
+        
+        // Use display values for amounts
+        $subtotal = floatval($invoice['display_subtotal']);
+        $total = floatval($invoice['display_total']);
+        $taxes = floatval($invoice['display_taxes']);
+        
+        $subtotalFormatted = number_format($subtotal, 2);
+        $totalFormatted = number_format($total, 2);
+        $taxFormatted = number_format($taxes, 2);
+        
+        $paidAmount = floatval($invoice['paid_amount']);
+        $paidFormatted = number_format($paidAmount, 2);
+        $balance = $total - $paidAmount;
+        $balanceFormatted = number_format($balance, 2);
+        
+        // Calculate overdue status
+        $isOverdue = false;
+        $overdueDays = 0;
+        if (!empty($invoice['due_date']) && $invoice['due_date'] != '0000-00-00' && 
+            $invoice['status'] != 'paid' && $invoice['status'] != 'cancelled') {
+            $today = new DateTime();
+            $dueDateObj = new DateTime($invoice['due_date']);
+            if ($today > $dueDateObj) {
+                $isOverdue = true;
+                $overdueDays = $today->diff($dueDateObj)->days;
+            }
+        }
+        
+        // Determine status badge
+        $status = !empty($invoice['status']) ? $invoice['status'] : 'draft';
+        $statusClass = 'badge-';
+        $statusText = ucfirst($status);
+        
+        switch ($status) {
+            case 'draft':
+                $statusClass .= 'draft';
+                break;
+            case 'sent':
+                $statusClass .= $isOverdue ? 'overdue' : 'sent';
+                $statusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Sent';
+                break;
+            case 'paid':
+                $statusClass .= 'paid';
+                break;
+            case 'cancelled':
+                $statusClass .= 'cancelled';
+                break;
+            default:
+                $statusClass .= 'draft';
+        }
+        
+        // Payment status with amounts
+        $paymentStatusClass = 'badge-';
+        $paymentStatusText = '';
+        
+        // First check if any payment has been made
+        if ($paidAmount > 0) {
+            if ($paidAmount >= $total) {
+                // Fully paid
+                $paymentStatusClass .= 'paid';
+                $paymentStatusText = 'Paid (KES ' . $paidFormatted . ')';
+            } else {
+                // Partial payment
+                $paymentStatusClass .= 'partial';
+                $paymentStatusText = 'Partial (KES ' . $paidFormatted . ' of ' . $totalFormatted . ')';
+            }
+        } else {
+            // No payments made
+            $paymentStatusClass .= 'unpaid';
+            $paymentStatusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Unpaid';
+        }
+        
+        echo '<div class="invoice-item" onclick="openInvoiceDetails(' . $invoice['id'] . ')">';
+        
+        echo '<div class="invoice-checkbox col-checkbox">
+                <input type="checkbox" onclick="event.stopPropagation()">
               </div>';
-                }
-              }
-              ?>
+        
+        echo '<div class="invoice-number col-number">' . htmlspecialchars($invoice['invoice_no']) . '</div>';
+        
+        echo '<div class="invoice-customer col-customer" title="' . htmlspecialchars($invoice['description']) . '">'
+            . htmlspecialchars($tenantName) . '
+            </div>';
+        
+        echo '<div class="invoice-date col-date">' . $invoiceDate . '</div>';
+        
+        echo '<div class="invoice-date col-due-date' . ($isOverdue ? ' text-danger' : '') . '">' . $dueDate . '</div>';
+        
+        echo '<div class="invoice-sub-total col-sub-total">' . $subtotalFormatted . '</div>';
+        
+        echo '<div class="invoice-taxes col-taxes">' . $taxFormatted . '</div>';
+        
+        echo '<div class="invoice-amount col-amount">' . $totalFormatted . '</div>';
+        
+        echo '<div class="invoice-status col-status">
+                <span class="status-badge ' . $statusClass . '">' . $statusText . '</span>
+              </div>';
+        
+        echo '<div class="invoice-status col-payment-status">
+                <span class="status-badge ' . $paymentStatusClass . '">' . $paymentStatusText . '</span>';
+        
+        // Show payment button if applicable
+        if ($status !== 'draft' && $status !== 'cancelled' && $paidAmount < $total) {
+            $buttonText = $paidAmount > 0 ? 'Add Payment' : 'Pay';
+            
+            echo '<br>
+                <button class="btn pay-btn btn-sm mt-1"
+                    onclick="event.stopPropagation(); openPayModal(this)"
+                    data-invoice-id="' . $invoice['id'] . '"
+                    data-tenant="' . htmlspecialchars($tenantName) . '"
+                    data-total="' . $total . '"
+                    data-paid="' . $paidAmount . '"
+                    data-balance="' . $balance . '"
+                    data-description="' . htmlspecialchars($invoice['description']) . '">
+                    <i class="fas fa-credit-card me-1"></i>
+                    ' . $buttonText . '
+                </button>';
+        }
+        
+        echo '</div>
+            <div class="invoice-actions col-actions dropdown">
+                <button class="action-btn dropdown-toggle" onclick="event.stopPropagation()" data-bs-toggle="dropdown">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#" onclick="viewInvoice(' . $invoice['id'] . ')">
+                        <i class="fas fa-eye me-2"></i>View Details
+                    </a></li>';
+        
+        if ($status === 'draft' || ($status === 'sent' && $paidAmount == 0)) {
+            echo '<li><a class="dropdown-item" href="/Jengopay/landlord/pages/financials/invoices/invoice_edit.php?id=' . $invoice['id'] . '">
+                  <i class="fas fa-edit me-2"></i>Edit Invoice
+              </a></li>';
+        }
+        
+        echo '<li><hr class="dropdown-divider"></li>';
+        
+        // Delete option - only for drafts and cancelled invoices
+        if ($status === 'draft' || $status === 'cancelled') {
+            echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
+                  <i class="fas fa-trash-alt me-2"></i>Delete Invoice
+              </a></li>';
+        }
+        
+        // Cancel/Restore options
+        if ($status !== 'cancelled' && $status !== 'paid') {
+            echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmCancelInvoice(' . $invoice['id'] . ')">
+                  <i class="fas fa-ban me-2"></i>Cancel Invoice
+              </a></li>';
+        } else if ($status === 'cancelled') {
+            echo '<li><a class="dropdown-item" href="#" onclick="restoreInvoice(' . $invoice['id'] . ')">
+                  <i class="fas fa-undo me-2"></i>Restore Invoice
+              </a></li>';
+        }
+        
+        echo '</ul>
+            </div>
+        </div>';
+    }
+}
+?>
             </div>
 
             <div class="invoice-list">
