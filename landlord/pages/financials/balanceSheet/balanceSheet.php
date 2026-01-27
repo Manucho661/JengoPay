@@ -51,7 +51,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 
 
   <!--Css files-->
-  <link rel="stylesheet" href="../../../assets/main.css" />
+  <link rel="stylesheet" href="/jengopay/landlord/assets/main.css" />
   <link rel="stylesheet" href="balancesheet.css">
 
 
@@ -263,10 +263,9 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
                       </tr>
                     </thead>
                     <tbody>
-                      <tr></tr>
-                      <tr></tr>
-                      <tr></tr>
-
+                      <tr>Non-current Assets</tr>
+                      <tr><td>yoyo</td> <td>haha</td></tr>
+                      <tr><td>yoyo</td> <td>haha</td></tr>
                     </tbody>
                   </table>
                 </div>
