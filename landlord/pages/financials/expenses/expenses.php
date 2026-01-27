@@ -434,7 +434,9 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                                             <?php endforeach; ?>
                                                         </datalist>
                                                         <input type="hidden" name="supplier_id" id="supplier_id">
+                                                        <small id="supplierError" class="text-danger d-none">The supplier doesn't exist. Please register them to continue.</small>
                                                     </div>
+
                                                 </div>
                                                 <!-- Hidden total -->
                                                 <div class="row no-wrap mt-2">
@@ -567,8 +569,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                                 <div class="row mt-3">
                                                     <div class="col-md-12 d-flex justify-content-between">
                                                         <button type="button" class="btn btn-outline-warning text-dark shadow-none" onclick="addRow()">➕ Add More</button>
-                                                        <!-- <button type="submit" class="btn btn-secondary shadow-none">✕ Close</button> -->
-                                                        <button type="submit" name="create_expense" class="btn btn-outline-warning text-dark shadow-none">✅ Submit</button>
+                                                        <button type="submit" name="create_expense" id="submitBtn" class="btn btn-outline-warning text-dark shadow-none" disabled>✅ Submit</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -1616,14 +1617,53 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
         document.addEventListener('DOMContentLoaded', function() {
             const supplierInput = document.querySelector('[list="supplierList"]');
             const supplierIdInput = document.getElementById('supplier_id');
+            const submitBtn = document.getElementById('submitBtn');
+            const supplierListOptions = document.querySelectorAll('#supplierList option');
+            const supplierErrorMsg = document.getElementById('supplierError');
 
+            let debounceTimer;
+
+            // Function to check if supplier exists in the list
+            const isValidSupplier = (inputValue) => {
+                let valid = false;
+                supplierListOptions.forEach(option => {
+                    if (option.value.toLowerCase() === inputValue.toLowerCase()) {
+                        valid = true;
+                        supplierIdInput.value = option.dataset.id;
+                    }
+                });
+                return valid;
+            };
+
+            // Debounced validation function
+            const validateSupplier = () => {
+                const inputValue = supplierInput.value.trim();
+
+                // If input is empty, clear the error message
+                if (inputValue === "") {
+                    supplierErrorMsg.classList.add('d-none'); // Hide error message if input is empty
+                    submitBtn.disabled = true; // Disable submit button until supplier is selected
+                    return;
+                }
+
+                if (isValidSupplier(inputValue)) {
+                    submitBtn.disabled = false;
+                    supplierErrorMsg.classList.add('d-none'); // Hide error message if valid supplier
+                } else {
+                    submitBtn.disabled = true;
+                    supplierErrorMsg.classList.remove('d-none'); // Show error message if supplier doesn't exist
+                }
+            };
+
+            // Event listener for input field
             supplierInput.addEventListener('input', function() {
-                const option = document.querySelector(
-                    `#supplierList option[value="${CSS.escape(this.value)}"]`
-                );
-
-                supplierIdInput.value = option ? option.dataset.id : '';
+                clearTimeout(debounceTimer); // Clear the previous timer
+                debounceTimer = setTimeout(validateSupplier, 2000); // Wait 500ms after typing stops
             });
+
+            // Initially disable the submit button and hide the error message
+            submitBtn.disabled = true;
+            supplierErrorMsg.classList.add('d-none');
         });
     </script>
 
