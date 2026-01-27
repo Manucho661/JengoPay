@@ -14,7 +14,7 @@ $monthlyTotals = array_fill(1, 12, 0);
 
 
 // register supplier
-require_once 'actions/registerSupplier.php';
+// require_once 'actions/registerSupplier.php';
 // get suppliers
 require_once 'actions/getSuppliers.php';
 // create expenses script
@@ -1066,52 +1066,97 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                 <h5 class="offcanvas-title" id="supplierOffcanvasLabel">
                     Register New Supplier
                 </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
             </div>
 
             <!-- Body -->
             <div class="offcanvas-body">
-                <form action="" method="POST">
+                <form id="supplierRegForm" action="actions/registerSupplier.php" method="POST">
                     <div id="submitMsg" class="text-danger mb-2"></div>
 
+                    <!-- Supplier Name -->
                     <div class="mb-3">
                         <label class="form-label" for="supplierName">Supplier Name</label>
-                        <input type="text" class="form-control" id="supplierName" name="name" required>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="supplierName"
+                            name="name"
+                            required>
                         <small id="supplierNameMsg" class="text-danger"></small>
                     </div>
 
+                    <!-- Email (required) -->
                     <div class="mb-3">
                         <label class="form-label" for="supplierEmail">Email</label>
-                        <input type="email" class="form-control" id="supplierEmail" name="email" required>
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="supplierEmail"
+                            name="email"
+                            required>
                     </div>
 
+                    <!-- Phone (required) -->
                     <div class="mb-3">
                         <label class="form-label" for="supplierPhone">Phone</label>
-                        <input type="text" class="form-control" id="supplierPhone" name="phone">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="supplierPhone"
+                            name="phone"
+                            required>
                     </div>
 
+                    <!-- KRA -->
                     <div class="mb-3">
                         <label class="form-label" for="supplierKra">KRA Number</label>
-                        <input type="text" class="form-control" id="supplierKra" name="kra" required>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="supplierKra"
+                            name="kra"
+                            required>
                         <small id="supplierKraMsg" class="text-danger"></small>
                     </div>
 
+                    <!-- Address -->
                     <div class="mb-3">
                         <label class="form-label" for="supplierAddress">Address</label>
-                        <input type="text" class="form-control" id="supplierAddress" name="address">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="supplierAddress"
+                            name="address"
+                            required>
                     </div>
 
-                    <div class="d-flex justify-content-end gap-2 mt-4">
-                        <button type="button" class="btn text-white bg-secondary" data-bs-dismiss="offcanvas">
+                    <!-- Actions -->
+                    <div class="d-flex gap-2 mt-4">
+                        <button
+                            type="button"
+                            class="btn btn-secondary flex-grow-1"
+                            data-bs-dismiss="offcanvas">
                             Cancel
                         </button>
-                        <button type="submit" class="btn text-white" style="background: linear-gradient(135deg, #00192D, #002B5B); width:100%; white-space: nowrap;" name="register_supplier">
+
+                        <button
+                            type="submit"
+                            id="supplierSubmitBtn"
+                            class="btn text-white flex-grow-1"
+                            style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;"
+                            name="register_supplier">
                             Save
                         </button>
                     </div>
                 </form>
             </div>
         </div>
+
 
         <!-- Edit Supplier details -->
         <div class="supplierEdit-modal-overlay" id="supplierEditOverlay"></div>

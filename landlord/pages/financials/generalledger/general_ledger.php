@@ -97,7 +97,7 @@ $runningBalance = 0;
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="../../../../landlord/assets/main.css" />
+  <link rel="stylesheet" href="/jengopay/landlord/assets/main.css" />
 
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
@@ -543,8 +543,7 @@ $runningBalance = 0;
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
 
-  <script src="../../../../landlord/assets/main.js"></script>
-  <script src="../../../../landlord/js/adminlte.js"></script>
+  <script src="/jengopay/landlord/assets/main.js"></script>
 
   <script>
     // Initialize DataTable

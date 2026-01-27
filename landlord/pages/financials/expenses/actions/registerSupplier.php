@@ -3,17 +3,22 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+header('Content-Type: application/json');
 require_once '../../../db/connect.php';
 
-// Only run when the supplier form is submitted
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['register_supplier'])) {
-    return;
+// Only run on POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'error' => 'Invalid request method.']);
+    exit;
 }
+
+// Destination page 
+$redirectTo = '/jengopay/landlord/pages/financials/expenses/expenses.php'; 
 
 // Ensure user is logged in
 if (empty($_SESSION['user']['id'])) {
     $_SESSION['error'] = "Unauthorized access.";
-    header('Location: ' . $_SERVER['REQUEST_URI']);
+    echo json_encode(['success' => false, 'redirect' => $redirectTo]);
     exit;
 }
 
@@ -26,12 +31,13 @@ $landlord = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$landlord) {
     $_SESSION['error'] = "Landlord account not found.";
-    header('Location: ' . $_SERVER['REQUEST_URI']);
+    echo json_encode(['success' => false, 'redirect' => $redirectTo]);
     exit;
 }
 
 $landlord_id = (int)$landlord['id'];
 
+// Convert PHP errors to exceptions (optional)
 set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
@@ -78,11 +84,19 @@ try {
     ]);
 
     $_SESSION['success'] = "Supplier registered successfully!";
-    header('Location: ' . $_SERVER['REQUEST_URI']);
+
+    echo json_encode([
+        'success' => true,
+        'redirect' => $redirectTo
+    ]);
     exit;
 
 } catch (Throwable $e) {
     $_SESSION['error'] = 'Failed to register supplier: ' . $e->getMessage();
-    header('Location: ' . $_SERVER['REQUEST_URI']);
+
+    echo json_encode([
+        'success' => false,
+        'redirect' => $redirectTo
+    ]);
     exit;
 }

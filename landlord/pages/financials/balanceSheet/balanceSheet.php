@@ -61,8 +61,7 @@ require_once './actions/getCurrentAssets.php';
 
   <!-- scripts for data_table -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-  <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
+
 
   <!-- Include XLSX and FileSaver.js for Excel export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -128,7 +127,6 @@ require_once './actions/getCurrentAssets.php';
   .section-header {
     color: green !important;
     font-size: 14px;
-    font-weight: bold;
   }
 
   .main-row td:first-child {
@@ -271,18 +269,31 @@ require_once './actions/getCurrentAssets.php';
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>Non-current Assets</tr>
-                      <?php foreach ($nonCurrentAssets as $nonCurrentAsset): ?>
-                        <tr>
-                          <td><?= htmlspecialchars($nonCurrentAsset['name']) ?></td>
-                          <td><?= htmlspecialchars($nonCurrentAsset['amount']) ?></td>
+                      <tr>
+                        <th colspan="2">Assets</th>
+                      </tr>
+                      <tr>
+                        <th class="section-header fs-6 fw-normal">Non-current Assets</th>
+                      </tr>
+
+                      <?php foreach ($nonCurrentAssets as $asset): ?>
+                        <tr
+                          class="main-row clickable-row"
+                          data-href="/jengopay/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['amount']) ?>"
+                          style="cursor: pointer;">
+                          <td><?= htmlspecialchars($asset['name']) ?></td>
+                          <td class="amount-text text-success">
+                            <?= htmlspecialchars($asset['amount']) ?>
+                          </td>
                         </tr>
                       <?php endforeach; ?>
-                      <tr>
+
+                      <tr class="total-row">
                         <td>Total</td>
-                        <td><?= htmlspecialchars($totalNonCurrentAssets) ?></td>
+                        <td class="amount-text"><?= htmlspecialchars($totalNonCurrentAssets) ?></td>
                       </tr>
                     </tbody>
+
                   </table>
                 </div>
               </div>
@@ -341,6 +352,16 @@ require_once './actions/getCurrentAssets.php';
   <!-- Js files -->
   <script src="../../../assets/main.js"></script>
   <script type="module" src="./js/main.js"></script>
+
+  <!-- handle link to gl -->
+  <script>
+    document.addEventListener("click", function(e) {
+      const row = e.target.closest(".clickable-row");
+      if (row && row.dataset.href) {
+        window.location.href = row.dataset.href;
+      }
+    });
+  </script>
 
   <script
     src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
