@@ -636,7 +636,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
         <div class="container">
           <div class="nav-links">
             <a href="" class="active"><i class="fas fa-search"></i> Find a Job</a>
-            <a href="yourApplications.php"><i class="fas fa-file-alt"></i> Your Applications</a>
+            <a href="applications.php"><i class="fas fa-file-alt"></i> Your Applications</a>
             <a href="assignedRequests.php"><i class="fas fa-briefcase"></i> Assigned Jobs</a>
             <a href="previousRequests.php"><i class="fas fa-history"></i> Previous Jobs</a>
           </div>

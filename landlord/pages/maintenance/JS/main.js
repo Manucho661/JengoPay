@@ -1,5 +1,5 @@
+import { getUnits } from "./getUnits.js";
 import { otherRequest } from "./uiControl.js";
-
 // import { fetchRequests} from "./api/getRequests.js";
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -7,14 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const modal = new bootstrap.Modal(modalEl);
 
   // open modal when button clicked
-  document.querySelector('.seTAvailable').addEventListener('click', () => {
-    modal.show();
-  });
+  // document.querySelector('.seTAvailable').addEventListener('click', () => {
+  //   modal.show();
+  // });
 
   // handle create request
-   document.getElementById('otherRequestBtn').addEventListener('click', otherRequest);
+  // document.getElementById('otherRequestBtn').addEventListener('click', otherRequest);
 
-
-
+  //  get the units
+  const buildingSelect = document.getElementById("building");
+  buildingSelect.addEventListener("change", getUnits());
 });
 

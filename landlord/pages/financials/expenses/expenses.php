@@ -12,11 +12,13 @@ unset($_SESSION['error'], $_SESSION['success']);
 $expenses = [];
 $monthlyTotals = array_fill(1, 12, 0);
 
+
+// register supplier
+// require_once 'actions/registerSupplier.php';
 // get suppliers
 require_once 'actions/getSuppliers.php';
 // create expenses script
 require_once 'actions/createExpense.php';
-// pay expense script
 //Include expense Batches
 require_once 'actions/getExpenses.php';
 // Include expense accounts
@@ -77,9 +79,6 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
     <link rel="stylesheet" href="expenses.css">
     <!-- scripts for data_table -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
-
 
     <!-- Pdf pluggin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -281,11 +280,17 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                             Registered Suppliers
                         </button>
 
-                        <button class="btn bg-warning text-white seTAvailable fw-bold rounded-4"
-                            id="addSupplier"
-                            style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+                        <button
+                            type="button"
+                            class="btn fw-bold rounded-4 text-white"
+                            style="background: linear-gradient(135deg, #00192D, #002B5B); width:100%; white-space: nowrap;"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#supplierOffcanvas"
+                            aria-controls="supplierOffcanvas">
                             Register Supplier
                         </button>
+
+
                     </div>
 
                     <!-- Mobile dropdown menu -->
@@ -429,7 +434,9 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                                             <?php endforeach; ?>
                                                         </datalist>
                                                         <input type="hidden" name="supplier_id" id="supplier_id">
+                                                        <small id="supplierError" class="text-danger d-none">The supplier doesn't exist. Please register them to continue.</small>
                                                     </div>
+
                                                 </div>
                                                 <!-- Hidden total -->
                                                 <div class="row no-wrap mt-2">
@@ -562,8 +569,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                                 <div class="row mt-3">
                                                     <div class="col-md-12 d-flex justify-content-between">
                                                         <button type="button" class="btn btn-outline-warning text-dark shadow-none" onclick="addRow()">➕ Add More</button>
-                                                        <!-- <button type="submit" class="btn btn-secondary shadow-none">✕ Close</button> -->
-                                                        <button type="submit" name="create_expense" class="btn btn-outline-warning text-dark shadow-none">✅ Submit</button>
+                                                        <button type="submit" name="create_expense" id="submitBtn" class="btn btn-outline-warning text-dark shadow-none" disabled>✅ Submit</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -634,7 +640,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                         <p style="color: #6c757d; font-size: 1rem; margin-bottom: 1.5rem;">
                                             Start tracking your finances by adding your first expense
                                         </p>
-                                        
+
                                     </div>
                                 </div>
                             <?php else: ?>
@@ -1049,41 +1055,109 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
         </div>
 
         <!-- Create new supplier -->
-        <div class="supplier-modal-overlay" id="supplierOverlay"></div>
-        <div class="supplier-modal" id="supplierModal">
-            <button class="supplier-close-btn" id="supplierCloseBtn">X</button>
-            <div class="d-flex">
-                <h4>
-                    <i class="fas fa-user-plus"></i> Register New Supplier
-                </h4>
+        <!-- Offcanvas (RIGHT SIDE, FULL HEIGHT, 1/4 WIDTH) -->
+        <div
+            class="offcanvas offcanvas-end"
+            tabindex="-1"
+            id="supplierOffcanvas"
+            aria-labelledby="supplierOffcanvasLabel"
+            style="width: 25vw; min-width: 320px;">
+            <!-- Header -->
+            <div class="offcanvas-header border-bottom">
+                <h5 class="offcanvas-title" id="supplierOffcanvasLabel">
+                    Register New Supplier
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
             </div>
 
-            <form id="supplierForm" class="supplier-form">
-                <div id="submitMsg" style="color: red; margin-top: 5px;"></div>
+            <!-- Body -->
+            <div class="offcanvas-body">
+                <form id="supplierRegForm" action="actions/registerSupplier.php" method="POST">
+                    <div id="submitMsg" class="text-danger mb-2"></div>
 
-                <label for="supplierName">Supplier Name</label>
-                <input type="text" id="supplierName" name="name" required>
-                <small id="supplierNameMsg" style="color:red;"></small> <!-- error/success message -->
+                    <!-- Supplier Name -->
+                    <div class="mb-3">
+                        <label class="form-label" for="supplierName">Supplier Name</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="supplierName"
+                            name="name"
+                            required>
+                        <small id="supplierNameMsg" class="text-danger"></small>
+                    </div>
 
-                <label for="supplierEmail">Email</label>
-                <input type="email" id="supplierEmail" name="email" required>
+                    <!-- Email (required) -->
+                    <div class="mb-3">
+                        <label class="form-label" for="supplierEmail">Email</label>
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="supplierEmail"
+                            name="email"
+                            required>
+                    </div>
 
-                <label for="supplierPhone">Phone</label>
-                <input type="text" id="supplierPhone" name="phone">
+                    <!-- Phone (required) -->
+                    <div class="mb-3">
+                        <label class="form-label" for="supplierPhone">Phone</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="supplierPhone"
+                            name="phone"
+                            required>
+                    </div>
 
-                <label for="supplierKra">KRA Number</label>
-                <input type="text" id="supplierKra" name="kra" required>
-                <small id="supplierKraMsg" style="color:red;"></small> <!-- error/success message -->
+                    <!-- KRA -->
+                    <div class="mb-3">
+                        <label class="form-label" for="supplierKra">KRA Number</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="supplierKra"
+                            name="kra"
+                            required>
+                        <small id="supplierKraMsg" class="text-danger"></small>
+                    </div>
 
-                <label for="supplierAddress">Address</label>
-                <input type="text" id="supplierAddress" name="address">
+                    <!-- Address -->
+                    <div class="mb-3">
+                        <label class="form-label" for="supplierAddress">Address</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="supplierAddress"
+                            name="address"
+                            required>
+                    </div>
 
-                <div class="supplier-form-actions">
-                    <button type="submit" class="supplier-submit-btn" id="registerBtn">Save</button>
-                    <button type="button" class="supplier-cancel-btn" id="supplierCancelBtn">Cancel</button>
-                </div>
-            </form>
+                    <!-- Actions -->
+                    <div class="d-flex gap-2 mt-4">
+                        <button
+                            type="button"
+                            class="btn btn-secondary flex-grow-1"
+                            data-bs-dismiss="offcanvas">
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            id="supplierSubmitBtn"
+                            class="btn text-white flex-grow-1"
+                            style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;"
+                            name="register_supplier">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
+
 
         <!-- Edit Supplier details -->
         <div class="supplierEdit-modal-overlay" id="supplierEditOverlay"></div>
@@ -1543,14 +1617,53 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
         document.addEventListener('DOMContentLoaded', function() {
             const supplierInput = document.querySelector('[list="supplierList"]');
             const supplierIdInput = document.getElementById('supplier_id');
+            const submitBtn = document.getElementById('submitBtn');
+            const supplierListOptions = document.querySelectorAll('#supplierList option');
+            const supplierErrorMsg = document.getElementById('supplierError');
 
+            let debounceTimer;
+
+            // Function to check if supplier exists in the list
+            const isValidSupplier = (inputValue) => {
+                let valid = false;
+                supplierListOptions.forEach(option => {
+                    if (option.value.toLowerCase() === inputValue.toLowerCase()) {
+                        valid = true;
+                        supplierIdInput.value = option.dataset.id;
+                    }
+                });
+                return valid;
+            };
+
+            // Debounced validation function
+            const validateSupplier = () => {
+                const inputValue = supplierInput.value.trim();
+
+                // If input is empty, clear the error message
+                if (inputValue === "") {
+                    supplierErrorMsg.classList.add('d-none'); // Hide error message if input is empty
+                    submitBtn.disabled = true; // Disable submit button until supplier is selected
+                    return;
+                }
+
+                if (isValidSupplier(inputValue)) {
+                    submitBtn.disabled = false;
+                    supplierErrorMsg.classList.add('d-none'); // Hide error message if valid supplier
+                } else {
+                    submitBtn.disabled = true;
+                    supplierErrorMsg.classList.remove('d-none'); // Show error message if supplier doesn't exist
+                }
+            };
+
+            // Event listener for input field
             supplierInput.addEventListener('input', function() {
-                const option = document.querySelector(
-                    `#supplierList option[value="${CSS.escape(this.value)}"]`
-                );
-
-                supplierIdInput.value = option ? option.dataset.id : '';
+                clearTimeout(debounceTimer); // Clear the previous timer
+                debounceTimer = setTimeout(validateSupplier, 2000); // Wait 500ms after typing stops
             });
+
+            // Initially disable the submit button and hide the error message
+            submitBtn.disabled = true;
+            supplierErrorMsg.classList.add('d-none');
         });
     </script>
 

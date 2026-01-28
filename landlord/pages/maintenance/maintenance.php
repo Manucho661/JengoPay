@@ -31,6 +31,11 @@ require_once 'actions/getBuildings.php';
   <!--begin::(Icons)-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
+  <!-- Bootstrap Icons -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet">
+
   <!--Main css file-->
   <link rel="stylesheet" href="../../../landlord/assets/main.css" />
   <link rel="stylesheet" href="maintenance.css">
@@ -108,55 +113,60 @@ require_once 'actions/getBuildings.php';
         </div>
 
         <!-- Third Row: stats -->
-        <div class="row">
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="stat-card d-flex align-items-center rounded-2 p-1">
+        <div class="row g-3">
+
+          <!-- Total Requests -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
               <div>
-                <i class="fas fa-clipboard-check me-3 text-warning"></i>
+                <i class="bi bi-clipboard-check fs-1 me-3 text-warning"></i>
               </div>
               <div>
-                <p class="mb-0" style="font-weight: bold;">Scheduled</p>
-                <h3>0</h3>
+                <p class="mb-0" style="font-weight: bold;">Total Requests</p>
+                <b>0</b>
               </div>
             </div>
           </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="stat-card d-flex align-items-center rounded-2 p-1">
+          <!-- Open -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
               <div>
-                <i class="fas fa-check-circle me-3 text-warning"></i>
+                <i class="bi bi-hourglass-split fs-1 me-3 text-warning"></i>
+              </div>
+              <div>
+                <p class="mb-0" style="font-weight: bold;">Open</p>
+                <b>0</b>
+              </div>
+            </div>
+          </div>
+
+          <!-- Completed -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+              <div>
+                <i class="bi bi-check-circle-fill fs-1 me-3 text-warning"></i>
               </div>
               <div>
                 <p class="mb-0" style="font-weight: bold;">Completed</p>
-                <h3>0</h3>
+                <b>0</b>
               </div>
             </div>
           </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="stat-card d-flex align-items-center rounded-2 p-1">
+          <!-- Closed -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
               <div>
-                <i class="fas fa-spinner fa-spin me-3 text-warning"></i>
+                <i class="bi bi-x-circle-fill fs-1 me-3 text-warning"></i>
               </div>
               <div>
-                <p class="mb-0" style="font-weight: bold;">In Progress</p>
-                <h3>0</h3>
+                <p class="mb-0" style="font-weight: bold;">Closed</p>
+                <b>0</b>
               </div>
             </div>
           </div>
 
-          <div class="col-12 col-sm-6 col-md-3">
-
-            <div class="stat-card d-flex align-items-center rounded-2 p-1">
-              <div>
-                <i class="fas fa-question-circle me-3 text-warning"></i>
-              </div>
-              <div>
-                <p class="mb-0" style="font-weight: bold;">Incomplete</p>
-                <h3>0</h3>
-              </div>
-            </div>
-          </div>
         </div>
 
         <hr>
@@ -250,106 +260,123 @@ require_once 'actions/getBuildings.php';
                 <div class="filtered-items text-white mx-3">
                   All Requests
                 </div>
-
               </div>
-              <div style="overflow: auto;">
-                <table id="requests-table" class="display requests-table">
-                  <thead class="mb-2">
-                    <tr>
-                      <th>REQUEST Date</th>
-                      <th>PROPERTY + UNIT</th>
-                      <th>CATEGORY + DESCRIPTION</th>
-                      <th>PROVIDER</th>
-                      <th>PRIORITY</th>
-                      <th>STATUS</th>
-                      <th>PAYMENT</th>
-                      <th>ACTIONS</th>
-                    </tr>
-                  </thead>
+              <?php if (empty($requests)): ?>
+                <!-- Empty State Message -->
+                <div class="text-center py-5" style="margin: 3rem 0;">
+                  <div style="background-color: #f8f9fa; border-radius: 16px; padding: 3rem 2rem; max-width: 500px; margin: 0 auto;">
+                    <div style="font-size: 4rem; color: #00192D; margin-bottom: 1rem;">
+                      <i class="bi bi-receipt"></i>
+                    </div>
+                    <h4 style="color: #00192D; font-weight: 600; margin-bottom: 1rem;">
+                      Requests items
+                    </h4>
+                    <p style="color: #6c757d; font-size: 1rem; margin-bottom: 1.5rem;">
+                      Start tracking your maintenance requests by adding your first request item
+                    </p>
 
-                  <tbody id="maintenanceRequestsTableBod">
-                    <?php if (!empty($requestsError ?? null)): ?>
+                  </div>
+                </div>
+              <?php else: ?>
+                <div style="overflow: auto;">
+                  <table id="requests-table" class="display requests-table">
+                    <thead class="mb-2">
                       <tr>
-                        <td colspan="8"><?= htmlspecialchars($requestsError) ?></td>
+                        <th>REQUEST Date</th>
+                        <th>PROPERTY + UNIT</th>
+                        <th>CATEGORY + DESCRIPTION</th>
+                        <th>PROVIDER</th>
+                        <th>PRIORITY</th>
+                        <th>STATUS</th>
+                        <th>PAYMENT</th>
+                        <th>ACTIONS</th>
                       </tr>
+                    </thead>
 
-                    <?php elseif (empty($requests)): ?>
-                      <tr>
-                        <td colspan="8">No requests found</td>
-                      </tr>
-
-                    <?php else: ?>
-                      <?php foreach ($requests as $req): ?>
-                        <tr
-                          onclick="window.location.href='request_details.php?id=<?= urlencode($req['id']) ?>'"
-                          style="cursor:pointer;">
-                          <td class="text-muted small">
-                            <?=
-                            !empty($req['created_at'])
-                              ? htmlspecialchars(date('M j', strtotime($req['created_at'])))
-                              : ''
-                            ?>
-                          </td>
-
-                          <td>
-                            <div><?= htmlspecialchars($req['building_name'] ?? '') ?></div>
-                            <div style="color: green;"><?= htmlspecialchars($req['unit'] ?? '') ?></div>
-                          </td>
-
-                          <td>
-                            <div><?= htmlspecialchars($req['category'] ?? '') ?></div>
-                            <div style="color:green; border:none; width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                              <?= htmlspecialchars($req['description'] ?? '') ?>
-                            </div>
-                          </td>
-
-                          <td>
-                            <div>
-                              <?= !empty(trim($req['provider_name'] ?? ''))
-                                ? htmlspecialchars($req['provider_name'])
-                                : 'Not assigned' ?>
-                            </div>
-                          </td>
-
-                          <td><?= htmlspecialchars($req['priority'] ?? '') ?></td>
-
-                          <td style="color: <?= !empty($req['status']) ? 'green' : '#b93232ff' ?>;">
-                            <?= htmlspecialchars($req['status'] ?? 'Not assigned') ?>
-                          </td>
-
-                          <td>
-                            <?php if (($req['payment_status'] ?? '') === 'Paid'): ?>
-                              <div class="Paid"><i class="bi bi-check-circle-fill"></i> Paid</div>
-                            <?php else: ?>
-                              <div class="Pending"><i class="bi bi-hourglass-split"></i> Pending</div>
-                            <?php endif; ?>
-                          </td>
-
-                          <td style="vertical-align: middle;">
-                            <div style="display:flex; gap:8px; align-items:center; height:100%;">
-                              <button
-                                type="button"
-                                onclick="event.stopPropagation(); window.location.href='request_details.php?id=<?= urlencode($req['id']) ?>'"
-                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
-                                style="background-color:#00192D; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
-                                <i class="bi bi-eye-fill"></i> View
-                              </button>
-
-                              <button
-                                type="button"
-                                onclick="event.stopPropagation(); /* delete handler here */"
-                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
-                                style="background-color:#ec5b53; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
-                                <i class="bi bi-trash-fill"></i> Delete
-                              </button>
-                            </div>
-                          </td>
+                    <tbody id="maintenanceRequestsTableBod">
+                      <?php if (!empty($requestsError ?? null)): ?>
+                        <tr>
+                          <td colspan="8"><?= htmlspecialchars($requestsError) ?></td>
                         </tr>
-                      <?php endforeach; ?>
-                    <?php endif; ?>
-                  </tbody>
-                </table>
-              </div>
+
+                      <?php elseif (empty($requests)): ?>
+                        <tr>
+                          <td colspan="8">No requests found</td>
+                        </tr>
+
+                      <?php else: ?>
+                        <?php foreach ($requests as $req): ?>
+                          <tr
+                            onclick="window.location.href='request_details.php?id=<?= urlencode($req['id']) ?>'"
+                            style="cursor:pointer;">
+                            <td class="text-muted small">
+                              <?=
+                              !empty($req['created_at'])
+                                ? htmlspecialchars(date('M j', strtotime($req['created_at'])))
+                                : ''
+                              ?>
+                            </td>
+
+                            <td>
+                              <div><?= htmlspecialchars($req['building_name'] ?? '') ?></div>
+                              <div style="color: green;"><?= htmlspecialchars($req['unit'] ?? '') ?></div>
+                            </td>
+
+                            <td>
+                              <div><?= htmlspecialchars($req['category'] ?? '') ?></div>
+                              <div style="color:green; border:none; width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                <?= htmlspecialchars($req['description'] ?? '') ?>
+                              </div>
+                            </td>
+
+                            <td>
+                              <div>
+                                <?= !empty(trim($req['provider_name'] ?? ''))
+                                  ? htmlspecialchars($req['provider_name'])
+                                  : 'Not assigned' ?>
+                              </div>
+                            </td>
+
+                            <td><?= htmlspecialchars($req['priority'] ?? '') ?></td>
+
+                            <td style="color: <?= !empty($req['status']) ? 'green' : '#b93232ff' ?>;">
+                              <?= htmlspecialchars($req['status'] ?? 'Not assigned') ?>
+                            </td>
+
+                            <td>
+                              <?php if (($req['payment_status'] ?? '') === 'Paid'): ?>
+                                <div class="Paid"><i class="bi bi-check-circle-fill"></i> Paid</div>
+                              <?php else: ?>
+                                <div class="Pending"><i class="bi bi-hourglass-split"></i> Pending</div>
+                              <?php endif; ?>
+                            </td>
+
+                            <td style="vertical-align: middle;">
+                              <div style="display:flex; gap:8px; align-items:center; height:100%;">
+                                <button
+                                  type="button"
+                                  onclick="event.stopPropagation(); window.location.href='request_details.php?id=<?= urlencode($req['id']) ?>'"
+                                  class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                  style="background-color:#00192D; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
+                                  <i class="bi bi-eye-fill"></i> View
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onclick="event.stopPropagation(); /* delete handler here */"
+                                  class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                  style="background-color:#ec5b53; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
+                                  <i class="bi bi-trash-fill"></i> Delete
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        <?php endforeach; ?>
+                      <?php endif; ?>
+                    </tbody>
+                  </table>
+                </div>
+              <?php endif; ?>
 
             </div>
           </div>
