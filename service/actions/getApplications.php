@@ -1,11 +1,8 @@
 <?php
-header('Content-Type: application/json');
-
 set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
 
-require_once '../../db/connect.php'; // include your PDO connection
 
 try {
     // Correct query with quotes around 'available'
@@ -33,17 +30,12 @@ try {
     ");
     $stmt->execute();
 
-    $Applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+   return $applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Return a success response
-    echo json_encode([
-        "success" => true,
-        "data" => $Applications
-    ]);
+    // Now, instead of echoing or returning JSON, return the $Applications array
+    // return $applications; // This can be assigned to a variable in the calling script
 } catch (Throwable $e) {
-    // Handle other errors that are not related to PDO
-    echo json_encode([
-        "success" => false,
-        "error" => "Error: " . $e->getMessage()
-    ]);
+    // Handle errors that are not related to PDO
+    return ["error" => "Error: " . $e->getMessage()];
 }
+?>

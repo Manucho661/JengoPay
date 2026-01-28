@@ -9,6 +9,9 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 // actions
 require_once './actions/getNonCurrentAssets.php';
 require_once './actions/getCurrentAssets.php';
+require_once './actions/getCurrentLiabilities.php';
+require_once './actions/getNonCurrentLiabilities.php';
+require_once  './actions/getEquity.php';
 ?>
 
 <!doctype html>
@@ -182,7 +185,7 @@ require_once './actions/getCurrentAssets.php';
 </style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-  <?php include_once "actions/getAssets.php" ?>
+
   <!--begin::App Wrapper-->
   <div class="app-wrapper">
 
@@ -267,12 +270,12 @@ require_once './actions/getCurrentAssets.php';
                         <th>Amount (KSH)</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="mb-3">
                       <tr>
                         <th colspan="2">Assets</th>
                       </tr>
                       <tr>
-                        <th class="section-header fs-6 fw-normal">Non-current Assets</th>
+                        <th colspan="2" class="section-header fs-6 fw-normal">Non-current Assets</th>
                       </tr>
 
                       <?php foreach ($nonCurrentAssets as $asset): ?>
@@ -294,7 +297,7 @@ require_once './actions/getCurrentAssets.php';
                     </tbody>
                     <tbody>
                       <tr>
-                        <th class="section-header fs-6 fw-normal">current Assets</th>
+                        <th colspan="2" class="section-header fs-6 fw-normal">Current Assets</th>
                       </tr>
 
                       <?php foreach ($CurrentAssets as $asset): ?>
@@ -313,8 +316,76 @@ require_once './actions/getCurrentAssets.php';
                         <td>Total</td>
                         <td class="amount-text"><?= htmlspecialchars($totalCurrentAssets) ?></td>
                       </tr>
+                      <tr class="total-row">
+                        <td class="fs-6">Total Assets</td>
+                        <td class="amount-text"><?= htmlspecialchars($totalCurrentAssets) + htmlspecialchars($totalNonCurrentAssets) ?></td>
+                      </tr>
                     </tbody>
+                    <tbody>
+                      <tr>
+                        <th colspan="2">Liabilities</th>
+                      </tr>
+                      <tr>
+                        <th colspan="2" class="section-header fs-6 fw-normal">Current Liabilities</th>
+                      </tr>
 
+                      <?php foreach ($currentLiabilities as $currentLiability): ?>
+                        <tr
+                          class="main-row clickable-row"
+                          data-href="/jengopay/financials/generalledger/general_ledger.php?account_code=<?= urlencode($currentLiability['amount']) ?>"
+                          style="cursor: pointer;">
+                          <td><?= htmlspecialchars($currentLiability['account_name']) ?></td>
+                          <td class="amount-text text-success">
+                            <?= htmlspecialchars($currentLiability['amount']) ?>
+                          </td>
+                        </tr>
+                      <?php endforeach; ?>
+                      <tr class="total-row">
+                        <td>Total</td>
+                        <td class="amount-text"><?= htmlspecialchars($totalCurrentLiabilities) ?></td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr>
+                        <th colspan="2" class="section-header fs-6 fw-normal">Non-Current Liabilities</th>
+                      </tr>
+                      <?php foreach ($nonCurrentLiabilities as $nonCurrentliability): ?>
+                        <tr
+                          class="main-row clickable-row"
+                          data-href="/jengopay/financials/generalledger/general_ledger.php?account_code=<?= urlencode($nonCurrentyliability['amount']) ?>"
+                          style="cursor: pointer;">
+                          <td><?= htmlspecialchars($nonCurrentliability['account_name']) ?></td>
+                          <td class="amount-text text-success">
+                            <?= htmlspecialchars($nonCurrentliability['amount']) ?>
+                          </td>
+                        </tr>
+                      <?php endforeach; ?>
+                      <tr class="total-row">
+                        <td>Total</td>
+                        <td class="amount-text"><?= htmlspecialchars($totalNonCurrentLiabilities) ?></td>
+                      </tr>
+                      <tr class="total-row">
+                        <td class="total-row">Total Liabilities</td>
+                        <td class="amount-text"><?= htmlspecialchars($totalNonCurrentLiabilities) + htmlspecialchars($totalCurrentLiabilities) ?></td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr>
+                        <th colspan="2">Equity</th>
+                      </tr>
+                      <tr>
+                        <td class="main-row clickable-row">Owner's Capital</td>
+                        <td class="amount-text"><?= htmlspecialchars($totalEquity) ?></td>
+                      </tr>
+                      <tr class="main-row clickable-row">
+                        <td>Retained Earnings</td>
+                        <td class="amount-text"><?= htmlspecialchars($retainedEarnings) ?></td>
+                      </tr>
+                    </tbody>
+                    <tr>
+                      <td class="total-row">Total liabilities and Equity</td>
+                      <td class="amount-text"><?= htmlspecialchars($totalEquity) ?></td>
+                    </tr>
                   </table>
                 </div>
               </div>

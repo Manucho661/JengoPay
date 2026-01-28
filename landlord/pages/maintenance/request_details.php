@@ -10,6 +10,9 @@ if (isset($_GET['id'])) {
   echo "No ID found in the URL.";
 }
 ?>
+<!-- Actions -->
+<?php require_once "actions/getRequestDetails.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -202,12 +205,6 @@ if (isset($_GET['id'])) {
     <!--end::Sidebar-->
 
     <!-- Main Layout -->
-    <div id="preloader" class="preloader-container">
-      <div id="pulse" class="pulse bg-yellow-600">
-        <span class="ripple"></span>
-      </div>
-      <div id="percent" class="percentage">0%</div>
-    </div>
     <main class="main" id="appMain" style="display: none;">
       <!--begin::App Content Header-->
       <nav aria-label="breadcrumb">
@@ -230,9 +227,12 @@ if (isset($_GET['id'])) {
             type="button"
             id="availabilityBtn"
             class="btn seTAvailable text-white fw-bold rounded-4"
-            style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;">
+            style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;"
+            data-request-id="<?= htmlspecialchars($request['id']) ?>" 
+            data-status="<?= htmlspecialchars($request['availability']) ?>">
             Set Available
           </button>
+
 
           <button
             type="button"
@@ -255,42 +255,43 @@ if (isset($_GET['id'])) {
         <div class="row">
           <div class="col-md-8">
             <div class="content-card">
-              <h5>Request Information (<span class="mx-2" style="font-size: 12px;" id="request-status"></span>)</h5>
-              <!-- <span class="badge bg-warning badge-status">In Progress</span> -->
+              <h5>Request Information (<span class="mx-2" style="font-size: 12px;"><?= htmlspecialchars($request['status'] ?? 'N/A') ?></span>)</h5>
               <div class="info-row">
                 <span class="info-label">Category:</span>
-                <span id="request-category"> </span>
+                <span><?= htmlspecialchars($request['category'] ?? 'N/A') ?></span>
               </div>
               <div class="info-row">
                 <span class="info-label">Title:</span>
-                <span id="request-name"></span>
+                <span><?= htmlspecialchars($request['title'] ?? 'N/A') ?></span>
               </div>
               <div class="info-row">
                 <span class="info-label">Request ID:</span>
-                <span id="request-id">#REQ-2024-1247</span>
+                <span>#REQ-<?= htmlspecialchars($request['id'] ?? 'N/A') ?></span>
               </div>
               <div class="info-row">
                 <span class="info-label">Property:</span>
-                <span>White House, C17</span>
+                <span><?= htmlspecialchars($request['building_name'] ?? 'N/A') . ', ' . htmlspecialchars($request['unit_number'] ?? 'N/A') ?></span>
               </div>
               <div class="info-row">
                 <span class="info-label">Created:</span>
-                <span id="created-at">December 8, 2025</span>
+                <span><?= !empty($request['created_at']) ? htmlspecialchars(date('M j, Y', strtotime($request['created_at']))) : 'N/A' ?></span>
               </div>
-
             </div>
+
             <!-- Description & Image -->
             <div class="content-card">
               <h5>Description & Photo</h5>
-              <div class="">
-                <p id="request-description"></p>
-                <!-- <p id="request-description"></p> -->
-                <img src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=800&h=400&fit=crop" alt="Blocked Sink" class="request-image mt-3">
+              <div>
+                <p><?= htmlspecialchars($request['description'] ?? 'No description provided.') ?></p>
+                <?php if (!empty($photos)): ?>
+                  <img src="<?= htmlspecialchars($photos[0]['photo_path']) ?>" alt="Request Image" class="request-image mt-3">
+                <?php else: ?>
+                  <p>No image provided.</p>
+                <?php endif; ?>
               </div>
-
             </div>
-
           </div>
+
           <div class="col-md-4">
             <div class="card">
               <div class="card-header">Budget & Timeline</div>

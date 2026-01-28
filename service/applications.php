@@ -14,6 +14,9 @@ if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') 
   $serviceProvider = ''; // Default if user is not logged in or not a provider
 }
 
+// actions
+include_once './actions/getApplications.php';
+var_dump($applications);
 ?>
 
 <!DOCTYPE html>

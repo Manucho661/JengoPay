@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -37,18 +38,22 @@ try {
        Assumption: expenses has landlord_id
     ------------------------------------------------- */
     $stmt = $pdo->prepare("
-        SELECT 
-            e.*,
-            COALESCE(SUM(ep.amount_paid), 0) AS total_paid
-        FROM expenses e
-        LEFT JOIN expense_payments ep 
-            ON e.id = ep.expense_id
-        WHERE e.landlord_id = ?
-        GROUP BY e.id
-        ORDER BY e.created_at DESC
-    ");
+    SELECT 
+        e.*, 
+        s.supplier_name,  -- Added supplier name
+        COALESCE(SUM(ep.amount_paid), 0) AS total_paid
+    FROM expenses e
+    LEFT JOIN expense_payments ep 
+        ON e.id = ep.expense_id
+    LEFT JOIN suppliers s  -- JOIN to get supplier_name
+        ON e.supplier_id = s.id
+    WHERE e.landlord_id = ?
+    GROUP BY e.id
+    ORDER BY e.created_at DESC
+");
     $stmt->execute([$landlordId]);
     $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
     /* -------------------------------------------------
        4) Summary values
@@ -152,7 +157,6 @@ try {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $monthlyTotals[(int) $row['month']] = (float) $row['total'];
     }
-
 } catch (Throwable $e) {
     $errorMessage = "❌ Failed to fetch expenses: " . $e->getMessage();
 }

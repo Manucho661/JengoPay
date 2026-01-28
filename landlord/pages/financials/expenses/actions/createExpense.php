@@ -1,19 +1,24 @@
 <?php
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 // Session variables to use
 $userId = $_SESSION['user']['id'];
+
+// Fetch landlord ID linked to the logged-in user
 $stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
 $stmt->execute([$userId]);
 $landlord = $stmt->fetch();
-$landlord_id = $landlord['id'];
+
+// Check if landlord exists for the user
+if (!$landlord) {
+    throw new Exception("Landlord account not found for this user.");
+}
+
+$landlord_id = $landlord['id']; // Store the landlord_id from the session
 
 // Expense journal helpers
-require_once $_SERVER['DOCUMENT_ROOT']
-    . '/Jengopay/landlord/pages/financials/expenses/actions/journalHelpers/expenseJournal.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/expenses/actions/journalHelpers/expenseJournal.php';
 
+// If it's not a POST request, return early
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['create_expense'])) {
     return; // do nothing on GET
 }
@@ -48,13 +53,13 @@ try {
         INSERT INTO expenses (
             supplier_id, building_id, landlord_id, expense_date, expense_no,
             untaxed_amount, total_taxes, total
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $stmt->execute([
         $supplier_id,
         $building_id,
-        $landlord_id,
+        $landlord_id,  // Correctly using landlord_id
         $expense_date,
         $expense_no,
         $untaxedAmount,
@@ -142,6 +147,7 @@ try {
         addJournalLine(
             $pdo,
             $journalId,
+            $landlord_id,  // Ensure landlord_id is passed
             $item_account_codes[$i],
             $amount,
             0.0,
@@ -153,9 +159,10 @@ try {
         addJournalLine(
             $pdo,
             $journalId,
+            $landlord_id,  // Ensure landlord_id is passed
             300,
             0.0,
-            $amount + $tax_amount,
+            $amount,
             'expenses',
             $expense_id
         );
@@ -165,6 +172,7 @@ try {
             addJournalLine(
                 $pdo,
                 $journalId,
+                $landlord_id,  // Ensure landlord_id is passed
                 325,
                 $tax_amount,
                 0.0,
@@ -196,3 +204,4 @@ try {
     header('Location: /Jengopay/landlord/pages/financials/expenses/expenses.php');
     exit;
 }
+?>

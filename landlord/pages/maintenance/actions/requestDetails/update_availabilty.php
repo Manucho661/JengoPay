@@ -19,6 +19,30 @@ try {
     $requestId = (int) $_GET['id'];
     $status = $_GET['status'] === "available" ? "available" : "unavailable"; // sanitize
 
+    // Check if the maintenance request exists before updating
+    $stmt = $pdo->prepare("SELECT * FROM maintenance_requests WHERE id = :id");
+    $stmt->execute([":id" => $requestId]);
+    $existingRequest = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$existingRequest) {
+        echo json_encode([
+            "status" => "error",
+            "id" => $requestId,
+            "message" => "Request ID does not exist"
+        ]);
+        exit;
+    }
+
+    // Check if the status is already the same
+    if ($existingRequest['availability'] === $status) {
+        echo json_encode([
+            "status" => "error",
+            "message" => "No update made (status already set to '$status')"
+        ]);
+        exit;
+    }
+
+    // Update availability status
     $sql = "UPDATE maintenance_requests SET availability = :status WHERE id = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
@@ -29,15 +53,16 @@ try {
     if ($stmt->rowCount() > 0) {
         echo json_encode([
             "status" => "success",
-            "message" => "Availability updated",
+            "message" => "Availability updated successfully",
             "new_status" => $status
         ]);
     } else {
         echo json_encode([
             "status" => "error",
-            "message" => "No update made (maybe same status or invalid ID)"
+            "message" => "No update made (possibly due to database issues)"
         ]);
     }
+
 } catch (Throwable $e) {
     echo json_encode([
         "status" => "error",

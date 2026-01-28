@@ -1,6 +1,4 @@
 <?php
-header('Content-Type: application/json');
-
 require_once '../../../db/connect.php'; // include your PDO connection
 
 set_error_handler(function ($errno, $errstr, $errfile, $errline) {
@@ -32,8 +30,7 @@ try {
     LEFT JOIN service_providers AS pr 
         ON ra.provider_id = pr.id
     WHERE mr.id = :id
-");
-
+    ");
     $stmt->execute(['id' => $requestId]);
     $request = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -71,7 +68,7 @@ try {
     $stmt->execute(['id' => $requestId]);
     $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Step 5: Combine into one structured response
+    // Step 5: Return data without echoing directly
     $response = [
         'request'   => $request,
         'photos'    => $photos,
@@ -79,7 +76,6 @@ try {
         'payments'  => $payments
     ];
 
-    echo json_encode($response);
 } catch (Throwable $e) {
     http_response_code(500);
     echo json_encode(["error" => $e->getMessage()]);

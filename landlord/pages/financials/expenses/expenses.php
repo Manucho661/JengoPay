@@ -661,7 +661,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                             <?php foreach ($currentExpenses as $exp): ?>
                                                 <tr>
                                                     <td><?= htmlspecialchars(date('d M Y', strtotime($exp['created_at']))) ?></td>
-                                                    <td><?= htmlspecialchars($exp['supplier']) ?></td>
+                                                    <td><?= htmlspecialchars($exp['supplier_name']) ?></td>
                                                     <td>
                                                         <div style="color:#28a745;"><?= htmlspecialchars($exp['expense_no']) ?></div>
                                                     </td>

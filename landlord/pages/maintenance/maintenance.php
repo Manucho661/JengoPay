@@ -282,14 +282,14 @@ require_once 'actions/getBuildings.php';
                   <table id="requests-table" class="display requests-table">
                     <thead class="mb-2">
                       <tr>
-                        <th>REQUEST Date</th>
-                        <th>PROPERTY + UNIT</th>
-                        <th>CATEGORY + DESCRIPTION</th>
-                        <th>PROVIDER</th>
-                        <th>PRIORITY</th>
-                        <th>STATUS</th>
-                        <th>PAYMENT</th>
-                        <th>ACTIONS</th>
+                        <th>Request Date</th>
+                        <th>Property</th>
+                        <th>Title</th>
+                        <th>Provider</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Actions</th>
                       </tr>
                     </thead>
 
@@ -312,10 +312,11 @@ require_once 'actions/getBuildings.php';
                             <td class="text-muted small">
                               <?=
                               !empty($req['created_at'])
-                                ? htmlspecialchars(date('M j', strtotime($req['created_at'])))
+                                ? htmlspecialchars(date('M j, Y', strtotime($req['created_at'])))
                                 : ''
                               ?>
                             </td>
+
 
                             <td>
                               <div><?= htmlspecialchars($req['building_name'] ?? '') ?></div>
@@ -323,31 +324,32 @@ require_once 'actions/getBuildings.php';
                             </td>
 
                             <td>
-                              <div><?= htmlspecialchars($req['category'] ?? '') ?></div>
-                              <div style="color:green; border:none; width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                <?= htmlspecialchars($req['description'] ?? '') ?>
+
+                              <div style="color:green; border:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                <?= htmlspecialchars($req['title'] ?? '') ?>
                               </div>
                             </td>
 
-                            <td>
+                            <td style="color: <?= !empty(trim($req['provider_name'] ?? '')) ? 'green' : '#b93232ff' ?>;">
                               <div>
                                 <?= !empty(trim($req['provider_name'] ?? ''))
                                   ? htmlspecialchars($req['provider_name'])
-                                  : 'Not assigned' ?>
+                                  : 'Unassigned' ?>
                               </div>
                             </td>
 
                             <td><?= htmlspecialchars($req['priority'] ?? '') ?></td>
 
-                            <td style="color: <?= !empty($req['status']) ? 'green' : '#b93232ff' ?>;">
-                              <?= htmlspecialchars($req['status'] ?? 'Not assigned') ?>
+                            <td style="color: <?= in_array($req['status'], ['Terminated', 'Cancelled']) ? '#b93232ff' : 'green' ?>;">
+                              <?= htmlspecialchars($req['status']) ?>
                             </td>
+
 
                             <td>
                               <?php if (($req['payment_status'] ?? '') === 'Paid'): ?>
                                 <div class="Paid"><i class="bi bi-check-circle-fill"></i> Paid</div>
                               <?php else: ?>
-                                <div class="Pending"><i class="bi bi-hourglass-split"></i> Pending</div>
+                                <div class="Pending rounded-2"><i class="bi bi-hourglass-split"></i> Pending</div>
                               <?php endif; ?>
                             </td>
 
@@ -358,7 +360,7 @@ require_once 'actions/getBuildings.php';
                                   onclick="event.stopPropagation(); window.location.href='request_details.php?id=<?= urlencode($req['id']) ?>'"
                                   class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
                                   style="background-color:#00192D; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
-                                  <i class="bi bi-eye-fill"></i> View
+                                  <i class="bi bi-eye-fill"></i>
                                 </button>
 
                                 <button
@@ -366,7 +368,7 @@ require_once 'actions/getBuildings.php';
                                   onclick="event.stopPropagation(); /* delete handler here */"
                                   class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
                                   style="background-color:#ec5b53; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
-                                  <i class="bi bi-trash-fill"></i> Delete
+                                  <i class="bi bi-trash-fill"></i>
                                 </button>
                               </div>
                             </td>

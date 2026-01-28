@@ -1,5 +1,3 @@
-
-
 /* ===========================
    UPDATE AVAILABILITY
 =========================== */
@@ -27,6 +25,8 @@ export async function updateAvailabilty() {
 
       // Update button instantly
       btn.dataset.status = newStatus;
+
+      // Correct the button text
       btn.textContent =
         newStatus === "available" ? "Set Unavailable" : "Set Available";
 

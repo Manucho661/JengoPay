@@ -23,46 +23,47 @@ try {
 
     $landlord_id = (int)$landlord['id'];
 
-    // 2) Fetch ONLY this landlord's maintenance requests
+    // 2) Fetch ONLY this landlord's maintenance requests along with the unit_number from the building_units table
     $stmt = $pdo->prepare("
-        SELECT
-            mr.*,
-            b.building_name,
-            ra.id AS assignment_id,
-            ra.status,
-            p.name  AS provider_name,
-            p.email AS provider_email,
-            p.phone AS provider_phone
-        FROM maintenance_requests mr
+    SELECT
+        mr.*,
+        mr.status,  -- Added to select status from maintenance_requests table
+        b.building_name,
+        bu.unit_number,  -- Added to fetch the unit number
+        ra.id AS assignment_id,
+        p.name  AS provider_name,
+        p.email AS provider_email,
+        p.phone AS provider_phone
+    FROM maintenance_requests mr
 
-        LEFT JOIN buildings b
-            ON mr.building_id = b.id
+    LEFT JOIN buildings b
+        ON mr.building_id = b.id
 
-        LEFT JOIN (
-            SELECT 
-                ra.*,
-                ROW_NUMBER() OVER (
-                    PARTITION BY ra.maintenance_request_id
-                    ORDER BY ra.created_at DESC
-                ) AS row_num
-            FROM maintenance_request_assignments ra
-        ) ra
-            ON mr.id = ra.maintenance_request_id
-           AND ra.row_num = 1
+    LEFT JOIN building_units bu  -- Join with building_units to get unit_number
+        ON mr.building_unit_id = bu.id
 
-        LEFT JOIN service_providers p
-            ON ra.provider_id = p.id
+    LEFT JOIN (
+        SELECT 
+            ra.*, 
+            ROW_NUMBER() OVER (
+                PARTITION BY ra.maintenance_request_id 
+                ORDER BY ra.created_at DESC
+            ) AS row_num
+        FROM maintenance_request_assignments ra
+    ) ra
+        ON mr.id = ra.maintenance_request_id
+       AND ra.row_num = 1
 
-        WHERE mr.landlord_id = :landlord_id
-        ORDER BY mr.created_at DESC
-    ");
+    LEFT JOIN service_providers p
+        ON ra.provider_id = p.id
+
+    WHERE mr.landlord_id = :landlord_id
+    ORDER BY mr.created_at DESC
+");
+
 
     $stmt->execute(['landlord_id' => $landlord_id]);
     $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // optional: expose landlord_id if your page needs it
-    // $meta = ['landlord_id' => $landlord_id];
-
 } catch (Throwable $e) {
     $requests = [];
     $requestsError = $e->getMessage();
