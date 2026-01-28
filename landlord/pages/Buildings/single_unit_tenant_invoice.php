@@ -71,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     
     try {
         $invoice_no   = $_POST['invoice_no'];
+        $tenant_id   = $_POST['tenant_id']; // Make sure this is coming from form
         $receiver     = $_POST['receiver'];
         $phone        = $_POST['phone'];
         $email        = $_POST['email'];
@@ -84,24 +85,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         // Insert invoice
         $stmt = $pdo->prepare("
             INSERT INTO invoice 
-            (invoice_no, receiver, phone, email, invoice_date, due_date, notes, subtotal, taxes, total)
-            VALUES (?,?,?,?,?,?,?,?,?,?)
+            (invoice_no, tenant_id, receiver, phone, email, invoice_date, due_date, notes, subtotal, taxes, total)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?)
         ");
         $stmt->execute([
-            $invoice_no, $receiver, $phone, $email,
+            $invoice_no, $tenant_id, $receiver, $phone, $email,
             $invoice_date, $due_date, $notes,
             $subtotal, $total_tax, $final_total
         ]);
         
         $invoice_id = $pdo->lastInsertId();
         
-        // Insert invoice items with account_code
+        // Insert invoice items with tenant_id
         $items = json_decode($_POST['invoice_items'], true);
         
         $itemStmt = $pdo->prepare("
             INSERT INTO invoice_items
-            (invoice_id, account_code, paid_for, description, unit_price, quantity, tax_type, tax_amount, total_price)
-            VALUES (?,?,?,?,?,?,?,?,?)
+            (invoice_id, tenant_id, account_code, paid_for, description, unit_price, quantity, tax_type, tax_amount, total_price)
+            VALUES (?,?,?,?,?,?,?,?,?,?)
         ");
         
         foreach ($items as $item) {
@@ -124,8 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                 $account_code = 515; // Garbage Collection
             }
             
+            // Make sure tenant_id is included in the execute statement
             $itemStmt->execute([
                 $invoice_id,
+                $tenant_id, // Add tenant_id here
                 $account_code,
                 $item['paid_for'] ?? '',
                 $item['description'] ?? '',
@@ -150,6 +153,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     }
 }
 ?>
+<?php
+$invoiceSubTotal = 0; // Net (before tax)
+$invoiceTaxTotal = 0; // VAT
+$invoiceGrandTotal = 0; // Net + Tax
+?>
+
 <?php
 require_once "../db/connect.php";
 $stmt = $pdo->prepare("
@@ -625,7 +634,9 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
     <b>Create Invoice for Unit <?= $unit_number ?: 'N/A'; ?> - <?= htmlspecialchars(($tenant_info['first_name'] ?? '') . ' ' . ($tenant_info['middle_name'] ?? '') . ' ' . ($tenant_info['last_name'] ?? ''));?></b>
 </div>
             <form id="invoiceForm" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ;?>" enctype="multipart/form-data" autocomplete="off">
-                <div class="card-body">
+            <input type="hidden" name="tenant_id" value="<?= htmlspecialchars($decrypted_id ?? ''); ?>">
+
+            <div class="card-body">
                     <!-- Tenant Info Section -->
                     <div class="row">
     <div class="col-md-3">
@@ -827,6 +838,11 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
         }
         ?>
     </tbody>
+    <tfoot>
+                            <tr><td colspan="6" class="text-end">Subtotal:</td><td id="subtotal" class="text-end">0.00</td><td></td></tr>
+                            <tr><td colspan="6" class="text-end">Total Tax:</td><td id="totalTax" class="text-end">0.00</td><td></td></tr>
+                            <tr><td colspan="6" class="text-end"><strong>Final Total:</strong></td><td id="finalTotal" class="text-end">0.00</td><td></td></tr>
+                        </tfoot>
 </table>
                     <hr>
                     <!-- Changed addRow() to open the drawer -->
@@ -985,18 +1001,15 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
             calculateTotals();
         }
     }
-
-// Update prepareInvoiceData function
-function prepareInvoiceData() {
+    function prepareInvoiceData() {
     const items = [];
     const rows = document.querySelectorAll('#invoiceBody tr');
     
     rows.forEach((row) => {
         const cells = row.querySelectorAll('td');
         if (cells.length >= 8) {
-            // Get account_code - it might be in a different column
-            const accountCodeCell = row.querySelector('.account-code');
-            const account_code = accountCodeCell ? accountCodeCell.textContent.trim() : '';
+            // Get account_code - from column 2 (index 1)
+            const account_code = cells[1].textContent.trim();
             
             const item = {
                 paid_for: cells[0].textContent.trim(),
@@ -1009,8 +1022,6 @@ function prepareInvoiceData() {
                 total_price: parseFloat(cells[7] ? cells[7].textContent.replace(/,/g, '') : 0) || 0
             };
             items.push(item);
-            
-            console.log("Item prepared:", item); // For debugging
         }
     });
     
@@ -1019,13 +1030,8 @@ function prepareInvoiceData() {
         return false;
     }
     
-    console.log("All items:", items); // For debugging
-    
     document.getElementById('invoiceItems').value = JSON.stringify(items);
     calculateTotals();
-    
-    // Debug: Show what's being submitted
-    console.log("Submitting:", document.getElementById('invoiceItems').value);
     
     return true;
 }

@@ -4,9 +4,9 @@ include '../../db/connect.php'; // adjust path as needed
 try {
   // Rent Total (account_item = 500)
   $stmtRent = $pdo->prepare("
-     SELECT SUM(sub_total) AS rent_total
+     SELECT SUM(unit_price) AS rent_total
      FROM invoice_items
-     WHERE account_item = '500'
+     WHERE account_code = '500'
  ");
   $stmtRent->execute();
   $rentResult = $stmtRent->fetch(PDO::FETCH_ASSOC);
@@ -16,9 +16,9 @@ try {
 
   // Water Charges (510)
   $stmtWater = $pdo->prepare("
-        SELECT SUM(sub_total) AS water_total
+        SELECT SUM(unit_price) AS water_total
         FROM invoice_items
-        WHERE account_item = '510'
+        WHERE account_code = '510'
     ");
   $stmtWater->execute();
   $waterTotal = $stmtWater->fetchColumn() ?? 0;
@@ -26,9 +26,9 @@ try {
 
   // Garbage Collection Fees (515)
   $stmtGarbage = $pdo->prepare("
-        SELECT SUM(sub_total) AS garbage_total
+        SELECT SUM(unit_price) AS garbage_total
         FROM invoice_items
-        WHERE account_item = '515'
+        WHERE account_code = '515'
     ");
   $stmtGarbage->execute();
   $garbageTotal = $stmtGarbage->fetchColumn() ?? 0;
@@ -37,9 +37,9 @@ try {
 
   // Late Payment Fees (account code 505)
   $stmtLateFees = $pdo->prepare("
-        SELECT SUM(sub_total) AS late_fees_total
+        SELECT SUM(unit_price) AS late_fees_total
         FROM invoice_items
-        WHERE account_item = '505'
+        WHERE account_code = '505'
         ");
   $stmtLateFees->execute();
   $lateFees = $stmtLateFees->fetchColumn() ?? 0;
@@ -47,9 +47,9 @@ try {
 
   // Commissions and Management Fees (account code 520)
   $stmtManagementFees = $pdo->prepare("
-        SELECT SUM(sub_total) AS management_fees_total
+        SELECT SUM(unit_price) AS management_fees_total
         FROM invoice_items
-        WHERE account_item = '520'
+        WHERE account_code = '520'
         ");
   $stmtManagementFees->execute();
   $managementFees = $stmtManagementFees->fetchColumn() ?? 0;
@@ -57,9 +57,9 @@ try {
 
   // Other Income (Advertising, Penalties) (account code 525)
   $stmtOtherIncome = $pdo->prepare("
-        SELECT SUM(sub_total) AS other_income_total
+        SELECT SUM(unit_price) AS other_income_total
         FROM invoice_items
-        WHERE account_item = '525'
+        WHERE account_code = '525'
         ");
   $stmtOtherIncome->execute();
   $otherIncome = $stmtOtherIncome->fetchColumn() ?? 0;
@@ -268,7 +268,7 @@ WHERE item_account_code = '630'
 include '../../db/connect.php';
 
 // Calculate INCOME from invoice_items
-$incomeStmt = $pdo->query("SELECT SUM(total) AS income FROM invoice_items");
+$incomeStmt = $pdo->query("SELECT SUM(total_price) AS income FROM invoice_items");
 $income = $incomeStmt->fetch(PDO::FETCH_ASSOC)['income'] ?? 0;
 
 // Calculate EXPENSES from expense_items
@@ -1281,6 +1281,11 @@ $netProfit = $income - $expenses;
                 </div>
 
               </div>
+
+              
+        <!--begin::Footer-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+        <!-- end::footer -->
               <!-- /.col -->
             </div>
             <!--end::Row-->

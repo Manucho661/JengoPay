@@ -1,249 +1,328 @@
 <?php
-session_start();
+session_start(); 
 require_once "../db/connect.php";
-include_once 'processes/encrypt_decrypt_function.php';
-
-/*
-|--------------------------------------------------------------------------
-| FETCH CHART OF ACCOUNTS (Revenue)
-|--------------------------------------------------------------------------
-*/
-$stmt = $pdo->prepare("
-    SELECT account_name, account_code 
-    FROM chart_of_accounts 
-    WHERE account_type = 'Revenue'
-    ORDER BY account_name ASC
-");
-$stmt->execute();
-$coaList = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-/*
-|--------------------------------------------------------------------------
-| FETCH RENTAL INCOME ACCOUNT
-|--------------------------------------------------------------------------
-*/
-$rental_account_code = 500;
-$rental_account_name = "Rental Income";
-
-$chartStmt = $pdo->prepare("
-    SELECT account_name, account_code 
-    FROM chart_of_accounts 
-    WHERE account_code = 500
-");
-$chartStmt->execute();
-if ($row = $chartStmt->fetch(PDO::FETCH_ASSOC)) {
-    $rental_account_name = $row['account_name'];
-}
-
-/*
-|--------------------------------------------------------------------------
-| LOAD BUILDING CONTEXT
-|--------------------------------------------------------------------------
-*/
-if (isset($_GET['add_single_unit'])) {
-    $buildingId = encryptor('decrypt', $_GET['add_single_unit']);
-    $_SESSION['building_id'] = $buildingId;
-}
-
-/*
-|--------------------------------------------------------------------------
-| HELPER: CREATE JOURNAL ENTRY (PDO)
-|--------------------------------------------------------------------------
-*/
-function createJournalEntry(PDO $pdo, $date, $description, array $entries)
-{
-    $stmt = $pdo->prepare("
-        INSERT INTO journal_entries (entry_date, description, created_at)
-        VALUES (?, ?, NOW())
-    ");
-    $stmt->execute([$date, $description]);
-
-    $journal_id = $pdo->lastInsertId();
-
-    $lineStmt = $pdo->prepare("
-        INSERT INTO journal_entry_lines
-        (journal_id, account_code, debit_amount, credit_amount)
-        VALUES (?, ?, ?, ?)
-    ");
-
-    foreach ($entries as $entry) {
-        $lineStmt->execute([
-            $journal_id,
-            $entry['account_code'],
-            $entry['debit'],
-            $entry['credit']
-        ]);
-    }
-
-    return $journal_id;
-}
-
-/*
-|--------------------------------------------------------------------------
-| MAIN FORM SUBMISSION
-|--------------------------------------------------------------------------
-*/
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_unit'])) {
-
+// Assuming you have a PDO connection $pdo
+if(isset($_GET['tenant_id']) && !empty($_GET['tenant_id'])) {
+    $tenant_id = $_GET['tenant_id'];
+    
     try {
-        $pdo->beginTransaction();
-
-        $buildingId = $_SESSION['building_id'] ?? null;
-        if (!$buildingId) {
-            throw new Exception("Building context missing.");
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | PREVENT DUPLICATE UNIT
-        |--------------------------------------------------------------------------
-        */
-        $check = $pdo->prepare("
-            SELECT COUNT(*) 
-            FROM building_units 
-            WHERE building_id = ? AND unit_number = ?
+        $stmt = $pdo->prepare("
+            SELECT 
+                first_name, 
+                middle_name, 
+                last_name, 
+                main_contact, 
+                alt_contact, 
+                email,
+                idMode,
+                id_no,
+                pass_no,
+                leasing_period,
+                leasing_start_date,
+                leasing_end_date,
+                move_in_date,
+                move_out_date,
+                account_no,
+                unit_category,
+                id_upload,
+                tax_pin_copy,
+                rental_agreement,
+                income,
+                job_title,
+                job_location,
+                casual_job,
+                business_name,
+                business_location,
+                tenant_status,
+                tenant_occupancy_status,
+                building_link,
+                tenant_reg
+            FROM tenants 
+            WHERE id = ?
         ");
-        $check->execute([$buildingId, $_POST['unit_number']]);
-
-        if ($check->fetchColumn() > 0) {
-            throw new Exception("This unit already exists in the building.");
+        
+        $stmt->execute([$tenant_id]);
+        $tenant_info = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if($tenant_info) {
+            // Use the fetched data in your form
+            $full_name = htmlspecialchars(
+                ($tenant_info['first_name'] ?? '') . ' ' . 
+                ($tenant_info['middle_name'] ?? '') . ' ' . 
+                ($tenant_info['last_name'] ?? '')
+            );
+            $main_contact = htmlspecialchars($tenant_info['main_contact'] ?? '');
+            $alt_contact = htmlspecialchars($tenant_info['alt_contact'] ?? '');
+            $email = htmlspecialchars($tenant_info['email'] ?? '');
+        } else {
+            // Handle no tenant found
+            $tenant_info = null;
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | UNIT CATEGORY
-        |--------------------------------------------------------------------------
-        */
-        $purpose = $_POST['purpose'];
-        $category = 'single_unit';
-
-        if ($purpose === 'Residential') $category = 'residential';
-        if (in_array($purpose, ['Office', 'Business', 'Store'])) $category = 'commercial';
-
-        $catStmt = $pdo->prepare("
-            SELECT id FROM unit_categories WHERE category_name = ?
-        ");
-        $catStmt->execute([$category]);
-        $unit_category_id = $catStmt->fetchColumn();
-
-        if (!$unit_category_id) {
-            $pdo->prepare("
-                INSERT INTO unit_categories (category_name, description, created_at)
-                VALUES (?, ?, NOW())
-            ")->execute([$category, ucfirst($category) . " unit"]);
-
-            $unit_category_id = $pdo->lastInsertId();
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | INSERT BUILDING UNIT
-        |--------------------------------------------------------------------------
-        */
-        $unitStmt = $pdo->prepare("
-            INSERT INTO building_units
-            (building_id, unit_category_id, unit_number, purpose, location, monthly_rent, occupancy_status, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-        ");
-        $unitStmt->execute([
-            $buildingId,
-            $unit_category_id,
-            $_POST['unit_number'],
-            $_POST['purpose'],
-            $_POST['location'],
-            $_POST['monthly_rent'],
-            $_POST['occupancy_status']
-        ]);
-
-        $building_unit_id = $pdo->lastInsertId();
-
-        /*
-        |--------------------------------------------------------------------------
-        | INSERT RECURRING BILLS
-        |--------------------------------------------------------------------------
-        */
-        if (!empty($_POST['bill_name']) && is_array($_POST['bill_name'])) {
-
-            $billStmt = $pdo->prepare("
-                INSERT INTO recurring_bills
-                (building_unit_id, bill_name, bill_name_other, quantity, unit_price, subtotal, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, NOW())
-            ");
-
-            foreach ($_POST['bill_name'] as $i => $billName) {
-
-                $billOther = $_POST['bill_name_other'][$i] ?? '';
-                if ($billName === 'Other' && $billOther) {
-                    $billName = $billOther;
-                }
-
-                $qty = floatval($_POST['quantity'][$i] ?? 0);
-                $price = floatval($_POST['unit_price'][$i] ?? 0);
-                if ($qty <= 0 || $price <= 0) continue;
-
-                $billStmt->execute([
-                    $building_unit_id,
-                    $billName,
-                    $billOther,
-                    $qty,
-                    $price,
-                    $qty * $price
-                ]);
-            }
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | CREATE RENT JOURNAL ENTRY
-        |--------------------------------------------------------------------------
-        */
-        $payment_method = $_POST['payment_method'] ?? 'cash';
-        $payment_date   = $_POST['payment_date'] ?? date('Y-m-d');
-        $monthly_rent   = floatval($_POST['monthly_rent']);
-
-        $cash_account = match ($payment_method) {
-            'mpesa' => 110,
-            'bank'  => 120,
-            default => 100,
-        };
-
-        $entries = [
-            ['account_code' => $cash_account, 'debit' => $monthly_rent, 'credit' => 0],
-            ['account_code' => 500, 'debit' => 0, 'credit' => $monthly_rent],
-        ];
-
-        createJournalEntry(
-            $pdo,
-            $payment_date,
-            "Rent for Unit " . $_POST['unit_number'],
-            $entries
-        );
-
-        $pdo->commit();
-
-        echo "<script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'Unit, bills and accounting entry saved successfully!',
-            }).then(() => window.location='single_units.php');
-        </script>";
-        exit;
-
-    } catch (Exception $e) {
-        if ($pdo->inTransaction()) $pdo->rollBack();
-
-        echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                html: '".addslashes($e->getMessage())."'
-            });
-        </script>";
+    } catch (PDOException $e) {
+        // Handle database error
+        error_log("Database error: " . $e->getMessage());
+        $tenant_info = null;
     }
 }
 ?>
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+    $pdo->beginTransaction();
+    
+    try {
+        $invoice_no   = $_POST['invoice_no'];
+        $receiver     = $_POST['receiver'];
+        $phone        = $_POST['phone'];
+        $email        = $_POST['email'];
+        $invoice_date = $_POST['invoice_date'];
+        $due_date     = $_POST['due_date'];
+        $notes        = $_POST['notes'];
+        $subtotal     = $_POST['subtotalValue'];
+        $total_tax    = $_POST['totalTaxValue'];
+        $final_total  = $_POST['finalTotalValue'];
+        
+        // Insert invoice
+        $stmt = $pdo->prepare("
+            INSERT INTO invoice 
+            (invoice_no, receiver, phone, email, invoice_date, due_date, notes, subtotal, taxes, total)
+            VALUES (?,?,?,?,?,?,?,?,?,?)
+        ");
+        $stmt->execute([
+            $invoice_no, $receiver, $phone, $email,
+            $invoice_date, $due_date, $notes,
+            $subtotal, $total_tax, $final_total
+        ]);
+        
+        $invoice_id = $pdo->lastInsertId();
+        
+        // Insert invoice items with account_code
+        $items = json_decode($_POST['invoice_items'], true);
+        
+        $itemStmt = $pdo->prepare("
+            INSERT INTO invoice_items
+            (invoice_id, account_code, paid_for, description, unit_price, quantity, tax_type, tax_amount, total_price)
+            VALUES (?,?,?,?,?,?,?,?,?)
+        ");
+        
+        foreach ($items as $item) {
+            // Debug: Check what data you're receiving
+            error_log("Item data: " . print_r($item, true));
+            
+            // Validate account_code
+            $account_code = !empty($item['account_code']) ? $item['account_code'] : null;
+            
+            // If account_code is empty but paid_for is Rent, use 500
+            if (empty($account_code) && stripos($item['paid_for'], 'rent') !== false) {
+                $account_code = 500; // Rental Income
+            }
+            // If account_code is empty but paid_for is Water, use 510
+            elseif (empty($account_code) && stripos($item['paid_for'], 'water') !== false) {
+                $account_code = 510; // Water Charges
+            }
+            // If account_code is empty but paid_for is Garbage, use 515
+            elseif (empty($account_code) && stripos($item['paid_for'], 'garbage') !== false) {
+                $account_code = 515; // Garbage Collection
+            }
+            
+            $itemStmt->execute([
+                $invoice_id,
+                $account_code,
+                $item['paid_for'] ?? '',
+                $item['description'] ?? '',
+                $item['unit_price'] ?? 0,
+                $item['quantity'] ?? 1,
+                $item['tax_type'] ?? 'VAT Inclusive',
+                $item['tax_amount'] ?? 0,
+                $item['total_price'] ?? 0
+            ]);
+        }
+        
+        $pdo->commit();
+        
+        header("Location: /jengopay/landlord/pages/financials/invoices/invoice.php?success=1");
+        exit;
+        
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        // More detailed error message
+        die("Error saving invoice: " . $e->getMessage() . "\n" . 
+            "Items data: " . print_r($items, true));
+    }
+}
+?>
+<?php
+$invoiceSubTotal = 0; // Net (before tax)
+$invoiceTaxTotal = 0; // VAT
+$invoiceGrandTotal = 0; // Net + Tax
+?>
 
+<?php
+require_once "../db/connect.php";
+$stmt = $pdo->prepare("
+    SELECT account_code, account_name
+    FROM chart_of_accounts
+    WHERE financial_statement = 'Income Statement'
+      AND account_type = 'Revenue'
+    ORDER BY account_code ASC
+");
+$stmt->execute();
+$accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+?>
+<?php
+require_once "../db/connect.php";
+include_once '../processes/encrypt_decrypt_function.php';
+
+$tenant_info = [];
+$monthly_rent = 0;
+$final_bill = 0;
+$garbage_data = [];
+
+if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
+    $id = $_GET['invoice'];
+    $decrypted_id = encryptor('decrypt', $id);
+
+    if ($decrypted_id !== null && $decrypted_id !== false) {
+        try {
+            // Fetch tenant info
+            $stmt = $pdo->prepare("SELECT * FROM tenants WHERE id = ?");
+            $stmt->execute([$decrypted_id]);
+            $tenant_info = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+            // Fetch tenant's active unit monthly rent dynamically
+         // Fetch tenant's active unit monthly rent dynamically
+if(!empty($decrypted_id)) {
+    // First, get the unit_id from tenancies table
+    $unitStmt = $pdo->prepare("
+        SELECT t.unit_id, bu.monthly_rent
+        FROM tenancies t
+        JOIN building_units bu ON t.unit_id = bu.id
+        WHERE t.tenant_id = ? AND t.status = 'Active'
+        ORDER BY t.id DESC
+        LIMIT 1
+    ");
+    $unitStmt->execute([$decrypted_id]);
+    $unitResult = $unitStmt->fetch(PDO::FETCH_ASSOC);
+    
+    if($unitResult) {
+        // Store unit_id and monthly_rent
+        $tenant_info['unit_id'] = $unitResult['unit_id'];
+        $monthly_rent = floatval($unitResult['monthly_rent']);
+        $final_bill = $monthly_rent;
+    }
+}
+
+
+// Fetch rental income account from chart_of_accounts
+try {
+    $chartStmt = $pdo->prepare("SELECT account_name, account_code FROM chart_of_accounts WHERE account_code = 500");
+    $chartStmt->execute();
+    $rentalAccount = $chartStmt->fetch(PDO::FETCH_ASSOC);
+    
+    if($rentalAccount) {
+        // You can use this information if needed
+        $rental_account_name = $rentalAccount['account_name'];
+        $rental_account_code = $rentalAccount['account_code'];
+    }
+} catch (Exception $e) {
+    error_log("Error fetching chart of accounts: " . $e->getMessage());
+    $rental_account_name = "Rental Income";
+    $rental_account_code = 500;
+}
+
+            // Fetch garbage/other charges if exists
+            try {
+                $garbageStmt = $pdo->prepare("SELECT bill, qty, unit_price, subtotal FROM bills WHERE tenant_id = ? AND bill = 'Garbage'");
+                $garbageStmt->execute([$decrypted_id]);
+                $garbage_data = $garbageStmt->fetch(PDO::FETCH_ASSOC) ?: [];
+            } catch(Exception $e) {
+                $garbage_data = [];
+            }
+
+            // If water bills are stored in the bills table
+// Fetch water bill data for current month
+try {
+    if(isset($tenant_info['unit_id']) && !empty($tenant_info['unit_id'])) {
+        // Get current month's water bills
+        $waterStmt = $pdo->prepare("
+            SELECT 
+                b.id AS bill_id,
+                b.building_unit_id,
+                t.account_no,
+                CONCAT(ten.first_name, ' ', ten.last_name) AS tenant_name,
+                b.quantity,
+                b.unit_price,
+                b.sub_total,
+                b.created_at,
+                MONTH(b.created_at) AS billing_month,
+                YEAR(b.created_at) AS billing_year
+            FROM bills b
+            INNER JOIN tenancies t ON b.building_unit_id = t.unit_id
+            INNER JOIN tenants ten ON t.tenant_id = ten.id
+            WHERE b.building_unit_id = ?
+                AND b.bill_name = 0
+                AND MONTH(b.created_at) = MONTH(CURRENT_DATE())
+                AND YEAR(b.created_at) = YEAR(CURRENT_DATE())
+                AND t.status = 'Active'
+            ORDER BY b.created_at DESC
+        ");
+        $waterStmt->execute([$tenant_info['unit_id']]);
+        $water_data = $waterStmt->fetch(PDO::FETCH_ASSOC);
+        
+        if($water_data) {
+            // Process water data for display
+            $water_quantity = $water_data['quantity'] ?? 0;
+            $water_unit_price = $water_data['unit_price'] ?? 0;
+            $water_total = $water_data['sub_total'] ?? 0;
+            
+            // Store in session or variable for use
+            $_SESSION['water_bill_data'] = $water_data;
+        } else {
+            $water_data = [];
+            $water_quantity = 0;
+            $water_unit_price = 0;
+            $water_total = 0;
+        }
+    }
+} catch(Exception $e) {
+    error_log("Error fetching water bill: " . $e->getMessage());
+    $water_data = [];
+    $water_quantity = 0;
+    $water_unit_price = 0;
+    $water_total = 0;
+}
+
+
+$recurringBills = [];
+
+if (!empty($tenant_info['unit_id'])) {
+    $stmt = $pdo->prepare("
+        SELECT 
+            unit_id,
+            bill_name,
+            account_code,
+            quantity,
+            unit_price,
+            subtotal
+        FROM recurring_bills
+        WHERE unit_id = ?
+          AND MONTH(created_at) = MONTH(CURRENT_DATE())
+          AND YEAR(created_at) = YEAR(CURRENT_DATE())
+    ");
+    $stmt->execute([$tenant_info['unit_id']]);
+    $recurringBills = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+
+        } catch(PDOException $e) {
+            error_log("Database error: ".$e->getMessage());
+            $tenant_info = [];
+            $monthly_rent = 0;
+        }
+    }
+}
+?>
 
 <!doctype html>
 <html lang="en">
@@ -294,7 +373,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_unit'])) {
 
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../../assets/main.css" />
+        <link rel="stylesheet" href="../../assets/main.css" />
     <!-- <link rel="stylesheet" href="text.css" /> -->
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
@@ -325,80 +404,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_unit'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-    <!--Tailwind CSS  -->
     <style>
-        .app-wrapper {
-            background-color: rgba(128, 128, 128, 0.1);
-        }
-
-        .modal-backdrop.show {
-            opacity: 0.4 !important;
-            /* Adjust the value as needed */
-        }
-
-        .diagonal-paid-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            /* Centered and rotated */
-            background-color: rgba(0, 128, 0, 0.2);
-            /* Light green with transparency */
-            color: green;
-            font-weight: bold;
-            font-size: 24px;
-            padding: 15px 40px;
-            border: 2px solid green;
-            border-radius: 8px;
-            text-transform: uppercase;
-            pointer-events: none;
-            z-index: 10;
-            white-space: nowrap;
-        }
-
-        .diagonal-unpaid-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            /* Centered and rotated */
-            background-color: rgba(255, 0, 0, 0.2);
-            /* Red with transparency for "UNPAID" */
-            color: #ff4d4d;
-            /* Softer red text color */
-            font-weight: bold;
-            font-size: 24px;
-            padding: 15px 40px;
-            border: 2px solid red;
-            border-radius: 8px;
-            text-transform: uppercase;
-            pointer-events: none;
-            z-index: 10;
-            white-space: nowrap;
-        }
-
-        .diagonal-partially-paid-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            /* Centered and rotated */
-            background-color: rgba(255, 165, 0, 0.2);
-            /* Amber background with opacity */
-            color: #ff9900;
-            /* Amber or gold text */
-            font-weight: bold;
-            font-size: 24px;
-            padding: 15px 40px;
-            border: 2px solid #ff9900;
-            /* Amber border */
-            border-radius: 8px;
-            text-transform: uppercase;
-            pointer-events: none;
-            z-index: 10;
-            white-space: nowrap;
-        }
-    </style>
+    /*========================== Add Items in the Invoice ====================================*/
+.offcanvas-right {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px; /* Adjust width as needed */
+  height: 100%;
+  background-color: #fff;
+  box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1050; /* Above Bootstrap modals */
+  padding: 20px;
+  overflow-y: auto; /* Enable scrolling for long forms */
+}
+.offcanvas-right.show {
+  transform: translateX(0);
+}
+.offcanvas-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 1040;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none; /* Allows clicks through when not visible */
+}
+.offcanvas-backdrop.show {
+  opacity: 1;
+  pointer-events: auto; /* Blocks clicks when visible */
+}
+#closeAddItem{
+  background-color: #cc0001;
+  color: #fff;
+  border: 0;
+  border-radius: 3px;
+}
+</style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
@@ -407,840 +454,790 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_unit'])) {
         <!--begin::Header-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
-
         <!--begin::Sidebar-->
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
-        <!--end::Sidebar-->
-
-        <!--begin::App Main-->
-        <main class="main">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" style="">
-                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Buildings/buildings.php" style="text-decoration: none;">Buildings</a></li>
-                    <li class="breadcrumb-item active">Add single unit</li>
-                </ol>
-            </nav>
-            <div class="container-fluid">
-                <?php
-                include_once 'processes/encrypt_decrypt_function.php';
-
-                $id = null;
-                if (isset($_GET['add_single_unit']) && !empty($_GET['add_single_unit'])) {
-                    $id = $_GET['add_single_unit'];
-                    $id = encryptor('decrypt', $id);
-                    $_SESSION['building_id'] = $id; // persist building id across different requests
-                    try {
-                        if (!empty($id)) {
-                            $select = "SELECT * FROM buildings WHERE id =:id";
-                            $stmt = $pdo->prepare($select);
-                            $stmt->execute(array(':id' => $id));
-
-                            while ($row = $stmt->fetch()) {
-                                $building_name = $row['building_name'];
-                                $county = $row['county'];
-                                $constituency = $row['constituency'];
-                                $ward = $row['ward'];
-                                $structure_type = $row['structure_type'];
-                                $floors_no = $row['floors_no'];
-                                $no_of_units = $row['no_of_units'];
-                                $building_type = $row['building_type'];
-                                $tax_rate = $row['tax_rate'];
-                                $ownership_info = $row['ownership_info'];
-                                $first_name = $row['first_name'];
-                                $last_name = $row['last_name'];
-                                $id_number = $row['id_number'];
-                                $primary_contact = $row['primary_contact'];
-                                $other_contact = $row['other_contact'];
-                                $owner_email = $row['owner_email'];
-                                $postal_address = $row['postal_address'];
-                                $entity_name = $row['entity_name'];
-                                $entity_phone = $row['entity_phone'];
-                                $entity_phoneother = $row['entity_phoneother'];
-                                $entity_email = $row['entity_email'];
-                                $entity_rep = $row['entity_rep'];
-                                $rep_role = $row['rep_role'];
-                                $entity_postal = $row['entity_postal'];
-                                $ownership_proof = $row['ownership_proof'];
-                                $title_deed = $row['title_deed'];
-                                $legal_document = $row['legal_document'];
-                                $photo_one = $row['photo_one'];
-                                $photo_two = $row['photo_two'];
-                                $photo_three = $row['photo_three'];
-                                $photo_four = $row['photo_four'];
-                                $added_on = $row['added_on'];
-                                $ownership_proof = $row['ownership_proof'];
-                                $title_deed = $row['title_deed'];
-                                $legal_document = $row['legal_document'];
-                                $photo_one = $row['photo_one'];
-                                $photo_two = $row['photo_two'];
-                                $photo_three = $row['photo_three'];
-                                $photo_four = $row['photo_four'];
-                            }
-                        } else {
-                            echo "<script>
-                                Swal.fire({
-                                  icon: 'error',
-                                  title: 'No Information!',
-                                  text: 'No Building Information could be Extracted from the Database',
-                                  confirmButtonColor: '#cc0001'
-                                  });
-                                  </script>";
-                        }
-                    } catch (PDOException $e) {
-                        echo "<script>
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    text: 'Failed to Load Building Information. " . addslashes($e->getMessage()) . "',
-                                    confirmButtonColor: '#cc0001'
-                                    });
-                                    </script>";
-                    }
-                }
-
-                //if the Submit button is clicked
-                if (isset($_POST['submit_unit'])) {
-
-                    try {
-                        if (!isset($_SESSION['building_id'])) {
-                            throw new Exception("Invalid building context.");
-                        }
-                
-                        $buildingId = $_SESSION['building_id'];
-                
-                        $pdo->beginTransaction();
-                
-                        /* =====================================================
-                           1. PREVENT DUPLICATE UNIT
-                        ===================================================== */
-                        $check = $pdo->prepare("
-                            SELECT COUNT(*) 
-                            FROM building_units 
-                            WHERE building_id = ? AND unit_number = ?
-                        ");
-                        $check->execute([$buildingId, $_POST['unit_number']]);
-                
-                        if ($check->fetchColumn() > 0) {
-                            throw new Exception("This unit already exists for this building.");
-                        }
-                
-                        /* =====================================================
-                           2. GET unit_category_id
-                        ===================================================== */
-                        $catStmt = $pdo->prepare("
-                            SELECT id FROM unit_categories 
-                            WHERE category_name = 'single_unit' LIMIT 1
-                        ");
-                        $catStmt->execute();
-                        $unitCategoryId = $catStmt->fetchColumn();
-                
-                        if (!$unitCategoryId) {
-                            throw new Exception("Unit category not found.");
-                        }
-                
-                        /* =====================================================
-                           3. INSERT INTO building_units
-                        ===================================================== */
-                        $unitStmt = $pdo->prepare("
-                            INSERT INTO building_units (
-                                building_id,
-                                unit_category_id,
-                                unit_number,
-                                purpose,
-                                location,
-                                monthly_rent,
-                                occupancy_status,
-                                created_at
-                            ) VALUES (
-                                ?, ?, ?, ?, ?, ?, ?, NOW()
-                            )
-                        ");
-                
-                        $unitStmt->execute([
-                            $buildingId,
-                            $unitCategoryId,
-                            $_POST['unit_number'],
-                            $_POST['purpose'],
-                            $_POST['location'],
-                            $_POST['monthly_rent'],
-                            $_POST['occupancy_status']
-                        ]);
-                
-                        $unitId = $pdo->lastInsertId();
-                
-                        /* =====================================================
-                           4. INSERT RECURRING BILLS (LINKED TO UNIT)
-                        ===================================================== */
-                        if (!empty($_POST['bill_name'])) {
-                
-                            $billStmt = $pdo->prepare("
-                                INSERT INTO recurring_bills (
-                                    building_unit_id,
-                                    bill_name,
-                                    bill_name_other,
-                                    quantity,
-                                    unit_price,
-                                    subtotal,
-                                    created_at
-                                ) VALUES (?, ?, ?, ?, ?, ?, NOW())
-                            ");
-                
-                            foreach ($_POST['bill_name'] as $i => $billName) {
-                
-                                $billNameOther = $_POST['bill_name_other'][$i] ?? '';
-                                $qty           = floatval($_POST['quantity'][$i] ?? 0);
-                                $price         = floatval($_POST['unit_price'][$i] ?? 0);
-                
-                                if ($billName === '' || $qty <= 0 || $price <= 0) {
-                                    continue;
-                                }
-                
-                                if ($billName === 'Other' && $billNameOther !== '') {
-                                    $billName = $billNameOther;
-                                }
-                
-                                $subtotal = $qty * $price;
-                
-                                $billStmt->execute([
-                                    $unitId,
-                                    $billName,
-                                    $billNameOther,
-                                    $qty,
-                                    $price,
-                                    $subtotal
-                                ]);
-                            }
-                        }
-                
-                        /* =====================================================
-                           5. COMMIT
-                        ===================================================== */
-                        $pdo->commit();
-                
-                        echo "
-                        <script>
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Unit and recurring bills saved successfully.',
-                                confirmButtonColor: '#00192D'
-                            }).then(() => {
-                                window.location.href = 'single_units.php';
-                            });
-                        </script>";
-                        exit;
-                
-                    } catch (Exception $e) {
-                
-                        if ($pdo->inTransaction()) {
-                            $pdo->rollBack();
-                        }
-                
-                        echo "
-                        <script>
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: '".addslashes($e->getMessage())."',
-                                confirmButtonColor: '#cc0001'
-                            });
-                        </script>";
-                        exit;
-                    }
-                }
-                
-                ?>
-                
-                <!--First Row-->
-                <div class="row align-items-center mb-4">
-                    <div class="col-12 d-flex align-items-center">
-                        <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
-                        <h3 class="mb-0 ms-3">Add a single unit</h3>
-                        <span class="mx-4"></span>
-                    </div>
-                </div>
-                
-                <!-- Second Row -->
-                <div class="row mb-4">
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="stat-card d-flex align-items-center rounded-2 p-1">
-                            <div>
-                                <i class="fas fa-building me-3 text-warning"></i>
-                            </div>
-                            <div>
-                                <p class="mb-0" style="font-weight: bold;">Building</p>
-                                <h3><?= htmlspecialchars($building_name); ?></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="stat-card d-flex align-items-center rounded-2 p-1">
-                            <div>
-                                <i class="fas fa-city me-3 text-warning"></i>
-                            </div>
-                            <div>
-                                <p class="mb-0" style="font-weight: bold;">Structure type</p>
-                                <h3><?= htmlspecialchars($structure_type); ?></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="stat-card d-flex align-items-center rounded-2 p-1">
-                            <div>
-                                <i class="fas fa-house-damage me-3 text-warning"></i>
-                            </div>
-                            <div>
-                                <p class="mb-0" style="font-weight: bold;">Building Type</p>
-                                <h3><?= htmlspecialchars($structure_type); ?></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="stat-card d-flex align-items-center rounded-2 p-1">
-                            <div>
-                                <i class="fas fa-city me-3 text-warning"></i>
-                            </div>
-                            <div>
-                                <p class="mb-0" style="font-weight: bold;">Number of Units</p>
-                                <h3><?= htmlspecialchars($no_of_units); ?></h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card shadow">
-
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="structure_type" value="<?= htmlspecialchars($structure_type); ?>">
-    <input type="hidden" name="first_name" value="<?= htmlspecialchars($first_name); ?>">
-    <input type="hidden" name="last_name" value="<?= htmlspecialchars($last_name); ?>">
-    <input type="hidden" name="owner_email" value="<?= htmlspecialchars($owner_email); ?>">
-    <input type="hidden" name="entity_name" value="<?= htmlspecialchars($entity_name); ?>">
-    <input type="hidden" name="entity_phone" value="<?= htmlspecialchars($entity_phone); ?>">
-    <input type="hidden" name="entity_phoneother" value="<?= htmlspecialchars($entity_phoneother); ?>">
-    <input type="hidden" name="entity_email" value="<?= htmlspecialchars($entity_email); ?>">
-    
-    <?php
-    // Fetch the Rental Income account from chart_of_accounts
-    $rental_account_name = "Rental Income";
-    $rental_account_code = 500;
-    
-    try {
-        require_once "../db/connect.php"; // Make sure this path is correct
-        $chartStmt = $pdo->prepare("SELECT account_name, account_code FROM chart_of_accounts WHERE account_code = 500");
-        $chartStmt->execute();
-        $rentalAccount = $chartStmt->fetch(PDO::FETCH_ASSOC);
         
-        if($rentalAccount) {
-            $rental_account_name = $rentalAccount['account_name'];
-            $rental_account_code = $rentalAccount['account_code'];
-        }
-    } catch (Exception $e) {
-        error_log("Error fetching chart of accounts: " . $e->getMessage());
-        // Use default values if fetch fails
-    }
-    ?>
-    
-    <div class="card-body">
-        <div class="card shadow" id="firstSection" style="border:1px solid rgb(0,25,45,.2);">
-            <div class="card-header" style="background-color: #00192D; color:#fff;">
-                <b class="text-warning">Unit Identification</b>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Unit Number</label>
-                            <input type="text" name="unit_number" required class="form-control" id="unit_number" placeholder="Unit Number">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Purpose</label>
-                            <select name="purpose" id="purpose" class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;">
-                                <option value="" selected hidden>-- Select Option -- </option>
-                                <option value="Office">Office</option>
-                                <option value="Residential">Residential</option>
-                                <option value="Business">Business</option>
-                                <option value="Store">Store</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="">Link to the Building</label>
-                            <input type="text" name="building_link" class="form-control" value="<?= htmlspecialchars($building_name); ?>" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Location with in the Building</label>
-                            <input name="location" type="text" class="form-control" id="location" placeholder="Location e.g.Second Floor">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer text-right">
-                <button type="button" class="btn btn-sm next-btn" id="firstSectionNexttBtn">Next</button>
-            </div>
-        </div>
+            <!--begin::Sidebar Wrapper-->
+            <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> 
+           
+        <!--end::Sidebar-->
+        <!--begin::App Main-->
+        <main class="app-main mt-4">
+            <div class="content-wrapper">
+                <!-- Main content -->
+                <?php
+include_once '../processes/encrypt_decrypt_function.php';
 
-        <div class="card shadow" id="secondSection" style="border:1px solid rgb(0,25,45,.2); display:none;">
-            <div class="card-header" style="background-color: #00192D; color:#fff;">
-                <b>Financials and Other Information</b>
-            </div>
-            <div class="card-body">
-                <!-- Updated Monthly Rent Section -->
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Monthly Rent <span class="text-muted small">(Linked to Chart of Accounts)</span></label>
-                            <input type="number" 
-                                   class="form-control" 
-                                   id="monthly_rent" 
-                                   name="monthly_rent" 
-                                   placeholder="Enter Monthly Rent"
-                                   min="0"
-                                   step="0.01"
-                                   required>
-                            <small class="text-muted">This amount will be recorded as "<?= htmlspecialchars($rental_account_name) ?>" in your accounting</small>
+$tenant_info = [
+    'first_name' => '', 'middle_name' => '', 'last_name' => '', 
+    'phone' => '', 'alt_phone' => '', 'email' => '',
+    'idMode' => '', 'id_no' => '', 'pass_no' => '',
+    'leasing_period' => '', 'leasing_start_date' => '', 'leasing_end_date' => '',
+    'move_in_date' => '', 'move_out_date' => '', 'account_no' => '',
+    'unit_category' => '', 'id_upload' => '', 'tax_pin_copy' => '',
+    'rental_agreement' => '', 'income' => '', 'job_title' => '',
+    'job_location' => '', 'casual_job' => '', 'business_name' => '',
+    'business_location' => '', 'tenant_status' => '', 
+    'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => '',
+    'unit_id' => '' // Added unit_id
+];
+
+$monthly_rent = 0;
+$final_bill = 0;
+$garbage_data = [];
+$unit_number = ''; // New variable for unit number
+
+// Fetch Tenant Information from the tenants table
+if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
+    $id = $_GET['invoice'];
+    $decrypted_id = encryptor('decrypt', $id);
+
+    if ($decrypted_id !== null && $decrypted_id !== false) {
+        try {
+            // First, get tenant info from tenants table
+            $tenant = $pdo->prepare("SELECT * FROM tenants WHERE id = ?");
+            $tenant->execute([$decrypted_id]);
+            $tenant_info = $tenant->fetch(PDO::FETCH_ASSOC);
+
+            if(!$tenant_info) {
+                echo "<script>
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Tenant Found',
+                        text: 'No tenant data found for the provided ID.'
+                    });
+                </script>";
+                
+                // Reset to default empty values
+                $tenant_info = [
+                    'first_name' => '', 'middle_name' => '', 'last_name' => '', 
+                    'phone' => '', 'alt_phone' => '', 'email' => '',
+                    'idMode' => '', 'id_no' => '', 'pass_no' => '',
+                    'leasing_period' => '', 'leasing_start_date' => '', 'leasing_end_date' => '',
+                    'move_in_date' => '', 'move_out_date' => '', 'account_no' => '',
+                    'unit_category' => '', 'id_upload' => '', 'tax_pin_copy' => '',
+                    'rental_agreement' => '', 'income' => '', 'job_title' => '',
+                    'job_location' => '', 'casual_job' => '', 'business_name' => '',
+                    'business_location' => '', 'tenant_status' => '', 
+                    'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => '',
+                    'unit_id' => ''
+                ];
+            } else {
+                // Merge with defaults to ensure all keys exist
+                $default_keys = [
+                    'first_name' => '', 'middle_name' => '', 'last_name' => '', 
+                    'phone' => '', 'alt_phone' => '', 'email' => '',
+                    'idMode' => '', 'id_no' => '', 'pass_no' => '',
+                    'leasing_period' => '', 'leasing_start_date' => '', 'leasing_end_date' => '',
+                    'move_in_date' => '', 'move_out_date' => '', 'account_no' => '',
+                    'unit_category' => '', 'id_upload' => '', 'tax_pin_copy' => '',
+                    'rental_agreement' => '', 'income' => '', 'job_title' => '',
+                    'job_location' => '', 'casual_job' => '', 'business_name' => '',
+                    'business_location' => '', 'tenant_status' => '', 
+                    'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => '',
+                    'unit_id' => ''
+                ];
+                
+                $tenant_info = array_merge($default_keys, $tenant_info);
+                
+                // Now fetch unit_id and monthly_rent from tenancies and building_units tables
+                $unitStmt = $pdo->prepare("
+                    SELECT t.unit_id, bu.monthly_rent, bu.unit_number
+                    FROM tenancies t
+                    JOIN building_units bu ON t.unit_id = bu.id
+                    WHERE t.tenant_id = ? AND t.status = 'Active'
+                    ORDER BY t.id DESC
+                    LIMIT 1
+                ");
+                $unitStmt->execute([$decrypted_id]);
+                $unitResult = $unitStmt->fetch(PDO::FETCH_ASSOC);
+                
+                if($unitResult) {
+                    $tenant_info['unit_id'] = $unitResult['unit_id'];
+                    $monthly_rent = floatval($unitResult['monthly_rent']);
+                    $unit_number = htmlspecialchars($unitResult['unit_number'] ?? '');
+                    $final_bill = $monthly_rent;
+                }
+                
+                // FETCH GARBAGE DATA
+                try {
+                    $garbage_stmt = $pdo->prepare("SELECT bill, qty, unit_price, subtotal FROM tenant_bills WHERE tenant_id = ? AND bill = 'Garbage'");
+                    $garbage_stmt->execute([$decrypted_id]);
+                    $garbage_data = $garbage_stmt->fetch(PDO::FETCH_ASSOC);
+                } catch (Exception $e) {
+                    $garbage_data = [];
+                }
+            }
+        } catch (PDOException $e) {
+            error_log("Database error fetching tenant info: " . $e->getMessage());
+            echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Database Error',
+                    text: 'Could not fetch tenant data. Please try again.'
+                });
+            </script>";
+            
+            $tenant_info = [
+                'first_name' => '', 'middle_name' => '', 'last_name' => '', 
+                'phone' => '', 'alt_phone' => '', 'email' => '',
+                'idMode' => '', 'id_no' => '', 'pass_no' => '',
+                'leasing_period' => '', 'leasing_start_date' => '', 'leasing_end_date' => '',
+                'move_in_date' => '', 'move_out_date' => '', 'account_no' => '',
+                'unit_category' => '', 'id_upload' => '', 'tax_pin_copy' => '',
+                'rental_agreement' => '', 'income' => '', 'job_title' => '',
+                'job_location' => '', 'casual_job' => '', 'business_name' => '',
+                'business_location' => '', 'tenant_status' => '', 
+                'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => '',
+                'unit_id' => ''
+            ];
+        }
+    } else {
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid ID',
+                text: 'The provided tenant ID is invalid.'
+            });
+        </script>";
+        
+        $tenant_info = [
+            'first_name' => '', 'middle_name' => '', 'last_name' => '', 
+            'phone' => '', 'alt_phone' => '', 'email' => '',
+            'idMode' => '', 'id_no' => '', 'pass_no' => '',
+            'leasing_period' => '', 'leasing_start_date' => '', 'leasing_end_date' => '',
+            'move_in_date' => '', 'move_out_date' => '', 'account_no' => '',
+            'unit_category' => '', 'id_upload' => '', 'tax_pin_copy' => '',
+            'rental_agreement' => '', 'income' => '', 'job_title' => '',
+            'job_location' => '', 'casual_job' => '', 'business_name' => '',
+            'business_location' => '', 'tenant_status' => '', 
+            'tenant_occupancy_status' => '', 'building_link' => '', 'tenant_reg' => '',
+            'unit_id' => ''
+        ];
+    }
+} else {
+    echo "<script>
+        Swal.fire({
+            icon: 'info',
+            title: 'No ID Provided',
+            text: 'Please select a tenant to create an invoice.'
+        });
+    </script>";
+}
+?>
+          
+              
+<div class="card shadow">
+<div class="card-header" style="background-color: #00192D; color: #fff;">
+    <b>Create Invoice for Unit <?= $unit_number ?: 'N/A'; ?> - <?= htmlspecialchars(($tenant_info['first_name'] ?? '') . ' ' . ($tenant_info['middle_name'] ?? '') . ' ' . ($tenant_info['last_name'] ?? ''));?></b>
+</div>
+            <form id="invoiceForm" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ;?>" enctype="multipart/form-data" autocomplete="off">
+                <div class="card-body">
+                    <!-- Tenant Info Section -->
+                    <div class="row">
+    <div class="col-md-3">
+        <div class="form-group mb-3">
+            <label>Invoice Number:</label>
+            <input type="text" id="invoiceNumber" name="invoice_no" required class="form-control" readonly>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group mb-3">
+            <label>Invoice To:</label>
+            <input type="text" 
+                   name="receiver" 
+                   required 
+                   class="form-control" 
+                   value="<?= htmlspecialchars(($tenant_info['first_name'] ?? '') . ' ' . ($tenant_info['middle_name'] ?? '') . ' ' . ($tenant_info['last_name'] ?? '')); ?>" 
+                   readonly>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group mb-3">
+            <label>Main Contact</label>
+            <input class="form-control" 
+                   value="<?= htmlspecialchars($tenant_info['phone'] ?? ''); ?>" 
+                   readonly 
+                   name="phone">
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group mb-3">
+            <label>Alternative Contact</label>
+            <input class="form-control" 
+                   value="<?= htmlspecialchars($tenant_info['alt_phone'] ?? ''); ?>" 
+                   readonly 
+                   name="alt_phone">
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <label>Email</label>
+        <input class="form-control" 
+               value="<?= htmlspecialchars($tenant_info['email'] ?? ''); ?>" 
+               readonly 
+               name="email">
+    </div>
+
+    <div class="col-md-4">
+        <label>Invoice Date</label>
+        <input type="date" id="invoiceDate" name="invoice_date" required class="form-control">
+    </div>
+
+    <div class="col-md-4">
+        <label>Date Due</label>
+        <input type="date" id="dateDue" name="due_date" required class="form-control" readonly>
+    </div>
+</div>
+
+
+                    <hr>
+                    <!-- <input type="hidden" name="paymentStatus" value="Pending">
+                    <input type="hidden" name="monthly_rent" id="monthlyRent" value="<?= htmlspecialchars($monthly_rent); ?>">
+                    <input type="hidden" name="final_bill" id="finalBill" value="<?= htmlspecialchars($final_bill); ?>"> -->
+
+                                       <!-- Invoice Items Table -->
+                                       <h5 class="mb-3">Invoice Items</h5>
+                                       <table id="invoiceTable" class="table table-bordered table-striped shadow">
+    <thead class="table-dark">
+    <tr>
+    <th>Paid For</th>
+    <th>Account Code</th> <!-- This should be column 2 -->
+    <th>Description</th>  <!-- This should be column 3 -->
+    <th>Unit Price</th>   <!-- This should be column 4 -->
+    <th>Quantity</th>     <!-- This should be column 5 -->
+    <th>Taxation</th>     <!-- This should be column 6 -->
+    <th>Tax Amount</th>   <!-- This should be column 7 -->
+    <th>Total Price</th>  <!-- This should be column 8 -->
+    <th>Action</th>       <!-- This should be column 9 -->
+</tr>
+    </thead>
+    <tbody id="invoiceBody">
+        <?php
+        // Display Rent row automatically since it's in monthly_rent
+        if ($monthly_rent > 0) {
+            // Get account code for Rent (500)
+            $rentAccountCode = 500;
+            $rentAccountName = "Rental Income";
+            $rentUnitPrice = $monthly_rent;
+            $rentQuantity = 1;
+            $rentTaxType = 'VAT Inclusive';
+            $rentTotalPrice = $monthly_rent;
+            $rentTaxAmount = round($rentTotalPrice * (16/116), 2);
+            $rentNetPrice = $rentTotalPrice - $rentTaxAmount;
+            
+            echo "<tr id='rowRent'>";
+            echo "<td>" . htmlspecialchars($rentAccountName) . "</td>";
+            echo "<td class='account-code'>" . htmlspecialchars($rentAccountCode) . "</td>";
+            echo "<td>Monthly Rental Payment</td>";
+            echo "<td class='unit-price'>" . number_format($rentNetPrice, 2) . "</td>";
+            echo "<td class='quantity'>" . $rentQuantity . "</td>";
+            echo "<td class='tax-type'>" . $rentTaxType . "</td>";
+            echo "<td class='tax-amount'>" . number_format($rentTaxAmount, 2) . "</td>";
+            echo "<td class='total-price'>" . number_format($rentTotalPrice, 2) . "</td>";
+            echo "<td>";
+            echo "<button type='button' class='btn btn-sm btn-danger' onclick='removeRow(\"rowRent\")'>";
+            echo "<i class='fa fa-trash'></i>";
+            echo "</button>";
+            echo "</td>";
+            echo "</tr>";
+        }
+        
+        // For water bill (use account code 510)
+        if (!empty($tenant_info['unit_id'])) {
+            try {
+                $waterStmt = $pdo->prepare("
+                    SELECT 
+                        SUM(quantity)   AS total_qty,
+                        SUM(sub_total)  AS total_amount
+                    FROM bills
+                    WHERE unit_id = ?
+                      AND bill_name = 'Water'
+                      AND MONTH(created_at) = MONTH(CURRENT_DATE())
+                      AND YEAR(created_at) = YEAR(CURRENT_DATE())
+                ");
+                $waterStmt->execute([$tenant_info['unit_id']]);
+                $water = $waterStmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($water && $water['total_amount'] > 0) {
+                    $waterAccountCode = 510;
+                    $waterAccountName = "Water Charges (Revenue)";
+                    $qty   = (float) $water['total_qty'];
+                    $total = (float) $water['total_amount'];
+                    $taxAmount = round($total * (16 / 116), 2);
+                    $netTotal  = $total - $taxAmount;
+                    $unitPrice = $qty > 0 ? $netTotal / $qty : 0;
+                    ?>
+                    <tr id="rowWater">
+                        <td><?= htmlspecialchars($waterAccountName) ?></td>
+                        <td class="account-code"><?= htmlspecialchars($waterAccountCode) ?></td>
+                        <td>Water Consumption (Monthly)</td>
+                        <td class="unit-price"><?= number_format($unitPrice, 2) ?></td>
+                        <td class="quantity"><?= $qty ?></td>
+                        <td class="tax-type">VAT Inclusive</td>
+                        <td class="tax-amount"><?= number_format($taxAmount, 2) ?></td>
+                        <td class="total-price"><?= number_format($total, 2) ?></td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger"
+                                onclick="removeRow('rowWater')">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <?php
+                }
+            } catch (PDOException $e) {
+                error_log("Water bill fetch error: " . $e->getMessage());
+            }
+        }
+        
+        // For garbage bills (use account code 515)
+        if (!empty($recurringBills)) {
+            foreach ($recurringBills as $index => $bill) {
+                $garbageAccountCode = 515;
+                $garbageAccountName = "Garbage Collection Fees (Revenue)";
+                $qty        = (int) ($bill['quantity'] ?? 1);
+                $total      = (float) ($bill['subtotal'] ?? 0);
+                $billName   = $bill['bill_name'];
+                $rowId      = 'rowRecurring' . $index;
+                
+                if ($total <= 0) continue;
+                
+                $taxAmount = round($total * (16 / 116), 2);
+                $netTotal  = $total - $taxAmount;
+                $unitPrice = $qty > 0 ? $netTotal / $qty : 0;
+                ?>
+                <tr id="<?= $rowId ?>">
+                    <td><?= htmlspecialchars($garbageAccountName) ?></td>
+                    <td class="account-code"><?= htmlspecialchars($garbageAccountCode) ?></td>
+                    <td><?= htmlspecialchars($billName) ?></td>
+                    <td class="unit-price"><?= number_format($unitPrice, 2) ?></td>
+                    <td class="quantity"><?= $qty ?></td>
+                    <td class="tax-type">VAT Inclusive</td>
+                    <td class="tax-amount"><?= number_format($taxAmount, 2) ?></td>
+                    <td class="total-price"><?= number_format($total, 2) ?></td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-sm btn-danger"
+                                onclick="removeRow('<?= $rowId ?>')">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <?php
+            }
+        }
+        ?>
+    </tbody>
+    <tfoot>
+                            <tr><td colspan="6" class="text-end">Subtotal:</td><td id="subtotal" class="text-end">0.00</td><td></td></tr>
+                            <tr><td colspan="6" class="text-end">Total Tax:</td><td id="totalTax" class="text-end">0.00</td><td></td></tr>
+                            <tr><td colspan="6" class="text-end"><strong>Final Total:</strong></td><td id="finalTotal" class="text-end">0.00</td><td></td></tr>
+                        </tfoot>
+</table>
+                    <hr>
+                    <!-- Changed addRow() to open the drawer -->
+                    <button type="button" onclick="openAddItemDrawer()" class="btn btn-sm shadow text-white" style="background-color:#00192D;">
+                        <i class="fa fa-plus"></i> Add Item
+                    </button>
+                    <hr>
+
+                    <!-- Notes & Attachment Section -->
+                    <div class="row mb-3 shadow p-3 rounded">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Notes</label>
+                                <textarea name="notes" rows="3" class="form-control"></textarea>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Chart of Accounts Reference</label>
-                            <div class="card" style="border: 1px solid #dee2e6;">
-                                <div class="card-body p-2">
-                                    <h6 class="card-title mb-1" style="font-size: 0.9rem;">Account Reference:</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.8rem;">
-                                        <strong>Account:</strong> <?= htmlspecialchars($rental_account_name) ?>
-                                    </p>
-                                    <p class="card-text mb-0" style="font-size: 0.8rem;">
-                                        <strong>Code:</strong> <?= htmlspecialchars($rental_account_code) ?>
-                                    </p>
-                                    <p class="card-text mb-0" style="font-size: 0.8rem;">
-                                        <strong>Type:</strong> Revenue - Rental Revenue
-                                    </p>
-                                </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Attachment</label>
+                                <input type="file" name="attachment" accept=".pdf,.jpg,.png,.docx" class="form-control">
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="card shadow">
-                    <div class="card-header" style="background-color:#00192D; color: #fff;">Recurring Bills</div>
-                    <div class="card-body">
-                        <table id="expensesTable" class="table">
-                            
-                            <thead>
-                                <tr>
-                                    <th>Bill</th>
-                                    <th>Qty</th>
-                                    <th>Unit Price</th>
-                                    <th>Subtotal</th>
-                                    <th>Options</th>
-                                </tr>
-                            </thead>
-                            <tbody id="expensesBody"></tbody>
-                                <!-- Rows will be added here dynamically -->
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td>Total</td>
-                                    <td id="totalQty">0</td>
-                                    <td id="totalUnitPrice">0.00</td>
-                                    <td id="totalSubtotal">0.00</td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                        <button type="button" class="btn btn-sm shadow" style="border:1px solid #00192D; color:#00192D;" onclick="addRow()">+ Add Row</button>
-                    </div>
+                    <input type="hidden" name="invoice_items" id="invoiceItems">
+                    <input type="hidden" name="subtotalValue" id="subtotalValue">
+                    <input type="hidden" name="totalTaxValue" id="totalTaxValue">
+                    <input type="hidden" name="finalTotalValue" id="finalTotalValue">
                 </div>
-                
-                <div class="form-group mt-3">
-                    <label>Occupancy Status</label>
-                    <select name="occupancy_status" id="occupancy_status" required class="form-control">
-                        <option value="" selected hidden>-- Select Status --</option>
-                        <option value="Occupied">Occupied</option>
-                        <option value="Vacant">Vacant</option>
-                        <option value="Under Maintenance">Under Maintenance</option>
-                    </select>
+                <div class="card-footer text-right">
+                    <button type="submit" onclick="return prepareInvoiceData()" name="submit" class="btn btn-sm shadow" style="border:1px solid #00192D; color:#00192D;"><i class="fa fa-check"></i> Submit Invoice</button>
                 </div>
-            </div>
-            <div class="card-footer text-right">
-                <button class="btn btn-sm" id="secondSectionBackBtn" type="button" style="background-color:#00192D; color:#fff;">Go Back</button>
-                <button class="btn btn-sm" type="submit" name="submit_unit" style="background-color:#00192D; color: #fff;">
-                    <i class="bi bi-send"></i> Submit
-                </button>
-            </div>
+            </form>
+          </div>
         </div>
-    </div>
-</form>
-                            </form>
-                        </div>
-                    </div>
+        <!-- Offcanvas (Side Panel) for Add Item -->
+        <div class="offcanvas-right shadow" id="addItemDrawer">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0">Add New Invoice Item</h5>
+            <button type="button" class="btn-close shadow" aria-label="Close" onclick="closeAddItemDrawer()" id="closeAddItem"><i class="fa fa-close"></i></button>
+        </div>
+            <form id="addItemForm">
+                <div class="mb-3">
+                    <label for="drawerItemName" class="form-label">Paid For <span class="text-danger">*</span></label>
+                    <select class="form-control" id="drawerItemName" onchange="checkDrawerOthersInput(this)" required>
+    <option value="">-- Select Item --</option>
+    <?php foreach ($accounts as $account): ?>
+        <option value="<?= htmlspecialchars($account['account_name']) ?>" 
+                data-account-code="<?= htmlspecialchars($account['account_code']) ?>">
+            <?= htmlspecialchars($account['account_name']) ?> (<?= htmlspecialchars($account['account_code']) ?>)
+        </option>
+    <?php endforeach; ?>
+</select>
+
+                    <input type="text" class="form-control mt-2 d-none" id="drawerOtherInput" placeholder="Please specify">
                 </div>
-            </div>
-        </main>
-        <!--end::App Main-->
+                <div class="mb-3">
+                    <label for="drawerDescription" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="drawerDescription">
+                </div>
+                <div class="mb-3">
+                    <label for="drawerUnitPrice" class="form-label">Unit Price <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" id="drawerUnitPrice" step="0.01" value="0" min="0" required>
+                </div>
+                <div class="mb-3">
+                    <label for="drawerQuantity" class="form-label">Quantity <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" id="drawerQuantity" value="1" min="1" required>
+                </div>
+                <div class="mb-3">
+                    <label for="drawerTaxType" class="form-label">Taxation</label>
+                    <select class="form-control" id="drawerTaxType">
+                        <option value="VAT Inclusive">VAT 16% Inclusive</option>
+                        <option value="VAT Exclusive">VAT 16% Exclusive</option>
+                        <option value="Zero Rated">Zero Rated</option>
+                        <option value="Exempted">Exempted</option>
+                    </select>
+                </div> <hr>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-sm shadow text-white" style="background-color:#00192D;"><i class="fa fa-plus"></i> Add Item</button>
+                    <button type="button" class="btn btn-sm text-white shadow" onclick="closeAddItemDrawer()" style="background-color:#cc0001;"><i class="fa fa-close"></i> Cancel</button>
+                </div>
+            </form>
+        </div>
+        <div class="offcanvas-backdrop" id="addItemDrawerBackdrop" onclick="closeAddItemDrawer()"></div>
+                                                
+            <!-- /.content -->
+            <!-- Help Pop Up Form -->
+        
+        </div>
+        <!-- /.content-wrapper -->
 
-        <!--begin::Footer-->
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
-        <!-- end footer -->
+        <!-- Footer -->
+      
+
     </div>
-    <!--end::App Wrapper-->
+    <!-- ./wrapper -->
+    <!-- Required Scripts -->
+    <?php include_once '../includes/required_scripts.php';?>
+    <!-- Meter Readings JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    
     <script>
-let rowCount = 0;
+    document.addEventListener('DOMContentLoaded', function() {
+        // Calculate initial totals based on database data
+        calculateTotals();
+        
+        // Set today's date as invoice date and due date (30 days from now)
+        const today = new Date();
+        const dueDate = new Date();
+        dueDate.setDate(today.getDate() + 30);
+        
+        document.getElementById('invoiceDate').valueAsDate = today;
+        document.getElementById('dateDue').valueAsDate = dueDate;
+        
+        // Generate invoice number
+        const invoiceNumber = 'INV-' + today.getFullYear() + '-' + 
+                             String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                             Math.floor(1000 + Math.random() * 9000);
+        document.getElementById('invoiceNumber').value = invoiceNumber;
+    });
 
-// Pass PHP CoA array to JavaScript
-const coaOptions = <?php echo json_encode($coaList); ?>;
+    function calculateTotals() {
+        let subtotal = 0;
+        let totalTax = 0;
+        
+        // Loop through all rows in the invoice body
+        const rows = document.querySelectorAll('#invoiceBody tr');
+        rows.forEach(row => {
+            const totalPriceCell = row.querySelector('.total-price');
+            const taxAmountCell = row.querySelector('.tax-amount');
+            
+            if (totalPriceCell && taxAmountCell) {
+                const totalPrice = parseFloat(totalPriceCell.textContent.replace(/,/g, '')) || 0;
+                const taxAmount = parseFloat(taxAmountCell.textContent.replace(/,/g, '')) || 0;
+                
+                subtotal += totalPrice;
+                totalTax += taxAmount;
+            }
+        });
+        
+        // Update footer totals
+        document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+        document.getElementById('totalTax').textContent = totalTax.toFixed(2);
+        document.getElementById('finalTotal').textContent = (subtotal + totalTax).toFixed(2);
+        
+        // Update hidden fields
+        document.getElementById('subtotalValue').value = subtotal.toFixed(2);
+        document.getElementById('totalTaxValue').value = totalTax.toFixed(2);
+        document.getElementById('finalTotalValue').value = (subtotal + totalTax).toFixed(2);
+    }
 
-function addRow() {
-    rowCount++;
-    const tableBody = document.querySelector('#expensesTable tbody');
-    const newRow = document.createElement('tr');
-    newRow.id = 'row-' + rowCount;
+    function removeRow(rowId) {
+        const row = document.getElementById(rowId);
+        if (row) {
+            row.remove();
+            calculateTotals();
+        }
+    }
 
-    const billOptions = coaOptions.map(opt => `<option value="${opt.account_name}" data-code="${opt.account_code}">${opt.account_name}</option>`).join('');
+// Update prepareInvoiceData function
+function prepareInvoiceData() {
+    const items = [];
+    const rows = document.querySelectorAll('#invoiceBody tr');
+    
+    rows.forEach((row) => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 8) {
+            // Get account_code - it might be in a different column
+            const accountCodeCell = row.querySelector('.account-code');
+            const account_code = accountCodeCell ? accountCodeCell.textContent.trim() : '';
+            
+            const item = {
+                paid_for: cells[0].textContent.trim(),
+                account_code: account_code,
+                description: cells[2] ? cells[2].textContent.trim() : '',
+                unit_price: parseFloat(cells[3] ? cells[3].textContent.replace(/,/g, '') : 0) || 0,
+                quantity: parseInt(cells[4] ? cells[4].textContent : 1) || 1,
+                tax_type: cells[5] ? cells[5].textContent.trim() : 'VAT Inclusive',
+                tax_amount: parseFloat(cells[6] ? cells[6].textContent.replace(/,/g, '') : 0) || 0,
+                total_price: parseFloat(cells[7] ? cells[7].textContent.replace(/,/g, '') : 0) || 0
+            };
+            items.push(item);
+            
+            console.log("Item prepared:", item); // For debugging
+        }
+    });
+    
+    if (items.length === 0) {
+        alert("No items to invoice!");
+        return false;
+    }
+    
+    console.log("All items:", items); // For debugging
+    
+    document.getElementById('invoiceItems').value = JSON.stringify(items);
+    calculateTotals();
+    
+    // Debug: Show what's being submitted
+    console.log("Submitting:", document.getElementById('invoiceItems').value);
+    
+    return true;
+}
+    // Functions for the add item drawer
+    function openAddItemDrawer() {
+        document.getElementById('addItemDrawer').classList.add('show');
+        document.getElementById('addItemDrawerBackdrop').classList.add('show');
+    }
 
-    newRow.innerHTML = `
-    <td>
-        <select name="bill_name[]" class="form-control form-control-sm bill-select" required>
-            <option value="" selected hidden>Select Bill</option>
-            ${billOptions}
-            <option value="Other">Other</option>
-        </select>
-        <input type="text" name="bill_name_other[]" class="form-control form-control-sm mt-1 d-none" placeholder="Specify other bill">
-    </td>
-    <td><input type="number" name="quantity[]" class="form-control form-control-sm qty-input" min="1" value="1" required></td>
-    <td><input type="number" name="unit_price[]" class="form-control form-control-sm price-input" min="0" step="0.01" value="0" required></td>
-    <td class="subtotal-cell">0.00</td>
-    <td>
-        <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(${rowCount})">
-            <i class="fa fa-trash"></i>
-        </button>
-    </td>
-`;
+    function closeAddItemDrawer() {
+        document.getElementById('addItemDrawer').classList.remove('show');
+        document.getElementById('addItemDrawerBackdrop').classList.remove('show');
+        document.getElementById('addItemForm').reset();
+        document.getElementById('drawerOtherInput').classList.add('d-none');
+    }
 
-    tableBody.appendChild(newRow);
+    // Handle add item form submission
+    document.getElementById('addItemForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let itemName = document.getElementById('drawerItemName').value;
+        if (itemName === 'Other') {
+            itemName = document.getElementById('drawerOtherInput').value.trim();
+            if (!itemName) {
+                alert('Please specify the item name');
+                return;
+            }
+        }
+        
+        const description = document.getElementById('drawerDescription').value || itemName;
+        const unitPrice = parseFloat(document.getElementById('drawerUnitPrice').value) || 0;
+        const quantity = parseInt(document.getElementById('drawerQuantity').value) || 1;
+        const taxType = document.getElementById('drawerTaxType').value;
+        
+        // Calculate tax amount
+        const totalPrice = unitPrice * quantity;
+        let taxAmount = 0;
+        if (taxType === 'VAT Inclusive') {
+            taxAmount = totalPrice * 0.16;
+        } else if (taxType === 'VAT Exclusive') {
+            taxAmount = totalPrice * 0.16;
+        }
+        
+        // Add row to table
+        const rowId = 'row' + Date.now(); // Unique ID
+        const newRow = document.createElement('tr');
+        newRow.id = rowId;
+        newRow.innerHTML = `
+            <td>${itemName}</td>
+            <td>${description}</td>
+            <td class="unit-price">${unitPrice.toFixed(2)}</td>
+            <td class="quantity">${quantity}</td>
+            <td class="tax-type">${taxType}</td>
+            <td class="tax-amount">${taxAmount.toFixed(2)}</td>
+            <td class="total-price">${totalPrice.toFixed(2)}</td>
+            <td>
+                <button type="button" class="btn btn-sm btn-danger" onclick="removeRow('${rowId}')">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </td>
+        `;
+        
+        document.getElementById('invoiceBody').appendChild(newRow);
+        
+        // Recalculate totals
+        calculateTotals();
+        
+        // Close drawer and reset form
+        closeAddItemDrawer();
+    });
 
-    const qtyInput = newRow.querySelector('.qty-input');
-    const priceInput = newRow.querySelector('.price-input');
-    const billSelect = newRow.querySelector('.bill-select');
-    const coaInput = newRow.querySelector('.coa-input');
-
-    qtyInput.addEventListener('input', calculateTotals);
-    priceInput.addEventListener('input', calculateTotals);
-
-    billSelect.addEventListener('change', function() {
-        const selectedOption = this.selectedOptions[0];
-        coaInput.value = selectedOption.getAttribute('data-code');
-
-        const otherInput = this.closest('td').querySelector('[name="bill_name_other[]"]');
-        if (this.value === 'Other') {
+    function checkDrawerOthersInput(select) {
+        const otherInput = document.getElementById('drawerOtherInput');
+        if (select.value === 'Other') {
             otherInput.classList.remove('d-none');
             otherInput.required = true;
         } else {
             otherInput.classList.add('d-none');
             otherInput.required = false;
         }
-    });
-
-    calculateTotals();
-}
-
-function removeRow(rowId) {
-    const row = document.getElementById('row-' + rowId);
-    if (row) {
-        row.remove();
-        calculateTotals();
     }
-}
-
-function calculateTotals() {
-    let totalQty = 0;
-    let totalUnitPrice = 0;
-    let totalSubtotal = 0;
-
-    document.querySelectorAll('#expensesTable tbody tr').forEach(row => {
-        const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
-        const price = parseFloat(row.querySelector('.price-input').value) || 0;
-        const subtotal = qty * price;
-
-        row.querySelector('.subtotal-cell').textContent = subtotal.toFixed(2);
-
-        totalQty += qty;
-        totalUnitPrice += price;
-        totalSubtotal += subtotal;
-    });
-
-    document.getElementById('totalQty').textContent = totalQty;
-    document.getElementById('totalUnitPrice').textContent = totalUnitPrice.toFixed(2);
-    document.getElementById('totalSubtotal').textContent = totalSubtotal.toFixed(2);
-}
-
-// Initialize first row
-document.addEventListener('DOMContentLoaded', addRow);
-</script>
-
+    </script>
+    
     <!-- <script>
-let coaAccounts = [];
+    function calculateRowTotal(row) {
+        let unitPrice = parseFloat($(row).find('.unit-price').text()) || 0;
+        let quantity = parseFloat($(row).find('.quantity').text()) || 0;
+        let taxType = $(row).find('.tax-type').text().trim();
+        
+        let netTotal = unitPrice * quantity;
+        let taxAmount = 0;
+        let totalPrice = 0;
+        
+        if (taxType === 'VAT Inclusive') {
+            // For VAT Inclusive: total = netTotal * 1.16
+            totalPrice = netTotal * 1.16;
+            taxAmount = totalPrice * (16/116);
+        } else if (taxType === 'VAT Exclusive') {
+            // For VAT Exclusive: tax = netTotal * 0.16, total = netTotal + tax
+            taxAmount = netTotal * 0.16;
+            totalPrice = netTotal + taxAmount;
+        } else {
+            // No tax
+            totalPrice = netTotal;
+            taxAmount = 0;
+        }
+        
+        // Update the row
+        $(row).find('.tax-amount').text(taxAmount.toFixed(2));
+        $(row).find('.total-price').text(totalPrice.toFixed(2));
+        
+        return { netTotal, taxAmount, totalPrice };
+    }
 
-// Fetch COA expenses on page load
-fetch('fetch_coa_revenue.php')
-    .then(res => res.json())
-    .then(data => {
-        coaAccounts = data;
+    function updateTotals() {
+        let subtotal = 0;
+        let totalTax = 0;
+        let finalTotal = 0;
+        
+        $('#invoiceBody tr').each(function() {
+            let rowTotal = parseFloat($(this).find('.total-price').text()) || 0;
+            let rowTax = parseFloat($(this).find('.tax-amount').text()) || 0;
+            
+            finalTotal += rowTotal;
+            totalTax += rowTax;
+            subtotal = finalTotal - totalTax;
+        });
+        
+        $('#subtotal').text(subtotal.toFixed(2));
+        $('#totalTax').text(totalTax.toFixed(2));
+        $('#finalTotal').text(finalTotal.toFixed(2));
+    }
+    </script> -->
+<script>
+function calculateInvoiceTotals() {
+    let subtotal = 0;
+    let totalTax = 0;
+    let finalTotal = 0;
+
+    document.querySelectorAll("#invoiceBody tr").forEach(row => {
+        let unitPrice = parseFloat(row.querySelector(".unit-price")?.innerText.replace(/,/g, "")) || 0;
+        let quantity  = parseFloat(row.querySelector(".quantity")?.innerText.replace(/,/g, "")) || 0;
+        let taxAmount = parseFloat(row.querySelector(".tax-amount")?.innerText.replace(/,/g, "")) || 0;
+        let totalPrice= parseFloat(row.querySelector(".total-price")?.innerText.replace(/,/g, "")) || 0;
+
+        subtotal += unitPrice * quantity;
+        totalTax += taxAmount;
+        finalTotal += totalPrice;
     });
 
-function addRow() {
-    const tbody = document.getElementById('expensesBody');
-
-    let coaOptions = `<option value="">Select Bill</option>`;
-    coaAccounts.forEach(acc => {
-        coaOptions += `<option value="${acc.account_code}">${acc.account_name}</option>`;
-    });
-
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>
-            <select class="form-control form-control-sm bill">
-                ${coaOptions}
-            </select>
-        </td>
-        <td>
-            <input type="number" class="form-control form-control-sm qty" value="1" min="1" oninput="calculateRow(this)">
-        </td>
-        <td>
-            <input type="number" class="form-control form-control-sm price" value="0" min="0" step="0.01" oninput="calculateRow(this)">
-        </td>
-        <td class="subtotal">0.00</td>
-        <td>
-            <button class="btn btn-sm btn-danger" onclick="this.closest('tr').remove(); calculateTotals();">✕</button>
-        </td>
-    `;
-    tbody.appendChild(row);
+    document.getElementById("subtotal").innerText = subtotal.toFixed(2);
+    document.getElementById("totalTax").innerText = totalTax.toFixed(2);
+    document.getElementById("finalTotal").innerText = finalTotal.toFixed(2);
 }
+
+// Remove row and recalc
+function removeRow(rowId) {
+    const row = document.getElementById(rowId);
+    if (row) row.remove();
+    calculateInvoiceTotals();
+}
+
+// Run on page load
+document.addEventListener("DOMContentLoaded", calculateInvoiceTotals);
 </script>
 
 <script>
-function calculateRow(el) {
-    const row = el.closest('tr');
-    const qty = parseFloat(row.querySelector('.qty').value) || 0;
-    const price = parseFloat(row.querySelector('.price').value) || 0;
+function prepareInvoiceData() {
+    let items = [];
 
-    const subtotal = qty * price;
-    row.querySelector('.subtotal').innerText = subtotal.toFixed(2);
-
-    calculateTotals();
-}
-
-function calculateTotals() {
-    let totalQty = 0;
-    let totalSubtotal = 0;
-
-    document.querySelectorAll('#expensesBody tr').forEach(row => {
-        totalQty += parseFloat(row.querySelector('.qty').value) || 0;
-        totalSubtotal += parseFloat(row.querySelector('.subtotal').innerText) || 0;
+    document.querySelectorAll("#invoiceBody tr").forEach(row => {
+        let item = {
+            paid_for: row.children[0].innerText.trim(),
+            description: row.children[1].innerText.trim(),
+            unit_price: row.querySelector(".unit-price").innerText.replace(/,/g,''),
+            quantity: row.querySelector(".quantity").innerText,
+            tax_type: row.querySelector(".tax-type").innerText,
+            tax_amount: row.querySelector(".tax-amount").innerText.replace(/,/g,''),
+            total_price: row.querySelector(".total-price").innerText.replace(/,/g,'')
+        };
+        items.push(item);
     });
 
-    document.getElementById('totalQty').innerText = totalQty;
-    document.getElementById('totalSubtotal').innerText = totalSubtotal.toFixed(2);
-    document.getElementById('totalUnitPrice').innerText = '—';
-}
-</script> -->
-
-
-    <!-- <script>
-// Dynamic rows for expenses table
-let rowCount = 0;
-
-function addRow() {
-    rowCount++;
-    const tableBody = document.querySelector('#expensesTable tbody');
-    const newRow = document.createElement('tr');
-    newRow.id = 'row-' + rowCount;
-    newRow.innerHTML = `
-        <td>
-            <select name="bill_name[]" class="form-control form-control-sm bill-select" required>
-                <option value="" selected hidden>Select Bill</option>
-                <option value="Water">Water</option>
-                <option value="Garbage">Garbage</option>
-                <option value="Electricity">Electricity</option>
-                <option value="Maintenance">Maintenance</option>
-                <option value="Internet">Internet</option>
-                <option value="Security">Security</option>
-                <option value="Parking">Parking</option>
-                <option value="Other">Other</option>
-            </select>
-            <input type="text" name="bill_name_other[]" class="form-control form-control-sm mt-1 d-none" placeholder="Specify other bill">
-        </td>
-        <td><input type="number" name="quantity[]" class="form-control form-control-sm qty-input" min="1" value="1" required></td>
-        <td><input type="number" name="unit_price[]" class="form-control form-control-sm price-input" min="0" step="0.01" value="0" required></td>
-        <td class="subtotal-cell">0.00</td>
-        <td>
-            <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(${rowCount})">
-                <i class="fa fa-trash"></i>
-            </button>
-        </td>
-    `;
-    tableBody.appendChild(newRow);
-    
-    // Add event listeners for calculations
-    const qtyInput = newRow.querySelector('.qty-input');
-    const priceInput = newRow.querySelector('.price-input');
-    const billSelect = newRow.querySelector('.bill-select');
-    
-    qtyInput.addEventListener('input', calculateTotals);
-    priceInput.addEventListener('input', calculateTotals);
-    billSelect.addEventListener('change', function() {
-        const otherInput = this.closest('td').querySelector('[name="bill_name_other[]"]');
-        if (this.value === 'Other') {
-            otherInput.classList.remove('d-none');
-            otherInput.required = true;
-        } else {
-            otherInput.classList.add('d-none');
-            otherInput.required = false;
-        }
-    });
-    
-    calculateTotals();
-}
-
-function removeRow(rowId) {
-    const row = document.getElementById('row-' + rowId);
-    if (row) {
-        row.remove();
-        calculateTotals();
+    if (items.length === 0) {
+        alert("Invoice must have at least one item");
+        return false;
     }
-}
 
-function calculateTotals() {
-    let totalQty = 0;
-    let totalUnitPrice = 0;
-    let totalSubtotal = 0;
-    
-    const rows = document.querySelectorAll('#expensesTable tbody tr');
-    rows.forEach(row => {
-        const qtyInput = row.querySelector('.qty-input');
-        const priceInput = row.querySelector('.price-input');
-        const subtotalCell = row.querySelector('.subtotal-cell');
-        
-        if (qtyInput && priceInput && subtotalCell) {
-            const qty = parseFloat(qtyInput.value) || 0;
-            const price = parseFloat(priceInput.value) || 0;
-            const subtotal = qty * price;
-            
-            subtotalCell.textContent = subtotal.toFixed(2);
-            
-            totalQty += qty;
-            totalUnitPrice += price;
-            totalSubtotal += subtotal;
-        }
-    });
-    
-    // Update footer totals
-    document.getElementById('totalQty').textContent = totalQty;
-    document.getElementById('totalUnitPrice').textContent = totalUnitPrice.toFixed(2);
-    document.getElementById('totalSubtotal').textContent = totalSubtotal.toFixed(2);
-}
+    document.getElementById("invoiceItems").value = JSON.stringify(items);
 
-// Initialize with one row when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    addRow();
-    
-    // Form validation before submission
-    const form = document.querySelector('form');
-    form.addEventListener('submit', function(e) {
-        // Validate that at least one bill row exists
-        const billRows = document.querySelectorAll('#expensesTable tbody tr');
-        if (billRows.length === 0) {
-            e.preventDefault();
-            alert('Please add at least one recurring bill or remove the entire recurring bills section.');
-            return false;
-        }
-        
-        // Validate each bill row
-        let isValid = true;
-        billRows.forEach(row => {
-            const billSelect = row.querySelector('.bill-select');
-            const qtyInput = row.querySelector('.qty-input');
-            const priceInput = row.querySelector('.price-input');
-            
-            if (!billSelect.value || !qtyInput.value || !priceInput.value) {
-                isValid = false;
-            }
-            
-            // Check for "Other" bill with empty specification
-            if (billSelect.value === 'Other') {
-                const otherInput = row.querySelector('[name="bill_name_other[]"]');
-                if (!otherInput.value.trim()) {
-                    isValid = false;
-                    otherInput.classList.add('is-invalid');
-                }
-            }
-        });
-        
-        if (!isValid) {
-            e.preventDefault();
-            alert('Please fill in all required fields for recurring bills.');
-            return false;
-        }
-        
-        return true;
-    });
-});
-</script> -->
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Validate monthly rent input
-    const monthlyRentInput = document.getElementById('monthly_rent');
-    if(monthlyRentInput) {
-        monthlyRentInput.addEventListener('blur', function() {
-            const value = parseFloat(this.value);
-            if (value < 0) {
-                alert('Monthly rent cannot be negative');
-                this.value = '';
-                this.focus();
-            }
-        });
-        
-        // Format the input to 2 decimal places
-        monthlyRentInput.addEventListener('change', function() {
-            if(this.value) {
-                this.value = parseFloat(this.value).toFixed(2);
-            }
-        });
-    }
-    
-    // Form submission validation
-    const form = document.querySelector('form');
-    form.addEventListener('submit', function(e) {
-        const monthlyRent = parseFloat(monthlyRentInput.value);
-        if (!monthlyRent || monthlyRent <= 0) {
-            e.preventDefault();
-            alert('Please enter a valid monthly rent amount');
-            monthlyRentInput.focus();
-            return false;
-        }
-        
-        // Add chart of accounts reference to form data
-        const coaInput = document.createElement('input');
-        coaInput.type = 'hidden';
-        coaInput.name = 'chart_of_accounts_ref';
-        coaInput.value = '<?= $rental_account_code ?>';
-        this.appendChild(coaInput);
-        
-        return true;
-    });
-});
+    document.getElementById("subtotalValue").value = document.getElementById("subtotal").innerText;
+    document.getElementById("totalTaxValue").value = document.getElementById("totalTax").innerText;
+    document.getElementById("finalTotalValue").value = document.getElementById("finalTotal").innerText;
+
+    return true; // allow submit
+}
 </script>
 
     <!-- Main Js File -->
     <script src="../../js/adminlte.js"></script>
-    <script src="js/main.js"></script>
+    <script src="../js/main.js"></script>
     <!-- html2pdf depends on html2canvas and jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="module" src="./js/main.js"></script>
@@ -1248,7 +1245,6 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
     <!-- pdf download plugin -->
-
 
     <!-- Scripts -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->

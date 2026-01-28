@@ -119,6 +119,75 @@ try {
 
 ?>
 
+<?php
+// ----------------------------------------------------
+// 1) Fetch invoices with tenant details and payment summary - UPDATED WITH PROPER JOIN
+// ----------------------------------------------------
+$stmt = $pdo->query("
+    SELECT
+        i.id,
+        i.invoice_no,
+        i.receiver,
+        i.phone,
+        i.email,
+        i.invoice_date,
+        i.due_date,
+        i.notes AS description,
+        COALESCE(i.subtotal, 0) AS subtotal,
+        COALESCE(i.total, 0) AS total,
+        COALESCE(i.taxes, 0) AS taxes,
+        i.status,
+        i.payment_status,
+        
+        -- Tenant details from tenants table
+        t.id AS tenant_id,
+        CONCAT(t.first_name, ' ', t.last_name) AS tenant_name,
+        t.account_no,
+        
+        -- Payment calculations
+        (SELECT COALESCE(SUM(p.amount), 0)
+         FROM payments p
+         WHERE p.invoice_id = i.id) AS paid_amount,
+        
+        -- Invoice items totals
+        (SELECT COALESCE(SUM(unit_price * quantity), 0) 
+         FROM invoice_items 
+         WHERE invoice_id = i.id) AS items_subtotal,
+        
+        (SELECT COALESCE(SUM(tax_amount), 0) 
+         FROM invoice_items 
+         WHERE invoice_id = i.id) AS items_taxes,
+        
+        (SELECT COALESCE(SUM(total_price), 0) 
+         FROM invoice_items 
+         WHERE invoice_id = i.id) AS items_total,
+        
+        -- Final display values
+        CASE
+            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = i.id)
+            THEN (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_id = i.id)
+            ELSE i.subtotal
+        END AS display_subtotal,
+        
+        CASE
+            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = i.id)
+            THEN (SELECT COALESCE(SUM(tax_amount), 0) FROM invoice_items WHERE invoice_id = i.id)
+            ELSE i.taxes
+        END AS display_taxes,
+        
+        CASE
+            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = i.id)
+            THEN (SELECT COALESCE(SUM(total_price), 0) FROM invoice_items WHERE invoice_id = i.id)
+            ELSE i.total
+        END AS display_total
+        
+    FROM invoice i
+    LEFT JOIN tenants t ON i.tenant_id = t.id
+    ORDER BY i.created_at DESC
+");
+$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 
 <!doctype html>
 <html lang="en">
@@ -1188,18 +1257,18 @@ try {
                 <h5 class="mt-3">No invoices found</h5>
                 <p class="text-muted">Try different search terms</p>
               </div>
-
               <?php
 // ----------------------------------------------------
-// 1) Fetch invoices with tenant details and payment summary - CORRECTED
+// 1) Fetch invoices with tenant details and payment summary - FIXED VERSION
 // ----------------------------------------------------
 $stmt = $pdo->query("
     SELECT
         i.id,
         i.invoice_no,
-        i.receiver AS tenant_name,
-        i.phone AS tenant_phone,
-        i.email AS tenant_email,
+        -- Get tenant name from tenants table
+        CONCAT(t.first_name, ' ', t.last_name) AS tenant_name,
+        COALESCE(t.phone, i.phone) AS tenant_phone,
+        COALESCE(t.email, i.email) AS tenant_email,
         i.invoice_date,
         i.due_date,
         i.notes AS description,
@@ -1208,8 +1277,7 @@ $stmt = $pdo->query("
         COALESCE(i.taxes, 0) AS taxes,
         i.status,
         i.payment_status,
-        -- Try to find tenant account_no from other sources
-        NULL AS account_no,  -- Since this doesn't exist in invoice table
+        t.account_no AS account_no,
         
         -- Payment calculations
         (SELECT COALESCE(SUM(p.amount), 0)
@@ -1249,6 +1317,7 @@ $stmt = $pdo->query("
         END AS display_total
         
     FROM invoice i
+    LEFT JOIN tenants t ON i.tenant_id = t.id
     ORDER BY i.created_at DESC
 ");
 $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -1262,8 +1331,13 @@ if (empty($invoices)) {
     // 2) Output each invoice item
     // ----------------------------------------------------
     foreach ($invoices as $invoice) {
-        // Use receiver as tenant name
+        // Use the actual tenant name from the join
         $tenantName = !empty($invoice['tenant_name']) ? $invoice['tenant_name'] : 'Unknown Tenant';
+        
+        // If tenant_name is empty but receiver has an ID, you could display "Tenant ID: X"
+        if (empty($tenantName) && !empty($invoice['tenant_id'])) {
+            $tenantName = 'Tenant ID: ' . $invoice['tenant_id'];
+        }
         
         // Format dates
         $invoiceDate = 'Draft';
@@ -1500,184 +1574,6 @@ if (empty($invoices)) {
             </div>
           </div>
 
-          <div class="invoice-form-container">
-            <!-- Customer Section -->
-            <div class="form-section">
-              <h3 class="section-title">Tenant Details</h3>
-              <form id="myForm" method="POST" action="/Jengopay/landlord/pages/financials/invoices/action/submit_invoice.php" enctype="multipart/form-data">
-                <div class="form-row">
-                  <!-- Existing Invoice # input -->
-                  <div class="form-group">
-                    <label for="invoice-number">Invoice #</label>
-                    <input type="text"
-                      id="invoice-number"
-                      value="<?= $invoiceNumber ?>"
-                      class="form-control"
-                      readonly>
-                    <input type="hidden"
-                      name="invoice_no"
-                      value="<?= $invoiceNumber ?>">
-                  </div>
-
-                  <!-- Building selector -->
-                  <div class="form-group">
-                    <label for="building">Building</label>
-                    <select id="building" name="building_id" class="form-control" required>
-                      <option value="">Select a Building</option>
-                      <?php foreach ($buildings as $b): ?>
-                        <option value="<?= $b['id'] ?>">
-                          <?= htmlspecialchars($b['building_name']) ?>
-                        </option>
-                      <?php endforeach; ?>
-                    </select>
-                  </div>
-
-                  <!-- Tenant selector -->
-                  <div class="form-group">
-                    <label for="customer">Tenant</label>
-                    <select id="customer" name="tenant" class="form-control" required disabled>
-                      <option value="">Select a Building First</option>
-                    </select>
-                  </div>
-                </div>
-
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="invoice-date">Invoice Date</label>
-                    <input type="date"
-                      id="invoice-date"
-                      name="invoice_date"
-                      class="form-control"
-                      required>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="due-date">Due Date</label>
-                    <input type="date"
-                      id="due-date"
-                      name="due_date"
-                      class="form-control"
-                      required>
-                  </div>
-                </div>
-
-
-                <!-- Items Section -->
-                <div class="form-section">
-                  <h3 class="section-title">Items</h3>
-                  <table class="items-table" id="itemsTable">
-                    <thead>
-                      <tr>
-                        <th>Item (Service)</th>
-                        <th>Description</th>
-                        <th>Qty</th>
-                        <th>Unit Price</th>
-                        <th>Taxes</th>
-                        <th>Total</th>
-                        <th>Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody id="itemsBody">
-                      <!-- One initial row -->
-                      <!-- <tr> -->
-                      <!-- <td> -->
-                      <!-- <select name="account_item[]" class="select-account searchable-select" required>
-            <option value="" disabled selected>Select Account Item</option>
-            <?php foreach ($accountItems as $item): ?>
-              <option value="<?= htmlspecialchars($item['account_code']) ?>">
-                <?= htmlspecialchars($item['account_name']) ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
-            </td>
-            <td style="min-width: 200px;">
-          <textarea name="description[]" class="form-control" placeholder="Description" rows="1" required></textarea>
-        </td>
-                    <td><input type="number" name="quantity[]" class="form-control quantity" required></td>
-                    <td><input type="number" name="unit_price[]" class="form-control unit-price" required></td>
-                    <td>
-                        <select name="vat_type[]" class="form-select vat-option" required>
-                            <option value="" disabled selected>Select Option</option>
-                            <option value="inclusive">VAT 16% Inclusive</option>
-                            <option value="exclusive">VAT 16% Exclusive</option>
-                            <option value="zero">Zero Rated</option>
-                            <option value="exempted">Exempted</option>
-                        </select>
-                    </td>
-                    <td><input type="text" name="total[]" class="form-control total" readonly></td>
-                    <td><button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa fa-trash"></i></button></td> -->
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <!-- Add More Button -->
-                  <button type="button" class="btn btn-success add-btn" id="addMoreBtn" style="background-color: #00192D; color: #FFC107;">
-                    <i class="fa fa-plus"></i> ADD MORE
-                  </button>
-                </div>
-
-                <!-- Notes & Terms -->
-                <div class="form-section">
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label for="notes">Notes(Optional)</label>
-                      <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Thank you for your business!"></textarea>
-                    </div>
-                    <!-- <div class="form-group">
-                                <label for="terms">Terms & Conditions</label>
-                                <textarea id="terms"  name="terms_conditions" class="form-control" rows="3" placeholder="Payment due within 15 days"></textarea>
-                            </div> -->
-                  </div>
-                </div>
-
-
-                <!-- Form Actions -->
-                <div class="form-actions">
-                  <div class="action-left">
-                    <!-- File Upload Section -->
-                    <div class="form-section">
-                      <h3 class="section-title">Attachments</h3>
-                      <div class="form-row">
-                        <div class="form-group">
-                          <!-- Hidden file input -->
-                          <input type="file" id="fileInput" name="attachment[]" multiple style="display: none;">
-
-                          <!-- Button to trigger file input -->
-                          <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('fileInput').click()" style="background-color: #00192D; color: #FFC107;">
-                            <i class="fas fa-paperclip"></i> Attach Files
-                          </button>
-
-                          <!-- Display selected files -->
-                          <div id="fileList" class="mt-2"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="action-right" style="display: flex; justify-content: flex-end;">
-                  <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
-                    <i class="fas fa-share-square"></i> Save & Send
-                  </button>
-                </div>
-
-                <!-- Add this hidden file input if you want actual file attachment -->
-                <!-- <input type="file" id="fileInput" style="display: none;"> -->
-                <!-- <div class="action-right"> -->
-                <!-- <button type="submit" style="background-color: #00192D; color: #FFC107; padding: 8px 16px; border: none; border-radius: 4px;">
-                                            <i class="fas fa-envelope"></i>
-                                            Save&Send
-                                        </button> -->
-                <!-- </div> -->
-
-
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
 
     <!--start footer -->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
