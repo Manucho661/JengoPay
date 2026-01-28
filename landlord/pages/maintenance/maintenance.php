@@ -470,11 +470,6 @@ require_once 'actions/getBuildings.php';
                 <label for="priority" class="form-label">Title</label>
                 <input type="text" class="form-control" id="request_title" name="title" placeholder="Enter request title">
               </div>
-              <!-- Other Request Field (Hidden by default) -->
-              <!-- <div class="mb-3" id="otherRequestField">
-                <label for="specifyRequest" class="form-label">Specify Request</label>
-                <input type="text" class="form-control" id="specifyRequest" name="custom_request" placeholder="Enter your specific request">
-              </div> -->
 
               <!-- Description -->
               <div class="mb-3">
@@ -486,6 +481,10 @@ require_once 'actions/getBuildings.php';
               <div class="mb-3">
                 <label for="photoUpload" class="form-label">Upload Photo</label>
                 <input type="file" class="form-control" id="photoUpload" name="photos[]" accept="image/*">
+                <!-- Preview Image -->
+                <div id="photoPreview" class="mt-2" style="display: none;">
+                  <img id="previewImage" src="" alt="Photo Preview" class="img-fluid" style="max-width: 100px;">
+                </div>
               </div>
             </form>
           </div>
@@ -532,6 +531,36 @@ require_once 'actions/getBuildings.php';
             autohide: true
           }).show();
         }
+      });
+    </script>
+
+    <!-- preview uploaded photos when submitted the maintenance request -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const photoUpload = document.getElementById('photoUpload');
+        const photoPreview = document.getElementById('photoPreview');
+        const previewImage = document.getElementById('previewImage');
+
+        // Event listener for file input
+        photoUpload.addEventListener('change', function() {
+          const file = this.files[0]; // Get the selected file
+
+          if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+              // Show the image preview and set the image source
+              photoPreview.style.display = 'block';
+              previewImage.src = e.target.result;
+            };
+
+            // Read the image file
+            reader.readAsDataURL(file);
+          } else {
+            // Hide preview if no file selected
+            photoPreview.style.display = 'none';
+          }
+        });
       });
     </script>
 

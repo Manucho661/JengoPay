@@ -7,7 +7,7 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 });
 
 try {
-    // Fetch Current Assets only
+    // Fetch Non-Current Assets only
     $sql = "
         SELECT
             coa.account_code AS account_id,
@@ -16,23 +16,23 @@ try {
         FROM journal_lines jl
         JOIN chart_of_accounts coa 
             ON coa.account_code = jl.account_id
-        WHERE coa.account_type = 'Current Assets'
+        WHERE coa.account_type = 'Non-Current Assets'
         GROUP BY coa.account_code, coa.account_name
         ORDER BY coa.account_name
     ";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
-    $CurrentAssets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $nonCurrentAssets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Calculate total (force numeric)
-    $totalCurrentAssets = 0;
-    foreach ($CurrentAssets as $asset) {
-        $totalCurrentAssets += (float)$asset['amount'];
+    $totalNonCurrentAssets = 0;
+    foreach ($nonCurrentAssets as $asset) {
+        $totalNonCurrentAssets += (float)$asset['amount'];
     }
 
 } catch (Throwable $e) {
-    $CurrentAssets = [];
-    $totalCurrentAssets = 0;
-    $CurrentAssetsError = $e->getMessage();
+    $nonCurrentAssets = [];
+    $totalNonCurrentAssets = 0;
+    $nonCurrentAssetsError = $e->getMessage();
 }

@@ -7,9 +7,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 // require_once 'actions/getRetainedEarnings.php';
 
 // actions
+require_once './actions/getNonCurrentAssets.php';
 require_once './actions/getCurrentAssets.php';
-
-
 ?>
 
 <!doctype html>
@@ -291,6 +290,28 @@ require_once './actions/getCurrentAssets.php';
                       <tr class="total-row">
                         <td>Total</td>
                         <td class="amount-text"><?= htmlspecialchars($totalNonCurrentAssets) ?></td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr>
+                        <th class="section-header fs-6 fw-normal">current Assets</th>
+                      </tr>
+
+                      <?php foreach ($CurrentAssets as $asset): ?>
+                        <tr
+                          class="main-row clickable-row"
+                          data-href="/jengopay/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['amount']) ?>"
+                          style="cursor: pointer;">
+                          <td><?= htmlspecialchars($asset['name']) ?></td>
+                          <td class="amount-text text-success">
+                            <?= htmlspecialchars($asset['amount']) ?>
+                          </td>
+                        </tr>
+                      <?php endforeach; ?>
+
+                      <tr class="total-row">
+                        <td>Total</td>
+                        <td class="amount-text"><?= htmlspecialchars($totalCurrentAssets) ?></td>
                       </tr>
                     </tbody>
 
