@@ -879,6 +879,7 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
     }
   }
   </script>
+  
 
     <!-- Main Js File -->
     <script src="../../js/adminlte.js"></script>
