@@ -264,17 +264,18 @@ try {
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
   <!--begin::App Wrapper-->
   <div class="app-wrapper">
+
     <!--begin::Header-->
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
+    <?php
+    //  include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; 
+    ?>
     <!--end::Header-->
+
     <!--begin::Sidebar-->
-
-    <!--begin::Sidebar Wrapper-->
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/JengoPay/landlord/pages/includes/sidebar.php'; ?>
-
+    <?php
+    // include_once '../../includes/sidebar.php';
+    ?>
     <!--end::Sidebar-->
-
-
         <!--begin::App Main-->
         <main class="app-main">
             <div class="app-content-header">
@@ -557,7 +558,7 @@ try {
         <!--end::App Main-->
 
         <!--begin::Footer-->
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+     
         <!-- end::footer -->
     </div>
     <!--end::App Wrapper-->
