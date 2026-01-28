@@ -138,6 +138,7 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
 
   <!--Tailwind CSS  -->
   <style>
+    
     .app-wrapper {
       background-color: rgba(128, 128, 128, 0.1);
     }
