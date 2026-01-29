@@ -78,8 +78,7 @@ try {
     // - Log the results for auditing
 
     // Make sure that everything is properly logged or returned for debugging
-    echo "Retained Earnings: " . $retainedEarnings . "<br>";
-    echo "Total Equity: " . $totalEquity . "<br>";
+    
 
 } catch (Throwable $e) {
     // Handle any exceptions or errors

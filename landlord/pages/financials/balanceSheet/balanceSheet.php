@@ -285,14 +285,24 @@ require_once  './actions/getEquity.php';
                           style="cursor: pointer;">
                           <td><?= htmlspecialchars($asset['name']) ?></td>
                           <td class="amount-text text-success">
-                            <?= htmlspecialchars($asset['amount']) ?>
+                            <?php
+                            $amount = (float)$asset['amount'];
+                            echo $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                            if ($amount < 0) echo '<span style="color:red;">';
+                            ?>
                           </td>
                         </tr>
                       <?php endforeach; ?>
 
                       <tr class="total-row">
                         <td>Total</td>
-                        <td class="amount-text"><?= htmlspecialchars($totalNonCurrentAssets) ?></td>
+                        <td class="amount-text">
+                          <?php
+                          $totalNonCurrentAssets = (float)$totalNonCurrentAssets;
+                          echo $totalNonCurrentAssets < 0 ? '(' . number_format(abs($totalNonCurrentAssets), 2) . ')' : number_format($totalNonCurrentAssets, 2);
+                          if ($totalNonCurrentAssets < 0) echo '<span style="color:red;">';
+                          ?>
+                        </td>
                       </tr>
                     </tbody>
                     <tbody>
@@ -307,18 +317,34 @@ require_once  './actions/getEquity.php';
                           style="cursor: pointer;">
                           <td><?= htmlspecialchars($asset['name']) ?></td>
                           <td class="amount-text text-success">
-                            <?= htmlspecialchars($asset['amount']) ?>
+                            <?php
+                            $amount = (float)$asset['amount'];
+                            echo $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                            if ($amount < 0) echo '<span style="color:red;">';
+                            ?>
                           </td>
                         </tr>
                       <?php endforeach; ?>
 
                       <tr class="total-row">
                         <td>Total</td>
-                        <td class="amount-text"><?= htmlspecialchars($totalCurrentAssets) ?></td>
+                        <td class="amount-text">
+                          <?php
+                          $totalCurrentAssets = (float)$totalCurrentAssets;
+                          echo $totalCurrentAssets < 0 ? '(' . number_format(abs($totalCurrentAssets), 2) . ')' : number_format($totalCurrentAssets, 2);
+                          if ($totalCurrentAssets < 0) echo '<span style="color:red;">';
+                          ?>
+                        </td>
                       </tr>
                       <tr class="total-row">
                         <td class="fs-6">Total Assets</td>
-                        <td class="amount-text"><?= htmlspecialchars($totalCurrentAssets) + htmlspecialchars($totalNonCurrentAssets) ?></td>
+                        <td class="amount-text">
+                          <?php
+                          $totalAssets = (float)($totalCurrentAssets + $totalNonCurrentAssets);
+                          echo $totalAssets < 0 ? '(' . number_format(abs($totalAssets), 2) . ')' : number_format($totalAssets, 2);
+                          if ($totalAssets < 0) echo '<span style="color:red;">';
+                          ?>
+                        </td>
                       </tr>
                     </tbody>
                     <tbody>
@@ -336,13 +362,23 @@ require_once  './actions/getEquity.php';
                           style="cursor: pointer;">
                           <td><?= htmlspecialchars($currentLiability['account_name']) ?></td>
                           <td class="amount-text text-success">
-                            <?= htmlspecialchars($currentLiability['amount']) ?>
+                            <?php
+                            $amount = (float)$currentLiability['amount'];
+                            echo $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                            if ($amount < 0) echo '<span style="color:red;">';
+                            ?>
                           </td>
                         </tr>
                       <?php endforeach; ?>
                       <tr class="total-row">
                         <td>Total</td>
-                        <td class="amount-text"><?= htmlspecialchars($totalCurrentLiabilities) ?></td>
+                        <td class="amount-text">
+                          <?php
+                          $totalCurrentLiabilities = (float)$totalCurrentLiabilities;
+                          echo $totalCurrentLiabilities < 0 ? '(' . number_format(abs($totalCurrentLiabilities), 2) . ')' : number_format($totalCurrentLiabilities, 2);
+                          if ($totalCurrentLiabilities < 0) echo '<span style="color:red;">';
+                          ?>
+                        </td>
                       </tr>
                     </tbody>
                     <tbody>
@@ -352,21 +388,37 @@ require_once  './actions/getEquity.php';
                       <?php foreach ($nonCurrentLiabilities as $nonCurrentliability): ?>
                         <tr
                           class="main-row clickable-row"
-                          data-href="/jengopay/financials/generalledger/general_ledger.php?account_code=<?= urlencode($nonCurrentyliability['amount']) ?>"
+                          data-href="/jengopay/financials/generalledger/general_ledger.php?account_code=<?= urlencode($nonCurrentliability['amount']) ?>"
                           style="cursor: pointer;">
                           <td><?= htmlspecialchars($nonCurrentliability['account_name']) ?></td>
                           <td class="amount-text text-success">
-                            <?= htmlspecialchars($nonCurrentliability['amount']) ?>
+                            <?php
+                            $amount = (float)$nonCurrentliability['amount'];
+                            echo $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                            if ($amount < 0) echo '<span style="color:red;">';
+                            ?>
                           </td>
                         </tr>
                       <?php endforeach; ?>
                       <tr class="total-row">
                         <td>Total</td>
-                        <td class="amount-text"><?= htmlspecialchars($totalNonCurrentLiabilities) ?></td>
+                        <td class="amount-text">
+                          <?php
+                          $totalNonCurrentLiabilities = (float)$totalNonCurrentLiabilities;
+                          echo $totalNonCurrentLiabilities < 0 ? '(' . number_format(abs($totalNonCurrentLiabilities), 2) . ')' : number_format($totalNonCurrentLiabilities, 2);
+                          if ($totalNonCurrentLiabilities < 0) echo '<span style="color:red;">';
+                          ?>
+                        </td>
                       </tr>
                       <tr class="total-row">
                         <td class="total-row">Total Liabilities</td>
-                        <td class="amount-text"><?= htmlspecialchars($totalNonCurrentLiabilities) + htmlspecialchars($totalCurrentLiabilities) ?></td>
+                        <td class="amount-text">
+                          <?php
+                          $totalLiabilities = (float)($totalNonCurrentLiabilities + $totalCurrentLiabilities);
+                          echo $totalLiabilities < 0 ? '(' . number_format(abs($totalLiabilities), 2) . ')' : number_format($totalLiabilities, 2);
+                          if ($totalLiabilities < 0) echo '<span style="color:red;">';
+                          ?>
+                        </td>
                       </tr>
                     </tbody>
                     <tbody>
@@ -375,20 +427,39 @@ require_once  './actions/getEquity.php';
                       </tr>
                       <tr>
                         <td class="main-row clickable-row">Owner's Capital</td>
-                        <td class="amount-text"><?= htmlspecialchars($totalEquity) ?></td>
+                        <td class="amount-text">
+                          <?php
+                          $totalEquity = (float)$totalEquity;
+                          echo $totalEquity < 0 ? '(' . number_format(abs($totalEquity), 2) . ')' : number_format($totalEquity, 2);
+                          if ($totalEquity < 0) echo '<span style="color:red;">';
+                          ?>
+                        </td>
                       </tr>
                       <tr class="main-row clickable-row">
                         <td>Retained Earnings</td>
-                        <td class="amount-text"><?= htmlspecialchars($retainedEarnings) ?></td>
+                        <td class="amount-text">
+                          <?php
+                          $retainedEarnings = (float)$retainedEarnings;
+                          echo $retainedEarnings < 0 ? '(' . number_format(abs($retainedEarnings), 2) . ')' : number_format($retainedEarnings, 2);
+                          if ($retainedEarnings < 0) echo '<span style="color:red;">';
+                          ?>
+                        </td>
                       </tr>
                     </tbody>
                     <tr>
                       <td class="total-row">Total liabilities and Equity</td>
-                      <td class="amount-text"><?= htmlspecialchars($totalEquity) ?></td>
+                      <td class="amount-text">
+                        <?php
+                        $totalEquityAndLiabilities = (float)($totalEquity + $totalLiabilities);
+                        echo $totalEquityAndLiabilities < 0 ? '(' . number_format(abs($totalEquityAndLiabilities), 2) . ')' : number_format($totalEquityAndLiabilities, 2);
+                        if ($totalEquityAndLiabilities < 0) echo '<span style="color:red;">';
+                        ?>
+                      </td>
                     </tr>
                   </table>
                 </div>
               </div>
+
               <!-- /.col -->
             </div>
             <!--end::Row-->
