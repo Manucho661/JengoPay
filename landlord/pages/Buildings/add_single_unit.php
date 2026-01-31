@@ -812,7 +812,7 @@ if (!empty($_POST['account_code']) && is_array($_POST['account_code'])) {
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Monthly Rent <span class="text-muted small">(Linked to Chart of Accounts)</span></label>
+                            <label>Monthly Rent <span class="text-muted small"></span></label>
                             <input type="number" 
                                    class="form-control" 
                                    id="monthly_rent" 
@@ -821,30 +821,46 @@ if (!empty($_POST['account_code']) && is_array($_POST['account_code'])) {
                                    min="0"
                                    step="0.01"
                                    required>
-                            <small class="text-muted">This amount will be recorded as "<?= htmlspecialchars($rental_account_name) ?>" in your accounting</small>
+<!-- Hidden text (optional: remove completely if not needed visually) -->
+<small class="text-muted d-none">
+    This amount will be recorded as "<?= htmlspecialchars($rental_account_name) ?>" in your accounting
+</small>
+
+<!-- Hidden input (this is what actually gets submitted) -->
+<input type="hidden" name="account_record_label"
+       value='This amount will be recorded as "<?= htmlspecialchars($rental_account_name) ?>" in your accounting'>
                         </div>
                     </div>
                     
                     <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Chart of Accounts Reference</label>
-                            <div class="card" style="border: 1px solid #dee2e6;">
-                                <div class="card-body p-2">
-                                    <h6 class="card-title mb-1" style="font-size: 0.9rem;">Account Reference:</h6>
-                                    <p class="card-text mb-1" style="font-size: 0.8rem;">
-                                        <strong>Account:</strong> <?= htmlspecialchars($rental_account_name) ?>
-                                    </p>
-                                    <p class="card-text mb-0" style="font-size: 0.8rem;">
-                                        <strong>Code:</strong> <?= htmlspecialchars($rental_account_code) ?>
-                                    </p>
-                                    <p class="card-text mb-0" style="font-size: 0.8rem;">
-                                        <strong>Type:</strong> Revenue - Rental Revenue
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="form-group">
+        <label class="d-none">Chart of Accounts Reference</label>
+
+        <!-- Hidden inputs (WILL submit) -->
+        <input type="hidden" name="account_name" value="<?= htmlspecialchars($rental_account_name) ?>">
+        <input type="hidden" name="account_code" value="<?= htmlspecialchars($rental_account_code) ?>">
+        <input type="hidden" name="account_type" value="Revenue - Rental Revenue">
+
+        <!-- Hidden card -->
+        <div class="card d-none" style="border: 1px solid #dee2e6;">
+            <div class="card-body p-2">
+                <h6 class="card-title mb-1" style="font-size: 0.9rem;">Account Reference:</h6>
+
+                <p class="card-text mb-1" style="font-size: 0.8rem;">
+                    <strong>Account:</strong> <?= htmlspecialchars($rental_account_name) ?>
+                </p>
+
+                <p class="card-text mb-0" style="font-size: 0.8rem;">
+                    <strong>Code:</strong> <?= htmlspecialchars($rental_account_code) ?>
+                </p>
+
+                <p class="card-text mb-0" style="font-size: 0.8rem;">
+                    <strong>Type:</strong> Revenue - Rental Revenue
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 
                 <div class="card shadow">
                     <div class="card-header" style="background-color:#00192D; color: #fff;">Recurring Bills</div>
