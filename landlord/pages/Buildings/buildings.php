@@ -7,9 +7,12 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 
 <!-- add builiding -->
 <?php
+// Actions
 include_once 'processes/encrypt_decrypt_function.php';
 // script to insert a building to database
-include_once './actions/addBuilding.php'
+include_once './actions/addBuilding.php';
+
+// Logged in landlord id
 ?>
 <!doctype html>
 <html lang="en">
@@ -212,9 +215,23 @@ include_once './actions/addBuilding.php'
 
                 <!-- Statistics Cards -->
                 <?php
-                $count_buildings = "SELECT building_type, COUNT(*) AS total FROM buildings GROUP BY building_type";
+                // get landlord id
+                $userId = $_SESSION['user']['id'];
+                $stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
+                $stmt->execute([$userId]);
+                $landlord = $stmt->fetch();
+                $landlord_id = $landlord['id'];
+
+                // Fetch count of buildings per type for the specific landlord
+                $count_buildings = "
+                    SELECT building_type, COUNT(*) AS total 
+                    FROM buildings 
+                    WHERE landlord_id = :landlord_id
+                    GROUP BY building_type
+                ";
+
                 $result = $pdo->prepare($count_buildings);
-                $result->execute();
+                $result->execute(['landlord_id' => $landlord_id]);
 
                 // Initialize the countings for all the buildings
                 $counts = [
