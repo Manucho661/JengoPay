@@ -16,7 +16,7 @@ if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') 
 
 // actions
 include_once './actions/getApplications.php';
-var_dump($applications);
+// var_dump($applications);
 ?>
 
 <!DOCTYPE html>
@@ -488,6 +488,31 @@ var_dump($applications);
 </head>
 
 <body>
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+
+    <?php if (!empty($error)): ?>
+      <div id="flashToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3500">
+        <div class="d-flex">
+          <div class="toast-body small">
+            <?= htmlspecialchars($error) ?>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <?php endif; ?>
+
+    <?php if (!empty($success)): ?>
+      <div id="flashToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="polite" aria-atomic="true" data-bs-delay="3000">
+        <div class="d-flex">
+          <div class="toast-body small">
+            <?= htmlspecialchars($success) ?>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <?php endif; ?>
+
+  </div>
   <div class="app-wrapper">
 
     <!-- Header -->
@@ -520,27 +545,53 @@ var_dump($applications);
 
         <!-- Statistics Cards -->
         <div class="stats-container">
-          <div class="stat-card total">
-            <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
-            <div class="stat-number">12</div>
-            <div class="stat-label">Total Applications</div>
+
+          <!-- Total Applications -->
+          <div class="stat-card d-flex align-items-center rounded-2 p-3">
+            <div>
+              <i class="fas fa-file-alt fs-1 me-3 text-warning"></i>
+            </div>
+            <div>
+              <p class="mb-0" style="font-weight: bold;">Total Applications</p>
+              <b><?= $totalApplications ?></b>
+            </div>
           </div>
-          <div class="stat-card pending">
-            <div class="stat-icon"><i class="fas fa-clock"></i></div>
-            <div class="stat-number">7</div>
-            <div class="stat-label">Pending Review</div>
+
+          <!-- Pending Review -->
+          <div class="stat-card d-flex align-items-center rounded-2 p-3">
+            <div>
+              <i class="fas fa-clock fs-1 me-3 text-warning"></i>
+            </div>
+            <div>
+              <p class="mb-0" style="font-weight: bold;">Pending Review</p>
+              <b><?= $pending ?></b>
+            </div>
           </div>
-          <div class="stat-card accepted">
-            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-            <div class="stat-number">4</div>
-            <div class="stat-label">Accepted</div>
+
+          <!-- Accepted -->
+          <div class="stat-card d-flex align-items-center rounded-2 p-3">
+            <div>
+              <i class="fas fa-check-circle fs-1 me-3 text-warning"></i>
+            </div>
+            <div>
+              <p class="mb-0" style="font-weight: bold;">Accepted</p>
+              <b><?= $accepted ?></b>
+            </div>
           </div>
-          <div class="stat-card rejected">
-            <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
-            <div class="stat-number">1</div>
-            <div class="stat-label">Declined</div>
+
+          <!-- Declined -->
+          <div class="stat-card d-flex align-items-center rounded-2 p-3">
+            <div>
+              <i class="fas fa-times-circle fs-1 me-3 text-warning"></i>
+            </div>
+            <div>
+              <p class="mb-0" style="font-weight: bold;">Declined</p>
+              <b><?= $declined ?></b>
+            </div>
           </div>
+
         </div>
+
 
         <!-- Filter Section -->
         <div class="filter-section">
@@ -813,6 +864,17 @@ var_dump($applications);
           alert('Open messaging interface');
         });
       });
+    });
+  </script>
+
+  <!-- Toast message -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const toastEl = document.getElementById("flashToast");
+      if (toastEl && window.bootstrap) {
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+      }
     });
   </script>
 </body>

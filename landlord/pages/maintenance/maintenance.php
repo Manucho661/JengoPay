@@ -269,7 +269,7 @@ require_once 'actions/getBuildings.php';
                       <i class="bi bi-receipt"></i>
                     </div>
                     <h4 style="color: #00192D; font-weight: 600; margin-bottom: 1rem;">
-                      Requests items
+                      No requests items found
                     </h4>
                     <p style="color: #6c757d; font-size: 1rem; margin-bottom: 1.5rem;">
                       Start tracking your maintenance requests by adding your first request item

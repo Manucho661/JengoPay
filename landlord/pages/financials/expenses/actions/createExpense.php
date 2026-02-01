@@ -134,13 +134,15 @@ try {
         $item_untaxed_amount = $qty * $unit_price;
 
         $tax_amount = 0.0;
-        $amount     = $item_untaxed_amount;
+        $total_item_amount = 0.0;
 
         if ($tax_type === 'exclusive') {
             $tax_amount = $item_untaxed_amount * 0.16;
+            $total_item_amount = $item_untaxed_amount + $tax_amount;
         } elseif ($tax_type === 'inclusive') {
             $tax_amount = $item_untaxed_amount * (16 / 116);
             $amount -= $tax_amount;
+            $total_item_amount = $item_untaxed_amount;
         }
 
         // Debit expense
@@ -149,7 +151,7 @@ try {
             $journalId,
             $landlord_id,  // Ensure landlord_id is passed
             $item_account_codes[$i],
-            $amount,
+            $total_item_amount,
             0.0,
             'expenses',
             $expense_id
@@ -162,7 +164,7 @@ try {
             $landlord_id,  // Ensure landlord_id is passed
             300,
             0.0,
-            $amount,
+            $total_item_amount,
             'expenses',
             $expense_id
         );
@@ -204,4 +206,3 @@ try {
     header('Location: /Jengopay/landlord/pages/financials/expenses/expenses.php');
     exit;
 }
-?>

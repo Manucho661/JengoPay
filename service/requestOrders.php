@@ -1034,19 +1034,6 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                 </div>
               </div>
 
-              <!-- Cover Letter -->
-              <div class="mb-3">
-                <label class="form-label fw-semibold d-flex gap-2">
-                  <i class="fas fa-comment text-warning"></i>
-                  Cover Letter (optional)
-                </label>
-                <textarea class="form-control" name="cover_letter" rows="4"
-                  placeholder="Explain why you're a good fit..."></textarea>
-                <div class="small text-muted mt-1">
-                  Keep it short, clear, and relevant
-                </div>
-              </div>
-
               <!-- Availability -->
               <div class="mb-2">
                 <label class="form-label fw-semibold d-flex gap-2">
