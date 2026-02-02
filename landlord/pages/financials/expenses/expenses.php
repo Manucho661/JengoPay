@@ -1026,10 +1026,11 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" form="payExpenseForm" class="btn" style="background-color: #FFC107; color: #00192D;">
+                        <button type="submit" form="payExpenseForm" id="confirmPaymentBtn" class="btn" style="background-color: #FFC107; color: #00192D;">
                             <i class="bi bi-credit-card"></i> Confirm Payment
                         </button>
                     </div>
+
                 </div>
             </div>
         </div>

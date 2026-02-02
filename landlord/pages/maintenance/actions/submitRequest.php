@@ -5,6 +5,8 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
 
+
+
 function redirect_with_message(string $url, string $type, string $message): void
 {
     $_SESSION['flash'] = [
@@ -22,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['submitRequest'])) {
 
 
 try {
+
     // Read POST fields safely
     $category    = isset($_POST['category']) ? trim($_POST['category']) : '';
     $title       = isset($_POST['title']) ? trim($_POST['title']) : null;
@@ -39,19 +42,27 @@ try {
     // Use real session user in production
     $userId = $_SESSION['user']['id'] ?? 1;
     $role   = $_SESSION['user']['role'] ?? 'landlord';
+    // Fetch landlord ID linked to the logged-in user
+    $stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    $landlord = $stmt->fetch();
+    $landlord_id = $landlord['id']; // Store the landlord_id from the session
+
 
     // Insert maintenance request
     $stmt = $pdo->prepare("
         INSERT INTO maintenance_requests
-            (created_by_user_id, requester_role, building_id, title, description, category, created_at)
+            (created_by_user_id, landlord_id, requester_role, building_id, building_unit_id, title, description, category, created_at)
         VALUES
-            (:created_by_user_id, :requester_role, :building_id, :title, :description, :category, NOW())
+            (:created_by_user_id, :landlord_id, :requester_role, :building_id, :building_unit_id, :title, :description, :category, NOW())
     ");
 
     $stmt->execute([
         ':created_by_user_id' => $userId,
         ':requester_role'     => $role,
+        ':landlord_id'        => $landlord_id,
         ':building_id'        => $buildingId,
+        ':building_unit_id'   => $unitId,
         ':title'              => $title,
         ':description'        => $description,
         ':category'           => $category,
