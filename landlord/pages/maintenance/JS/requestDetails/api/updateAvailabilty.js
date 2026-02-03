@@ -29,8 +29,6 @@ export async function updateAvailabilty() {
       // Correct the button text
       btn.textContent =
         newStatus === "available" ? "Set Unavailable" : "Set Available";
-
-      applyAvailabilityStyles(newStatus);
     } else {
       console.warn("⚠️ Failed to update availability:", data.message);
       btn.textContent =
