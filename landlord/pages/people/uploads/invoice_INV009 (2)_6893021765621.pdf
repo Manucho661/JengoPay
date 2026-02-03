@@ -1,9 +1,0 @@
-<br />
-<b>Warning</b>:  Undefined variable $paymentStatus in <b>C:\xampp\htdocs\originalTwo\AdminLTE\dist\pages\financials\view_invoice_pdf.php</b> on line <b>77</b><br />
-<br />
-<b>Warning</b>:  Undefined variable $paymentStatus in <b>C:\xampp\htdocs\originalTwo\AdminLTE\dist\pages\financials\view_invoice_pdf.php</b> on line <b>87</b><br />
-<br />
-<b>Warning</b>:  Undefined variable $statusStyle in <b>C:\xampp\htdocs\originalTwo\AdminLTE\dist\pages\financials\view_invoice_pdf.php</b> on line <b>133</b><br />
-<br />
-<b>Warning</b>:  Undefined variable $paymentStatus in <b>C:\xampp\htdocs\originalTwo\AdminLTE\dist\pages\financials\view_invoice_pdf.php</b> on line <b>158</b><br />
-<strong>TCPDF ERROR: </strong>Some data has already been output, can&#039;t send PDF file
