@@ -448,6 +448,9 @@ if (!empty($tenant_info['unit_id'])) {
   border: 0;
   border-radius: 3px;
 }
+.account-code {
+    display: none;
+  }
 </style>
 </head>
 
@@ -710,7 +713,7 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                                        <table id="invoiceTable" class="table table-bordered table-striped shadow">
     <thead class="table-dark">
     <tr>
-    <th>Paid For</th>
+    <th class="account-code">Paid For</th>
     <th>Account Code</th> <!-- This should be column 2 -->
     <th>Description</th>  <!-- This should be column 3 -->
     <th>Unit Price</th>   <!-- This should be column 4 -->
@@ -773,9 +776,10 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                     $waterAccountName = "Water Charges (Revenue)";
                     $qty   = (float) $water['total_qty'];
                     $total = (float) $water['total_amount'];
-                    $taxAmount = round($total * (16 / 116), 2);
-                    $netTotal  = $total - $taxAmount;
-                    $unitPrice = $qty > 0 ? $netTotal / $qty : 0;
+                    $taxAmount = 0;            // ❌ NO VAT
+                    $netTotal  = $total;       // Net = Total
+                    $unitPrice = $qty > 0 ? $total / $qty : 0;
+
                     ?>
                     <tr id="rowWater">
                         <td><?= htmlspecialchars($waterAccountName) ?></td>
@@ -783,7 +787,7 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                         <td>Water Consumption (Monthly)</td>
                         <td class="unit-price"><?= number_format($unitPrice, 2) ?></td>
                         <td class="quantity"><?= $qty ?></td>
-                        <td class="tax-type">VAT Inclusive</td>
+                        <td class="tax-type">VAT Exclusive</td>
                         <td class="tax-amount"><?= number_format($taxAmount, 2) ?></td>
                         <td class="total-price"><?= number_format($total, 2) ?></td>
                         <td>
@@ -812,9 +816,10 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                 
                 if ($total <= 0) continue;
                 
-                $taxAmount = round($total * (16 / 116), 2);
-                $netTotal  = $total - $taxAmount;
-                $unitPrice = $qty > 0 ? $netTotal / $qty : 0;
+                $taxAmount = 0;                 // ❌ NO VAT
+                $netTotal  = $total;            // Net = Total
+                $unitPrice = $qty > 0 ? $total / $qty : 0;
+
                 ?>
                 <tr id="<?= $rowId ?>">
                     <td><?= htmlspecialchars($garbageAccountName) ?></td>
@@ -822,8 +827,9 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                     <td><?= htmlspecialchars($billName) ?></td>
                     <td class="unit-price"><?= number_format($unitPrice, 2) ?></td>
                     <td class="quantity"><?= $qty ?></td>
-                    <td class="tax-type">VAT Inclusive</td>
-                    <td class="tax-amount"><?= number_format($taxAmount, 2) ?></td>
+                    <td class="tax-type">VAT Exclusive</td>
+                   <td class="tax-amount">0.00</td>
+
                     <td class="total-price"><?= number_format($total, 2) ?></td>
                     <td>
                         <button type="button"
@@ -965,33 +971,25 @@ if(isset($_GET['invoice']) && !empty($_GET['invoice'])) {
     });
 
     function calculateTotals() {
-        let subtotal = 0;
-        let totalTax = 0;
-        
-        // Loop through all rows in the invoice body
-        const rows = document.querySelectorAll('#invoiceBody tr');
-        rows.forEach(row => {
-            const totalPriceCell = row.querySelector('.total-price');
-            const taxAmountCell = row.querySelector('.tax-amount');
-            
-            if (totalPriceCell && taxAmountCell) {
-                const totalPrice = parseFloat(totalPriceCell.textContent.replace(/,/g, '')) || 0;
-                const taxAmount = parseFloat(taxAmountCell.textContent.replace(/,/g, '')) || 0;
-                
-                subtotal += totalPrice;
-                totalTax += taxAmount;
-            }
-        });
-        
-        // Update footer totals
-        document.getElementById('subtotal').textContent = subtotal.toFixed(2);
-        document.getElementById('totalTax').textContent = totalTax.toFixed(2);
-        document.getElementById('finalTotal').textContent = (subtotal + totalTax).toFixed(2);
-        
-        // Update hidden fields
-        document.getElementById('subtotalValue').value = subtotal.toFixed(2);
-        document.getElementById('totalTaxValue').value = totalTax.toFixed(2);
-        document.getElementById('finalTotalValue').value = (subtotal + totalTax).toFixed(2);
+      let subtotal = 0;
+let totalTax = 0;
+
+rows.forEach(row => {
+    const totalPrice = parseFloat(row.querySelector('.total-price')?.textContent.replace(/,/g,'')) || 0;
+    const taxAmount  = parseFloat(row.querySelector('.tax-amount')?.textContent.replace(/,/g,'')) || 0;
+    const taxType    = row.querySelector('.tax-type')?.textContent.trim();
+
+    subtotal += (totalPrice - taxAmount);
+
+    if (taxType !== 'VAT Exempt') {
+        totalTax += taxAmount;
+    }
+});
+
+document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+document.getElementById('totalTax').textContent = totalTax.toFixed(2);
+document.getElementById('finalTotal').textContent = (subtotal + totalTax).toFixed(2);
+
     }
 
     function removeRow(rowId) {
