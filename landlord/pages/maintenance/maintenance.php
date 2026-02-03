@@ -16,7 +16,13 @@ require_once 'actions/getRequests.php';
 // include buildings
 require_once 'actions/getBuildings.php';
 
-// pagination
+// Pagination logic
+$itemsPerPage = 5;
+$currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$totalItems = count($requests);
+$totalPages = ceil($totalItems / $itemsPerPage);
+$offset = ($currentPage - 1) * $itemsPerPage;
+$currentRequests = array_slice($requests, $offset, $itemsPerPage);
 ?>
 
 <!doctype html>
@@ -42,6 +48,44 @@ require_once 'actions/getBuildings.php';
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Pagination */
+    .pagination {
+      margin: 2rem 0;
+    }
+
+    .pagination .page-link {
+      color: var(--primary-color);
+      border: 1px solid #dee2e6;
+      padding: 0.5rem 0.75rem;
+      margin: 0 0.2rem;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+
+    .pagination .page-link:hover {
+      background: #FFC107;
+      color: #00192D;
+      border-color: #FFC107;
+    }
+
+    .pagination .page-item.active .page-link {
+      background: #00192D;
+      border-color: #00192D;
+      color: white;
+    }
+
+    .pagination .page-item.disabled .page-link {
+      color: #6c757d;
+      pointer-events: none;
+      background: #fff;
+    }
+
+    .pagination-info {
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+  </style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
 
@@ -261,7 +305,7 @@ require_once 'actions/getBuildings.php';
                   All Requests
                 </div>
               </div>
-              <?php if (empty($requests)): ?>
+              <?php if (empty($currentRequests)): ?>
                 <!-- Empty State Message -->
                 <div class="text-center py-5" style="margin: 3rem 0;">
                   <div style="background-color: #f8f9fa; border-radius: 16px; padding: 3rem 2rem; max-width: 500px; margin: 0 auto;">
@@ -294,89 +338,112 @@ require_once 'actions/getBuildings.php';
                     </thead>
 
                     <tbody id="maintenanceRequestsTableBod">
-                      <?php if (!empty($requestsError ?? null)): ?>
-                        <tr>
-                          <td colspan="8"><?= htmlspecialchars($requestsError) ?></td>
+                      <?php foreach ($currentRequests as $req): ?>
+                        <tr
+                          onclick="window.location.href='request_details.php?id=<?= urlencode($req['id']) ?>'"
+                          style="cursor:pointer;">
+                          <td class="text-muted small">
+                            <?=
+                            !empty($req['created_at'])
+                              ? htmlspecialchars(date('M j, Y', strtotime($req['created_at'])))
+                              : ''
+                            ?>
+                          </td>
+
+
+                          <td>
+                            <div><?= htmlspecialchars($req['building_name'] ?? '') ?></div>
+                            <div style="color: green;"><?= htmlspecialchars($req['unit'] ?? '') ?></div>
+                          </td>
+
+                          <td>
+
+                            <div style="color:green; border:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                              <?= htmlspecialchars($req['title'] ?? '') ?>
+                            </div>
+                          </td>
+
+                          <td style="color: <?= !empty(trim($req['provider_name'] ?? '')) ? 'green' : '#b93232ff' ?>;">
+                            <div>
+                              <?= !empty(trim($req['provider_name'] ?? ''))
+                                ? htmlspecialchars($req['provider_name'])
+                                : 'Unassigned' ?>
+                            </div>
+                          </td>
+
+                          <td><?= htmlspecialchars($req['priority'] ?? '') ?></td>
+
+                          <td style="color: <?= in_array($req['status'], ['Terminated', 'Cancelled']) ? '#b93232ff' : 'green' ?>;">
+                            <?= htmlspecialchars($req['status']) ?>
+                          </td>
+
+
+                          <td>
+                            <?php if (($req['payment_status'] ?? '') === 'Paid'): ?>
+                              <div class="Paid"><i class="bi bi-check-circle-fill"></i> Paid</div>
+                            <?php else: ?>
+                              <div class="Pending rounded-2"><i class="bi bi-hourglass-split"></i> Pending</div>
+                            <?php endif; ?>
+                          </td>
+
+                          <td style="vertical-align: middle;">
+                            <div style="display:flex; gap:8px; align-items:center; height:100%;">
+                              <button
+                                type="button"
+                                onclick="event.stopPropagation(); window.location.href='request_details.php?id=<?= urlencode($req['id']) ?>'"
+                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                style="background-color:#00192D; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
+                                <i class="bi bi-eye-fill"></i>
+                              </button>
+
+                              <button
+                                type="button"
+                                onclick="event.stopPropagation(); /* delete handler here */"
+                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                style="background-color:#ec5b53; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
+                                <i class="bi bi-trash-fill"></i>
+                              </button>
+                            </div>
+                          </td>
                         </tr>
-
-                      <?php elseif (empty($requests)): ?>
-                        <tr>
-                          <td colspan="8">No requests found</td>
-                        </tr>
-
-                      <?php else: ?>
-                        <?php foreach ($requests as $req): ?>
-                          <tr
-                            onclick="window.location.href='request_details.php?id=<?= urlencode($req['id']) ?>'"
-                            style="cursor:pointer;">
-                            <td class="text-muted small">
-                              <?=
-                              !empty($req['created_at'])
-                                ? htmlspecialchars(date('M j, Y', strtotime($req['created_at'])))
-                                : ''
-                              ?>
-                            </td>
-
-
-                            <td>
-                              <div><?= htmlspecialchars($req['building_name'] ?? '') ?></div>
-                              <div style="color: green;"><?= htmlspecialchars($req['unit'] ?? '') ?></div>
-                            </td>
-
-                            <td>
-
-                              <div style="color:green; border:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                <?= htmlspecialchars($req['title'] ?? '') ?>
-                              </div>
-                            </td>
-
-                            <td style="color: <?= !empty(trim($req['provider_name'] ?? '')) ? 'green' : '#b93232ff' ?>;">
-                              <div>
-                                <?= !empty(trim($req['provider_name'] ?? ''))
-                                  ? htmlspecialchars($req['provider_name'])
-                                  : 'Unassigned' ?>
-                              </div>
-                            </td>
-
-                            <td><?= htmlspecialchars($req['priority'] ?? '') ?></td>
-
-                            <td style="color: <?= in_array($req['status'], ['Terminated', 'Cancelled']) ? '#b93232ff' : 'green' ?>;">
-                              <?= htmlspecialchars($req['status']) ?>
-                            </td>
-
-
-                            <td>
-                              <?php if (($req['payment_status'] ?? '') === 'Paid'): ?>
-                                <div class="Paid"><i class="bi bi-check-circle-fill"></i> Paid</div>
-                              <?php else: ?>
-                                <div class="Pending rounded-2"><i class="bi bi-hourglass-split"></i> Pending</div>
-                              <?php endif; ?>
-                            </td>
-
-                            <td style="vertical-align: middle;">
-                              <div style="display:flex; gap:8px; align-items:center; height:100%;">
-                                <button
-                                  type="button"
-                                  onclick="event.stopPropagation(); window.location.href='request_details.php?id=<?= urlencode($req['id']) ?>'"
-                                  class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
-                                  style="background-color:#00192D; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
-                                  <i class="bi bi-eye-fill"></i>
-                                </button>
-
-                                <button
-                                  type="button"
-                                  onclick="event.stopPropagation(); /* delete handler here */"
-                                  class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
-                                  style="background-color:#ec5b53; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
-                                  <i class="bi bi-trash-fill"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        <?php endforeach; ?>
-                      <?php endif; ?>
+                      <?php endforeach; ?>
                     </tbody>
                   </table>
+                  <!-- Pagination -->
+                  <?php if ($totalPages > 1): ?>
+                    <nav aria-label="Request pagination">
+                      <ul class="pagination justify-content-center">
+                        <!-- Previous Button -->
+                        <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
+                          <a class="page-link" href="?page=<?php echo $currentPage - 1; ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                          </a>
+                        </li>
+
+                        <!-- Page Numbers -->
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                          <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                          </li>
+                        <?php endfor; ?>
+
+                        <!-- Next Button -->
+                        <li class="page-item <?php echo $currentPage == $totalPages ? 'disabled' : ''; ?>">
+                          <a class="page-link" href="?page=<?php echo $currentPage + 1; ?>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </nav>
+
+                    <!-- Pagination Info -->
+                    <div class="pagination-info text-center mb-4">
+                      <p class="text-muted">
+                        Showing <?php echo $offset + 1; ?> to <?php echo min($offset + $itemsPerPage, $totalItems); ?>
+                        of <?php echo $totalItems; ?> requests
+                      </p>
+                    </div>
+                  <?php endif; ?>
                 </div>
               <?php endif; ?>
 
@@ -421,12 +488,12 @@ require_once 'actions/getBuildings.php';
                 <label for="category" class="form-label">Category</label>
                 <select class="form-select" id="category" name="category" required>
                   <option value="">Select a category</option>
-                  <option value="plumbing">Plumbing Request</option>
-                  <option value="security">Security</option>
-                  <option value="electrical">Electrical</option>
-                  <option value="maintenance">Maintenance</option>
-                  <option value="cleaning">Cleaning</option>
-                  <option value="cleaning">Other</option>
+                  <option value="Plumbing">Plumbing Request</option>
+                  <option value="Security">Security</option>
+                  <option value="Electrical">Electrical</option>
+                  <option value="Maintenance">Maintenance</option>
+                  <option value="Cleaning">Cleaning</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
 

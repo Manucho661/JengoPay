@@ -367,7 +367,7 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
 
                 <!-- filter and search section -->
                 <div class="row mb-3 mt-3">
-                    <div class="col-md-6 d-flex">
+                    <div class="col-md-4 d-flex">
                         <input
                             type="text"
                             class="form-control filter-shadow"
@@ -382,17 +382,27 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                         </button>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
+                        <select class="form-select filter-shadow">
+                            <option selected>buidling type</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
                         <select class="form-select filter-shadow">
                             <option selected>Filter by Category</option>
                         </select>
                     </div>
 
                     <!-- Filter by Tenant -->
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <select class="form-select filter-shadow">
                             <option selected>Filter by Ownership</option>
                         </select>
+                    </div>
+                    <!-- Filter by Tenant -->
+                    <div class="col-md-2">
+                        <button class="btn btn-primary">Apply</button>
                     </div>
 
                 </div>

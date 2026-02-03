@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Applications - Service Provider Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00192D;
+            --accent-color: #FFC107;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #003d5c 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .header .tagline {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation */
+        .navigation {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        /* Page Title Section */
+        .page-title-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .page-title {
+            color: var(--primary-color);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card.pending .stat-icon { color: #FFC107; }
+        .stat-card.accepted .stat-icon { color: #28a745; }
+        .stat-card.rejected .stat-icon { color: #dc3545; }
+        .stat-card.total .stat-icon { color: var(--primary-color); }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 1rem;
+        }
+
+        .filter-tab {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: #6c757d;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .filter-tab:hover {
+            color: var(--primary-color);
+        }
+
+        .filter-tab.active {
+            color: var(--primary-color);
+        }
+
+        .filter-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1.1rem;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-color);
+        }
+
+        /* Application Card */
+        .application-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .application-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .application-card.pending { border-left-color: #FFC107; }
+        .application-card.accepted { border-left-color: #28a745; }
+        .application-card.rejected { border-left-color: #dc3545; }
+
+        .application-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .application-title {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.accepted {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .application-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .meta-item i {
+            color: var(--accent-color);
+        }
+
+        .application-details {
+            background: var(--light-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .detail-value {
+            color: #495057;
+        }
+
+        .application-message {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        .application-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .applied-date {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-action {
+            padding: 0.5rem 1.2rem;
+            border-radius: 5px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-view {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-withdraw {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-withdraw:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .btn-message {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-message:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            background: white;
+            border-radius: 10px;
+            padding: 4rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .empty-state-icon {
+            font-size: 5rem;
+            color: #dee2e6;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: #6c757d;
+            margin-bottom: 2rem;
+        }
+
+        /* Pagination */
+        .pagination {
+            margin: 2rem 0;
+        }
+
+        .pagination .page-link {
+            color: var(--primary-color);
+            border: 1px solid #dee2e6;
+            padding: 0.5rem 0.75rem;
+            margin: 0 0.2rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .pagination .page-link:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            border-color: var(--accent-color);
+        }
+
+        .pagination .page-item.active .page-link {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Offcanvas Custom Styles */
+        .offcanvas-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #003d5c 100%);
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .offcanvas-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .offcanvas-body {
+            padding: 0;
+        }
+
+        .detail-section {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .detail-section:last-child {
+            border-bottom: none;
+        }
+
+        .detail-section-title {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-section-title i {
+            color: var(--accent-color);
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #6c757d;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .message-box {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+            line-height: 1.6;
+            color: #495057;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .status-indicator.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-indicator.accepted {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-indicator.rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--accent-color);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: -1.1rem;
+            top: 1.2rem;
+            width: 2px;
+            height: calc(100% - 0.5rem);
+            background: #dee2e6;
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .timeline-content {
+            color: #495057;
+            margin-top: 0.3rem;
+        }
+
+        /* Image Slider in Offcanvas */
+        .offcanvas-image-slider {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .offcanvas-slider-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .offcanvas-slider-image.active {
+            display: block;
+        }
+
+        .offcanvas-slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 25, 45, 0.8);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .offcanvas-slider-btn:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .offcanvas-slider-btn.prev {
+            left: 10px;
+        }
+
+        .offcanvas-slider-btn.next {
+            right: 10px;
+        }
+
+        .offcanvas-image-counter {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 25, 45, 0.8);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .offcanvas-slider-indicators {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .offcanvas-indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .offcanvas-indicator-dot.active {
+            background: var(--accent-color);
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        .action-btn-offcanvas {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-message-client {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-message-client:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        .btn-withdraw-app {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-withdraw-app:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .application-header {
+                flex-direction: column;
+            }
+
+            .application-footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-tools"></i> Service Provider Portal</h1>
+            <p class="tagline">Find and apply for service requests in your area</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="container">
+            <div class="nav-links">
+                <a href="requestOrders.php"><i class="fas fa-search"></i> Find a Job</a>
+                <a href="applications.php" class="active"><i class="fas fa-file-alt"></i> Your Applications</a>
+                <a href="#"><i class="fas fa-briefcase"></i> Assigned Jobs</a>
+                <a href="#"><i class="fas fa-history"></i> Previous Jobs</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Page Title -->
+        <div class="page-title-section">
+            <h1 class="page-title">Your Applications</h1>
+            <p class="page-subtitle">Track and manage all your job applications in one place</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-container">
+            <div class="stat-card total">
+                <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="stat-number">12</div>
+                <div class="stat-label">Total Applications</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-number">7</div>
+                <div class="stat-label">Pending Review</div>
+            </div>
+            <div class="stat-card accepted">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-number">4</div>
+                <div class="stat-label">Accepted</div>
+            </div>
+            <div class="stat-card rejected">
+                <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+                <div class="stat-number">1</div>
+                <div class="stat-label">Declined</div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterApplications('all')">
+                    All Applications <span style="background: #e9ecef; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;">12</span>
+                </button>
+                <button class="filter-tab" onclick="filterApplications('pending')">
+                    Pending <span style="background: #fff3cd; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;">7</span>
+                </button>
+                <button class="filter-tab" onclick="filterApplications('accepted')">
+                    Accepted <span style="background: #d4edda; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;">4</span>
+                </button>
+                <button class="filter-tab" onclick="filterApplications('rejected')">
+                    Declined <span style="background: #f8d7da; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;">1</span>
+                </button>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" placeholder="Search by job title or property...">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option>Sort by: Most Recent</option>
+                        <option>Sort by: Oldest</option>
+                        <option>Sort by: Status</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn w-100" style="background: var(--primary-color); color: white;">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications List -->
+        <?php
+        // Sample data
+        $applications = [
+            [
+                'title' => 'Electrical Outlet Installation',
+                'property' => 'Silver House',
+                'unit' => 'C9',
+                'status' => 'pending',
+                'applied_date' => '2026-01-20',
+                'client_budget' => 'KES 5,000',
+                'your_budget' => 'KES 4,500',
+                'your_duration' => '2-3 hours',
+                'message' => 'I have over 5 years of experience in residential electrical work. I\'m certified and have all necessary tools. Can start immediately.',
+                'category' => 'Electrical',
+                'images' => ['image1.jpg', 'image2.jpg', 'image3.jpg']
+            ],
+            [
+                'title' => 'Kitchen Sink Leak Repair',
+                'property' => 'Golden Heights',
+                'unit' => 'A12',
+                'status' => 'accepted',
+                'applied_date' => '2026-01-18',
+                'client_budget' => 'KES 3,500',
+                'your_budget' => 'KES 3,200',
+                'your_duration' => '1-2 hours',
+                'message' => 'I specialize in plumbing repairs and have fixed similar issues many times. Quick and professional service guaranteed.',
+                'category' => 'Plumbing',
+                'images' => ['image1.jpg']
+            ],
+            [
+                'title' => 'Ceiling Fan Installation',
+                'property' => 'Palm Residences',
+                'unit' => 'B5',
+                'status' => 'pending',
+                'applied_date' => '2026-01-19',
+                'client_budget' => 'KES 7,000',
+                'your_budget' => 'KES 6,500',
+                'your_duration' => '3-4 hours',
+                'message' => 'Licensed electrician with experience in ceiling fan installations. I ensure proper wiring and secure mounting.',
+                'category' => 'Electrical',
+                'images' => ['image1.jpg', 'image2.jpg']
+            ],
+            [
+                'title' => 'Door Lock Replacement',
+                'property' => 'Sunset Apartments',
+                'unit' => 'D3',
+                'status' => 'rejected',
+                'applied_date' => '2026-01-17',
+                'client_budget' => 'KES 2,500',
+                'your_budget' => 'KES 2,000',
+                'your_duration' => '1 hour',
+                'message' => 'Quick and efficient lock replacement service. I carry various lock types.',
+                'category' => 'Carpentry',
+                'images' => []
+            ],
+            [
+                'title' => 'Interior Wall Painting',
+                'property' => 'Riverside Complex',
+                'unit' => 'H9',
+                'status' => 'accepted',
+                'applied_date' => '2026-01-15',
+                'client_budget' => 'KES 12,000',
+                'your_budget' => 'KES 11,000',
+                'your_duration' => '2 days',
+                'message' => 'Professional painter with 8 years experience. Clean work, attention to detail, and excellent finishing.',
+                'category' => 'Painting',
+                'images' => ['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg']
+            ]
+        ];
+
+        foreach ($applications as $application): ?>
+        <div class="application-card <?php echo $application['status']; ?>">
+            <div class="application-header">
+                <div>
+                    <h3 class="application-title"><?php echo $application['title']; ?></h3>
+                    <div class="application-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-building"></i>
+                            <span><?php echo $application['property']; ?> - Unit <?php echo $application['unit']; ?></span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            <span><?php echo $application['category']; ?></span>
+                        </div>
+                    </div>
+                </div>
+                <span class="status-badge <?php echo $application['status']; ?>">
+                    <?php echo ucfirst($application['status']); ?>
+                </span>
+            </div>
+
+            <div class="application-details">
+                <div class="detail-row">
+                    <span class="detail-label">Client's Budget:</span>
+                    <span class="detail-value"><?php echo $application['client_budget']; ?></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Your Proposed Budget:</span>
+                    <span class="detail-value" style="font-weight: 600; color: var(--primary-color);"><?php echo $application['your_budget']; ?></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Your Estimated Duration:</span>
+                    <span class="detail-value"><?php echo $application['your_duration']; ?></span>
+                </div>
+            </div>
+
+            <div class="application-message">
+                <strong style="color: var(--primary-color); display: block; margin-bottom: 0.5rem;">Your Message:</strong>
+                <?php echo $application['message']; ?>
+            </div>
+
+            <div class="application-footer">
+                <div class="applied-date">
+                    <i class="fas fa-calendar"></i> Applied on <?php echo date('M d, Y', strtotime($application['applied_date'])); ?>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-action btn-view"
+                            data-bs-toggle="offcanvas" 
+                            data-bs-target="#applicationDetailsOffcanvas"
+                            data-title="<?php echo htmlspecialchars($application['title']); ?>"
+                            data-property="<?php echo htmlspecialchars($application['property']); ?>"
+                            data-unit="<?php echo htmlspecialchars($application['unit']); ?>"
+                            data-category="<?php echo htmlspecialchars($application['category']); ?>"
+                            data-status="<?php echo $application['status']; ?>"
+                            data-client-budget="<?php echo htmlspecialchars($application['client_budget']); ?>"
+                            data-your-budget="<?php echo htmlspecialchars($application['your_budget']); ?>"
+                            data-duration="<?php echo htmlspecialchars($application['your_duration']); ?>"
+                            data-message="<?php echo htmlspecialchars($application['message']); ?>"
+                            data-applied-date="<?php echo date('M d, Y', strtotime($application['applied_date'])); ?>"
+                            data-images='<?php echo json_encode($application['images']); ?>'>
+                        <i class="fas fa-eye"></i> View Details
+                    </button>
+                    <?php if ($application['status'] === 'accepted'): ?>
+                    <button class="btn-action btn-message">
+                        <i class="fas fa-comments"></i> Message Client
+                    </button>
+                    <?php elseif ($application['status'] === 'pending'): ?>
+                    <button class="btn-action btn-withdraw">
+                        <i class="fas fa-trash"></i> Withdraw
+                    </button>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+
+        <!-- Pagination -->
+        <nav aria-label="Applications pagination">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Offcanvas for Application Details -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="applicationDetailsOffcanvas" aria-labelledby="applicationDetailsLabel" style="width: 650px; max-width: 90vw;">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="applicationDetailsLabel">
+                <i class="fas fa-file-alt"></i> Application Details
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <!-- Job Information Section -->
+            <div class="detail-section">
+                <h3 class="detail-section-title">
+                    <i class="fas fa-briefcase"></i> Job Information
+                </h3>
+                <h4 id="offcanvasJobTitle" style="color: var(--primary-color); font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;"></h4>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Property:</span>
+                        <span class="info-value" id="offcanvasProperty"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Category:</span>
+                        <span class="info-value" id="offcanvasCategory"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Section -->
+            <div class="detail-section">
+                <h3 class="detail-section-title">
+                    <i class="fas fa-info-circle"></i> Application Status
+                </h3>
+                <div id="offcanvasStatus"></div>
+            </div>
+
+            <!-- Budget & Duration Section -->
+            <div class="detail-section">
+                <h3 class="detail-section-title">
+                    <i class="fas fa-money-bill-wave"></i> Budget & Duration
+                </h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Client's Budget:</span>
+                        <span class="info-value" id="offcanvasClientBudget"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Your Proposed Budget:</span>
+                        <span class="info-value" style="color: #28a745;" id="offcanvasYourBudget"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Your Duration:</span>
+                        <span class="info-value" id="offcanvasDuration"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Your Message Section -->
+            <div class="detail-section">
+                <h3 class="detail-section-title">
+                    <i class="fas fa-comment"></i> Your Cover Letter
+                </h3>
+                <div class="message-box" id="offcanvasMessage"></div>
+            </div>
+
+            <!-- Job Images Section -->
+            <div class="detail-section">
+                <h3 class="detail-section-title">
+                    <i class="fas fa-images"></i> Job Images
+                </h3>
+                <div class="offcanvas-image-slider" id="offcanvasImageSlider">
+                    <!-- Images will be populated dynamically -->
+                    <div class="offcanvas-image-counter">
+                        <span class="current-image-number">1</span> / <span class="total-images">0</span>
+                    </div>
+                    
+                    <!-- Navigation Buttons (only shown if multiple images) -->
+                    <button class="offcanvas-slider-btn prev" onclick="changeOffcanvasSlide(-1)" style="display: none;">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="offcanvas-slider-btn next" onclick="changeOffcanvasSlide(1)" style="display: none;">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    
+                    <!-- Indicators (only shown if multiple images) -->
+                    <div class="offcanvas-slider-indicators" id="offcanvasIndicators" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Timeline Section -->
+            <div class="detail-section">
+                <h3 class="detail-section-title">
+                    <i class="fas fa-history"></i> Application Timeline
+                </h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date" id="offcanvasAppliedDate"></div>
+                        <div class="timeline-content">You submitted your application</div>
+                    </div>
+                    <div class="timeline-item" id="timelineStatus" style="display: none;">
+                        <div class="timeline-date" id="offcanvasStatusDate"></div>
+                        <div class="timeline-content" id="offcanvasStatusText"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Section -->
+            <div class="detail-section" id="actionsSection">
+                <h3 class="detail-section-title">
+                    <i class="fas fa-tasks"></i> Actions
+                </h3>
+                <button class="action-btn-offcanvas btn-message-client" id="btnMessageOffcanvas" style="display: none;">
+                    <i class="fas fa-comments"></i> Message Client
+                </button>
+                <button class="action-btn-offcanvas btn-withdraw-app" id="btnWithdrawOffcanvas" style="display: none;">
+                    <i class="fas fa-trash"></i> Withdraw Application
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>About Us</h4>
+                    <p>Connecting skilled service providers with property owners for quality maintenance and repair services.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Find Jobs</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> support@example.com</p>
+                    <p><i class="fas fa-phone"></i> +254 700 000 000</p>
+                    <div style="margin-top: 1rem;">
+                        <a href="#" style="color: white; margin-right: 1rem;"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" style="color: white; margin-right: 1rem;"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" style="color: white;"><i class="fab fa-linkedin fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Service Provider Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentSlideIndex = 0;
+        let totalSlides = 0;
+
+        // Image slider functions for offcanvas
+        function changeOffcanvasSlide(direction) {
+            const slider = document.getElementById('offcanvasImageSlider');
+            const slides = slider.querySelectorAll('.offcanvas-slider-image');
+            const indicators = slider.querySelectorAll('.offcanvas-indicator-dot');
+            const counter = slider.querySelector('.current-image-number');
+            
+            currentSlideIndex += direction;
+            
+            // Loop around
+            if (currentSlideIndex >= totalSlides) currentSlideIndex = 0;
+            if (currentSlideIndex < 0) currentSlideIndex = totalSlides - 1;
+            
+            // Update slides
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlideIndex);
+            });
+            
+            // Update indicators
+            indicators.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlideIndex);
+            });
+            
+            // Update counter
+            counter.textContent = currentSlideIndex + 1;
+        }
+        
+        function goToOffcanvasSlide(index) {
+            currentSlideIndex = index;
+            const slider = document.getElementById('offcanvasImageSlider');
+            const slides = slider.querySelectorAll('.offcanvas-slider-image');
+            const indicators = slider.querySelectorAll('.offcanvas-indicator-dot');
+            const counter = slider.querySelector('.current-image-number');
+            
+            // Update slides
+            slides.forEach((slide, idx) => {
+                slide.classList.toggle('active', idx === index);
+            });
+            
+            // Update indicators
+            indicators.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === index);
+            });
+            
+            // Update counter
+            counter.textContent = index + 1;
+        }
+
+        // Populate offcanvas with application details
+        const offcanvasElement = document.getElementById('applicationDetailsOffcanvas');
+        offcanvasElement.addEventListener('show.bs.offcanvas', function (event) {
+            const button = event.relatedTarget;
+            
+            // Get all data from button
+            const title = button.getAttribute('data-title');
+            const property = button.getAttribute('data-property');
+            const unit = button.getAttribute('data-unit');
+            const category = button.getAttribute('data-category');
+            const status = button.getAttribute('data-status');
+            const clientBudget = button.getAttribute('data-client-budget');
+            const yourBudget = button.getAttribute('data-your-budget');
+            const duration = button.getAttribute('data-duration');
+            const message = button.getAttribute('data-message');
+            const appliedDate = button.getAttribute('data-applied-date');
+            const imagesJSON = button.getAttribute('data-images');
+            const images = JSON.parse(imagesJSON);
+            
+            // Setup image slider
+            const imageSlider = document.getElementById('offcanvasImageSlider');
+            const indicatorsContainer = document.getElementById('offcanvasIndicators');
+            
+            // Clear previous images
+            const existingImages = imageSlider.querySelectorAll('.offcanvas-slider-image');
+            existingImages.forEach(img => img.remove());
+            indicatorsContainer.innerHTML = '';
+            
+            if (images && images.length > 0) {
+                totalSlides = images.length;
+                currentSlideIndex = 0;
+                
+                // Update counter
+                imageSlider.querySelector('.total-images').textContent = totalSlides;
+                imageSlider.querySelector('.current-image-number').textContent = '1';
+                
+                // Add images
+                images.forEach((image, index) => {
+                    const img = document.createElement('img');
+                    img.src = 'https://via.placeholder.com/650x250/00192D/FFC107?text=Job+Image+' + (index + 1);
+                    img.alt = 'Job image ' + (index + 1);
+                    img.className = 'offcanvas-slider-image' + (index === 0 ? ' active' : '');
+                    imageSlider.insertBefore(img, imageSlider.firstChild);
+                });
+                
+                // Show/hide navigation based on image count
+                if (totalSlides > 1) {
+                    imageSlider.querySelector('.prev').style.display = 'flex';
+                    imageSlider.querySelector('.next').style.display = 'flex';
+                    indicatorsContainer.style.display = 'flex';
+                    
+                    // Add indicators
+                    for (let i = 0; i < totalSlides; i++) {
+                        const dot = document.createElement('span');
+                        dot.className = 'offcanvas-indicator-dot' + (i === 0 ? ' active' : '');
+                        dot.onclick = () => goToOffcanvasSlide(i);
+                        indicatorsContainer.appendChild(dot);
+                    }
+                } else {
+                    imageSlider.querySelector('.prev').style.display = 'none';
+                    imageSlider.querySelector('.next').style.display = 'none';
+                    indicatorsContainer.style.display = 'none';
+                }
+            } else {
+                // No images - show placeholder
+                totalSlides = 1;
+                const img = document.createElement('img');
+                img.src = 'https://via.placeholder.com/650x250/e9ecef/6c757d?text=No+Images+Available';
+                img.alt = 'No images';
+                img.className = 'offcanvas-slider-image active';
+                imageSlider.insertBefore(img, imageSlider.firstChild);
+                
+                imageSlider.querySelector('.total-images').textContent = '0';
+                imageSlider.querySelector('.current-image-number').textContent = '0';
+                imageSlider.querySelector('.prev').style.display = 'none';
+                imageSlider.querySelector('.next').style.display = 'none';
+                indicatorsContainer.style.display = 'none';
+            }
+            
+            // Populate offcanvas
+            document.getElementById('offcanvasJobTitle').textContent = title;
+            document.getElementById('offcanvasProperty').textContent = property + ' - Unit ' + unit;
+            document.getElementById('offcanvasCategory').textContent = category;
+            document.getElementById('offcanvasClientBudget').textContent = clientBudget;
+            document.getElementById('offcanvasYourBudget').textContent = yourBudget;
+            document.getElementById('offcanvasDuration').textContent = duration;
+            document.getElementById('offcanvasMessage').textContent = message;
+            document.getElementById('offcanvasAppliedDate').textContent = 'Applied on ' + appliedDate;
+            
+            // Set status with proper styling
+            let statusHTML = '';
+            let statusIcon = '';
+            let statusText = '';
+            
+            if (status === 'pending') {
+                statusIcon = '<i class="fas fa-clock"></i>';
+                statusText = 'Pending Review';
+                statusHTML = '<div class="status-indicator pending">' + statusIcon + ' ' + statusText + '</div>';
+            } else if (status === 'accepted') {
+                statusIcon = '<i class="fas fa-check-circle"></i>';
+                statusText = 'Accepted';
+                statusHTML = '<div class="status-indicator accepted">' + statusIcon + ' ' + statusText + '</div>';
+                
+                // Show status in timeline
+                document.getElementById('timelineStatus').style.display = 'block';
+                document.getElementById('offcanvasStatusDate').textContent = 'Status updated';
+                document.getElementById('offcanvasStatusText').textContent = 'Your application was accepted by the client';
+            } else if (status === 'rejected') {
+                statusIcon = '<i class="fas fa-times-circle"></i>';
+                statusText = 'Declined';
+                statusHTML = '<div class="status-indicator rejected">' + statusIcon + ' ' + statusText + '</div>';
+                
+                // Show status in timeline
+                document.getElementById('timelineStatus').style.display = 'block';
+                document.getElementById('offcanvasStatusDate').textContent = 'Status updated';
+                document.getElementById('offcanvasStatusText').textContent = 'Your application was declined by the client';
+            }
+            
+            document.getElementById('offcanvasStatus').innerHTML = statusHTML;
+            
+            // Show/hide action buttons based on status
+            const btnMessage = document.getElementById('btnMessageOffcanvas');
+            const btnWithdraw = document.getElementById('btnWithdrawOffcanvas');
+            
+            if (status === 'accepted') {
+                btnMessage.style.display = 'block';
+                btnWithdraw.style.display = 'none';
+            } else if (status === 'pending') {
+                btnMessage.style.display = 'none';
+                btnWithdraw.style.display = 'block';
+            } else {
+                btnMessage.style.display = 'none';
+                btnWithdraw.style.display = 'none';
+            }
+        });
+        
+        // Message client button in offcanvas
+        document.getElementById('btnMessageOffcanvas').addEventListener('click', function() {
+            alert('Open messaging interface');
+        });
+        
+        // Withdraw button in offcanvas
+        document.getElementById('btnWithdrawOffcanvas').addEventListener('click', function() {
+            if (confirm('Are you sure you want to withdraw this application?')) {
+                alert('Application withdrawn successfully');
+                // Close offcanvas
+                const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+                offcanvas.hide();
+            }
+        });
+
+        // Filter applications by status
+        function filterApplications(status) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+
+            // Filter logic would go here
+            // In a real application, this would filter the displayed applications
+            console.log('Filtering by:', status);
+        }
+
+        // Action buttons functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Message buttons in cards
+            document.querySelectorAll('.btn-message').forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('Open messaging interface');
+                });
+            });
+
+            // Withdraw buttons in cards
+            document.querySelectorAll('.btn-withdraw').forEach(button => {
+                button.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to withdraw this application?')) {
+                        alert('Application withdrawn successfully');
+                    }
+                });
+            });
+        });
+    </script>

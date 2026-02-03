@@ -16,7 +16,7 @@ if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') 
 
 // actions
 include_once './actions/getApplications.php';
-// var_dump($applications);
+
 ?>
 
 <!DOCTYPE html>
@@ -38,11 +38,12 @@ include_once './actions/getApplications.php';
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      /* background-color: var(--light-bg); */
       background-color: #f4f6f9;
+
     }
 
     /* Header Styles */
-
 
     /* Navigation */
     .navigation {
@@ -470,6 +471,272 @@ include_once './actions/getApplications.php';
       border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
+    /* Offcanvas Custom Styles */
+    .offcanvas-header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #003d5c 100%);
+      color: white;
+      padding: 1.5rem;
+    }
+
+    .offcanvas-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .offcanvas-body {
+      padding: 0;
+    }
+
+    .detail-section {
+      padding: 1.5rem;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .detail-section:last-child {
+      border-bottom: none;
+    }
+
+    .detail-section-title {
+      color: var(--primary-color);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .detail-section-title i {
+      color: var(--accent-color);
+    }
+
+    .info-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem;
+      background: var(--light-bg);
+      border-radius: 8px;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #6c757d;
+    }
+
+    .info-value {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .message-box {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent-color);
+      line-height: 1.6;
+      color: #495057;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .status-indicator.pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-indicator.accepted {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-indicator.rejected {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.5rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.5rem;
+      top: 0.5rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      border: 3px solid white;
+    }
+
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      left: -1.1rem;
+      top: 1.2rem;
+      width: 2px;
+      height: calc(100% - 0.5rem);
+      background: #dee2e6;
+    }
+
+    .timeline-item:last-child::after {
+      display: none;
+    }
+
+    .timeline-date {
+      font-size: 0.85rem;
+      color: #6c757d;
+      font-weight: 600;
+    }
+
+    .timeline-content {
+      color: #495057;
+      margin-top: 0.3rem;
+    }
+
+    /* Image Slider in Offcanvas */
+    .offcanvas-image-slider {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      background: #e9ecef;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .offcanvas-slider-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .offcanvas-slider-image.active {
+      display: block;
+    }
+
+    .offcanvas-slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 25, 45, 0.8);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      z-index: 10;
+    }
+
+    .offcanvas-slider-btn:hover {
+      background: var(--accent-color);
+      color: var(--primary-color);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .offcanvas-slider-btn.prev {
+      left: 10px;
+    }
+
+    .offcanvas-slider-btn.next {
+      right: 10px;
+    }
+
+    .offcanvas-image-counter {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(0, 25, 45, 0.8);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 10;
+    }
+
+    .offcanvas-slider-indicators {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .offcanvas-indicator-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .offcanvas-indicator-dot.active {
+      background: var(--accent-color);
+      width: 20px;
+      border-radius: 4px;
+    }
+
+    .action-btn-offcanvas {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 0.5rem;
+    }
+
+    .btn-message-client {
+      background: #17a2b8;
+      color: white;
+    }
+
+    .btn-message-client:hover {
+      background: #138496;
+      transform: translateY(-2px);
+    }
+
+    .btn-withdraw-app {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-withdraw-app:hover {
+      background: #c82333;
+      transform: translateY(-2px);
+    }
+
     @media (max-width: 768px) {
       .application-header {
         flex-direction: column;
@@ -597,16 +864,16 @@ include_once './actions/getApplications.php';
         <div class="filter-section">
           <div class="filter-tabs">
             <button class="filter-tab active" onclick="filterApplications('all')">
-              All Applications <span style="background: #e9ecef; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;">12</span>
+              All Applications <span style="background: #e9ecef; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;"><?= $totalApplications ?></span>
             </button>
             <button class="filter-tab" onclick="filterApplications('pending')">
-              Pending <span style="background: #fff3cd; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;">7</span>
+              Pending <span style="background: #fff3cd; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;"><?= $pending ?></span>
             </button>
             <button class="filter-tab" onclick="filterApplications('accepted')">
-              Accepted <span style="background: #d4edda; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;">4</span>
+              Accepted <span style="background: #d4edda; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;"><?= $accepted ?></span>
             </button>
             <button class="filter-tab" onclick="filterApplications('rejected')">
-              Declined <span style="background: #f8d7da; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;">1</span>
+              Declined <span style="background: #f8d7da; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;"><?= $declined ?></span>
             </button>
           </div>
 
@@ -632,68 +899,7 @@ include_once './actions/getApplications.php';
         <!-- Applications List -->
         <?php
         // Sample data
-        $applications = [
-          [
-            'title' => 'Electrical Outlet Installation',
-            'property' => 'Silver House',
-            'unit' => 'C9',
-            'status' => 'pending',
-            'applied_date' => '2026-01-20',
-            'client_budget' => 'KES 5,000',
-            'your_budget' => 'KES 4,500',
-            'your_duration' => '2-3 hours',
-            'message' => 'I have over 5 years of experience in residential electrical work. I\'m certified and have all necessary tools. Can start immediately.',
-            'category' => 'Electrical'
-          ],
-          [
-            'title' => 'Kitchen Sink Leak Repair',
-            'property' => 'Golden Heights',
-            'unit' => 'A12',
-            'status' => 'accepted',
-            'applied_date' => '2026-01-18',
-            'client_budget' => 'KES 3,500',
-            'your_budget' => 'KES 3,200',
-            'your_duration' => '1-2 hours',
-            'message' => 'I specialize in plumbing repairs and have fixed similar issues many times. Quick and professional service guaranteed.',
-            'category' => 'Plumbing'
-          ],
-          [
-            'title' => 'Ceiling Fan Installation',
-            'property' => 'Palm Residences',
-            'unit' => 'B5',
-            'status' => 'pending',
-            'applied_date' => '2026-01-19',
-            'client_budget' => 'KES 7,000',
-            'your_budget' => 'KES 6,500',
-            'your_duration' => '3-4 hours',
-            'message' => 'Licensed electrician with experience in ceiling fan installations. I ensure proper wiring and secure mounting.',
-            'category' => 'Electrical'
-          ],
-          [
-            'title' => 'Door Lock Replacement',
-            'property' => 'Sunset Apartments',
-            'unit' => 'D3',
-            'status' => 'rejected',
-            'applied_date' => '2026-01-17',
-            'client_budget' => 'KES 2,500',
-            'your_budget' => 'KES 2,000',
-            'your_duration' => '1 hour',
-            'message' => 'Quick and efficient lock replacement service. I carry various lock types.',
-            'category' => 'Carpentry'
-          ],
-          [
-            'title' => 'Interior Wall Painting',
-            'property' => 'Riverside Complex',
-            'unit' => 'H9',
-            'status' => 'accepted',
-            'applied_date' => '2026-01-15',
-            'client_budget' => 'KES 12,000',
-            'your_budget' => 'KES 11,000',
-            'your_duration' => '2 days',
-            'message' => 'Professional painter with 8 years experience. Clean work, attention to detail, and excellent finishing.',
-            'category' => 'Painting'
-          ]
-        ];
+
 
         foreach ($applications as $application): ?>
           <div class="application-card <?php echo $application['status']; ?>">
@@ -703,7 +909,7 @@ include_once './actions/getApplications.php';
                 <div class="application-meta">
                   <div class="meta-item">
                     <i class="fas fa-building"></i>
-                    <span><?php echo $application['property']; ?> - Unit <?php echo $application['unit']; ?></span>
+                    <span><?php echo $application['building_name']; ?> - Unit <?php echo $application['unit_number']; ?></span>
                   </div>
                   <div class="meta-item">
                     <i class="fas fa-tag"></i>
@@ -719,29 +925,36 @@ include_once './actions/getApplications.php';
             <div class="application-details">
               <div class="detail-row">
                 <span class="detail-label">Client's Budget:</span>
-                <span class="detail-value"><?php echo $application['client_budget']; ?></span>
+                <span class="detail-value"><?php echo $application['budget']; ?></span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Your Proposed Budget:</span>
-                <span class="detail-value" style="font-weight: 600; color: var(--primary-color);"><?php echo $application['your_budget']; ?></span>
+                <span class="detail-value" style="font-weight: 600; color: var(--primary-color);"><?php echo $application['proposed_budget']; ?></span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Your Estimated Duration:</span>
-                <span class="detail-value"><?php echo $application['your_duration']; ?></span>
+                <span class="detail-value"><?php echo $application['proposed_duration']; ?></span>
               </div>
             </div>
 
-            <div class="application-message">
-              <strong style="color: var(--primary-color); display: block; margin-bottom: 0.5rem;">Your Message:</strong>
-              <?php echo $application['message']; ?>
-            </div>
 
             <div class="application-footer">
               <div class="applied-date">
-                <i class="fas fa-calendar"></i> Applied on <?php echo date('M d, Y', strtotime($application['applied_date'])); ?>
+                <i class="fas fa-calendar"></i> Applied on <?php echo date('M d, Y', strtotime($application['created_at'])); ?>
               </div>
               <div class="action-buttons">
-                <button class="btn-action btn-view">
+                <button class="btn-action btn-view" data-bs-toggle="offcanvas"
+                  data-bs-target="#applicationDetailsOffcanvas"
+                  data-title="<?php echo htmlspecialchars($application['title']); ?>"
+                  data-property="<?php echo htmlspecialchars($application['building_name']); ?>"
+                  data-unit="<?php echo htmlspecialchars($application['unit_number']); ?>"
+                  data-category="<?php echo htmlspecialchars($application['category']); ?>"
+                  data-status="<?php echo $application['status']; ?>"
+                  data-client-budget="<?php echo htmlspecialchars($application['budget']); ?>"
+                  data-your-budget="<?php echo htmlspecialchars($application['proposed_budget']); ?>"
+                  data-duration="<?php echo htmlspecialchars($application['proposed_duration']); ?>"
+                  data-applied-date="<?php echo date('M d, Y', strtotime($application['created_at'])); ?>">
+
                   <i class="fas fa-eye"></i> View Details
                 </button>
                 <?php if ($application['status'] === 'accepted'): ?>
@@ -823,6 +1036,120 @@ include_once './actions/getApplications.php';
     </footer>
   </div>
 
+  <!-- Modals and offcanvas -->
+  <!-- Offcanvas for Application Details -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="applicationDetailsOffcanvas" aria-labelledby="applicationDetailsLabel" style="width: 650px; max-width: 90vw;">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="applicationDetailsLabel">
+        <i class="fas fa-file-alt"></i> Application Details
+      </h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- Job Information Section -->
+      <div class="detail-section">
+        <h3 class="detail-section-title">
+          <i class="fas fa-briefcase"></i> Job Information
+        </h3>
+        <h4 id="offcanvasJobTitle" style="color: var(--primary-color); font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;"></h4>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Property:</span>
+            <span class="info-value" id="offcanvasProperty"></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Category:</span>
+            <span class="info-value" id="offcanvasCategory"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Section -->
+      <div class="detail-section">
+        <h3 class="detail-section-title">
+          <i class="fas fa-info-circle"></i> Application Status
+        </h3>
+        <div id="offcanvasStatus"></div>
+      </div>
+
+      <!-- Budget & Duration Section -->
+      <div class="detail-section">
+        <h3 class="detail-section-title">
+          <i class="fas fa-money-bill-wave"></i> Budget & Duration
+        </h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Client's Budget:</span>
+            <span class="info-value" id="offcanvasClientBudget"></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Your Proposed Budget:</span>
+            <span class="info-value" style="color: #28a745;" id="offcanvasYourBudget"></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Your Duration:</span>
+            <span class="info-value" id="offcanvasDuration"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Job Images Section -->
+      <div class="detail-section">
+        <h3 class="detail-section-title">
+          <i class="fas fa-images"></i> Job Images
+        </h3>
+        <div class="offcanvas-image-slider" id="offcanvasImageSlider">
+          <!-- Images will be populated dynamically -->
+          <div class="offcanvas-image-counter">
+            <span class="current-image-number">1</span> / <span class="total-images">0</span>
+          </div>
+
+          <!-- Navigation Buttons (only shown if multiple images) -->
+          <button class="offcanvas-slider-btn prev" onclick="changeOffcanvasSlide(-1)" style="display: none;">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="offcanvas-slider-btn next" onclick="changeOffcanvasSlide(1)" style="display: none;">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+
+          <!-- Indicators (only shown if multiple images) -->
+          <div class="offcanvas-slider-indicators" id="offcanvasIndicators" style="display: none;"></div>
+        </div>
+      </div>
+
+      <!-- Timeline Section -->
+      <div class="detail-section">
+        <h3 class="detail-section-title">
+          <i class="fas fa-history"></i> Application Timeline
+        </h3>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-date" id="offcanvasAppliedDate"></div>
+            <div class="timeline-content">You submitted your application</div>
+          </div>
+          <div class="timeline-item" id="timelineStatus" style="display: none;">
+            <div class="timeline-date" id="offcanvasStatusDate"></div>
+            <div class="timeline-content" id="offcanvasStatusText"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions Section -->
+      <div class="detail-section" id="actionsSection">
+        <h3 class="detail-section-title">
+          <i class="fas fa-tasks"></i> Actions
+        </h3>
+        <button class="action-btn-offcanvas btn-message-client" id="btnMessageOffcanvas" style="display: none;">
+          <i class="fas fa-comments"></i> Message Client
+        </button>
+        <button class="action-btn-offcanvas btn-withdraw-app" id="btnWithdrawOffcanvas" style="display: none;">
+          <i class="fas fa-trash"></i> Withdraw Application
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Filter applications by status
@@ -843,11 +1170,6 @@ include_once './actions/getApplications.php';
     // Action buttons functionality
     document.addEventListener('DOMContentLoaded', function() {
       // View Details buttons
-      document.querySelectorAll('.btn-view').forEach(button => {
-        button.addEventListener('click', function() {
-          alert('View detailed application information');
-        });
-      });
 
       // Withdraw buttons
       document.querySelectorAll('.btn-withdraw').forEach(button => {
@@ -875,6 +1197,243 @@ include_once './actions/getApplications.php';
         const toast = new bootstrap.Toast(toastEl);
         toast.show();
       }
+    });
+  </script>
+
+  <script>
+    let currentSlideIndex = 0;
+    let totalSlides = 0;
+
+    // Image slider functions for offcanvas
+    function changeOffcanvasSlide(direction) {
+      const slider = document.getElementById('offcanvasImageSlider');
+      const slides = slider.querySelectorAll('.offcanvas-slider-image');
+      const indicators = slider.querySelectorAll('.offcanvas-indicator-dot');
+      const counter = slider.querySelector('.current-image-number');
+
+      currentSlideIndex += direction;
+
+      // Loop around
+      if (currentSlideIndex >= totalSlides) currentSlideIndex = 0;
+      if (currentSlideIndex < 0) currentSlideIndex = totalSlides - 1;
+
+      // Update slides
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlideIndex);
+      });
+
+      // Update indicators
+      indicators.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlideIndex);
+      });
+
+      // Update counter
+      counter.textContent = currentSlideIndex + 1;
+    }
+
+    function goToOffcanvasSlide(index) {
+      currentSlideIndex = index;
+      const slider = document.getElementById('offcanvasImageSlider');
+      const slides = slider.querySelectorAll('.offcanvas-slider-image');
+      const indicators = slider.querySelectorAll('.offcanvas-indicator-dot');
+      const counter = slider.querySelector('.current-image-number');
+
+      // Update slides
+      slides.forEach((slide, idx) => {
+        slide.classList.toggle('active', idx === index);
+      });
+
+      // Update indicators
+      indicators.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === index);
+      });
+
+      // Update counter
+      counter.textContent = index + 1;
+    }
+
+    // Populate offcanvas with application details
+    const offcanvasElement = document.getElementById('applicationDetailsOffcanvas');
+    offcanvasElement.addEventListener('show.bs.offcanvas', function(event) {
+      const button = event.relatedTarget;
+
+      // Get all data from button
+      const title = button.getAttribute('data-title');
+      const property = button.getAttribute('data-property');
+      const unit = button.getAttribute('data-unit');
+      const category = button.getAttribute('data-category');
+      const status = button.getAttribute('data-status');
+      const clientBudget = button.getAttribute('data-client-budget');
+      const yourBudget = button.getAttribute('data-your-budget');
+      const duration = button.getAttribute('data-duration');
+      const message = button.getAttribute('data-message');
+      const appliedDate = button.getAttribute('data-applied-date');
+      const imagesJSON = button.getAttribute('data-images');
+      const images = JSON.parse(imagesJSON);
+
+      // Setup image slider
+      const imageSlider = document.getElementById('offcanvasImageSlider');
+      const indicatorsContainer = document.getElementById('offcanvasIndicators');
+
+      // Clear previous images
+      const existingImages = imageSlider.querySelectorAll('.offcanvas-slider-image');
+      existingImages.forEach(img => img.remove());
+      indicatorsContainer.innerHTML = '';
+
+      if (images && images.length > 0) {
+        totalSlides = images.length;
+        currentSlideIndex = 0;
+
+        // Update counter
+        imageSlider.querySelector('.total-images').textContent = totalSlides;
+        imageSlider.querySelector('.current-image-number').textContent = '1';
+
+        // Add images
+        images.forEach((image, index) => {
+          const img = document.createElement('img');
+          img.src = 'https://via.placeholder.com/650x250/00192D/FFC107?text=Job+Image+' + (index + 1);
+          img.alt = 'Job image ' + (index + 1);
+          img.className = 'offcanvas-slider-image' + (index === 0 ? ' active' : '');
+          imageSlider.insertBefore(img, imageSlider.firstChild);
+        });
+
+        // Show/hide navigation based on image count
+        if (totalSlides > 1) {
+          imageSlider.querySelector('.prev').style.display = 'flex';
+          imageSlider.querySelector('.next').style.display = 'flex';
+          indicatorsContainer.style.display = 'flex';
+
+          // Add indicators
+          for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('span');
+            dot.className = 'offcanvas-indicator-dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToOffcanvasSlide(i);
+            indicatorsContainer.appendChild(dot);
+          }
+        } else {
+          imageSlider.querySelector('.prev').style.display = 'none';
+          imageSlider.querySelector('.next').style.display = 'none';
+          indicatorsContainer.style.display = 'none';
+        }
+      } else {
+        // No images - show placeholder
+        totalSlides = 1;
+        const img = document.createElement('img');
+        img.src = 'https://via.placeholder.com/650x250/e9ecef/6c757d?text=No+Images+Available';
+        img.alt = 'No images';
+        img.className = 'offcanvas-slider-image active';
+        imageSlider.insertBefore(img, imageSlider.firstChild);
+
+        imageSlider.querySelector('.total-images').textContent = '0';
+        imageSlider.querySelector('.current-image-number').textContent = '0';
+        imageSlider.querySelector('.prev').style.display = 'none';
+        imageSlider.querySelector('.next').style.display = 'none';
+        indicatorsContainer.style.display = 'none';
+      }
+
+      // Populate offcanvas
+      document.getElementById('offcanvasJobTitle').textContent = title;
+      document.getElementById('offcanvasProperty').textContent = property + ' - Unit ' + unit;
+      document.getElementById('offcanvasCategory').textContent = category;
+      document.getElementById('offcanvasClientBudget').textContent = clientBudget;
+      document.getElementById('offcanvasYourBudget').textContent = yourBudget;
+      document.getElementById('offcanvasDuration').textContent = duration;
+      document.getElementById('offcanvasAppliedDate').textContent = 'Applied on ' + appliedDate;
+
+      // Set status with proper styling
+      let statusHTML = '';
+      let statusIcon = '';
+      let statusText = '';
+
+      if (status === 'pending') {
+        statusIcon = '<i class="fas fa-clock"></i>';
+        statusText = 'Pending Review';
+        statusHTML = '<div class="status-indicator pending">' + statusIcon + ' ' + statusText + '</div>';
+      } else if (status === 'accepted') {
+        statusIcon = '<i class="fas fa-check-circle"></i>';
+        statusText = 'Accepted';
+        statusHTML = '<div class="status-indicator accepted">' + statusIcon + ' ' + statusText + '</div>';
+
+        // Show status in timeline
+        document.getElementById('timelineStatus').style.display = 'block';
+        document.getElementById('offcanvasStatusDate').textContent = 'Status updated';
+        document.getElementById('offcanvasStatusText').textContent = 'Your application was accepted by the client';
+      } else if (status === 'rejected') {
+        statusIcon = '<i class="fas fa-times-circle"></i>';
+        statusText = 'Declined';
+        statusHTML = '<div class="status-indicator rejected">' + statusIcon + ' ' + statusText + '</div>';
+
+        // Show status in timeline
+        document.getElementById('timelineStatus').style.display = 'block';
+        document.getElementById('offcanvasStatusDate').textContent = 'Status updated';
+        document.getElementById('offcanvasStatusText').textContent = 'Your application was declined by the client';
+      }
+
+      document.getElementById('offcanvasStatus').innerHTML = statusHTML;
+
+      // Show/hide action buttons based on status
+      const btnMessage = document.getElementById('btnMessageOffcanvas');
+      const btnWithdraw = document.getElementById('btnWithdrawOffcanvas');
+
+      if (status === 'accepted') {
+        btnMessage.style.display = 'block';
+        btnWithdraw.style.display = 'none';
+      } else if (status === 'pending') {
+        btnMessage.style.display = 'none';
+        btnWithdraw.style.display = 'block';
+      } else {
+        btnMessage.style.display = 'none';
+        btnWithdraw.style.display = 'none';
+      }
+    });
+
+    // Message client button in offcanvas
+    document.getElementById('btnMessageOffcanvas').addEventListener('click', function() {
+      alert('Open messaging interface');
+    });
+
+    // Withdraw button in offcanvas
+    document.getElementById('btnWithdrawOffcanvas').addEventListener('click', function() {
+      if (confirm('Are you sure you want to withdraw this application?')) {
+        alert('Application withdrawn successfully');
+        // Close offcanvas
+        const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+        offcanvas.hide();
+      }
+    });
+
+    // Filter applications by status
+    function filterApplications(status) {
+      // Remove active class from all tabs
+      document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+
+      // Add active class to clicked tab
+      event.target.classList.add('active');
+
+      // Filter logic would go here
+      // In a real application, this would filter the displayed applications
+      console.log('Filtering by:', status);
+    }
+
+    // Action buttons functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Message buttons in cards
+      document.querySelectorAll('.btn-message').forEach(button => {
+        button.addEventListener('click', function() {
+          alert('Open messaging interface');
+        });
+      });
+
+      // Withdraw buttons in cards
+      document.querySelectorAll('.btn-withdraw').forEach(button => {
+        button.addEventListener('click', function() {
+          if (confirm('Are you sure you want to withdraw this application?')) {
+            alert('Application withdrawn successfully');
+          }
+        });
+      });
     });
   </script>
 </body>

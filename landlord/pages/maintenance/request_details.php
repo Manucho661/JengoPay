@@ -55,6 +55,13 @@ if (isset($_GET['id'])) {
 
 </head>
 <style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* background-color: var(--light-bg); */
+    background-color: #f4f6f9;
+
+  }
+
   :root {
     --primary: #00192D;
     --secondary: #FFC107;
@@ -78,14 +85,6 @@ if (isset($_GET['id'])) {
     padding: 1.25rem;
     font-weight: 600;
   }
-
-  /* .card h5 {
-    color: var(--main-color);
-    font-weight: 600;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--accent-color);
-  } */
 
   .content-card {
     background: white;
@@ -194,7 +193,7 @@ if (isset($_GET['id'])) {
   /* Hidden state before animation */
 </style>
 
-<body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
+<body class="layout-fixed sidebar-expand-lg" style="background-color:#f4f6f9;">
   <div class="app-wrapper" style="height: 100 vh; ">
     <!--begin::Header-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
@@ -205,7 +204,7 @@ if (isset($_GET['id'])) {
     <!--end::Sidebar-->
 
     <!-- Main Layout -->
-    <main class="main" id="appMain" style="display: none;">
+    <main class="main" style="background-color:#f4f6f9;">
       <!--begin::App Content Header-->
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb" style="">
@@ -228,7 +227,7 @@ if (isset($_GET['id'])) {
             id="availabilityBtn"
             class="btn seTAvailable text-white fw-bold rounded-4"
             style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;"
-            data-request-id="<?= htmlspecialchars($request['id']) ?>" 
+            data-request-id="<?= htmlspecialchars($request['id']) ?>"
             data-status="<?= htmlspecialchars($request['availability']) ?>">
             Set Available
           </button>
@@ -290,12 +289,89 @@ if (isset($_GET['id'])) {
                 <?php endif; ?>
               </div>
             </div>
+            <div class="content-card">
+              <h5>Proposals Received <span class="badge bg-primary">3</span></h5>
+
+              <div>
+                <div class="card proposal-card mb-3">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h5 class="mb-1">QuickFix Plumbing Services</h5>
+                        <div class="text-warning mb-2">
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star-half-alt"></i>
+                          <span class="text-muted">(4.5)</span>
+                        </div>
+                        <p class="mb-2">We can fix your blocked sink using professional equipment. We'll also inspect the pipes to prevent future blockages.</p>
+                        <div>
+                          <span class="badge bg-success">Budget: KES 3,500</span>
+                          <span class="badge bg-info ms-2">Duration: 2-3 hours</span>
+                        </div>
+                      </div>
+                      <button class="btn btn-sm btn-outline-primary">View Details</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card proposal-card mb-3">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h5 class="mb-1">ProPipe Solutions</h5>
+                        <div class="text-warning mb-2">
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="far fa-star"></i>
+                          <span class="text-muted">(4.0)</span>
+                        </div>
+                        <p class="mb-2">Same-day service available. We use eco-friendly products and provide 30-day guarantee on all work.</p>
+                        <div>
+                          <span class="badge bg-success">Budget: KES 4,200</span>
+                          <span class="badge bg-info ms-2">Duration: 3-4 hours</span>
+                        </div>
+                      </div>
+                      <button class="btn btn-sm btn-outline-primary">View Details</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card proposal-card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h5 class="mb-1">City Maintenance Co.</h5>
+                        <div class="text-warning mb-2">
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <span class="text-muted">(5.0)</span>
+                        </div>
+                        <p class="mb-2">Premium service with video inspection of pipes. Includes full report and maintenance recommendations.</p>
+                        <div>
+                          <span class="badge bg-success">Budget: KES 5,800</span>
+                          <span class="badge bg-info ms-2">Duration: 4-5 hours</span>
+                        </div>
+                      </div>
+                      <button class="btn btn-sm btn-outline-primary">View Details</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="col-md-4">
-            <div class="card">
-              <div class="card-header">Budget & Timeline</div>
-              <div class="card-body d-flex">
+            <div class="content-card">
+              <h5>Budget & Timeline</h5>
+              <div>
                 <div>
                   <div class="info-row">
                     <span class="info-label">Budget:</span>
@@ -318,7 +394,7 @@ if (isset($_GET['id'])) {
               </div>
             </div>
             <div class="content-card">
-              <h5 class="card-header">Provider Details</h5>
+              <h5>Provider Details</h5>
               <div class="text-center mb-3">
                 <img src="https://ui-avatars.com/api/?name=QuickFix+Plumbing&size=80&background=3498db&color=fff" alt="Provider" class="rounded-circle mb-2">
                 <h6 class="mb-0">QuickFix Plumbing Services</h6>
@@ -348,136 +424,74 @@ if (isset($_GET['id'])) {
                 </span>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="row align-items-center gy-3 gx-2 mb-2">
-          <!-- Request Name -->
-          <div class="col-lg-4 col-md-6 col-12 d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center flex-wrap gap-3">
-            </div>
-          </div>
+            <!-- Status & Payment -->
+            <div class="content-card">
+              <h5>Status & Payment</h5>
 
-          <!-- Request Property -->
-          <div class="col-lg-4 col-md-6 col-12 d-flex align-items-center border-left justify-content-between">
-
-
-            <!-- Optional More Icon (you can hide one if not needed) -->
-            <button class="btn btn-light border-0 d-lg-none mobileNavToggleProperty" id="mobileNavToggleProperty">
-              <i class="bi bi-three-dots fs-5"></i>
-            </button>
-
-            <div id="mobileNavMenuProperty" class="mobile-nav-menu d-none position-absolute bg-white shadow rounded-3 mt-2">
-            </div>
-          </div>
-
-          <!-- Navigation (desktop only) -->
-          <div class="col-lg-4 d-none d-lg-flex justify-content-end align-items-center">
-          </div>
-        </div>
-        <div class="row mt-4 mb-2">
-          <div class="col-md-6">
-            <div class="d-flex align-items-center flex-wrap">
-              <span class="info-box-icon me-2 bg-warning">
-                <i class="bi bi-house fs-3 text-white"></i>
-              </span>
-              <div class="d-flex align-items-center flex-wrap">
-                <i><b class="mb-0 me-2" id="request-property"></b></i>
-                <i><b class="mb-0 text-success" id="request-unit"></b></i>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 d-flex gap-1 flex-nowrap">
-
-
-            <!-- style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;"> -->
-
-          </div>
-          <div class="new-messages">
-            <div class="chat-toggle-btn" id="openChatPanel">
-              <i class="bi bi-chat-dots-fill"></i>
-            </div>
-          </div>
-        </div>
-        <div class="row bg-white rounded">
-          <div class="col-md-4 border-right">
-            <div class="card p-3 d-flex flex-row gap-5 border-0 shadow-none d-flex ">
               <div>
-                <p class="fw-bold">Provider</p>
-                <p id="request-provider" class="request-provider text-success">Not Assigned</p>
-              </div>
-              <div>
-                <p class="fw-bold">Response</p>
-                <p id="provider_response" style="font-size: 15px; color: #b93232ff;" class="">Not assigned</p>
+                <div class="info-row">
+                  <span class="info-label">Status:</span>
+                  <span><span class="badge bg-warning">In Progress</span></span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Payment:</span>
+                  <span><span class="badge bg-danger">Pending</span></span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Amount:</span>
+                  <span class="fw-bold">KES 3,500</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Method:</span>
+                  <span>M-Pesa</span>
+                </div>
+                <button class="btn btn-primary w-100 mt-3">Process Payment</button>
               </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card p-3 d-flex flex-row gap-5 border-0 shadow-none d-flex ">
-              <div>
-                <p class="fw-bold">Payment</p>
-                <p id="request-payment" style="font-size: 15px; color: #b93232ff;" class="">Not assigned</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row py-2 bg-white rounded-2 mt-2">
-          <div class="col-md-7 " style="min-height: 100%;">
-            <!-- content displays here -->
-            <!-- Row 2: Category & Description -->
-            <div class="card p-3 shadow-none border-bottom">
 
+            <!-- Other Requests -->
+            <div class="content-card">
+              <h5>Other Recent Requests</h5>
 
-            </div>
-
-            <!-- Row 3: Photo -->
-            <div class="card p-3 shadow-none mt-2">
-              <div style="display: flex; align-items: center; gap: 10px; color: #00192D;">
-                <span class="info-box-icon me-2 bg-warning p-2">
-                  <i class="bi bi-image fs-3 text-white p-2"></i>
-                </span>
-                <span style="font-weight: 600;">Request Image</span>
-              </div>
-              <img id="request-photo" src="" alt="Photo" class="photo-preview w-100 rounded">
-            </div>
-
-          </div>
-          <div class="col-md-5 border" style="max-height:500px; overflow:auto;">
-            <div class="request-sidebar">
-              <!-- <h3><i class="fa-solid fa-screwdriver-wrench"></i>Request NO 40</h3> -->
-              <div class="d-flex flex-column">
-                <!-- Secondary Buttons Container -->
-                <div id="secondaryButtons" class="secondary-buttons p rounded-2" style="background-color: #E6EAF0;">
-                  <button id="paidBtn" class="btn shadow-none">
-                    <i class="fas fa-check-circle me-2"></i> Paid
-                  </button>
-                  <div id="paymentContainer" class="payment-container" style="display: none;">
-                    <p class="text-muted justify-content-between">Choose the Option</p>
+              <div class="p-0">
+                <div class="list-group list-group-flush">
+                  <a href="#" class="list-group-item list-group-item-action other-request">
                     <div class="d-flex justify-content-between">
-                      <button class="btn shadow-none">Cash</button>
-                      <button class="btn shadow-none">Mpesa</button>
-                      <button class="btn shadow-none">Bank</button>
-                      <button class="btn shadow-none" id="openRecordPaymentModalBtn">Record</button>
+                      <div>
+                        <h6 class="mb-1">Leaking Faucet</h6>
+                        <small class="text-muted">Apt 2A - Dec 7</small>
+                      </div>
+                      <span class="badge bg-success align-self-center">Completed</span>
                     </div>
-                  </div>
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action other-request">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <h6 class="mb-1">Broken Window</h6>
+                        <small class="text-muted">Apt 5C - Dec 6</small>
+                      </div>
+                      <span class="badge bg-warning align-self-center">In Progress</span>
+                    </div>
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action other-request">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <h6 class="mb-1">AC Not Working</h6>
+                        <small class="text-muted">Apt 1B - Dec 5</small>
+                      </div>
+                      <span class="badge bg-info align-self-center">Open</span>
+                    </div>
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action other-request">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <h6 class="mb-1">Door Lock Issue</h6>
+                        <small class="text-muted">Apt 4D - Dec 4</small>
+                      </div>
+                      <span class="badge bg-success align-self-center">Completed</span>
+                    </div>
+                  </a>
                 </div>
-              </div>
-
-              <div class="search-bar rounded-2">
-                <div class="text-muted rounded-2 w-100 mb-2 d-flex" style="background-color: #E6EAF0;">
-                  <button onclick="toggleProposalsORotherRequests(proposals-list)" id="proposals" class="btn shadow-none m-1 border-0 shadow-0 flex-fill proposals">Proposals</button>
-                  <button onclick="toggleProposalsORotherRequests(requestList)" id="otherRequests" class="btn shadow-none m-1 border-0 flex-fill">Other Requests</button>
-                </div>
-                <div>
-                  <input class="rounded-2" type="text" id="searchInput" placeholder="Search by unit, category, or property...">
-                </div>
-                <!-- proposals list -->
-                <ul id="proposals-list" class="proposals-list visible">
-                  <!-- Details rentered dynamical through Javascript (getProviderProposals.js) -->
-                </ul>
-                <!-- request list -->
-                <ul class="request-list" id="requestList">
-                  <!-- Details rentered dynamical through Javascript (otherRequestDetails.js) -->
-                </ul>
               </div>
             </div>
           </div>

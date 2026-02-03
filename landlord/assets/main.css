@@ -266,7 +266,7 @@
             grid-area: main;
             padding: 2rem;
             overflow-y: auto;
-            background-color:rgba(128,128,128, 0.1);" 
+            background-color:#f4f6f9;
         }
         .breadcrumb {
             background-color: transparent !important;
