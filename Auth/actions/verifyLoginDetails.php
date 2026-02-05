@@ -52,7 +52,7 @@ try {
     // Redirect user based on role
     // -----------------------------
     if ($user['role'] === 'landlord') {
-        $redirectUrl = '/jengopay/landlord/pages/dashboard/index2.php';
+        $redirectUrl = '/jengopay/landlord/pages/dashboard/dashboard.php';
     } elseif ($user['role'] === 'provider') {
         $redirectUrl = '/jengopay/service/requestOrders.php';
     } else {

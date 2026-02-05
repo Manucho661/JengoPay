@@ -375,11 +375,11 @@ if (isset($_GET['id'])) {
                 <div>
                   <div class="info-row">
                     <span class="info-label">Budget:</span>
-                    <span class="text-success fw-bold" id="budget"></span>
+                    <span class="text-success fw-bold" id="budget">Not set</span>
                   </div>
                   <div class="info-row">
                     <span class="info-label">Duration:</span>
-                    <span id="duration"></span>
+                    <span id="duration">Not set</span>
                   </div>
                   <div class="info-row">
                     <span class="info-label">Deadline:</span>
@@ -387,9 +387,7 @@ if (isset($_GET['id'])) {
                   </div>
                 </div>
                 <div>
-                  <button class="mx-4 btn btn-warning btn-sm align-self-start " data-bs-toggle="modal" data-bs-target="#durationBudgetModal">
-                    <i class="bi bi-pencil fw-semibold text-white"></i>
-                  </button>
+                  <button class="btn btn-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#durationBudgetModal">Set Budget and Duration</button>
                 </div>
               </div>
             </div>
@@ -752,16 +750,21 @@ if (isset($_GET['id'])) {
   <div class="modal fade" id="durationBudgetModal" tabindex="-1" aria-labelledby="availabilityModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header" style="background: linear-gradient(135deg, #00192D 0%, #FFC107 100%);">
+        <div class="modal-header" style="background: linear-gradient(135deg, #00192D 0%, #003d5c 100%)">
           <h5 class="modal-title" id="availabilityModalLabel" style="color: white;">Set Budget and Duration</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <form id="durationBudget">
           <div class="modal-body">
+            <input
+              type="hidden"
+              id="requestIdInput"
+              name="request_id"
+              value="<?= htmlspecialchars($request['id']) ?>">
             <!-- Price Input -->
             <div class="mb-3">
-              <label for="priceInput" class="form-label" style="color: white;">Enter Price</label>
+              <label for="priceInput" class="form-label">Enter Price</label>
               <input
                 type="number"
                 class="form-control"
@@ -773,7 +776,7 @@ if (isset($_GET['id'])) {
 
             <!-- Duration Selection -->
             <div class="mb-3">
-              <label for="durationSelect" class="form-label" style="color: white;">Select Duration</label>
+              <label for="durationSelect" class="form-label">Duration</label>
               <select class="form-select" id="durationSelect" name="durationOption">
                 <option value="">-- Choose Duration --</option>
                 <option value="<24">Less than 24 hrs</option>
@@ -801,8 +804,7 @@ if (isset($_GET['id'])) {
           <div class="modal-footer">
             <button
               type="button"
-              class="btn"
-              style="background-color: #FFC107; color: #00192D;"
+              class="btn bg-secondary text-white"
               data-bs-dismiss="modal">
               Close
             </button>

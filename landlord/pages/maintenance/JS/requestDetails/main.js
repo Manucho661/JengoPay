@@ -1,9 +1,8 @@
 import { otherRequests } from "./api/otherRequestDetails.js";
-import { getRequestDetails } from "./api/getRequestDetails.js";
 import { assignProvider } from "./api/assignProvider.js";
 import { updateAvailabilty } from "./api/updateAvailabilty.js";
 import { getProviderDetails } from "./api/getProviderDetails.js";
-import { setDurationBudget } from "./api/durationBudget.js";
+import { setDurationBudget } from "./setDurationBudget.js";
 import { sendText } from "./api/sendText.js";
 import { getTextMessages } from "./api/getTextMessages.js";
 import { toggleProposalsORotherRequests, confirmAssignBox, hideAssignBox } from "./uiControl.js";

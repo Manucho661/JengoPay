@@ -8,11 +8,27 @@ if (isset($_POST['submit_building'])) {
         if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
             $name = basename($_FILES[$fileKey]['name']);
             $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $name); // sanitize
-            $destination = "all_uploads/" . $tm . "_" . $safeName;
-            move_uploaded_file($_FILES[$fileKey]['tmp_name'], $destination);
-            return $destination;
+
+            // Set the upload directory
+            $uploadDir = __DIR__ . "/all_uploads/";
+
+            // Create the folder if it doesn't exist
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            // Full destination path
+            $destination = $uploadDir . $tm . "_" . $safeName;
+
+            // Move the uploaded file
+            if (move_uploaded_file($_FILES[$fileKey]['tmp_name'], $destination)) {
+                return $destination; // returns full path
+            } else {
+                return null; // failed to move file
+            }
         }
-        return null;
+
+        return null; // file not uploaded
     }
 
     $ownership_proof_destination = uploadFile('ownership_proof', $tm);

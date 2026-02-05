@@ -29,13 +29,6 @@ require_once "../../../auth/auth_check.php";   // Protect this page
     crossorigin="anonymous" />
   <!--end::Fonts-->
 
-  <!--begin::Third Party Plugin(OverlayScrollbars)-->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-    integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
-    crossorigin="anonymous" />
-  <!--end::Third Party Plugin(OverlayScrollbars)-->
   <!--begin::Third Party Plugin(Bootstrap Icons)-->
   <link
     rel="stylesheet"

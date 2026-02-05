@@ -1,7 +1,7 @@
 <!-- Sidebar -->
 <aside class="sidebar" id="sidebar">
     <div class="menu-item active">
-        <span><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;"><i class="fas fa-home"></i> Dashboard</a></span>
+        <span><a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;"><i class="fas fa-home"></i> Dashboard</a></span>
     </div>
     <div class="menu-item" onclick="toggleSubmenu('properties')">
         <span><i class="fas fa-building"></i>Properties</span>

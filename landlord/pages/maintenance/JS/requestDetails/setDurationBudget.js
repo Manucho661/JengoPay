@@ -1,4 +1,4 @@
-import { getRequestDetails } from "./getRequestDetails.js";
+
 
 export async function setDurationBudget(e) { 
     e.preventDefault(); // ✅ capital "D"
@@ -20,7 +20,6 @@ export async function setDurationBudget(e) {
 
         console.log("Duration budget working");
         console.log("Server response:", result.message);
-        getRequestDetails();
         
         return result;
     } 
