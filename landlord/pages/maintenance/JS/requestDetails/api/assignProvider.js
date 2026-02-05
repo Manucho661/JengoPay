@@ -1,4 +1,3 @@
-import { getRequestDetails } from "./getRequestDetails.js";
 
 /* ===========================
    ASSIGN PROVIDER
@@ -16,8 +15,7 @@ export async function assignProvider() {
 
     if (data.status === "success") {
       console.log("✅ Provider assigned successfully:", data);
-      // Refresh request details
-      getRequestDetails();
+     
     } else {
       console.warn("⚠️ Assignment failed:", data.message);
     }

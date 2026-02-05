@@ -9,9 +9,17 @@ if (isset($_GET['id'])) {
 } else {
   echo "No ID found in the URL.";
 }
+
+// success or error messages for actions
+$error   = $_SESSION['error'] ?? '';
+$success = $_SESSION['success'] ?? '';
+
+unset($_SESSION['error'], $_SESSION['success']);
 ?>
 <!-- Actions -->
-<?php require_once "actions/getRequestDetails.php";
+<?php
+require_once "actions/getRequestDetails.php";
+require_once "actions/setDurationBudget.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -132,40 +140,6 @@ if (isset($_GET['id'])) {
   }
 
 
-  .preloader-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 70vh;
-    /* adjust to taste */
-    color: #333;
-    font-family: Arial, sans-serif;
-  }
-
-  .pulse {
-    position: relative;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: visible;
-    transition: transform 0.3s ease;
-  }
-
-  /* ripple uses semi-transparent same-hue */
-  .ripple {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: rgba(255, 193, 7, 0.45);
-    /* soft ripple */
-    animation: ripple 1.5s infinite ease-out;
-  }
-
   @keyframes ripple {
     0% {
       transform: scale(1);
@@ -178,22 +152,58 @@ if (isset($_GET['id'])) {
     }
   }
 
-  .percentage {
-    margin-top: 14px;
-    font-size: 1.25rem;
-    font-weight: 700;
-    transition: opacity 0.4s ease, transform 0.25s ease;
-  }
-
-  /* fade class used to fade out both pulse and percentage smoothly */
-  .fade {
-    /* opacity: 0; */
-  }
 
   /* Hidden state before animation */
+
+  .setBudget-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.8rem;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  .setBudget-btn:hover {
+    background: var(--accent-color);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+  }
 </style>
 
 <body class="layout-fixed sidebar-expand-lg" style="background-color:#f4f6f9;">
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+
+    <?php if (!empty($error)): ?>
+      <div id="flashToastError"
+        class="toast align-items-center text-bg-danger border-0"
+        role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body small">
+            <?= htmlspecialchars($error) ?>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <?php endif; ?>
+
+    <?php if (!empty($success)): ?>
+      <div id="flashToastSuccess"
+        class="toast align-items-center text-bg-success border-0"
+        role="alert" aria-live="polite" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body small">
+            <?= htmlspecialchars($success) ?>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <?php endif; ?>
+
+  </div>
   <div class="app-wrapper" style="height: 100 vh; ">
     <!--begin::Header-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
@@ -372,23 +382,36 @@ if (isset($_GET['id'])) {
             <div class="content-card">
               <h5>Budget & Timeline</h5>
               <div>
-                <div>
-                  <div class="info-row">
-                    <span class="info-label">Budget:</span>
-                    <span class="text-success fw-bold" id="budget">Not set</span>
+                <?php if (is_null($request['budget']) || is_null($request['duration'])): ?>
+                  <!-- Budget/Duration Not Set State -->
+                  <div class="text-center py-4">
+                    <p class="text-muted mb-3">Budget and duration not set</p>
+                    <button class="setBudget-btn" data-bs-toggle="modal" data-bs-target="#durationBudgetModal">
+                      Set Budget and Duration
+                    </button>
                   </div>
-                  <div class="info-row">
-                    <span class="info-label">Duration:</span>
-                    <span id="duration">Not set</span>
+                <?php else: ?>
+                  <!-- Budget/Duration Set State -->
+                  <div>
+                    <div class="info-row">
+                      <span class="info-label">Budget:</span>
+                      <span id="budget">KSH <?= htmlspecialchars($request['budget']) ?></span>
+                    </div>
+                    <div class="info-row">
+                      <span class="info-label">Duration:</span>
+                      <span id="duration"><?= htmlspecialchars($request['duration']) ?> HRS</span>
+                    </div>
+                    <div class="info-row">
+                      <span class="info-label">Deadline:</span>
+                      <span class="text-danger"><?= htmlspecialchars($request['category'] ?? 'N/A') ?></span>
+                    </div>
                   </div>
-                  <div class="info-row">
-                    <span class="info-label">Deadline:</span>
-                    <span class="text-danger">Not set</span>
+                  <div>
+                    <button class="setBudget-btn" data-bs-toggle="modal" data-bs-target="#durationBudgetModal">
+                      Reset Budget and Duration
+                    </button>
                   </div>
-                </div>
-                <div>
-                  <button class="btn btn-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#durationBudgetModal">Set Budget and Duration</button>
-                </div>
+                <?php endif; ?>
               </div>
             </div>
             <div class="content-card">
@@ -755,13 +778,18 @@ if (isset($_GET['id'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
-        <form id="durationBudget">
+        <form
+          id=""
+          action=""
+          method="POST">
           <div class="modal-body">
+
             <input
               type="hidden"
               id="requestIdInput"
               name="request_id"
               value="<?= htmlspecialchars($request['id']) ?>">
+
             <!-- Price Input -->
             <div class="mb-3">
               <label for="priceInput" class="form-label">Enter Price</label>
@@ -777,7 +805,7 @@ if (isset($_GET['id'])) {
             <!-- Duration Selection -->
             <div class="mb-3">
               <label for="durationSelect" class="form-label">Duration</label>
-              <select class="form-select" id="durationSelect" name="durationOption">
+              <select class="form-select" id="durationSelect" name="durationOption" required>
                 <option value="">-- Choose Duration --</option>
                 <option value="<24">Less than 24 hrs</option>
                 <option value="1">1 day</option>
@@ -787,31 +815,24 @@ if (isset($_GET['id'])) {
               </select>
             </div>
 
-            <!-- Custom Duration Input (hidden by default) -->
-            <div class="mb-3" id="customDurationDiv" style="display: none;">
-              <label for="customDurationInput" class="form-label" style="color: white;">Enter Custom Duration (days)</label>
+            <!-- Custom Duration -->
+            <div class="mb-3" id="customDurationDiv" style="display:none;">
+              <label for="customDurationInput" class="form-label">Enter Custom Duration (days)</label>
               <input
                 type="number"
                 class="form-control"
                 id="customDurationInput"
                 name="customDuration"
-                placeholder="Enter duration"
                 min="1">
             </div>
+
           </div>
 
-          <!-- Footer Buttons -->
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn bg-secondary text-white"
-              data-bs-dismiss="modal">
+            <button type="button" class="btn bg-secondary text-white" data-bs-dismiss="modal">
               Close
             </button>
-            <button
-              type="submit"
-              class="btn"
-              style="background-color: #00192D; color: white;">
+            <button type="submit" name="setBudgetDuration" class="btn" style="background-color:#00192D;color:white;">
               Confirm
             </button>
           </div>
@@ -870,7 +891,7 @@ if (isset($_GET['id'])) {
 
 
   <!-- payment accordian -->
-  <script>
+  <!-- <script>
     document.getElementById("paidBtn").addEventListener("click", function() {
       const paymentContainer = document.getElementById("paymentContainer");
 
@@ -882,16 +903,16 @@ if (isset($_GET['id'])) {
         this.style.backgroundColor = ""; // Revert to default when closed
       }
     });
-  </script>
+  </script> -->
 
   <!-- Record PAYMENT -->
-  <script>
+  <!-- <script>
     document.getElementById("openRecordPaymentModalBtn").addEventListener("click", function() {
       // Get the modal element
       var myModal = new bootstrap.Modal(document.getElementById("recordPaymentModal"));
       myModal.show();
     });
-  </script>
+  </script> -->
 
 
   <!-- Pay Request -->
@@ -923,8 +944,8 @@ if (isset($_GET['id'])) {
     });
   </script>
 
-  <script src="../../js/adminlte.js"></script>
-  <script>
+
+  <!-- <script>
     document.addEventListener("DOMContentLoaded", function() {
       const toggles = [{
         btn: "mobileNavToggleProperty",
@@ -949,8 +970,29 @@ if (isset($_GET['id'])) {
         });
       });
     });
-  </script>
+  </script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Toast message -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const successEl = document.getElementById("flashToastSuccess");
+        const errorEl = document.getElementById("flashToastError");
 
+        if (successEl && window.bootstrap) {
+          new bootstrap.Toast(successEl, {
+            delay: 8000,
+            autohide: true
+          }).show();
+        }
+
+        if (errorEl && window.bootstrap) {
+          new bootstrap.Toast(errorEl, {
+            delay: 10000,
+            autohide: true
+          }).show();
+        }
+      });
+    </script>
 
 </body>
 

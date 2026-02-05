@@ -1,5 +1,4 @@
 import { html, render } from "https://unpkg.com/lit@3.1.4/index.js?module";
-import { getRequestDetails } from "./getRequestDetails.js";
 
 /* ===========================
    OTHER REQUESTS
@@ -66,7 +65,7 @@ function renderRequestsList(requests) {
       window.history.replaceState(null, "", `?id=${req.id}`);
 
       // Fetch and display request details dynamically
-      getRequestDetails(req.id);
+    
     });
 
     container.appendChild(li);

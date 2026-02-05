@@ -1,6 +1,3 @@
-import { getRequestDetails } from "./getRequestDetails.js";
-
-// the assign buttons
 
 
 export async function terminateContract() {
@@ -20,7 +17,7 @@ export async function terminateContract() {
         console.log("Server Response:", data);
 
         // re-render the request details
-        getRequestDetails();
+        
 
         const modalElement = document.getElementById('providerModal');
         const modal = bootstrap.Modal.getInstance(modalElement); // get existing instance

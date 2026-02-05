@@ -68,26 +68,26 @@ durationSelect.addEventListener('change', function () {
 });
 
 // CHAT AREA
-const chatPanel = document.getElementById('chatPanel');
-const openChatPanel = document.getElementById('openChatPanel');
-const closeChatPanel = document.getElementById('closeChatPanel');
-const chatItems = document.querySelectorAll('.chat-item');
-const chatModal = new bootstrap.Modal(document.getElementById('chatModal'));
-const chatModalLabel = document.getElementById('chatModalLabel');
+// const chatPanel = document.getElementById('chatPanel');
+// const openChatPanel = document.getElementById('openChatPanel');
+// const closeChatPanel = document.getElementById('closeChatPanel');
+// const chatItems = document.querySelectorAll('.chat-item');
+// const chatModal = new bootstrap.Modal(document.getElementById('chatModal'));
+// const chatModalLabel = document.getElementById('chatModalLabel');
 
-openChatPanel.addEventListener('click', () => {
-  chatPanel.style.display = 'flex';
-});
+// openChatPanel.addEventListener('click', () => {
+//   chatPanel.style.display = 'flex';
+// });
 
-closeChatPanel.addEventListener('click', () => {
-  chatPanel.style.display = 'none';
-});
+// closeChatPanel.addEventListener('click', () => {
+//   chatPanel.style.display = 'none';
+// });
 
-chatItems.forEach(item => {
-  item.addEventListener('click', () => {
-    const client = item.dataset.client;
-    chatModalLabel.textContent = `Chat with ${client}`;
-    chatPanel.style.display = 'none';
-    chatModal.show();
-  });
-});
+// chatItems.forEach(item => {
+//   item.addEventListener('click', () => {
+//     const client = item.dataset.client;
+//     chatModalLabel.textContent = `Chat with ${client}`;
+//     chatPanel.style.display = 'none';
+//     chatModal.show();
+//   });
+// });
