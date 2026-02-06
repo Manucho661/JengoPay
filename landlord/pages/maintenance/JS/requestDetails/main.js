@@ -1,7 +1,6 @@
 import { assignProvider } from "./api/assignProvider.js";
 import { updateAvailabilty } from "./api/updateAvailabilty.js";
 // import { getProviderDetails } from "./api/getProviderDetails.js";
-import { setDurationBudget } from "./setDurationBudget.js";
 import { sendText } from "./api/sendText.js";
 import { getTextMessages } from "./api/getTextMessages.js";
 import { toggleProposalsORotherRequests, confirmAssignBox, hideAssignBox } from "./uiControl.js";
@@ -23,8 +22,6 @@ function setupEvents() {
 
   document.getElementById("availabilityBtn").addEventListener("click", updateAvailabilty);
   // document.getElementById("request-provider").addEventListener("click", getProviderDetails);
-
-  document.getElementById("durationBudget")?.addEventListener("submit", setDurationBudget);
 
   document.getElementById("terminateBtn").addEventListener("click", terminateContractBox);
   document.getElementById("cancelTerminateBtn").addEventListener("click", hideTerminateBox);

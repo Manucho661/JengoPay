@@ -137,7 +137,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
       <div class="container-fluid">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb" style="">
-            <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Home</a></li>
+            <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Home</a></li>
             <li class="breadcrumb-item active">Requests</li>
           </ol>
         </nav>

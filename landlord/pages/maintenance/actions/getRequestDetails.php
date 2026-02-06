@@ -27,7 +27,7 @@ try {
             ON ra.maintenance_request_id = mr.id 
             AND ra.terminated IS NULL
         LEFT JOIN service_providers AS pr 
-            ON ra.provider_id = pr.id
+            ON ra.service_provider_id = pr.id
         WHERE mr.id = :id
         LIMIT 1
     ");

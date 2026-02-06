@@ -18,8 +18,14 @@ unset($_SESSION['error'], $_SESSION['success']);
 ?>
 <!-- Actions -->
 <?php
+// request details
 require_once "actions/getRequestDetails.php";
+// set duration
 require_once "actions/setDurationBudget.php";
+// get proposals
+require_once "actions/getProposals.php";
+// get provider details
+require_once "actions/getProviderDetails.php"
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -155,17 +161,19 @@ require_once "actions/setDurationBudget.php";
 
   /* Hidden state before animation */
 
-  .setBudget-btn {
+  .setBudget-btn,
+  .viewDetails-btn {
     background: var(--primary);
     color: white;
     border: none;
-    padding: 0.6rem 1.8rem;
+    padding: 0.3rem 1.4rem;
     border-radius: 5px;
-    font-weight: 600;
+    font-weight: 400;
     transition: all 0.3s;
   }
 
-  .setBudget-btn:hover {
+  .setBudget-btn:hover,
+  .viewDetails-btn:hover {
     background: var(--accent-color);
     color: var(--primary-color);
     transform: translateY(-2px);
@@ -300,82 +308,78 @@ require_once "actions/setDurationBudget.php";
               </div>
             </div>
             <div class="content-card">
-              <h5>Proposals Received <span class="badge bg-primary">3</span></h5>
+              <h5>
+                Proposals Received
+                <span class="badge bg-warning text-black">
+                  <?= count($proposals) ?>
+                </span>
+              </h5>
 
               <div>
-                <div class="card proposal-card mb-3">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                      <div>
-                        <h5 class="mb-1">QuickFix Plumbing Services</h5>
-                        <div class="text-warning mb-2">
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star-half-alt"></i>
-                          <span class="text-muted">(4.5)</span>
-                        </div>
-                        <p class="mb-2">We can fix your blocked sink using professional equipment. We'll also inspect the pipes to prevent future blockages.</p>
-                        <div>
-                          <span class="badge bg-success">Budget: KES 3,500</span>
-                          <span class="badge bg-info ms-2">Duration: 2-3 hours</span>
-                        </div>
-                      </div>
-                      <button class="btn btn-sm btn-outline-primary">View Details</button>
-                    </div>
-                  </div>
-                </div>
+                <?php if (empty($proposals)): ?>
 
-                <div class="card proposal-card mb-3">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                      <div>
-                        <h5 class="mb-1">ProPipe Solutions</h5>
-                        <div class="text-warning mb-2">
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="far fa-star"></i>
-                          <span class="text-muted">(4.0)</span>
-                        </div>
-                        <p class="mb-2">Same-day service available. We use eco-friendly products and provide 30-day guarantee on all work.</p>
-                        <div>
-                          <span class="badge bg-success">Budget: KES 4,200</span>
-                          <span class="badge bg-info ms-2">Duration: 3-4 hours</span>
-                        </div>
-                      </div>
-                      <button class="btn btn-sm btn-outline-primary">View Details</button>
-                    </div>
-                  </div>
-                </div>
+                  <!-- No proposals message -->
 
-                <div class="card proposal-card">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                      <div>
-                        <h5 class="mb-1">City Maintenance Co.</h5>
-                        <div class="text-warning mb-2">
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <span class="text-muted">(5.0)</span>
-                        </div>
-                        <p class="mb-2">Premium service with video inspection of pipes. Includes full report and maintenance recommendations.</p>
-                        <div>
-                          <span class="badge bg-success">Budget: KES 5,800</span>
-                          <span class="badge bg-info ms-2">Duration: 4-5 hours</span>
-                        </div>
+                  <div class="text-center py-5" style="margin: 3rem 0;">
+                    <div style="background-color: #f8f9fa; border-radius: 16px; padding: 3rem 2rem; max-width: 500px; margin: 0 auto;">
+                      <div style="font-size: 4rem; color: #00192D; margin-bottom: 1rem;">
+                        <i class="bi bi-receipt"></i>
                       </div>
-                      <button class="btn btn-sm btn-outline-primary">View Details</button>
+                      <h4 style="color: #00192D; font-weight: 600; margin-bottom: 1rem;">
+                        No proposals received
+                      </h4>
+                      <p style="color: #6c757d; font-size: 1rem; margin-bottom: 1.5rem;">
+                        <!-- Start tracking your finances by adding your first expense -->
+                      </p>
+
                     </div>
                   </div>
-                </div>
+
+                <?php else: ?>
+
+                  <?php foreach ($proposals as $proposal): ?>
+                    <div class="card proposal-card mb-3">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                          <div>
+                            <h6 class="mb-1">
+                              <?= htmlspecialchars($proposal['service_provider_name']) ?>
+                            </h6>
+
+                            <div class="text-warning mb-2">
+                              <i class="fas fa-star"></i>
+                              <i class="fas fa-star"></i>
+                              <i class="fas fa-star"></i>
+                              <i class="fas fa-star"></i>
+                              <i class="fas fa-star-half-alt"></i>
+                              <span class="text-muted">(4.5)</span>
+                            </div>
+
+                            <!-- message part left as-is -->
+                            <p class="mb-2">
+                              We can fix your blocked sink using professional equipment. We'll also inspect the pipes to prevent future blockages.
+                            </p>
+
+                            <div>
+                              <span class="badge bg-success">
+                                Budget: KES <?= htmlspecialchars($proposal['proposed_budget']) ?>
+                              </span>
+                              <span class="badge bg-info ms-2">
+                                Duration: <?= htmlspecialchars($proposal['proposed_duration']) ?>
+                              </span>
+                            </div>
+                          </div>
+
+                          <button class="viewDetails-btn">View Details</button>
+                        </div>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+
+                <?php endif; ?>
               </div>
             </div>
+
           </div>
 
           <div class="col-md-4">
@@ -416,34 +420,62 @@ require_once "actions/setDurationBudget.php";
             </div>
             <div class="content-card">
               <h5>Provider Details</h5>
-              <div class="text-center mb-3">
-                <img src="https://ui-avatars.com/api/?name=QuickFix+Plumbing&size=80&background=3498db&color=fff" alt="Provider" class="rounded-circle mb-2">
-                <h6 class="mb-0">QuickFix Plumbing Services</h6>
-                <small class="text-muted">Licensed Plumber</small>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Contact:</span>
-                <span>+254 712 345 678</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Email:</span>
-                <span>info@quickfix.ke</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Response:</span>
-                <span><span class="badge bg-success">Accepted</span></span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Rating:</span>
-                <span>
-                  <i class="fas fa-star text-warning"></i>
-                  <i class="fas fa-star text-warning"></i>
-                  <i class="fas fa-star text-warning"></i>
-                  <i class="fas fa-star text-warning"></i>
-                  <i class="fas fa-star-half-alt text-warning"></i>
-                  (4.5)
-                </span>
-              </div>
+
+              <?php if (!$assignment): ?>
+                <!-- No assignment message -->
+                <div class="text-center py-4 text-muted">
+                  <i class="fas fa-user-slash fa-2x mb-2"></i>
+                  <p class="mb-0">No provider has been assigned to this request yet.</p>
+                </div>
+
+              <?php else: ?>
+                <!-- Provider details -->
+                <div class="text-center mb-3">
+                  <img
+                    src="https://ui-avatars.com/api/?name=<?= urlencode($assignment['name']) ?>&size=80&background=3498db&color=fff"
+                    alt="Provider"
+                    class="rounded-circle mb-2">
+                  <h6 class="mb-0"><?= htmlspecialchars($assignment['name']) ?></h6>
+                  <small class="text-muted">Licensed Service Provider</small>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Contact:</span>
+                  <span><?= htmlspecialchars($assignment['phone']) ?></span>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Email:</span>
+                  <span><?= htmlspecialchars($assignment['email']) ?></span>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Response:</span>
+                  <span><span class="badge bg-success"><?= htmlspecialchars($assignment['status']) ?></span></span>
+                </div>
+
+                <div class="info-row">
+                  <span class="info-label">Rating:</span>
+                  <span>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star text-warning"></i>
+                    <i class="fas fa-star-half-alt text-warning"></i>
+                    (4.5)
+                  </span>
+                </div>
+
+                <div>
+                  <button
+                    class="setBudget-btn w-100 bg-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#durationBudgetModal">
+                    Terminate Contract
+                  </button>
+                </div>
+
+              <?php endif; ?>
             </div>
             <!-- Status & Payment -->
             <div class="content-card">
@@ -971,28 +1003,28 @@ require_once "actions/setDurationBudget.php";
       });
     });
   </script> -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Toast message -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        const successEl = document.getElementById("flashToastSuccess");
-        const errorEl = document.getElementById("flashToastError");
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Toast message -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const successEl = document.getElementById("flashToastSuccess");
+      const errorEl = document.getElementById("flashToastError");
 
-        if (successEl && window.bootstrap) {
-          new bootstrap.Toast(successEl, {
-            delay: 8000,
-            autohide: true
-          }).show();
-        }
+      if (successEl && window.bootstrap) {
+        new bootstrap.Toast(successEl, {
+          delay: 8000,
+          autohide: true
+        }).show();
+      }
 
-        if (errorEl && window.bootstrap) {
-          new bootstrap.Toast(errorEl, {
-            delay: 10000,
-            autohide: true
-          }).show();
-        }
-      });
-    </script>
+      if (errorEl && window.bootstrap) {
+        new bootstrap.Toast(errorEl, {
+          delay: 10000,
+          autohide: true
+        }).show();
+      }
+    });
+  </script>
 
 </body>
 

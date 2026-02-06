@@ -401,11 +401,10 @@ $netProfit = $income - $expenses;
           </div>
         </div>
 
-        <!-- Second row -->
-        <div class="row">
+        <!-- Second row Summary-->
+        <!-- <div class="row">
           <div class="col-sm-8">
             <div class="row Summary mt-6">
-              <!-- Summary -->
               <div class="col-md-12 ">
 
                 <div class="summary-section text-center p-2 row g-3">
@@ -440,7 +439,7 @@ $netProfit = $income - $expenses;
             </div>
 
           </div>
-        </div>
+        </div> -->
 
         <!-- Filters -->
         <div class="row">
