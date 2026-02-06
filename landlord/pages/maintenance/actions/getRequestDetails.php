@@ -65,20 +65,43 @@ try {
     $stmt->execute(['id' => $requestId]);
     $photos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Step 3: Get proposals
-    $stmt = $pdo->prepare("
-        SELECT 
-            p.*, 
-            pr.name, 
-            pr.phone,
-            pr.ratings,
-            pr.location
-        FROM maintenance_request_proposals p
-        JOIN service_providers pr ON p.service_provider_id = pr.id
-        WHERE p.maintenance_request_id = :id
+
+    // Step 2: Get photos || provider details
+    $proposals = [];
+    $assignedProvider = null;
+
+    // Check if already assigned
+    if (!empty($request['provider_id']) && $request['provider_id'] != 0) {
+
+        // Fetch assigned provider details
+        $stmt = $pdo->prepare("
+        SELECT id, name, phone, email
+        FROM service_providers
+        WHERE id = :pid
+        LIMIT 1
     ");
-    $stmt->execute(['id' => $requestId]);
-    $proposals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute(['pid' => $request['provider_id']]);
+        $assignedProvider = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    } else {
+
+        // Fetch proposals only if NOT assigned
+        $stmt = $pdo->prepare("
+        SELECT 
+            sp.name AS service_provider_name,
+            sp.id AS service_provider_id,
+            mrp.proposed_budget,
+            mrp.proposed_duration,
+            mrp.provider_availability
+        FROM maintenance_request_proposals mrp
+        JOIN service_providers sp 
+            ON mrp.service_provider_id = sp.id
+        WHERE mrp.maintenance_request_id = :id
+    ");
+        $stmt->execute(['id' => $requestId]);
+        $proposals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     // Step 4: Get payments
     $stmt = $pdo->prepare("SELECT * FROM maintenance_request_payments WHERE maintenance_request_id = :id");

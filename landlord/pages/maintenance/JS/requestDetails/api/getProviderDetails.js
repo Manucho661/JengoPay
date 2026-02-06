@@ -5,47 +5,23 @@ import { html, render } from "https://unpkg.com/lit@3.1.4/index.js?module";
 =========================== */
 export async function getProviderDetails() {
 
-  const providerId = this.getAttribute("data-provider-id");
+  console.log('yoyi');
 
+  const providerId = this.getAttribute("data-provider-id");
+  console.log(providerId);
   try {
     const response = await fetch(
       `./actions/requestDetails/getProviderDetails.php?provider_id=${providerId}`
     );
 
-    const details = await response.json();
-    console.log(details);
-    openProviderDetailsModal(details);
+
+    const res = await response.json();
+    const provider = res.details;
+
+ //  populate provider details on offCanvas
+    document.getElementById("providerName").textContent = provider.name;
 
   } catch (err) {
     console.error("❌ Error fetching provider details:", err);
   }
-}
-
-function openProviderDetailsModal(details) {
-  // --- helper: safely set content or attribute ---
-  const safeSet = (id, value, prop = "innerText") => {
-    const el = document.getElementById(id);
-    if (!el) {
-      console.warn(`⚠️ Missing element: #${id}`);
-      return;
-    }
-
-    if (prop === "src") {
-      el.src = value;
-    } else {
-      el[prop] = value;
-    }
-  };
-
-    safeSet("providerModalName", details.details.name || "Unknown Provider");
-
-// --- show modal---
-  const modalEl = document.getElementById("providerModal");
-  if (!modalEl) {
-    console.error("❌ Cannot open modal: #proposalModal not found in DOM");
-    return;
-  }
-
-  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-  modal.show();
 }

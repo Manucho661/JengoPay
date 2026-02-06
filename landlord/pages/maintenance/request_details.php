@@ -22,10 +22,9 @@ unset($_SESSION['error'], $_SESSION['success']);
 require_once "actions/getRequestDetails.php";
 // set duration
 require_once "actions/setDurationBudget.php";
-// get proposals
-require_once "actions/getProposals.php";
-// get provider details
-require_once "actions/getProviderDetails.php"
+// request assignment
+require_once 'actions/assignProvider.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -358,37 +357,58 @@ require_once "actions/getProviderDetails.php"
               <div>
                 <p><?= htmlspecialchars($request['description'] ?? 'No description provided.') ?></p>
                 <?php if (!empty($photos)): ?>
-                  <img src="<?= htmlspecialchars($photos[0]['photo_path']) ?>" alt="Request Image" class="request-image mt-3">
+                  <img src="/jengopay/landlord/maintenance/<?= htmlspecialchars($photos[0]['photo_path']) ?>" alt="Request Image" class="request-image mt-3">
                 <?php else: ?>
                   <p>No image provided.</p>
                 <?php endif; ?>
               </div>
             </div>
             <div class="content-card">
+
               <h5>
                 Proposals Received
-                <span class="badge bg-warning text-black">
-                  <?= count($proposals) ?>
-                </span>
+                <?php if (empty($assignedProvider)): ?>
+                  <span class="badge bg-warning text-black">
+                    <?= count($proposals) ?>
+                  </span>
+                <?php endif; ?>
               </h5>
 
+
               <div>
-                <?php if (empty($proposals)): ?>
+                <?php if (!empty($assignedProvider)): ?>
 
-                  <!-- No proposals message -->
-
+                  <!-- Already assigned message -->
                   <div class="text-center py-5" style="margin: 3rem 0;">
                     <div style="background-color: #f8f9fa; border-radius: 16px; padding: 3rem 2rem; max-width: 500px; margin: 0 auto;">
                       <div style="font-size: 4rem; color: #00192D; margin-bottom: 1rem;">
-                        <i class="bi bi-receipt"></i>
+                        <i class="bi bi-person-check"></i>
+                      </div>
+                      <h4 style="color: #00192D; font-weight: 600; margin-bottom: 1rem;">
+                        Already Assigned
+                      </h4>
+                      <p style="color: #6c757d; font-size: 1rem; margin-bottom: 1.5rem;">
+                        This request has already been assigned to
+                        <strong><?= htmlspecialchars($assignedProvider['name']) ?></strong>.
+                        Terminate the assignment to reassign another provider.
+                      </p>
+                    </div>
+                  </div>
+
+                <?php elseif (empty($proposals)): ?>
+
+                  <!-- No proposals message -->
+                  <div class="text-center py-5" style="margin: 3rem 0;">
+                    <div style="background-color: #f8f9fa; border-radius: 16px; padding: 3rem 2rem; max-width: 500px; margin: 0 auto;">
+                      <div style="font-size: 4rem; color: #00192D; margin-bottom: 1rem;">
+                        <i class="bi bi-chat-dots"></i>
                       </div>
                       <h4 style="color: #00192D; font-weight: 600; margin-bottom: 1rem;">
                         No proposals received
                       </h4>
                       <p style="color: #6c757d; font-size: 1rem; margin-bottom: 1.5rem;">
-                        <!-- Start tracking your finances by adding your first expense -->
+                        Service providers have not yet submitted any proposals for this request.
                       </p>
-
                     </div>
                   </div>
 
@@ -412,7 +432,6 @@ require_once "actions/getProviderDetails.php"
                               <span class="text-muted">(4.5)</span>
                             </div>
 
-                            <!-- message part left as-is -->
                             <p class="mb-2">
                               We can fix your blocked sink using professional equipment. We'll also inspect the pipes to prevent future blockages.
                             </p>
@@ -427,8 +446,14 @@ require_once "actions/getProviderDetails.php"
                             </div>
                           </div>
 
-                          <button class="viewDetails-btn" data-bs-toggle="offcanvas" data-bs-target="#providerOffcanvas"
-                            data-provider-name="<?php echo htmlspecialchars($proposal['service_provider_name']); ?>">View Details</button>
+                          <button class="viewDetails-btn"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#providerOffcanvas"
+                            data-request-id="<?= htmlspecialchars($request['id']); ?>"
+                            data-provider-id="<?= htmlspecialchars($proposal['service_provider_id']); ?>"
+                            data-provider-name="<?= htmlspecialchars($proposal['service_provider_name']); ?>">
+                            View Details
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -479,7 +504,7 @@ require_once "actions/getProviderDetails.php"
             <div class="content-card">
               <h5>Provider Details</h5>
 
-              <?php if (!$assignment): ?>
+              <?php if (!$assignedProvider): ?>
                 <!-- No assignment message -->
                 <div class="text-center py-4 text-muted">
                   <i class="fas fa-user-slash fa-2x mb-2"></i>
@@ -490,26 +515,28 @@ require_once "actions/getProviderDetails.php"
                 <!-- Provider details -->
                 <div class="text-center mb-3">
                   <img
-                    src="https://ui-avatars.com/api/?name=<?= urlencode($assignment['name']) ?>&size=80&background=3498db&color=fff"
+                    src="https://ui-avatars.com/api/?name=<?= urlencode($assignedProvider['name']) ?>&size=80&background=3498db&color=fff"
                     alt="Provider"
                     class="rounded-circle mb-2">
-                  <h6 class="mb-0"><?= htmlspecialchars($assignment['name']) ?></h6>
+                  <h6 class="mb-0"><?= htmlspecialchars($assignedProvider['name']) ?></h6>
                   <small class="text-muted">Licensed Service Provider</small>
                 </div>
 
                 <div class="info-row">
                   <span class="info-label">Contact:</span>
-                  <span><?= htmlspecialchars($assignment['phone']) ?></span>
+                  <span><?= htmlspecialchars($assignedProvider['phone']) ?></span>
                 </div>
 
                 <div class="info-row">
                   <span class="info-label">Email:</span>
-                  <span><?= htmlspecialchars($assignment['email']) ?></span>
+                  <span><?= htmlspecialchars($assignedProvider['email']) ?></span>
                 </div>
 
                 <div class="info-row">
                   <span class="info-label">Response:</span>
-                  <span><span class="badge bg-success"><?= htmlspecialchars($assignment['status']) ?></span></span>
+                  <span><span class="badge bg-success">
+                      Active
+                    </span></span>
                 </div>
 
                 <div class="info-row">
@@ -713,41 +740,17 @@ require_once "actions/getProviderDetails.php"
               </span>
             </div>
           </div>
-          <div class="job-item">
-            <h6>Water Heater Installation</h6>
-            <small class="text-muted"><i class="fas fa-map-marker-alt"></i> Kilimani Residence</small><br>
-            <small class="text-muted"><i class="fas fa-calendar"></i> Jan 20, 2026</small>
-            <div class="mt-2">
-              <span class="text-warning">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
-              </span>
-            </div>
-          </div>
-          <div class="job-item">
-            <h6>Pipe Leak Repair</h6>
-            <small class="text-muted"><i class="fas fa-map-marker-alt"></i> Lavington Estate</small><br>
-            <small class="text-muted"><i class="fas fa-calendar"></i> Jan 15, 2026</small>
-            <div class="mt-2">
-              <span class="text-warning">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-              </span>
-            </div>
-          </div>
         </div>
       </div>
 
       <div class="d-grid gap-2">
-        <button class="acceptProposalBtn" id="acceptProposalBtn">
-          <i class="fas fa-check"></i> Accept This Proposal
-        </button>
+        <form method="POST" action="" id="acceptProposalForm">
+          <input type="hidden" id="assignRequestId" name="request_id" value="<?php htmlspecialchars($request['id']) ?>">
+          <input type="hidden" name="provider_id" id="providerId" value="">
+          <button type="submit" name="assignProvider" class="acceptProposalBtn w-100">
+            <i class="fas fa-check"></i> Accept This Proposal
+          </button>
+        </form>
         <button class="messageProviderBtn">
           <i class="fas fa-comment"></i> Send Message
         </button>
@@ -1232,11 +1235,14 @@ require_once "actions/getProviderDetails.php"
 
       viewDetailsBtns.forEach(btn => {
         btn.addEventListener('click', function() {
-          const providerName = this.getAttribute('data-provider-name');
+          const requestId = this.getAttribute('data-request-id');
+          const providerId = this.getAttribute('data-provider-id');
 
           // Update provider name in offcanvas
           if (providerName) {
-            document.getElementById('providerName').textContent = providerName;
+            // document.getElementById('providerName').textContent = providerName;
+            document.getElementById('providerId').value = providerId;
+            document.getElementById('assignRequestId').value = requestId;
 
             // Update avatar with provider name
             const avatarImg = document.getElementById('providerAvatar');

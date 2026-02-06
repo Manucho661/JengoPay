@@ -15,6 +15,7 @@ try {
     $stmt = $pdo->prepare("
     SELECT 
         sp.name AS service_provider_name,
+        sp.id AS service_provider_id,
         mrp.proposed_budget,
         mrp.proposed_duration,
         mrp.provider_availability

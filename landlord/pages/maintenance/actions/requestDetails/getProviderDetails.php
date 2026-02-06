@@ -16,7 +16,7 @@ if (!$providerID || !is_numeric($providerID)) {
 }
 
 try {
-    $stmt = $pdo->prepare("SELECT * FROM providers WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM service_providers WHERE id = ?");
     $stmt->execute([$providerID]);
     $details = $stmt->fetch(PDO::FETCH_ASSOC);
 

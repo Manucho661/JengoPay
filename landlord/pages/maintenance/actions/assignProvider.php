@@ -1,0 +1,56 @@
+<?php
+require_once '../../db/connect.php'; // include your PDO connection
+
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
+
+// Only allow POST request
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['assignProvider'])) {
+    return; // do nothing on GET
+}
+
+try {
+    $requestId  = $_POST['request_id'] ?? null;
+    $providerId = $_POST['provider_id'] ?? null;
+
+    if (!$requestId || !$providerId) {
+        echo "Missing request_id or provider_id";
+        exit;
+    }
+
+    $pdo->beginTransaction();
+
+    // 1) Insert assignment
+    $stmt = $pdo->prepare("
+        INSERT INTO maintenance_request_assignments (maintenance_request_id, service_provider_id)
+        VALUES (:maintenance_request_id, :service_provider_id)
+    ");
+    $stmt->execute([
+        ':maintenance_request_id' => (int)$requestId,
+        ':service_provider_id'    => (int)$providerId,
+    ]);
+
+    // 2) Update main request to track assigned provider
+    $stmt2 = $pdo->prepare("
+        UPDATE maintenance_requests
+        SET assigned_to_provider_id = :provider_id
+        WHERE id = :request_id
+    ");
+    $stmt2->execute([
+        ':provider_id' => (int)$providerId,
+        ':request_id'  => (int)$requestId,
+    ]);
+
+    $pdo->commit();
+
+    $_SESSION['success'] = "Maintenance request assigned successfully.";
+    header('Location: ' . $_SERVER['REQUEST_URI']);
+    exit;
+} catch (Throwable $e) {
+    $_SESSION['error'] =
+        'Failed to assign the provider: ' . $e->getMessage();
+
+    header('Location: ' . $_SERVER['REQUEST_URI']);
+    exit;
+}

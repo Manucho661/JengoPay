@@ -831,7 +831,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                 <!-- <div class="diagonal-paid-label">PAID</div> -->
                                 <div class="diagonal-unpaid-label" id="expenseModalPaymentStatus">UNPAID</div>
                                 <div class="address text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
-                                    <strong> <span id="building_name">Silver Spoon Towers</span>  </strong><br>
+                                    <strong> <span id="building_name">Silver Spoon Towers</span> </strong><br>
                                     50303 Nairobi, Kenya<br>
                                     silver@gmail.com<br>
                                     +254 700 123456
