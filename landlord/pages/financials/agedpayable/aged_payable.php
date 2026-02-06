@@ -182,13 +182,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <!--begin::App Wrapper-->
     <div class="app-wrapper" style="height: 100 vh; background-color:rgba(128,128,128, 0.1);">
-        
-        <!--begin::Header-->
-        <?php include_once '../../includes/header.php' ?>
-        <!--end::Header-->
 
+        <!--begin::Header-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
+        <!--end::Header-->
+        
         <!--begin::Sidebar-->
-       <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
         <!--end::Sidebar-->
 
         <!--begin::App Main-->
@@ -204,7 +204,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
                             <p class="text-muted"> Manage your Payable accounts</p>
                         </div>
                     </div>
-                    
+
                     <!--end::Row-->
                 </div>
                 <!--end::Container-->
@@ -289,7 +289,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
         </main>
         <!--end::App Main-->
         <!--begin::Footer-->
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?> 
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
         <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->

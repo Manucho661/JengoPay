@@ -86,9 +86,9 @@ try {
 
     $stmtItem = $pdo->prepare("
         INSERT INTO expense_items (
-            item_account_code, expense_id, building_id, description, qty,
+        landlord_id, item_account_code, expense_id, building_id, description, qty,
             unit_price, item_untaxed_amount, taxes, item_total, discount
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     for ($i = 0; $i < count($item_account_codes); $i++) {
@@ -99,6 +99,7 @@ try {
         $item_untaxed_amount = $qty * $unit_price;
 
         $stmtItem->execute([
+            $landlord_id,
             $item_account_codes[$i],
             $expense_id,
             $building_id,

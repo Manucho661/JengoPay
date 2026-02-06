@@ -2,6 +2,21 @@
 session_start();
 require_once '../../db/connect.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
+
+// Session variables to use
+$userId = $_SESSION['user']['id'];
+// Fetch landlord ID linked to the logged-in user
+$stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
+$stmt->execute([$userId]);
+$landlord = $stmt->fetch();
+
+// Check if landlord exists for the user
+if (!$landlord) {
+  throw new Exception("Landlord account not found for this user.");
+}
+
+$landlord_id = $landlord['id']; // Store the landlord_id from the session
+
 try {
   // Rent Total (account_item = 500)
   $stmtRent = $pdo->prepare("
@@ -77,14 +92,17 @@ try {
 
   $formattedTotalIncome = number_format($totalIncome, 2);
 
+  // EXPENSES
 
   // Get total Maintenance and Repair Costs using account code 600
   $stmt = $pdo->prepare("
-        SELECT SUM(item_untaxed_amount) AS maintenance_total
-        FROM expense_items
-        WHERE item_account_code = '600'
-      ");
-  $stmt->execute();
+    SELECT SUM(item_untaxed_amount) AS maintenance_total
+    FROM expense_items
+    WHERE item_account_code = '600'
+      AND landlord_id = :landlord_id
+");
+
+  $stmt->execute([':landlord_id' => $landlord_id]);
   $maintenanceTotal = $stmt->fetchColumn() ?? 0;
 
   // Format with thousands separator and 2 decimal places
@@ -93,12 +111,13 @@ try {
 
   // Fetch total for Staff Salaries and Wages using account code 605
   $stmt = $pdo->prepare("
+    SELECT SUM(item_untaxed_amount) AS salary_total
+    FROM expense_items
+    WHERE item_account_code = '605'
+      AND landlord_id = :landlord_id
+");
 
-     SELECT SUM(item_untaxed_amount) AS salary_total
-     FROM expense_items
-     WHERE item_account_code = '605'
- ");
-  $stmt->execute();
+  $stmt->execute([':landlord_id' => $landlord_id]);
   $salaryTotal = $stmt->fetchColumn() ?? 0;
 
   // Format the salary total with 2 decimal places and thousands separator
@@ -106,11 +125,13 @@ try {
 
   // Fetch total Electricity Expense using account code 610
   $stmt = $pdo->prepare("
- SELECT SUM(item_untaxed_amount) AS electricity_total
- FROM expense_items
- WHERE item_account_code = '610'
+    SELECT SUM(item_untaxed_amount) AS electricity_total
+    FROM expense_items
+    WHERE item_account_code = '610'
+      AND landlord_id = :landlord_id
 ");
-  $stmt->execute();
+
+  $stmt->execute([':landlord_id' => $landlord_id]);
   $electricityTotal = $stmt->fetchColumn() ?? 0;
 
   // Format result
@@ -118,11 +139,13 @@ try {
 
   // Fetch total Water Expense using account code 615
   $stmt = $pdo->prepare("
-SELECT SUM(item_untaxed_amount) AS water_expense_total
-FROM expense_items
-WHERE item_account_code = '615'
+    SELECT SUM(item_untaxed_amount) AS water_expense_total
+    FROM expense_items
+    WHERE item_account_code = '615'
+      AND landlord_id = :landlord_id
 ");
-  $stmt->execute();
+
+  $stmt->execute([':landlord_id' => $landlord_id]);
   $waterExpenseTotal = $stmt->fetchColumn() ?? 0;
 
   // Format result
@@ -130,23 +153,28 @@ WHERE item_account_code = '615'
 
   // Fetch total Garbage Collection Expense using account code 620
   $stmt = $pdo->prepare("
-SELECT SUM(item_untaxed_amount) AS garbage_expense_total
-FROM expense_items
-WHERE item_account_code = '620'
+    SELECT SUM(item_untaxed_amount) AS garbage_expense_total
+    FROM expense_items
+    WHERE item_account_code = '620'
+      AND landlord_id = :landlord_id
 ");
-  $stmt->execute();
-  $garbageExpenseTotal = $stmt->fetchColumn() ?? 0;
 
+  $stmt->execute([':landlord_id' => $landlord_id]);
+
+  $garbageExpenseTotal = $stmt->fetchColumn() ?? 0;
   // Format result
   $formattedGarbageExpense = number_format($garbageExpenseTotal, 2);
 
   // Fetch total Internet Expense using account code 625
   $stmt = $pdo->prepare("
-SELECT SUM(item_untaxed_amount) AS internet_expense_total
-FROM expense_items
-WHERE item_account_code = '625'
+    SELECT SUM(item_untaxed_amount) AS internet_expense_total
+    FROM expense_items
+    WHERE item_account_code = '625'
+      AND landlord_id = :landlord_id
 ");
-  $stmt->execute();
+
+  $stmt->execute([':landlord_id' => $landlord_id]);
+
   $internetExpenseTotal = $stmt->fetchColumn() ?? 0;
 
   // Format the result
@@ -154,85 +182,109 @@ WHERE item_account_code = '625'
 
 
   // Fetch total Security Expense using account code 630
+
   $stmt = $pdo->prepare("
-SELECT SUM(item_untaxed_amount) AS security_expense_total
-FROM expense_items
-WHERE item_account_code = '630'
+    SELECT SUM(item_untaxed_amount) AS security_expense_total
+    FROM expense_items
+    WHERE item_account_code = '630'
+      AND landlord_id = :landlord_id
 ");
-  $stmt->execute();
+
+  $stmt->execute([':landlord_id' => $landlord_id]);
+
   $securityExpenseTotal = $stmt->fetchColumn() ?? 0;
+
 
   // Format the result
   $formattedSecurityExpense = number_format($securityExpenseTotal, 2);
 
 
-  // Fetch total for Property Management Software Subscription using account code 635
   $stmt = $pdo->prepare("
-  SELECT SUM(item_untaxed_amount) AS software_expense_total
-  FROM expense_items
-  WHERE item_account_code = '635'
+    SELECT SUM(item_untaxed_amount) AS software_expense_total
+    FROM expense_items
+    WHERE item_account_code = '635'
+      AND landlord_id = :landlord_id
 ");
-  $stmt->execute();
+
+  $stmt->execute([':landlord_id' => $landlord_id]);
+
   $softwareExpenseTotal = $stmt->fetchColumn() ?? 0;
 
   // Format the result
   $formattedSoftwareExpense = number_format($softwareExpenseTotal, 2);
 
   // Fetch total Marketing and Advertising Costs using account code 640
+  // Fetch total for Marketing Expense using account code 640
   $stmt = $pdo->prepare("
- SELECT SUM(item_untaxed_amount) AS marketing_expense_total
- FROM expense_items
- WHERE item_account_code = '640'
+    SELECT SUM(item_untaxed_amount) AS marketing_expense_total
+    FROM expense_items
+    WHERE item_account_code = '640'
+      AND landlord_id = :landlord_id
 ");
-  $stmt->execute();
+
+  $stmt->execute([':landlord_id' => $landlord_id]);
+
   $marketingExpenseTotal = $stmt->fetchColumn() ?? 0;
+
 
   // Format the result
   $formattedMarketingExpense = number_format($marketingExpenseTotal, 2);
 
   // Fetch total Legal and Compliance Fees using account code 645
+  // Fetch total for Legal Expense using account code 645
   $stmt = $pdo->prepare("
- SELECT SUM(item_untaxed_amount) AS legal_expense_total
- FROM expense_items
- WHERE item_account_code = '645'
+    SELECT SUM(item_untaxed_amount) AS legal_expense_total
+    FROM expense_items
+    WHERE item_account_code = '645'
+      AND landlord_id = :landlord_id
 ");
-  $stmt->execute();
+
+  $stmt->execute([':landlord_id' => $landlord_id]);
+
   $legalExpenseTotal = $stmt->fetchColumn() ?? 0;
 
   // Format the result
   $formattedLegalExpense = number_format($legalExpenseTotal, 2);
 
   // Fetch total Loan Interest Payments using account code 655
+
+  // Fetch total for Loan Interest using account code 655
   $stmt = $pdo->prepare("
-        SELECT SUM(item_untaxed_amount) AS loan_interest_total
-        FROM expense_items
-        WHERE item_account_code = '655'
-    ");
-  $stmt->execute();
+    SELECT SUM(item_untaxed_amount) AS loan_interest_total
+    FROM expense_items
+    WHERE item_account_code = '655'
+      AND landlord_id = :landlord_id
+");
+  $stmt->execute([':landlord_id' => $landlord_id]);
   $loanInterestTotal = $stmt->fetchColumn() ?? 0;
 
   // Format the result
   $formattedLoanInterest = number_format($loanInterestTotal, 2);
 
-  // Fetch total Bank/Mpesa Charges using account code 660
+  // Fetch total for Bank/Mpesa Charges using account code 660
   $stmt = $pdo->prepare("
-        SELECT SUM(item_untaxed_amount) AS bank_charges_total
-        FROM expense_items
-        WHERE item_account_code = '660'
-    ");
-  $stmt->execute();
+    SELECT SUM(item_untaxed_amount) AS bank_charges_total
+    FROM expense_items
+    WHERE item_account_code = '660'
+      AND landlord_id = :landlord_id
+");
+  $stmt->execute([':landlord_id' => $landlord_id]);
   $bankChargesTotal = $stmt->fetchColumn() ?? 0;
+
 
   // Format the result
   $formattedBankCharges = number_format($bankChargesTotal, 2);
 
   // Fetch total for Other Expenses using account code 665
   $stmt = $pdo->prepare("
-      SELECT SUM(item_untaxed_amount) AS other_expense_total
-      FROM expense_items
-      WHERE item_account_code = '665'
-  ");
-  $stmt->execute();
+    SELECT SUM(item_untaxed_amount) AS other_expense_total
+    FROM expense_items
+    WHERE item_account_code = '665'
+      AND landlord_id = :landlord_id
+");
+
+  $stmt->execute([':landlord_id' => $landlord_id]);
+
   $otherExpenseTotal = $stmt->fetchColumn() ?? 0;
 
   // Format the result
@@ -294,27 +346,8 @@ $netProfit = $income - $expenses;
   <meta
     name="description"
     content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-  <meta
-    name="keywords"
-    content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
-  <!--end::Primary Meta Tags-->
   <!--begin::Fonts-->
 
-
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-    integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
-    crossorigin="anonymous" />
-  <!--end::Fonts-->
-  <!--begin::Third Party Plugin(OverlayScrollbars)-->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-    integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
-    crossorigin="anonymous" />
-  <!--end::Third Party Plugin(OverlayScrollbars)-->
-  <!--begin::Third Party Plugin(Bootstrap Icons)-->
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
@@ -326,15 +359,7 @@ $netProfit = $income - $expenses;
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
   <link rel="stylesheet" href="/jengopay/landlord/assets/main.css" />
-  <link rel="stylesheet" href="style.css">
-  <!-- <link rel="stylesheet" href="text.css" /> -->
   <!--end::Required Plugin(AdminLTE)-->
-  <!-- apexcharts -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-    integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-    crossorigin="anonymous" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="profit&loss.css">
 
@@ -361,7 +386,6 @@ $netProfit = $income - $expenses;
     body {
       font-size: 16px;
     }
-    
   </style>
 </head>
 
@@ -371,7 +395,7 @@ $netProfit = $income - $expenses;
 
     <!--begin::Header-->
     <?php
-    //  include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; 
+    include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php';
     ?>
     <!--end::Header-->
 
@@ -388,7 +412,7 @@ $netProfit = $income - $expenses;
 
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb" style="">
-            <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Dashboard</a></li>
             <li class="breadcrumb-item active">Profit $ Loss</li>
           </ol>
         </nav>
@@ -446,20 +470,13 @@ $netProfit = $income - $expenses;
           <div class="col-3 col-md-3">
             <label for="buildingFilter" class="form-label">Property</label>
             <?php
-            include '../../db/connect.php';
             $buildings = $pdo->query("SELECT id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
             ?>
             <select id="buildingFilter" class="form-control">
               <option value="">-- Select Property --</option>
-              <option value="all">All</option>
-              <?php foreach ($buildings as $b): ?>
-                <option value="<?= $b['building_id'] ?>"><?= htmlspecialchars($b['building_name']) ?></option>
-              <?php endforeach; ?>
+
             </select>
           </div>
-
-
-
 
           <!-- Start Date -->
           <div class="col-3 col-md-3">
@@ -474,7 +491,8 @@ $netProfit = $income - $expenses;
           </div>
 
           <!-- Filter Button -->
-          <div class="col-3 mt-3">
+          <div class="col-3 col-md-3">
+            <label class="form-label d-block">&nbsp;</label>
             <button id="filterBtn" class="btn btn-outline-dark"
               style="color: #FFC107; background-color: #00192D;">
               <i class="fas fa-filter"></i> Filter
@@ -482,7 +500,6 @@ $netProfit = $income - $expenses;
           </div>
 
         </div>
-
         <!-- Third row, main content -->
         <div class="row mt-4">
           <div class="col-12">
@@ -500,512 +517,512 @@ $netProfit = $income - $expenses;
                     </tr>
                   </thead>
                   <tbody id="accordionFinance">
-    <!-- Income header -->
-    <tr class="main-section-header">
-        <td colspan="2" style="color:green;"><b>Income</b></td>
-    </tr>
+                    <!-- Income header -->
+                    <tr class="main-section-header">
+                      <td colspan="2" style="color:green;"><b>Income</b></td>
+                    </tr>
 
-    <!-- Main Row -->
-    <?php if ($rentTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#rentDetails" aria-expanded="false" aria-controls="rentDetails" style="cursor:pointer;">
-        <td>Rental Income</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedRent ?></td>
-    </tr>
+                    <!-- Main Row -->
+                    <?php if ($rentTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#rentDetails" aria-expanded="false" aria-controls="rentDetails" style="cursor:pointer;">
+                        <td>Rental Income</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedRent ?></td>
+                      </tr>
 
-    <tr>
-        <td colspan="2" class="p-0">
-            <div id="rentDetails" class="collapse" data-bs-parent="#accordionFinance">
-                <div class="d-flex justify-content-between align-items-center p-3">
-                    <div>
-                        <span class="fw-bold text-dark">Rental Income</span>
-                        <span class="text-primary fw-bold ms-1"
-                            style="cursor:pointer;"
-                            data-bs-toggle="popover"
-                            data-bs-html="true"
-                            title="Options"
-                            data-bs-content="<a href='general_ledger.php?account_code=500&account_name=Rental Income' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                    </div>
-                    <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedRent ?></span>
-                </div>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                      <tr>
+                        <td colspan="2" class="p-0">
+                          <div id="rentDetails" class="collapse" data-bs-parent="#accordionFinance">
+                            <div class="d-flex justify-content-between align-items-center p-3">
+                              <div>
+                                <span class="fw-bold text-dark">Rental Income</span>
+                                <span class="text-primary fw-bold ms-1"
+                                  style="cursor:pointer;"
+                                  data-bs-toggle="popover"
+                                  data-bs-html="true"
+                                  title="Options"
+                                  data-bs-content="<a href='general_ledger.php?account_code=500&account_name=Rental Income' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                              </div>
+                              <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedRent ?></span>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <?php if ($waterTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#waterDetails" aria-expanded="false" aria-controls="waterDetails" style="cursor:pointer;">
-        <td>Water Charges (Revenue)</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedWater ?></td>
-    </tr>
+                    <?php if ($waterTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#waterDetails" aria-expanded="false" aria-controls="waterDetails" style="cursor:pointer;">
+                        <td>Water Charges (Revenue)</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedWater ?></td>
+                      </tr>
 
-    <tr>
-        <td colspan="2" class="p-0">
-            <div id="waterDetails" class="collapse" data-bs-parent="#accordionFinance">
-                <div class="d-flex justify-content-between align-items-center p-3">
-                    <div>
-                        <span class="fw-bold text-dark">Water Charges (Revenue)</span>
-                        <span class="text-primary fw-bold ms-1"
-                            style="cursor:pointer;"
-                            data-bs-toggle="popover"
-                            data-bs-html="true"
-                            title="Options"
-                            data-bs-content="<a href='general_ledger.php?account_code=510&account_name=Water Charges (Revenue)' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                    </div>
-                    <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedWater ?></span>
-                </div>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                      <tr>
+                        <td colspan="2" class="p-0">
+                          <div id="waterDetails" class="collapse" data-bs-parent="#accordionFinance">
+                            <div class="d-flex justify-content-between align-items-center p-3">
+                              <div>
+                                <span class="fw-bold text-dark">Water Charges (Revenue)</span>
+                                <span class="text-primary fw-bold ms-1"
+                                  style="cursor:pointer;"
+                                  data-bs-toggle="popover"
+                                  data-bs-html="true"
+                                  title="Options"
+                                  data-bs-content="<a href='general_ledger.php?account_code=510&account_name=Water Charges (Revenue)' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                              </div>
+                              <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedWater ?></span>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <?php if ($garbageTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#garbageDetails" aria-expanded="false" aria-controls="garbageDetails" style="cursor:pointer;">
-        <td>Garbage Charges (Revenue)</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedGarbage ?></td>
-    </tr>
+                    <?php if ($garbageTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#garbageDetails" aria-expanded="false" aria-controls="garbageDetails" style="cursor:pointer;">
+                        <td>Garbage Charges (Revenue)</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedGarbage ?></td>
+                      </tr>
 
-    <tr>
-        <td colspan="2" class="p-0">
-            <div id="garbageDetails" class="collapse" data-bs-parent="#accordionFinance">
-                <div class="d-flex justify-content-between align-items-center p-3">
-                    <div>
-                        <span class="fw-bold text-dark">Garbage Charges (Revenue)</span>
-                        <span class="text-primary fw-bold ms-1"
-                            style="cursor:pointer;"
-                            data-bs-toggle="popover"
-                            data-bs-html="true"
-                            title="Options"
-                            data-bs-content="<a href='general_ledger.php?account_code=515&account_name=Garbage Charges (Revenue)' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                    </div>
-                    <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedGarbage ?></span>
-                </div>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                      <tr>
+                        <td colspan="2" class="p-0">
+                          <div id="garbageDetails" class="collapse" data-bs-parent="#accordionFinance">
+                            <div class="d-flex justify-content-between align-items-center p-3">
+                              <div>
+                                <span class="fw-bold text-dark">Garbage Charges (Revenue)</span>
+                                <span class="text-primary fw-bold ms-1"
+                                  style="cursor:pointer;"
+                                  data-bs-toggle="popover"
+                                  data-bs-html="true"
+                                  title="Options"
+                                  data-bs-content="<a href='general_ledger.php?account_code=515&account_name=Garbage Charges (Revenue)' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                              </div>
+                              <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedGarbage ?></span>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <?php if ($lateFees > 0): ?>
-    <tr class="main-row" data-bs-target="#lateDetails" aria-expanded="false" aria-controls="lateDetails" style="cursor:pointer;">
-        <td>Late Payment Fees</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLateFees ?></td>
-    </tr>
+                    <?php if ($lateFees > 0): ?>
+                      <tr class="main-row" data-bs-target="#lateDetails" aria-expanded="false" aria-controls="lateDetails" style="cursor:pointer;">
+                        <td>Late Payment Fees</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLateFees ?></td>
+                      </tr>
 
-    <tr>
-        <td colspan="2" class="p-0">
-            <div id="lateDetails" class="collapse" data-bs-parent="#accordionFinance">
-                <div class="d-flex justify-content-between align-items-center p-3">
-                    <div>
-                        <span class="fw-bold text-dark">Late Payment Fees</span>
-                        <span class="text-primary fw-bold ms-1"
-                            style="cursor:pointer;"
-                            data-bs-toggle="popover"
-                            data-bs-html="true"
-                            title="Options"
-                            data-bs-content="<a href='general_ledger.php?account_code=505&account_name=Late Payment Fees' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                    </div>
-                    <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLateFees ?></span>
-                </div>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                      <tr>
+                        <td colspan="2" class="p-0">
+                          <div id="lateDetails" class="collapse" data-bs-parent="#accordionFinance">
+                            <div class="d-flex justify-content-between align-items-center p-3">
+                              <div>
+                                <span class="fw-bold text-dark">Late Payment Fees</span>
+                                <span class="text-primary fw-bold ms-1"
+                                  style="cursor:pointer;"
+                                  data-bs-toggle="popover"
+                                  data-bs-html="true"
+                                  title="Options"
+                                  data-bs-content="<a href='general_ledger.php?account_code=505&account_name=Late Payment Fees' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                              </div>
+                              <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLateFees ?></span>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <?php if ($managementFees > 0): ?>
-    <tr class="main-row" data-bs-target="#managementDetails" aria-expanded="false" aria-controls="managementDetails" style="cursor:pointer;">
-        <td>Commissions and Management Fees</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedManagementFees ?></td>
-    </tr>
+                    <?php if ($managementFees > 0): ?>
+                      <tr class="main-row" data-bs-target="#managementDetails" aria-expanded="false" aria-controls="managementDetails" style="cursor:pointer;">
+                        <td>Commissions and Management Fees</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedManagementFees ?></td>
+                      </tr>
 
-    <tr>
-        <td colspan="2" class="p-0">
-            <div id="managementDetails" class="collapse" data-bs-parent="#accordionFinance">
-                <div class="d-flex justify-content-between align-items-center p-3">
-                    <div>
-                        <span class="fw-bold text-dark">Commissions and Management Fees</span>
-                        <span class="text-primary fw-bold ms-1"
-                            style="cursor:pointer;"
-                            data-bs-toggle="popover"
-                            data-bs-html="true"
-                            title="Options"
-                            data-bs-content="<a href='general_ledger.php?account_code=520&account_name=Commissions and Management Fees' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                    </div>
-                    <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedManagementFees ?></span>
-                </div>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                      <tr>
+                        <td colspan="2" class="p-0">
+                          <div id="managementDetails" class="collapse" data-bs-parent="#accordionFinance">
+                            <div class="d-flex justify-content-between align-items-center p-3">
+                              <div>
+                                <span class="fw-bold text-dark">Commissions and Management Fees</span>
+                                <span class="text-primary fw-bold ms-1"
+                                  style="cursor:pointer;"
+                                  data-bs-toggle="popover"
+                                  data-bs-html="true"
+                                  title="Options"
+                                  data-bs-content="<a href='general_ledger.php?account_code=520&account_name=Commissions and Management Fees' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                              </div>
+                              <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedManagementFees ?></span>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <?php if ($otherIncome > 0): ?>
-    <tr class="main-row" data-bs-target="#otherDetails" aria-expanded="false" aria-controls="otherDetails" style="cursor:pointer;">
-        <td>Other Income (Advertising, Penalties)</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedOtherIncome ?></td>
-    </tr>
+                    <?php if ($otherIncome > 0): ?>
+                      <tr class="main-row" data-bs-target="#otherDetails" aria-expanded="false" aria-controls="otherDetails" style="cursor:pointer;">
+                        <td>Other Income (Advertising, Penalties)</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedOtherIncome ?></td>
+                      </tr>
 
-    <tr>
-        <td colspan="2" class="p-0">
-            <div id="otherDetails" class="collapse" data-bs-parent="#accordionFinance">
-                <div class="d-flex justify-content-between align-items-center p-3">
-                    <div>
-                        <span class="fw-bold text-dark">Other Income (Advertising, Penalties)</span>
-                        <span class="text-primary fw-bold ms-1"
-                            style="cursor:pointer;"
-                            data-bs-toggle="popover"
-                            data-bs-html="true"
-                            title="Options"
-                            data-bs-content="<a href='general_ledger.php?account_code=525&account_name=Other Income (Advertising, Penalties)' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                    </div>
-                    <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedOtherIncome ?></span>
-                </div>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                      <tr>
+                        <td colspan="2" class="p-0">
+                          <div id="otherDetails" class="collapse" data-bs-parent="#accordionFinance">
+                            <div class="d-flex justify-content-between align-items-center p-3">
+                              <div>
+                                <span class="fw-bold text-dark">Other Income (Advertising, Penalties)</span>
+                                <span class="text-primary fw-bold ms-1"
+                                  style="cursor:pointer;"
+                                  data-bs-toggle="popover"
+                                  data-bs-html="true"
+                                  title="Options"
+                                  data-bs-content="<a href='general_ledger.php?account_code=525&account_name=Other Income (Advertising, Penalties)' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                              </div>
+                              <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedOtherIncome ?></span>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <!-- Total Income -->
-    <tr class="category">
-        <td><b>Total Income</b></td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;"><b>Ksh <?= $formattedTotalIncome ?></b></td>
-    </tr>
-    
-    <!-- Expenses header -->
-    <tr class="category">
-        <td style="color:red;"><b>Expenses</b></td>
-        <td style="text-align:right; padding-right: 20px;"></td>
-    </tr>
+                    <!-- Total Income -->
+                    <tr class="category">
+                      <td><b>Total Income</b></td>
+                      <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;"><b>Ksh <?= $formattedTotalIncome ?></b></td>
+                    </tr>
 
-    <?php if ($maintenanceTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#maintenanceDetails" aria-expanded="false" aria-controls="maintenanceDetails" style="cursor:pointer;">
-        <td>Maintenance and Repair Costs</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedMaintenance ?></td>
-    </tr>
+                    <!-- Expenses header -->
+                    <tr class="category">
+                      <td style="color:red;"><b>Expenses</b></td>
+                      <td style="text-align:right; padding-right: 20px;"></td>
+                    </tr>
 
-    <tr class="collapse" id="maintenanceDetails">
-        <td colspan="2" style="padding-left:40px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="fw-bold text-dark">Maintenance and Repair Costs</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=600&account_name=Maintenance and Repair Costs' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedMaintenance ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($maintenanceTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#maintenanceDetails" aria-expanded="false" aria-controls="maintenanceDetails" style="cursor:pointer;">
+                        <td>Maintenance and Repair Costs</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedMaintenance ?></td>
+                      </tr>
 
-    <?php if ($salaryTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#salaryDetails" aria-expanded="false" aria-controls="salaryDetails" style="cursor:pointer;">
-        <td>Staff Salaries and Wages</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSalaryTotal ?></td>
-    </tr>
+                      <tr class="collapse" id="maintenanceDetails">
+                        <td colspan="2" style="padding-left:40px;">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                              <span class="fw-bold text-dark">Maintenance and Repair Costs</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=600&account_name=Maintenance and Repair Costs' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedMaintenance ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="collapse" id="salaryDetails">
-        <td colspan="2" style="padding-left:40px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="fw-bold text-dark">Staff Salaries and Wages</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=605&account_name=Staff Salaries and Wages' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSalaryTotal ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($salaryTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#salaryDetails" aria-expanded="false" aria-controls="salaryDetails" style="cursor:pointer;">
+                        <td>Staff Salaries and Wages</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSalaryTotal ?></td>
+                      </tr>
 
-    <?php if ($electricityTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#electricityDetails" aria-expanded="false" aria-controls="electricityDetails" style="cursor:pointer;">
-        <td>Electricity Expense</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedElectricity ?></td>
-    </tr>
+                      <tr class="collapse" id="salaryDetails">
+                        <td colspan="2" style="padding-left:40px;">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                              <span class="fw-bold text-dark">Staff Salaries and Wages</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=605&account_name=Staff Salaries and Wages' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSalaryTotal ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="collapse" id="electricityDetails">
-        <td colspan="2" style="padding-left:40px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="fw-bold text-dark">Electricity Expense</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=610&account_name=Electricity Expense' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedElectricity ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($electricityTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#electricityDetails" aria-expanded="false" aria-controls="electricityDetails" style="cursor:pointer;">
+                        <td>Electricity Expense</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedElectricity ?></td>
+                      </tr>
 
-    <?php if ($waterExpenseTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#waterExpDetails" aria-expanded="false" aria-controls="waterExpDetails" style="cursor:pointer;">
-        <td>Water Expense</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedWaterExpense ?></td>
-    </tr>
+                      <tr class="collapse" id="electricityDetails">
+                        <td colspan="2" style="padding-left:40px;">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                              <span class="fw-bold text-dark">Electricity Expense</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=610&account_name=Electricity Expense' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedElectricity ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="collapse" id="waterExpDetails">
-        <td colspan="2" style="padding-left:40px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="fw-bold text-dark">Water Expense</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=615&account_name=Water Expense' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedWaterExpense ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($waterExpenseTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#waterExpDetails" aria-expanded="false" aria-controls="waterExpDetails" style="cursor:pointer;">
+                        <td>Water Expense</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedWaterExpense ?></td>
+                      </tr>
 
-    <?php if ($garbageExpenseTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#garbageExpDetails" aria-expanded="false" aria-controls="garbageExpDetails" style="cursor:pointer;">
-        <td>Garbage Collection Expense</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedGarbageExpense ?></td>
-    </tr>
+                      <tr class="collapse" id="waterExpDetails">
+                        <td colspan="2" style="padding-left:40px;">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                              <span class="fw-bold text-dark">Water Expense</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=615&account_name=Water Expense' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedWaterExpense ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="collapse" id="garbageExpDetails">
-        <td colspan="2" style="padding-left:40px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="fw-bold text-dark">Garbage Collection Expense</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=620&account_name=Garbage Collection Expense' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedGarbageExpense ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($garbageExpenseTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#garbageExpDetails" aria-expanded="false" aria-controls="garbageExpDetails" style="cursor:pointer;">
+                        <td>Garbage Collection Expense</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedGarbageExpense ?></td>
+                      </tr>
 
-    <?php if ($internetExpenseTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#internetDetails" aria-expanded="false" aria-controls="internetDetails" style="cursor:pointer;">
-        <td>Internet Expense</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedInternetExpense ?></td>
-    </tr>
+                      <tr class="collapse" id="garbageExpDetails">
+                        <td colspan="2" style="padding-left:40px;">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                              <span class="fw-bold text-dark">Garbage Collection Expense</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=620&account_name=Garbage Collection Expense' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedGarbageExpense ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="collapse" id="internetDetails">
-        <td colspan="2">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <span class="fw-bold text-dark">Internet Expense</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=625&account_name=Internet Expense' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedInternetExpense ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($internetExpenseTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#internetDetails" aria-expanded="false" aria-controls="internetDetails" style="cursor:pointer;">
+                        <td>Internet Expense</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedInternetExpense ?></td>
+                      </tr>
 
-    <?php if ($securityExpenseTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#securityDetails" aria-expanded="false" aria-controls="securityDetails" style="cursor:pointer;">
-        <td>Security Expense</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSecurityExpense ?></td>
-    </tr>
+                      <tr class="collapse" id="internetDetails">
+                        <td colspan="2">
+                          <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                              <span class="fw-bold text-dark">Internet Expense</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=625&account_name=Internet Expense' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedInternetExpense ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="collapse" id="securityDetails">
-        <td colspan="2">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <span class="fw-bold text-dark">Security Expense</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=630&account_name=Security Expense' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSecurityExpense ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($securityExpenseTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#securityDetails" aria-expanded="false" aria-controls="securityDetails" style="cursor:pointer;">
+                        <td>Security Expense</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSecurityExpense ?></td>
+                      </tr>
 
-    <?php if ($softwareExpenseTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#softwareDetails" aria-expanded="false" aria-controls="softwareDetails" style="cursor:pointer;">
-        <td>Property Management Software Subscription</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSoftwareExpense ?></td>
-    </tr>
+                      <tr class="collapse" id="securityDetails">
+                        <td colspan="2">
+                          <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                              <span class="fw-bold text-dark">Security Expense</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=630&account_name=Security Expense' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSecurityExpense ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="collapse" id="softwareDetails">
-        <td colspan="2">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <span class="fw-bold text-dark">Property Management Software Subscription</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=635&account_name=Property Management Software Subscription' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSoftwareExpense ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($softwareExpenseTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#softwareDetails" aria-expanded="false" aria-controls="softwareDetails" style="cursor:pointer;">
+                        <td>Property Management Software Subscription</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSoftwareExpense ?></td>
+                      </tr>
 
-    <?php if ($marketingExpenseTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#marketingDetails" aria-expanded="false" aria-controls="marketingDetails" style="cursor:pointer;">
-        <td>Marketing and Advertising Costs</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedMarketingExpense ?></td>
-    </tr>
+                      <tr class="collapse" id="softwareDetails">
+                        <td colspan="2">
+                          <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                              <span class="fw-bold text-dark">Property Management Software Subscription</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=635&account_name=Property Management Software Subscription' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSoftwareExpense ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="collapse" id="marketingDetails">
-        <td colspan="2">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <span class="fw-bold text-dark">Marketing and Advertising Costs</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=640&account_name=Marketing and Advertising Costs' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedMarketingExpense ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($marketingExpenseTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#marketingDetails" aria-expanded="false" aria-controls="marketingDetails" style="cursor:pointer;">
+                        <td>Marketing and Advertising Costs</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedMarketingExpense ?></td>
+                      </tr>
 
-    <?php if ($legalExpenseTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#legalDetails" aria-expanded="false" aria-controls="legalDetails" style="cursor:pointer;">
-        <td>Legal and Compliance Fees</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLegalExpense ?></td>
-    </tr>
+                      <tr class="collapse" id="marketingDetails">
+                        <td colspan="2">
+                          <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                              <span class="fw-bold text-dark">Marketing and Advertising Costs</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=640&account_name=Marketing and Advertising Costs' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedMarketingExpense ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="collapse" id="legalDetails">
-        <td colspan="2">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <span class="fw-bold text-dark">Legal and Compliance Fees</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=645&account_name=Legal and Compliance Fees' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLegalExpense ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($legalExpenseTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#legalDetails" aria-expanded="false" aria-controls="legalDetails" style="cursor:pointer;">
+                        <td>Legal and Compliance Fees</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLegalExpense ?></td>
+                      </tr>
 
-    <?php if ($loanInterestTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#loanDetails" aria-expanded="false" aria-controls="loanDetails" style="cursor:pointer;">
-        <td>Loan Interest Payments</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLoanInterest ?></td>
-    </tr>
+                      <tr class="collapse" id="legalDetails">
+                        <td colspan="2">
+                          <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                              <span class="fw-bold text-dark">Legal and Compliance Fees</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=645&account_name=Legal and Compliance Fees' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLegalExpense ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="collapse" id="loanDetails">
-        <td colspan="2">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <span class="fw-bold text-dark">Loan Interest Payments</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=655&account_name=Loan Interest Payments' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLoanInterest ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($loanInterestTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#loanDetails" aria-expanded="false" aria-controls="loanDetails" style="cursor:pointer;">
+                        <td>Loan Interest Payments</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLoanInterest ?></td>
+                      </tr>
 
-    <?php if ($bankChargesTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#bankDetails" aria-expanded="false" aria-controls="bankDetails" style="cursor:pointer;">
-        <td>Bank/Mpesa Charges</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedBankCharges ?></td>
-    </tr>
+                      <tr class="collapse" id="loanDetails">
+                        <td colspan="2">
+                          <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                              <span class="fw-bold text-dark">Loan Interest Payments</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=655&account_name=Loan Interest Payments' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLoanInterest ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="collapse" id="bankDetails">
-        <td colspan="2">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <span class="fw-bold text-dark">Bank/Mpesa Charges</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=660&account_name=Bank/Mpesa Charges' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedBankCharges ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($bankChargesTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#bankDetails" aria-expanded="false" aria-controls="bankDetails" style="cursor:pointer;">
+                        <td>Bank/Mpesa Charges</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedBankCharges ?></td>
+                      </tr>
 
-    <?php if ($otherExpenseTotal > 0): ?>
-    <tr class="main-row" data-bs-target="#otherExpenseDetails" aria-expanded="false" aria-controls="otherExpenseDetails" style="cursor:pointer;">
-        <td>Other Expenses (Office, Supplies, Travel)</td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedOtherExpense ?></td>
-    </tr>
+                      <tr class="collapse" id="bankDetails">
+                        <td colspan="2">
+                          <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                              <span class="fw-bold text-dark">Bank/Mpesa Charges</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=660&account_name=Bank/Mpesa Charges' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedBankCharges ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="collapse" id="otherExpenseDetails">
-        <td colspan="2">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <span class="fw-bold text-dark">Other Expenses (Office, Supplies, Travel)</span>
-                    <span class="text-primary fw-bold ms-1"
-                        style="cursor:pointer;"
-                        data-bs-toggle="popover"
-                        data-bs-html="true"
-                        title="Options"
-                        data-bs-content="<a href='general_ledger.php?account_code=665&account_name=Other Expenses (Office, Supplies, Travel)' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
-                </div>
-                <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedOtherExpense ?></span>
-            </div>
-        </td>
-    </tr>
-    <?php endif; ?>
+                    <?php if ($otherExpenseTotal > 0): ?>
+                      <tr class="main-row" data-bs-target="#otherExpenseDetails" aria-expanded="false" aria-controls="otherExpenseDetails" style="cursor:pointer;">
+                        <td>Other Expenses (Office, Supplies, Travel)</td>
+                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedOtherExpense ?></td>
+                      </tr>
 
-    <!-- Activate popovers -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-            popoverTriggerList.map(function(popoverTriggerEl) {
-                return new bootstrap.Popover(popoverTriggerEl);
-            });
-        });
-    </script>
+                      <tr class="collapse" id="otherExpenseDetails">
+                        <td colspan="2">
+                          <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                              <span class="fw-bold text-dark">Other Expenses (Office, Supplies, Travel)</span>
+                              <span class="text-primary fw-bold ms-1"
+                                style="cursor:pointer;"
+                                data-bs-toggle="popover"
+                                data-bs-html="true"
+                                title="Options"
+                                data-bs-content="<a href='general_ledger.php?account_code=665&account_name=Other Expenses (Office, Supplies, Travel)' class='text-decoration-none text-dark d-block p-1'>View General Ledger</a>">⋮</span>
+                            </div>
+                            <span class="fw-bold text-success" style="font-family: monospace; white-space: nowrap;">Ksh <?= $formattedOtherExpense ?></span>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endif; ?>
 
-    <tr class="category">
-        <td><b>Total Expenses</b></td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;"><b>Ksh <?= $formattedTotalExpenses ?></b></td>
-    </tr>
+                    <!-- Activate popovers -->
+                    <script>
+                      document.addEventListener('DOMContentLoaded', function() {
+                        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+                        popoverTriggerList.map(function(popoverTriggerEl) {
+                          return new bootstrap.Popover(popoverTriggerEl);
+                        });
+                      });
+                    </script>
 
-    <tr class="category">
-        <td><b>Net Profit</b></td>
-        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;"><b>Ksh <?= $formattedNetProfit ?></b></td>
-    </tr>
-</tbody>
+                    <tr class="category">
+                      <td><b>Total Expenses</b></td>
+                      <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;"><b>Ksh <?= $formattedTotalExpenses ?></b></td>
+                    </tr>
+
+                    <tr class="category">
+                      <td><b>Net Profit</b></td>
+                      <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;"><b>Ksh <?= $formattedNetProfit ?></b></td>
+                    </tr>
+                  </tbody>
                 </table>
               </div>
 
@@ -1896,75 +1913,7 @@ function applyFilters() {
   <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
   <script src="/jengopay/landlord/assets/main.js"></script>
   <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
-  <script>
-    const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-    const Default = {
-      scrollbarTheme: 'os-theme-light',
-      scrollbarAutoHide: 'leave',
-      scrollbarClickScroll: true,
-    };
-    document.addEventListener('DOMContentLoaded', function() {
-      const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-      if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-        OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-          scrollbars: {
-            theme: Default.scrollbarTheme,
-            autoHide: Default.scrollbarAutoHide,
-            clickScroll: Default.scrollbarClickScroll,
-          },
-        });
-      }
-    });
-  </script>
-  <!--end::OverlayScrollbars Configure-->
-  <!-- OPTIONAL SCRIPTS -->
-  <!-- apexcharts -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-    integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
-    crossorigin="anonymous"></script>
 
-
-  <!-- DataTable Script -->
-
-  <script>
-    $(document).ready(function() {
-      var table = $('#balanceSheet').DataTable({
-        "lengthChange": false,
-        "dom": 'Bfrtip',
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-        "initComplete": function() {
-          // Move the buttons to the first .col-md-6
-          table.buttons().container().appendTo('#balanceSheet_wrapper .col-md-6:eq(0)');
-
-          // Move the search box to the second .col-md-6
-          $('#balanceSheet_filter').appendTo('#balanceSheet_wrapper .col-md-6:eq(1)');
-        }
-      });
-    });
-  </script>
-
-
-  <script>
-    // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-    // IT'S ALL JUST JUNK FOR DEMO
-    // ++++++++++++++++++++++++++++++++++++++++++
-
-    /* apexcharts
-     * -------
-     * Here we will create a few charts using apexcharts
-     */
-
-    //-----------------------
-    // - MONTHLY SALES CHART -
-    //-----------------------
-
-
-
-    //-----------------
-    // - END PIE CHART -
-    //-----------------
-  </script>
 
   <!--end::Script-->
 </body>
