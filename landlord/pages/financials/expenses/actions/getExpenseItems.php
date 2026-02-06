@@ -9,7 +9,14 @@ try {
     $expenseId = $_GET['id'];
 
     $stm = $pdo->prepare("
-        SELECT * FROM expenses
+        SELECT 
+            expenses.*,
+            b.building_name,
+            expense_items.*,
+            expense_payments.*
+        FROM expenses
+        LEFT JOIN buildings b
+            ON expenses.building_id = b.id
         LEFT JOIN expense_items 
             ON expenses.id = expense_items.expense_id
         LEFT JOIN expense_payments 

@@ -27,9 +27,9 @@ try {
     $stmt = $pdo->prepare("
     SELECT
         mr.*,
-        mr.status,  -- Added to select status from maintenance_requests table
+        mr.status,
         b.building_name,
-        bu.unit_number,  -- Added to fetch the unit number
+        bu.unit_number,
         ra.id AS assignment_id,
         p.name  AS provider_name,
         p.email AS provider_email,
@@ -39,7 +39,7 @@ try {
     LEFT JOIN buildings b
         ON mr.building_id = b.id
 
-    LEFT JOIN building_units bu  -- Join with building_units to get unit_number
+    LEFT JOIN building_units bu
         ON mr.building_unit_id = bu.id
 
     LEFT JOIN (
@@ -55,16 +55,42 @@ try {
        AND ra.row_num = 1
 
     LEFT JOIN service_providers p
-        ON ra.provider_id = p.id
+        ON ra.service_provider_id = p.id
 
     WHERE mr.landlord_id = :landlord_id
     ORDER BY mr.created_at DESC
-");
-
+    ");
 
     $stmt->execute(['landlord_id' => $landlord_id]);
     $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // ✅ Initialize counters
+    $totalRequests = 0;
+    $openRequests = 0;
+    $completedRequests = 0;
+    $closedRequests = 0;
+
+    // ✅ Count based on status column
+    foreach ($requests as $request) {
+        $totalRequests++;
+
+        if ($request['status'] === 'open') {
+            $openRequests++;
+        } elseif ($request['status'] === 'completed') {
+            $completedRequests++;
+        } elseif ($request['status'] === 'closed') {
+            $closedRequests++;
+        }
+    }
+
 } catch (Throwable $e) {
     $requests = [];
     $requestsError = $e->getMessage();
+// echo $requestsError;
+    // Initialize counters in case of error
+    $totalRequests = 0;
+    $openRequests = 0;
+    $completedRequests = 0;
+    $closedRequests = 0;
 }
+

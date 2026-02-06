@@ -167,7 +167,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
               </div>
               <div>
                 <p class="mb-0" style="font-weight: bold;">Total Requests</p>
-                <b>0</b>
+                <b><?= $totalRequests ?></b>
               </div>
             </div>
           </div>
@@ -180,7 +180,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
               </div>
               <div>
                 <p class="mb-0" style="font-weight: bold;">Open</p>
-                <b>0</b>
+                <b><?= $openRequests ?></b>
               </div>
             </div>
           </div>
@@ -193,7 +193,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
               </div>
               <div>
                 <p class="mb-0" style="font-weight: bold;">Completed</p>
-                <b>0</b>
+                <b><?= $completedRequests ?></b>
               </div>
             </div>
           </div>
@@ -206,7 +206,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
               </div>
               <div>
                 <p class="mb-0" style="font-weight: bold;">Closed</p>
-                <b>0</b>
+                <b><?= $closedRequests ?></b>
               </div>
             </div>
           </div>

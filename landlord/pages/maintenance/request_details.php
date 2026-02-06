@@ -162,7 +162,8 @@ require_once "actions/getProviderDetails.php"
   /* Hidden state before animation */
 
   .setBudget-btn,
-  .viewDetails-btn {
+  .viewDetails-btn,
+  .messageProviderBtn {
     background: var(--primary);
     color: white;
     border: none;
@@ -172,11 +173,67 @@ require_once "actions/getProviderDetails.php"
     transition: all 0.3s;
   }
 
+  .acceptProposalBtn {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 0.3rem 1.4rem;
+    border-radius: 5px;
+    font-weight: 400;
+    transition: all 0.3s;
+  }
+
   .setBudget-btn:hover,
-  .viewDetails-btn:hover {
+  .viewDetails-btn:hover,
+  .messageProviderBtn:hover,
+  .acceptProposalBtn:hover {
     background: var(--accent-color);
     color: var(--primary-color);
     transform: translateY(-2px);
+  }
+
+  /* Offcanvas Styles */
+  .offcanvas {
+    width: 500px !important;
+  }
+
+  .provider-header {
+    background: linear-gradient(135deg, #00192D, #1a3a52);
+    color: white;
+    padding: 2rem;
+    margin: -1rem -1rem 1.5rem -1rem;
+  }
+
+  .stat-box {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .stat-box h4 {
+    color: #FFC107;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-box p {
+    color: #6c757d;
+    margin-bottom: 0;
+    font-size: 0.875rem;
+  }
+
+  .job-item {
+    padding: 1rem;
+    border-left: 3px solid #FFC107;
+    background-color: #f8f9fa;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+  }
+
+  .job-item h6 {
+    color: #00192D;
+    margin-bottom: 0.5rem;
   }
 </style>
 
@@ -370,7 +427,8 @@ require_once "actions/getProviderDetails.php"
                             </div>
                           </div>
 
-                          <button class="viewDetails-btn">View Details</button>
+                          <button class="viewDetails-btn" data-bs-toggle="offcanvas" data-bs-target="#providerOffcanvas"
+                            data-provider-name="<?php echo htmlspecialchars($proposal['service_provider_name']); ?>">View Details</button>
                         </div>
                       </div>
                     </div>
@@ -555,6 +613,146 @@ require_once "actions/getProviderDetails.php"
     <!-- Begin Footer -->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
     <!-- end footer -->
+  </div>
+
+  <!-- OffCanvas -->
+  <!-- Offcanvas for Provider Details -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="providerOffcanvas" aria-labelledby="providerOffcanvasLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="providerOffcanvasLabel">Provider Details</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="provider-header">
+        <div class="text-center">
+          <img src="https://ui-avatars.com/api/?name=QuickFix+Plumbing&size=100&background=FFC107&color=00192D"
+            alt="Provider" class="rounded-circle mb-3" id="providerAvatar">
+          <h4 class="mb-1" id="providerName">QuickFix Plumbing Services</h4>
+          <div class="mb-2" id="providerRatingStars">
+            <span class="text-warning">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+              <span class="text-muted">(4.5)</span>
+            </span>
+          </div>
+          <p class="mb-0 opacity-75" id="providerExperience">8 years of experience</p>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-6">
+          <div class="stat-box">
+            <h4 id="jobsCompleted">0</h4>
+            <p>Jobs Completed</p>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="stat-box">
+            <h4 id="completionRate">0%</h4>
+            <p>Completion Rate</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h6 class="fw-bold mb-3"><i class="fas fa-info-circle text-warning"></i> Contact Information</h6>
+        <div class="info-row">
+          <span class="info-label"><i class="fas fa-envelope"></i> Email:</span>
+          <span><a href="mailto:info@quickfix.ke" id="providerEmail">info@quickfix.ke</a></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fas fa-phone"></i> Phone:</span>
+          <span><a href="tel:+254712345678" id="providerPhone">+254 712 345 678</a></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fas fa-clock"></i> Response Time:</span>
+          <span id="responseTime">Within 2 hours</span>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h6 class="fw-bold mb-3"><i class="fas fa-file-alt text-warning"></i> Proposal Details</h6>
+        <p id="proposalDescription">We can fix your blocked sink using professional equipment. We'll also inspect the pipes to prevent future blockages.</p>
+        <div class="d-flex gap-2">
+          <span class="badge bg-success" id="proposalBudget">KES 3,500</span>
+          <span class="badge bg-info" id="proposalDuration">2-3 hours</span>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h6 class="fw-bold mb-3"><i class="fas fa-briefcase text-warning"></i> Recent Jobs</h6>
+        <div id="recentJobsList">
+          <div class="job-item">
+            <h6>Kitchen Sink Repair</h6>
+            <small class="text-muted"><i class="fas fa-map-marker-alt"></i> Westlands Apartments</small><br>
+            <small class="text-muted"><i class="fas fa-calendar"></i> Jan 28, 2026</small>
+            <div class="mt-2">
+              <span class="text-warning">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </span>
+            </div>
+          </div>
+          <div class="job-item">
+            <h6>Bathroom Plumbing Fix</h6>
+            <small class="text-muted"><i class="fas fa-map-marker-alt"></i> Riverside Tower</small><br>
+            <small class="text-muted"><i class="fas fa-calendar"></i> Jan 25, 2026</small>
+            <div class="mt-2">
+              <span class="text-warning">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </span>
+            </div>
+          </div>
+          <div class="job-item">
+            <h6>Water Heater Installation</h6>
+            <small class="text-muted"><i class="fas fa-map-marker-alt"></i> Kilimani Residence</small><br>
+            <small class="text-muted"><i class="fas fa-calendar"></i> Jan 20, 2026</small>
+            <div class="mt-2">
+              <span class="text-warning">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="far fa-star"></i>
+              </span>
+            </div>
+          </div>
+          <div class="job-item">
+            <h6>Pipe Leak Repair</h6>
+            <small class="text-muted"><i class="fas fa-map-marker-alt"></i> Lavington Estate</small><br>
+            <small class="text-muted"><i class="fas fa-calendar"></i> Jan 15, 2026</small>
+            <div class="mt-2">
+              <span class="text-warning">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2">
+        <button class="acceptProposalBtn" id="acceptProposalBtn">
+          <i class="fas fa-check"></i> Accept This Proposal
+        </button>
+        <button class="messageProviderBtn">
+          <i class="fas fa-comment"></i> Send Message
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- MODALS -->
@@ -1023,6 +1221,80 @@ require_once "actions/getProviderDetails.php"
           autohide: true
         }).show();
       }
+    });
+  </script>
+
+  <!-- Offcanvas script -->
+  <script>
+    // Handle View Details button click to populate offcanvas with provider data
+    document.addEventListener('DOMContentLoaded', function() {
+      const viewDetailsBtns = document.querySelectorAll('.viewDetails-btn');
+
+      viewDetailsBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const providerName = this.getAttribute('data-provider-name');
+
+          // Update provider name in offcanvas
+          if (providerName) {
+            document.getElementById('providerName').textContent = providerName;
+
+            // Update avatar with provider name
+            const avatarImg = document.getElementById('providerAvatar');
+            avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(providerName)}&size=100&background=FFC107&color=00192D`;
+            avatarImg.alt = providerName;
+          }
+
+          // You can add more data attributes and update other fields here
+          // For example:
+          // const providerEmail = this.getAttribute('data-provider-email');
+          // if (providerEmail) {
+          //     document.getElementById('providerEmail').textContent = providerEmail;
+          //     document.getElementById('providerEmail').href = 'mailto:' + providerEmail;
+          // }
+        });
+      });
+    });
+
+    function setAvailable() {
+      if (confirm('Are you sure you want to set this request as available for bidding?')) {
+        alert('Request has been set as available!');
+        // Add your logic here
+      }
+    }
+
+    function cancelRequest() {
+      if (confirm('Are you sure you want to cancel this request? This action cannot be undone.')) {
+        alert('Request has been cancelled!');
+        // Add your logic here
+      }
+    }
+
+    // Add smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // Optional: Add event listeners for offcanvas buttons if needed
+    // You can populate these with PHP data or handle them with your backend
+    document.getElementById('acceptProposalBtn')?.addEventListener('click', function() {
+      alert('Accept proposal functionality - connect to your PHP backend');
+    });
+
+    document.getElementById('contactProviderBtn')?.addEventListener('click', function() {
+      const phone = document.getElementById('providerPhone').textContent;
+      window.location.href = `tel:${phone}`;
+    });
+
+    document.getElementById('messageProviderBtn')?.addEventListener('click', function() {
+      alert('Message provider functionality - connect to your PHP backend');
     });
   </script>
 

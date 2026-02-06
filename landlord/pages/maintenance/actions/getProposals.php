@@ -13,20 +13,22 @@ if (!$id || !is_numeric($id)) {
 
 try {
     $stmt = $pdo->prepare("
-        SELECT 
-            sp.name AS service_provider_name,
-            mrp.proposed_budget,
-            mrp.proposed_duration,
-            mrp.provider_availability
-        FROM maintenance_request_proposals mrp
-        JOIN service_providers sp 
-            ON mrp.service_provider_id = sp.id
-        WHERE mrp.id = ?
-    ");
+    SELECT 
+        sp.name AS service_provider_name,
+        mrp.proposed_budget,
+        mrp.proposed_duration,
+        mrp.provider_availability
+    FROM maintenance_request_proposals mrp
+    JOIN service_providers sp 
+        ON mrp.service_provider_id = sp.id
+    WHERE mrp.maintenance_request_id = ?
+");
+
 
     $stmt->execute([$id]);
 
     $proposals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
     // no output on success
 

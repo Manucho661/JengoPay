@@ -788,7 +788,13 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                     <div class="request-footer">
                       <div class="budget-info">
                         <i class="fas fa-money-bill-wave"></i>
-                        <?php echo htmlspecialchars($request['budget']); ?>
+                        <?php
+                        if (empty($request['budget'])) {
+                          echo "Not set";
+                        } else {
+                          echo htmlspecialchars($request['budget']);
+                        }
+                        ?>
                       </div>
 
                       <button
@@ -799,13 +805,14 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                         data-job-title="<?php echo htmlspecialchars($request['title']); ?>"
                         data-job-property="<?php echo htmlspecialchars($request['building_name']); ?>"
                         data-job-unit="<?php echo htmlspecialchars($request['unit_number']); ?>"
-                        data-job-budget="<?php echo htmlspecialchars($request['budget']); ?>"
+                        data-job-budget="<?php echo ($request['budget'] === null || $request['budget'] === '') ? 'Not set' : htmlspecialchars($request['budget']); ?>"
                         data-job-duration="<?php echo htmlspecialchars($request['duration']); ?>"
                         data-job-category="<?php echo htmlspecialchars($request['category']); ?>">
 
                         <i class="fas fa-paper-plane"></i>
                         <?php echo $request['has_applied'] ? 'Reapply' : 'Apply Now'; ?>
                       </button>
+
                     </div>
 
                   </div>
