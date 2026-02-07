@@ -563,29 +563,37 @@ require_once 'actions/assignProvider.php';
               <?php endif; ?>
             </div>
             <!-- Status & Payment -->
-            <div class="content-card">
-              <h5>Status & Payment</h5>
+            <?php if (!empty($request['payment_status'])): ?>
+              <div class="content-card">
+                <h5>Status & Payment</h5>
 
-              <div>
-                <div class="info-row">
-                  <span class="info-label">Status:</span>
-                  <span><span class="badge bg-warning">In Progress</span></span>
+                <div>
+                  <div class="info-row">
+                    <span class="info-label">Status:</span>
+                    <span><span class="badge bg-warning">In Progress</span></span>
+                  </div>
+
+                  <div class="info-row">
+                    <span class="info-label">Payment:</span>
+                    <span><span class="badge bg-danger">
+                        <?= htmlspecialchars($request['payment_status']) ?>
+                      </span></span>
+                  </div>
+
+                  <div class="info-row">
+                    <span class="info-label">Amount:</span>
+                    <span class="fw-bold">KES 3,500</span>
+                  </div>
+
+                  <div class="info-row">
+                    <span class="info-label">Method:</span>
+                    <span>M-Pesa</span>
+                  </div>
+
+                  <button class="btn btn-primary w-100 mt-3">Process Payment</button>
                 </div>
-                <div class="info-row">
-                  <span class="info-label">Payment:</span>
-                  <span><span class="badge bg-danger">Pending</span></span>
-                </div>
-                <div class="info-row">
-                  <span class="info-label">Amount:</span>
-                  <span class="fw-bold">KES 3,500</span>
-                </div>
-                <div class="info-row">
-                  <span class="info-label">Method:</span>
-                  <span>M-Pesa</span>
-                </div>
-                <button class="btn btn-primary w-100 mt-3">Process Payment</button>
               </div>
-            </div>
+            <?php endif; ?>
 
             <!-- Other Requests -->
             <div class="content-card">

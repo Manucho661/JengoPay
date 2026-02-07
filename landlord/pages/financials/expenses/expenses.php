@@ -26,6 +26,10 @@ require_once 'actions/getExpenseAccounts.php';
 // include buildings
 require_once 'actions/getBuildings.php';
 
+// filters
+$status     = $_GET['status'] ?? null;
+$q          = trim($_GET['q'] ?? ''); // search text
+
 
 // Pagination logic
 $itemsPerPage = 6;
@@ -86,6 +90,16 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
 
     <!--Tailwind CSS  -->
     <style>
+        :root {
+            --primary: #00192D;
+            --secondary: #FFC107;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #FFC107;
+            --light-bg: #f8f9fa;
+            --accent-color: #FFC107;
+        }
+
         .app-wrapper {
             background-color: rgba(128, 128, 128, 0.1);
         }
@@ -194,6 +208,37 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
         .pagination-info {
             color: #6c757d;
             font-size: 0.9rem;
+        }
+
+        /* btn styles */
+        .applyFilterBtn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.3rem 1.4rem;
+            border-radius: 5px;
+            font-weight: 400;
+            transition: all 0.3s;
+        }
+
+        .applyFilterBtn:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* filters */
+        .form-select,
+        .form-control {
+            background: rgba(255, 193, 7, 0.05);
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: none;
+            outline: none;
+            background: rgba(255, 193, 7, 0.1);
         }
     </style>
 </head>
@@ -584,37 +629,61 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                 <!-- Fifth Row: filter -->
                 <div class="row g-3 mb-4">
                     <!-- Filter by Building -->
-                    <div class="col-md-3 col-sm-12">
-                        <select class="form-select rounded-3">
-                            <option selected disabled>Filter By Building</option>
-                            <option value="manucho">Manucho</option>
-                            <option value="silver">Silver Spoon</option>
-                            <option value="ebenezer">Ebenezer</option>
-                        </select>
-                    </div>
+                    <div class="col-md-12 col-sm-12">
+                        <div class="card border-0 mb-4">
+                            <div class="card-body ">
+                                <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filters</h5>
+                                <form method="GET">
+                                    <div style="overflow-x:auto;">
+                                        <div class="row g-3 mb-3 flex-nowrap" style="min-width:900px;">
 
-                    <!-- Filter by Items -->
-                    <div class="col-md-3 col-sm-12">
-                        <select class="form-select rounded-3">
-                            <option selected disabled>Filter By Items</option>
-                            <option value="garbage">Garbage</option>
-                            <option value="electricity">Electricity</option>
-                        </select>
-                    </div>
+                                            <div class="col-md-3" style="min-width:220px;">
+                                                <label class="form-label text-muted small">Search</label>
+                                                <input type="text" name="search" class="form-control" placeholder="Supplier or expense no...">
+                                            </div>
 
-                    <!-- Filter by Status -->
-                    <div class="col-md-3 col-sm-12">
-                        <select class="form-select rounded-3">
-                            <option selected disabled>Filter By Status</option>
-                            <option value="paid">Paid</option>
-                            <option value="pending">Pending</option>
-                            <option value="overpaid">Overpaid</option>
-                        </select>
-                    </div>
+                                            <div class="col-md-3" style="min-width:220px;">
+                                                <label class="form-label text-muted small">Buildings</label>
+                                                <select name="building_id" class="form-select">
+                                                    <option value="">All Buildings</option>
+                                                    <option value="1">Hindocha</option>
+                                                    <option value="2">Crown Z</option>
+                                                </select>
+                                            </div>
 
-                    <!-- Date Picker -->
-                    <div class="col-md-3 col-sm-12">
-                        <input type="date" class="form-control rounded-3">
+                                            <div class="col-md-3" style="min-width:220px;">
+                                                <label class="form-label text-muted small">Status</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="">All Statuses</option>
+                                                    <option value="paid">Paid</option>
+                                                    <option value="pending">Pending</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-3" style="min-width:220px;">
+                                                <label class="form-label text-muted small">Date From</label>
+                                                <input type="date" name="date_from" class="form-control">
+                                            </div>
+
+                                            <div class="col-md-3" style="min-width:220px;">
+                                                <label class="form-label text-muted small">Date To</label>
+                                                <input type="date" name="date_to" class="form-control">
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <button type="reset" class="btn btn-secondary">
+                                            <i class="fas fa-redo"></i> Reset
+                                        </button>
+                                        <button type="submit" class="applyFilterBtn">
+                                            <i class="fas fa-search"></i> Apply Filters
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
