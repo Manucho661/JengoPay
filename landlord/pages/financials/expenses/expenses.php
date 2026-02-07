@@ -240,6 +240,37 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
             outline: none;
             background: rgba(255, 193, 7, 0.1);
         }
+
+        .filters-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .filters-row {
+            flex-wrap: nowrap;
+        }
+
+        /* Default (desktop/tablet) */
+        .filter-col {
+            min-width: 220px;
+        }
+
+        /* Phones: make each filter narrower */
+        @media (max-width: 576px) {
+            .filter-col {
+                min-width: 160px;
+            }
+
+            .filter-col input,
+            .filter-col select {
+                font-size: 0.9rem;
+                padding: .375rem .5rem;
+            }
+        }
+
+        .filters-scroll {
+            mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);
+        }
     </style>
 </head>
 
@@ -634,54 +665,81 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                             <div class="card-body ">
                                 <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filters</h5>
                                 <form method="GET">
-                                    <div style="overflow-x:auto;">
-                                        <div class="row g-3 mb-3 flex-nowrap" style="min-width:900px;">
+                                    <!-- always reset to page 1 when applying filters -->
+                                    <input type="hidden" name="page" value="1">
 
-                                            <div class="col-md-3" style="min-width:220px;">
+                                    <div class="filters-scroll">
+                                        <div class="row g-3 mb-3 filters-row">
+
+                                            <div class="col-auto filter-col">
                                                 <label class="form-label text-muted small">Search</label>
-                                                <input type="text" name="search" class="form-control" placeholder="Supplier or expense no...">
+                                                <input
+                                                    type="text"
+                                                    name="search"
+                                                    class="form-control"
+                                                    placeholder="Supplier or expense no..."
+                                                    value="<?= htmlspecialchars($search ?? '') ?>">
                                             </div>
 
-                                            <div class="col-md-3" style="min-width:220px;">
+                                            <div class="col-auto filter-col">
                                                 <label class="form-label text-muted small">Buildings</label>
-                                                <select name="building_id" class="form-select">
+                                                <select class="form-select shadow-sm" name="building_id">
                                                     <option value="">All Buildings</option>
-                                                    <option value="1">Hindocha</option>
-                                                    <option value="2">Crown Z</option>
+                                                    <?php foreach ($buildings as $building): ?>
+                                                        <?php $bid = (string)(int)$building['id']; ?>
+                                                        <option value="<?= $bid ?>" <?= (($building_id ?? '') === $bid) ? 'selected' : '' ?>>
+                                                            <?= htmlspecialchars($building['building_name']) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
 
-                                            <div class="col-md-3" style="min-width:220px;">
+                                            <div class="col-auto filter-col">
                                                 <label class="form-label text-muted small">Status</label>
                                                 <select name="status" class="form-select">
-                                                    <option value="">All Statuses</option>
-                                                    <option value="paid">Paid</option>
-                                                    <option value="pending">Pending</option>
+                                                    <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Statuses</option>
+
+                                                    <!-- Use values that match your DB exactly -->
+                                                    <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
+                                                    <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
+                                                    <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
+                                                    <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
                                                 </select>
                                             </div>
 
-                                            <div class="col-md-3" style="min-width:220px;">
+                                            <div class="col-auto filter-col">
                                                 <label class="form-label text-muted small">Date From</label>
-                                                <input type="date" name="date_from" class="form-control">
+                                                <input
+                                                    type="date"
+                                                    name="date_from"
+                                                    class="form-control"
+                                                    value="<?= htmlspecialchars($date_from ?? '') ?>">
                                             </div>
 
-                                            <div class="col-md-3" style="min-width:220px;">
+                                            <div class="col-auto filter-col">
                                                 <label class="form-label text-muted small">Date To</label>
-                                                <input type="date" name="date_to" class="form-control">
+                                                <input
+                                                    type="date"
+                                                    name="date_to"
+                                                    class="form-control"
+                                                    value="<?= htmlspecialchars($date_to ?? '') ?>">
                                             </div>
 
                                         </div>
                                     </div>
 
                                     <div class="d-flex gap-2 justify-content-end">
-                                        <button type="reset" class="btn btn-secondary">
+                                        <!-- Replace with your real page name -->
+                                        <a href="expenses.php" class="btn btn-secondary">
                                             <i class="fas fa-redo"></i> Reset
-                                        </button>
+                                        </a>
+
                                         <button type="submit" class="applyFilterBtn">
                                             <i class="fas fa-search"></i> Apply Filters
                                         </button>
                                     </div>
                                 </form>
+
                             </div>
                         </div>
                     </div>
@@ -700,15 +758,31 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                 <!-- Empty State Message -->
                                 <div class="text-center py-5" style="margin: 3rem 0;">
                                     <div style="background-color: #f8f9fa; border-radius: 16px; padding: 3rem 2rem; max-width: 500px; margin: 0 auto;">
+
                                         <div style="font-size: 4rem; color: #00192D; margin-bottom: 1rem;">
-                                            <i class="bi bi-receipt"></i>
+                                            <i class="bi <?= $hasFilters ? 'bi-search' : 'bi-receipt' ?>"></i>
                                         </div>
+
                                         <h4 style="color: #00192D; font-weight: 600; margin-bottom: 1rem;">
-                                            No Expense Items Found
+                                            <?= $hasFilters ? 'No Results Found' : 'No Expense Items Found' ?>
                                         </h4>
+
                                         <p style="color: #6c757d; font-size: 1rem; margin-bottom: 1.5rem;">
-                                            Start tracking your finances by adding your first expense
+                                            <?php if ($hasFilters): ?>
+                                                No expenses match your selected filters. Try adjusting or clearing filters.
+                                            <?php else: ?>
+                                                Start tracking your finances by adding your first expense.
+                                            <?php endif; ?>
                                         </p>
+
+                                        <?php if ($hasFilters): ?>
+                                            <a href="expenses.php" class="btn btn-secondary">
+                                                <i class="fas fa-redo"></i> Clear Filters
+                                            </a>
+                                        <?php else: ?>
+                                            <!-- Optional: show your "Add Expense" button here -->
+                                            <!-- <button class="btn" style="background:#00192D;color:#FFC107">Add Expense</button> -->
+                                        <?php endif; ?>
 
                                     </div>
                                 </div>
