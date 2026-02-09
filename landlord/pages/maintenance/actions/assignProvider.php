@@ -32,11 +32,12 @@ try {
         ':service_provider_id'    => (int)$providerId,
     ]);
 
-    // 2) Update main request to track assigned provider AND status
+    // 2) Update main request: assigned provider, status, and assigned_at
     $stmt2 = $pdo->prepare("
         UPDATE maintenance_requests
         SET assigned_to_provider_id = :provider_id,
-            status = 'Assigned'
+            status = 'Assigned',
+            assigned_at = NOW()
         WHERE id = :request_id
     ");
     $stmt2->execute([

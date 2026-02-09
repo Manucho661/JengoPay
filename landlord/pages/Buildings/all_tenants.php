@@ -223,12 +223,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
             try {
               // Combine all three tables
               $sql = "
-              SELECT id, tfirst_name, tmiddle_name, building_link, unit_category, account_no, tmain_contact, talt_contact, idMode, id_no, pass_no, unit_number, move_in_date, tenant_reg, tenant_status FROM single_units
-              UNION ALL
-              SELECT id, tfirst_name, tmiddle_name, building_link, unit_category, account_no, tmain_contact, talt_contact, idMode, id_no, pass_no, unit_number, move_in_date, tenant_reg, tenant_status FROM bedsitter_units
-              UNION ALL
-              SELECT id, tfirst_name, tmiddle_name, building_link, unit_category, account_no, tmain_contact, talt_contact, idMode, id_no, pass_no, unit_number, move_in_date, tenant_reg, tenant_status FROM multi_rooms_units
-              ORDER BY move_in_date ASC, tenant_reg DESC";
+              SELECT id, first_name, middle_name, phone, alt_phone, idMode, id_no, tenant_reg, status FROM tenants
+              ORDER BY created_at ASC, tenant_reg DESC";
 
               $stmt = $pdo->prepare($sql);
               $stmt->execute();
@@ -260,21 +256,21 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
                     <?php $i = 1;
                     foreach ($allTenants as $tenant): ?>
                       <tr>
-                        <td><?= htmlspecialchars($tenant['tfirst_name']) . ' ' . htmlspecialchars($tenant['tmiddle_name']);; ?></td>
-                        <td><?= $tenant['account_no'] . ' (' . $tenant['building_link'] . ')'; ?></td>
-                        <td><?= htmlspecialchars($tenant['unit_category']); ?></td>
+                        <td><?= htmlspecialchars($tenant['first_name']) . ' ' . htmlspecialchars($tenant['middle_name']);; ?></td>
+                        <td></td>
+                        <td></td>
                         <td>
-                          <?= htmlspecialchars($tenant['tmain_contact']) . ' ' . htmlspecialchars($tenant['talt_contact']); ?>
+                          <?= htmlspecialchars($tenant['phone']) . ' ' . htmlspecialchars($tenant['alt_phone']); ?>
                         </td>
-                        <td><i class="bi bi-person-vcard"></i> <?= $tenant['id_no'] . ' ' . $tenant['pass_no'] . ' (' . ucfirst($tenant['idMode']) . ')'; ?>
+                        <td><i class="bi bi-person-vcard"></i> 
                         </td>
-                        <td><?= htmlspecialchars($tenant['move_in_date']); ?></td>
-                        <td><?= htmlspecialchars($tenant['tenant_reg']); ?></td>
+                        <td></td>
+                        <td></td>
                         <td>
-                          <?php if ($tenant['tenant_status'] == 'Active'): ?>
-                            <button class="btn btn-xs shadow" style="background-color:#24953E; color:#fff"><i class="bi bi-person-check"></i> <?= $tenant['tenant_status']; ?></button>
+                          <?php if ($tenant['status'] == 'Active'): ?>
+                            <button class="btn btn-xs shadow" style="background-color:#24953E; color:#fff"><i class="bi bi-person-check"></i> <?= $tenant['status']; ?></button>
                           <?php else: ?>
-                            <button class="btn btn-xs shadow" style="background-color: #cc0001; color:#fff"><i class="bi bi-person-exclamation"></i> <?= $tenant['tenant_status']; ?></button>
+                            <button class="btn btn-xs shadow" style="background-color: #cc0001; color:#fff"><i class="bi bi-person-exclamation"></i> <?= $tenant['status']; ?></button>
                           <?php endif; ?>
                         </td>
                         <td>
@@ -285,11 +281,11 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
                             </button>
                             <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
                               <?php
-                              if ($tenant['tenant_status'] == 'Active') {
+                              if ($tenant['status'] == 'Active') {
                               ?>
-                                <a class="dropdown-item" href="<?= 'https://wa.me/' . $tenant['tmain_contact'] . '/?text=Hello,' . " " . $tenant['tfirst_name'] . '' ?>" target="_blank"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                                <a class="dropdown-item" href="<?= 'https://wa.me/' . $tenant['phone'] . '/?text=Hello,' . " " . $tenant['first_name'] . '' ?>" target="_blank"><i class="bi bi-whatsapp"></i> WhatsApp</a>
                                 <a class="dropdown-item open-chat"
-                                  data-tenant="<?= $tenant['tfirst_name']; ?>"
+                                  data-tenant="<?= $tenant['first_name']; ?>"
                                   href="#">
                                   <i class="bi bi-envelope"></i> Message
                                 </a>

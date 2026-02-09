@@ -1,7 +1,8 @@
-<?
+<?php
 session_start();
-require_once '../../db/connect.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
+
+require_once '../../db/connect.php';
 ?>
 
 <!doctype html>
@@ -192,7 +193,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
         <!--end::Sidebar-->
 
         <!--begin::App Main-->
-        <main class="main" style=" height:100%;">
+        <main class="main">
             <!--begin::App Content Header-->
             <div class="app-content-header" style="">
                 <!--begin::Container-->

@@ -394,6 +394,14 @@ $netProfit = $income - $expenses;
       /* navy */
       margin-left: 10px;
     }
+
+    .amount-box {
+      width: 50px;
+      /* pick a width that fits your biggest number */
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
   </style>
 </head>
 
@@ -493,7 +501,7 @@ $netProfit = $income - $expenses;
                   <thead style="background-color: rgba(128, 128, 128, 0.2); color: black;">
                     <tr>
                       <th style="font-size: 16px;">Description</th>
-                      <th style="font-size: 16px;">Amount </th>
+                      <th class="p-0" style="font-size: 16px;">Amount (KSH) </th>
                     </tr>
                   </thead>
                   <tbody id="accordionFinance">
@@ -532,7 +540,14 @@ $netProfit = $income - $expenses;
                     <?php if ($waterTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#waterDetails" aria-expanded="false" aria-controls="waterDetails" style="cursor:pointer;">
                         <td>Water Charges (Revenue)</td>
-                        <td class="p-0">Ksh <?= $formattedWater ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                              
+                              <?= $formattedWater ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr>
@@ -558,7 +573,7 @@ $netProfit = $income - $expenses;
                     <?php if ($garbageTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#garbageDetails" aria-expanded="false" aria-controls="garbageDetails" style="cursor:pointer;">
                         <td>Garbage Charges (Revenue)</td>
-                        <td class="p-0">Ksh <?= $formattedGarbage ?></td>
+                        <td class="p-0"> <?= $formattedGarbage ?></td>
                       </tr>
 
                       <tr>
@@ -584,7 +599,7 @@ $netProfit = $income - $expenses;
                     <?php if ($lateFees > 0): ?>
                       <tr class="main-row" data-bs-target="#lateDetails" aria-expanded="false" aria-controls="lateDetails" style="cursor:pointer;">
                         <td>Late Payment Fees</td>
-                        <td class="p-0">Ksh <?= $formattedLateFees ?></td>
+                        <td class="p-0"><?= $formattedLateFees ?></td>
                       </tr>
 
                       <tr>
@@ -610,7 +625,7 @@ $netProfit = $income - $expenses;
                     <?php if ($managementFees > 0): ?>
                       <tr class="main-row" data-bs-target="#managementDetails" aria-expanded="false" aria-controls="managementDetails" style="cursor:pointer;">
                         <td>Commissions and Management Fees</td>
-                        <td class="p-0">Ksh <?= $formattedManagementFees ?></td>
+                        <td class="p-0"> <?= $formattedManagementFees ?></td>
                       </tr>
 
                       <tr>
@@ -636,7 +651,7 @@ $netProfit = $income - $expenses;
                     <?php if ($otherIncome > 0): ?>
                       <tr class="main-row" data-bs-target="#otherDetails" aria-expanded="false" aria-controls="otherDetails" style="cursor:pointer;">
                         <td>Other Income (Advertising, Penalties)</td>
-                        <td class="p-0">Ksh <?= $formattedOtherIncome ?></td>
+                        <td class="p-0"><?= $formattedOtherIncome ?></td>
                       </tr>
 
                       <tr>
@@ -662,7 +677,13 @@ $netProfit = $income - $expenses;
                     <!-- Total Income -->
                     <tr class="category">
                       <td><b>Total Income</b></td>
-                      <td class="p-0"><b>Ksh <?= $formattedTotalIncome ?></b></td>
+                      <td class="p-0">
+                        <div class="d-flex justify-content-start">
+                          <div class="d-flex justify-content-end amount-box">
+                             <?= $formattedTotalIncome ?>
+                          </div>
+                        </div>
+                      </td>
                     </tr>
 
                     <!-- Expenses header -->
@@ -674,7 +695,7 @@ $netProfit = $income - $expenses;
                     <?php if ($maintenanceTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#maintenanceDetails" aria-expanded="false" aria-controls="maintenanceDetails" style="cursor:pointer;">
                         <td>Maintenance and Repair Costs</td>
-                        <td class="p-0">Ksh <?= $formattedMaintenance ?></td>
+                        <td class="p-0"> <?= $formattedMaintenance ?></td>
                       </tr>
 
                       <tr class="collapse" id="maintenanceDetails">
@@ -722,7 +743,13 @@ $netProfit = $income - $expenses;
                     <?php if ($electricityTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#electricityDetails" aria-expanded="false" aria-controls="electricityDetails" style="cursor:pointer;">
                         <td>Electricity Expense</td>
-                        <td class="p-0">Ksh <?= $formattedElectricity ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                               <?= $formattedElectricity ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr class="collapse" id="electricityDetails">
@@ -746,7 +773,13 @@ $netProfit = $income - $expenses;
                     <?php if ($waterExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#waterExpDetails" aria-expanded="false" aria-controls="waterExpDetails" style="cursor:pointer;">
                         <td>Water Expense</td>
-                        <td class="p-0">Ksh <?= $formattedWaterExpense ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                               <?= $formattedWaterExpense ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr class="collapse" id="waterExpDetails">
@@ -770,7 +803,13 @@ $netProfit = $income - $expenses;
                     <?php if ($garbageExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#garbageExpDetails" aria-expanded="false" aria-controls="garbageExpDetails" style="cursor:pointer;">
                         <td>Garbage Collection Expense</td>
-                        <td class="p-0">Ksh <?= $formattedGarbageExpense ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                               <?= $formattedGarbageExpense ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr class="collapse" id="garbageExpDetails">
@@ -794,7 +833,13 @@ $netProfit = $income - $expenses;
                     <?php if ($internetExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#internetDetails" aria-expanded="false" aria-controls="internetDetails" style="cursor:pointer;">
                         <td>Internet Expense</td>
-                        <td class="p-0">Ksh <?= $formattedInternetExpense ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                               <?= $formattedInternetExpense ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr class="collapse" id="internetDetails">
@@ -818,7 +863,13 @@ $netProfit = $income - $expenses;
                     <?php if ($securityExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#securityDetails" aria-expanded="false" aria-controls="securityDetails" style="cursor:pointer;">
                         <td>Security Expense</td>
-                        <td class="p-0">Ksh <?= $formattedSecurityExpense ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                            <?= $formattedSecurityExpense ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr class="collapse" id="securityDetails">
@@ -842,7 +893,13 @@ $netProfit = $income - $expenses;
                     <?php if ($softwareExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#softwareDetails" aria-expanded="false" aria-controls="softwareDetails" style="cursor:pointer;">
                         <td>Property Management Software Subscription</td>
-                        <td class="p-0">Ksh <?= $formattedSoftwareExpense ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                               <?= $formattedSoftwareExpense ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr class="collapse" id="softwareDetails">
@@ -866,7 +923,13 @@ $netProfit = $income - $expenses;
                     <?php if ($marketingExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#marketingDetails" aria-expanded="false" aria-controls="marketingDetails" style="cursor:pointer;">
                         <td>Marketing and Advertising Costs</td>
-                        <td class="p-0">Ksh <?= $formattedMarketingExpense ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                               <?= $formattedMarketingExpense ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr class="collapse" id="marketingDetails">
@@ -890,7 +953,13 @@ $netProfit = $income - $expenses;
                     <?php if ($legalExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#legalDetails" aria-expanded="false" aria-controls="legalDetails" style="cursor:pointer;">
                         <td>Legal and Compliance Fees</td>
-                        <td class="p-0">Ksh <?= $formattedLegalExpense ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                               <?= $formattedLegalExpense ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr class="collapse" id="legalDetails">
@@ -914,7 +983,13 @@ $netProfit = $income - $expenses;
                     <?php if ($loanInterestTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#loanDetails" aria-expanded="false" aria-controls="loanDetails" style="cursor:pointer;">
                         <td>Loan Interest Payments</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLoanInterest ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                               <?= $formattedLoanInterest ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr class="collapse" id="loanDetails">
@@ -938,7 +1013,13 @@ $netProfit = $income - $expenses;
                     <?php if ($bankChargesTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#bankDetails" aria-expanded="false" aria-controls="bankDetails" style="cursor:pointer;">
                         <td>Bank/Mpesa Charges</td>
-                        <td class="p-0">Ksh <?= $formattedBankCharges ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                               <?= $formattedBankCharges ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr class="collapse" id="bankDetails">
@@ -962,7 +1043,13 @@ $netProfit = $income - $expenses;
                     <?php if ($otherExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#otherExpenseDetails" aria-expanded="false" aria-controls="otherExpenseDetails" style="cursor:pointer;">
                         <td>Other Expenses (Office, Supplies, Travel)</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedOtherExpense ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                              <?= $formattedOtherExpense ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr class="collapse" id="otherExpenseDetails">
@@ -995,12 +1082,25 @@ $netProfit = $income - $expenses;
 
                     <tr class="category">
                       <td><b>Total Expenses</b></td>
-                      <td class="p-0"><b>Ksh <?= $formattedTotalExpenses ?></b></td>
+                      <td class="p-0">
+                        <div class="d-flex justify-content-start">
+                          <div class="d-flex justify-content-end amount-box">
+                            <b> <?= $formattedTotalExpenses ?></b>
+                          </div>
+                        </div>
+                      </td>
                     </tr>
 
                     <tr class="category">
                       <td><b>Net Profit</b></td>
-                      <td class="p-0"><b>Ksh <?= $formattedNetProfit ?></b></td>
+                      <td class="p-0">
+                        <div class="d-flex justify-content-start">
+                          <div class="d-flex justify-content-end amount-box">
+                            <b> <?= $formattedNetProfit ?></b>
+                          </div>
+                        </div>
+                      </td>
+
                     </tr>
                   </tbody>
                 </table>
@@ -1248,43 +1348,7 @@ $netProfit = $income - $expenses;
       })
     });
   </script>
-  <!-- </script> -->
-  <!-- <script>
-  document.getElementById('filterBtn').addEventListener('click', function() {
-    let filterPanel = document.getElementById('filterPanel');
-    if (filterPanel.style.display === 'none' || filterPanel.style.display === '') {
-      filterPanel.style.display = 'block';
-    } else {
-      filterPanel.style.display = 'none';
-    }
-  });
-</script> -->
-
-  <!-- <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Set default dates (current month)
-    const today = new Date();
-    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-
-    document.getElementById('startDate').valueAsDate = firstDayOfMonth;
-    document.getElementById('endDate').valueAsDate = today;
-
-    // Add click event listener to filter button
-    document.getElementById('filterBtn').addEventListener('click', function() {
-        const buildingId = document.getElementById('buildingFilter').value;
-        const startDate = document.getElementById('startDate').value;
-        const endDate = document.getElementById('endDate').value;
-
-        // Validate dates
-        if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-            alert('End date must be after start date');
-            return;
-        }
-
-        filterBalanceSheet(buildingId, startDate, endDate);
-    });
-});
-</script> -->
+  
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -1432,81 +1496,6 @@ $netProfit = $income - $expenses;
     });
   </script>
 
-  <!-- <script>
-function applyFilters() {
-  const startDate = document.getElementById("startDate").value;
-  const endDate = document.getElementById("endDate").value;
-  const buildingId = document.getElementById("buildingFilter").value;
-
-  const params = new URLSearchParams();
-
-  if (startDate) params.append('start_date', startDate);
-  if (endDate) params.append('end_date', endDate);
-  if (buildingId && buildingId !== "") params.append('building_id', buildingId);
-
-  // Reload with filters applied
-  window.location.href = window.location.pathname + '?' + params.toString();
-}
-</script> -->
-
-
-
-
-  <!-- <script>
-  document.getElementById('applyFilter').addEventListener('click', function() {
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
-    const buildingId = document.getElementById('buildingFilter').value;
-
-    if (!startDate || !endDate) {
-        alert('Please select both start and end dates');
-        return;
-    }
-
-    // Send AJAX request to fetch filtered data
-    fetch(`fetch_profit_loss.php?start_date=${startDate}&end_date=${endDate}&building_id=${buildingId}`)
-        .then(response => response.json())
-        .then(data => {
-            updateProfitLossTable(data);
-            updateSummarySection(data.summary);
-        })
-        .catch(error => console.error('Error:', error));
-});
-
-function updateProfitLossTable(data) {
-    // Update the table with new data
-    const tbody = document.querySelector('#myTable tbody');
-    tbody.innerHTML = '';
-
-    // Rebuild table rows with filtered data
-    // ... implementation depends on your data structure
-}
-
-function updateSummarySection(summary) {
-    // Update the summary cards at the top
-    document.querySelector('.summary-item.assets .value').innerHTML = `<b>KSH ${summary.total_income}</b>`;
-    document.querySelector('.summary-item.liabilities .value').innerHTML = `<b>KSH ${summary.total_expenses}</b>`;
-    document.querySelector('.summary-item.equity .value').innerHTML = `<b>KSH ${summary.net_profit}</b>`;
-}
-</script>
- -->
-
-  <!-- <script>
-function applyFilters() {
-  const startDate = document.getElementById("startDate").value;
-  const endDate = document.getElementById("endDate").value;
-  const buildingId = document.getElementById("buildingFilter").value;
-
-  // Redirect to same page with GET parameters
-  const params = new URLSearchParams();
-
-  if (startDate) params.append('start_date', startDate);
-  if (endDate) params.append('end_date', endDate);
-  if (buildingId && buildingId !== "all") params.append('building_id', buildingId);
-
-  window.location.href = window.location.pathname + '?' + params.toString();
-}
-</script> -->
   <script>
     document.getElementById('downloadBtn').addEventListener('click', function() {
       const {

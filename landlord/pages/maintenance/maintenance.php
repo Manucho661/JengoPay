@@ -212,31 +212,105 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
           </div>
 
         </div>
-
-        <hr>
         <!-- Fourth Row: search and main call to action buttons -->
+
+
+        <!-- Fifth row filters -->
+        <div class="row g-3 mb-4">
+          <!-- Filter by Building -->
+          <div class="col-md-12 col-sm-12">
+            <div class="card border-0 mb-4">
+              <div class="card-body ">
+                <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filters</h5>
+                <form method="GET">
+                  <!-- always reset to page 1 when applying filters -->
+                  <input type="hidden" name="page" value="1">
+
+                  <div class="filters-scroll">
+                    <div class="row g-3 mb-3 filters-row">
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Search</label>
+                        <input
+                          type="text"
+                          name="search"
+                          class="form-control"
+                          placeholder="Provider or request title..."
+                          value="<?= htmlspecialchars($search ?? '') ?>">
+                      </div>
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Buildings</label>
+                        <select class="form-select shadow-sm" name="building_id">
+                          <option value="">All Buildings</option>
+                          <?php foreach ($buildings as $building): ?>
+                            <?php $bid = (string)(int)$building['id']; ?>
+                            <option value="<?= $bid ?>" <?= (($building_id ?? '') === $bid) ? 'selected' : '' ?>>
+                              <?= htmlspecialchars($building['building_name']) ?>
+                            </option>
+                          <?php endforeach; ?>
+                        </select>
+                      </div>
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Status</label>
+                        <select name="status" class="form-select">
+                          <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Statuses</option>
+
+                          <!-- Use values that match your DB exactly -->
+                          <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
+                          <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
+                          <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
+                          <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                        </select>
+                      </div>
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Date From</label>
+                        <input
+                          type="date"
+                          name="date_from"
+                          class="form-control"
+                          value="<?= htmlspecialchars($date_from ?? '') ?>">
+                      </div>
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Date To</label>
+                        <input
+                          type="date"
+                          name="date_to"
+                          class="form-control"
+                          value="<?= htmlspecialchars($date_to ?? '') ?>">
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div class="d-flex gap-2 justify-content-end">
+                    <!-- Replace with your real page name -->
+                    <a href="expenses.php" class="btn btn-secondary">
+                      <i class="fas fa-redo"></i> Reset
+                    </a>
+
+                    <button type="submit" class="actionBtn">
+                      <i class="fas fa-search"></i> Apply Filters
+                    </button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="row mb-4">
           <!-- Search -->
-          <div class="col-md-6 d-flex">
-            <input
-              type="text"
-              class="form-control filter-shadow"
-              placeholder="Search requests..."
-              style="border-radius: 25px 0 0 25px;">
-
-            <button
-              class="btn text-white"
-              style="border-radius: 0 25px 25px 0; background: linear-gradient(135deg, #00192D, #002B5B)">
-              Search
-            </button>
-          </div>
 
           <!-- Action buttons -->
-          <div class="col-md-6 d-flex justify-content-end gap-2">
+          <div class="col-md-12 d-flex justify-content-end gap-2">
             <button
               type="button"
-              class="btn text-white fw-bold rounded-4"
-              style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;"
+              class="actionBtn"
               data-bs-toggle="modal"
               data-bs-target="#requestModal">
               Create request
@@ -244,58 +318,18 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
 
             <button
               type="button"
-              class="btn text-white fw-bold rounded-4"
-              style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;">
+              class="actionBtn">
               Set all available
             </button>
 
             <button
               type="button"
-              class="btn text-white fw-bold bg-danger border-0 rounded-4"
+              class="dangerActionBtn"
               style="white-space: nowrap;">
               Cancel all requests
             </button>
           </div>
         </div>
-
-        <!-- Fifth row filters -->
-        <div class="row g-3 mb-4 align-items-center">
-
-          <!-- Filter by Building -->
-          <div class="col-md-3">
-            <select class="form-select filter-shadow">
-              <option selected>Filter by Building</option>
-            </select>
-          </div>
-
-          <!-- Filter by Tenant -->
-          <div class="col-md-3">
-            <select class="form-select filter-shadow">
-              <option selected>Filter by Tenant</option>
-            </select>
-          </div>
-
-          <!-- Filter Status -->
-          <div class="col-md-2">
-            <select class="form-select filter-shadow">
-              <option selected>Filter Status</option>
-              <option>Pending</option>
-              <option>Completed</option>
-            </select>
-          </div>
-
-          <!-- Date Filter -->
-          <div class="col-md-2">
-            <input type="date" class="form-control filter-shadow">
-          </div>
-
-          <!-- Apply Button -->
-          <div class="col-md-2 text-end">
-            <button class="btn w-100 text-white" style="background: linear-gradient(135deg, #00192D, #002B5B);">Apply</button>
-          </div>
-
-        </div>
-
         <!-- sixth Row: Table -->
         <div class="row">
           <div class="col-md-12">

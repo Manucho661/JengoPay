@@ -1,7 +1,9 @@
 <?php
 session_start();
+require_once '../../db/connect.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
-include '../../db/connect.php';
+?>
+<?php
 
 // Capture filters
 $from_date  = $_GET['from_date'] ?? '';
@@ -334,186 +336,147 @@ $runningBalance = 0;
 
     <!--begin::App Main-->
     <main class="main">
-      <!--begin::App Content Header-->
-      <div class="app-content-header">
-        <!--begin::Container-->
-        <div class="container-fluid">
-          <!--begin::Row-->
-          <div class="row">
-            <div class="col-sm-6">
-              <h1 class="page-title">General Ledger</h1>
-              <p class="page-subtitle">Track and manage all financial transactions</p>
-            </div>
-            <div class="col-sm-6">
-              <div class="export-buttons">
-                <button class="btn btn-light" onclick="exportToExcel()">
-                  <i class="fas fa-file-excel me-2"></i> Export Excel
-                </button>
-                <button class="btn btn-light" onclick="exportToPDF()">
-                  <i class="fas fa-file-pdf me-2"></i> Export PDF
-                </button>
-              </div>
-            </div>
+      <div class="container">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb" style="">
+            <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Dashboard</a></li>
+            <li class="breadcrumb-item active">General ledger</li>
+          </ol>
+        </nav>
+
+        <!--First Row-->
+        <div class="row align-items-center mb-3">
+          <div class="col-12 d-flex align-items-center">
+            <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+            <h3 class="mb-0 ms-3">General Ledger</h3>
           </div>
-          <!--end::Row-->
         </div>
-        <!--end::Container-->
-      </div>
-      <!--end::App Content Header-->
 
-      <!--begin::App Content-->
-      <div class="app-content">
-        <!--begin::Container-->
-        <div class="container-fluid">
+        <!-- Fifth Row: filter -->
+        <div class="row g-3 mb-4">
+          <!-- Filter by Building -->
+          <div class="col-md-12 col-sm-12">
+            <div class="card border-0 mb-4">
+              <div class="card-body ">
+                <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filters</h5>
+                <form method="GET">
+                  <!-- always reset to page 1 when applying filters -->
+                  <input type="hidden" name="page" value="1">
 
-          <!-- Stats Cards -->
-          <div class="row mb-4">
-            <div class="col-md-3">
-              <div class="stats-card primary">
-                <i class="fas fa-exchange-alt fa-2x"></i>
-                <div class="stats-value"><?= count($ledgerRows) ?></div>
-                <div class="stats-label">Total Transactions</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="stats-card success">
-                <i class="fas fa-arrow-down fa-2x"></i>
-                <div class="stats-value">
-                  <?php
-                  $totalDebit = 0;
-                  foreach ($ledgerRows as $row) {
-                    $totalDebit += $row['debit'];
-                  }
-                  echo 'KSH ' . number_format($totalDebit, 2);
-                  ?>
-                </div>
-                <div class="stats-label">Total Debit</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="stats-card warning">
-                <i class="fas fa-arrow-up fa-2x"></i>
-                <div class="stats-value">
-                  <?php
-                  $totalCredit = 0;
-                  foreach ($ledgerRows as $row) {
-                    $totalCredit += $row['credit'];
-                  }
-                  echo 'KSH ' . number_format($totalCredit, 2);
-                  ?>
-                </div>
-                <div class="stats-label">Total Credit</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="stats-card info">
-                <i class="fas fa-balance-scale fa-2x"></i>
-                <div class="stats-value">
-                  <?php
-                  $netBalance = $totalDebit - $totalCredit;
-                  echo 'KSH ' . number_format(abs($netBalance), 2);
-                  ?>
-                </div>
-                <div class="stats-label">Net Balance</div>
+                  <div class="filters-scroll">
+                    <div class="row g-3 mb-3 filters-row">
+
+                      <div class="col-auto filter-col">
+                        <label for="account_id" class="form-label">Account</label>
+                        <select id="account_id" name="account_id" class="form-select">
+                          <option value="">-- All Accounts --</option>
+                          <?php foreach ($accounts as $acc): ?>
+                            <option value="<?= $acc['account_code'] ?>" <?= $account_id == $acc['account_code'] ? 'selected' : '' ?>>
+                              <?= htmlspecialchars($acc['account_name']) ?>
+                            </option>
+                          <?php endforeach; ?>
+                        </select>
+                      </div>
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Date From</label>
+                        <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
+                      </div>
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Date To</label>
+                        <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div class="d-flex gap-2 justify-content-end">
+
+                    <button type="button" class="btn text-white bg-secondary" onclick="resetFilters()">
+                      <i class="fas fa-redo me-2"></i> Reset
+                    </button>
+
+                    <button type="submit" class="actionBtn">
+                      <i class="fas fa-search"></i> Apply Filters
+                    </button>
+                  </div>
+                </form>
+
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Filters Card -->
-          <div class="filter-card">
-            <h5 class="mb-3">Filter Transactions</h5>
-            <form method="get" class="row g-3">
-              <div class="col-md-3">
-                <label for="from_date" class="form-label">From Date</label>
-                <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
-              </div>
-              <div class="col-md-3">
-                <label for="to_date" class="form-label">To Date</label>
-                <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
-              </div>
-              <div class="col-md-4">
-                <label for="account_id" class="form-label">Account</label>
-                <select id="account_id" name="account_id" class="form-select">
-                  <option value="">-- All Accounts --</option>
-                  <?php foreach ($accounts as $acc): ?>
-                    <option value="<?= $acc['account_code'] ?>" <?= $account_id == $acc['account_code'] ? 'selected' : '' ?>>
-                      <?= htmlspecialchars($acc['account_name']) ?>
-                    </option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-              <div class="col-md-2 d-flex align-items-end">
-                <div class="filter-actions w-100">
-                  <button type="submit" class="btn btn-primary w-100 mb-2">
-                    <i class="fas fa-filter me-2"></i> Filter
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Ledger Table -->
+            <div class="card border-0 ">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">General Ledger Entries</h5>
+                <div class="export-buttons">
+                  <button class="btn btn-light" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel me-2"></i> Export Excel
                   </button>
-                  <button type="button" class="btn btn-outline-secondary w-100" onclick="resetFilters()">
-                    <i class="fas fa-redo me-2"></i> Reset
+                  <button class="btn btn-light" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf me-2"></i> Export PDF
                   </button>
                 </div>
               </div>
-            </form>
-          </div>
-
-          <!-- Ledger Table -->
-          <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <h5 class="mb-0">General Ledger Entries</h5>
-              <span class="badge bg-primary"><?= count($ledgerRows) ?> entries</span>
-            </div>
-            <div class="card-body p-0">
-              <div class="table-responsive">
-                <table class="table table-striped table-hover mb-0">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Reference</th>
-                      <th>Description</th>
-                      <th>Account</th>
-                      <th class="text-end">Debit (KSH)</th>
-                      <th class="text-end">Credit (KSH)</th>
-                      <th class="text-end">Running Balance</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-                    $runningBalance = 0;
-                    foreach ($ledgerRows as $row):
-                      $runningBalance += $row['debit'] - $row['credit'];
-                      $balanceClass = $runningBalance >= 0 ? 'running-balance-positive' : 'running-balance-negative';
-                    ?>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped table-hover mb-0">
+                    <thead>
                       <tr>
-                        <td><?= htmlspecialchars(date('Y-m-d', strtotime($row['created_at']))) ?></td>
-                        <td>
-                          <span class="badge-account"><?= htmlspecialchars($row['reference']) ?></span>
-                        </td>
-                        <td><?= htmlspecialchars($row['description']) ?></td>
-                        <td>
-                          <div><?= htmlspecialchars($row['account_name']) ?></div>
-                          <small class="text-muted"><?= htmlspecialchars($row['account_code']) ?></small>
-                        </td>
-                        <td class="text-end"><?= number_format($row['debit'], 2) ?></td>
-                        <td class="text-end"><?= number_format($row['credit'], 2) ?></td>
-                        <td class="text-end <?= $balanceClass ?>"><?= number_format($runningBalance, 2) ?></td>
+                        <th>Date</th>
+                        <th>Reference</th>
+                        <th>Description</th>
+                        <th>Account</th>
+                        <th class="text-end">Debit (KSH)</th>
+                        <th class="text-end">Credit (KSH)</th>
+                        <th class="text-end">Running Balance</th>
                       </tr>
-                    <?php endforeach; ?>
+                    </thead>
+                    <tbody>
+                      <?php
+                      $runningBalance = 0;
+                      foreach ($ledgerRows as $row):
+                        $runningBalance += $row['debit'] - $row['credit'];
+                        $balanceClass = $runningBalance >= 0 ? 'running-balance-positive' : 'running-balance-negative';
+                      ?>
+                        <tr>
+                          <td><?= htmlspecialchars(date('Y-m-d', strtotime($row['created_at']))) ?></td>
+                          <td>
+                            <span class="badge-account"><?= htmlspecialchars($row['reference']) ?></span>
+                          </td>
+                          <td><?= htmlspecialchars($row['description']) ?></td>
+                          <td>
+                            <div><?= htmlspecialchars($row['account_name']) ?></div>
+                            <small class="text-muted"><?= htmlspecialchars($row['account_code']) ?></small>
+                          </td>
+                          <td class="text-end"><?= number_format($row['debit'], 2) ?></td>
+                          <td class="text-end"><?= number_format($row['credit'], 2) ?></td>
+                          <td class="text-end <?= $balanceClass ?>"><?= number_format($runningBalance, 2) ?></td>
+                        </tr>
+                      <?php endforeach; ?>
 
-                    <?php if (empty($ledgerRows)): ?>
-                      <tr>
-                        <td colspan="7" class="text-center py-4">
-                          <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
-                          <p class="text-muted">No transactions found for the selected filters</p>
-                        </td>
-                      </tr>
-                    <?php endif; ?>
-                  </tbody>
-                </table>
+                      <?php if (empty($ledgerRows)): ?>
+                        <tr>
+                          <td colspan="7" class="text-center py-4">
+                            <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
+                            <p class="text-muted">No transactions found for the selected filters</p>
+                          </td>
+                        </tr>
+                      <?php endif; ?>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
 
         </div>
-        <!--end::Container-->
+
       </div>
       <!--end::App Content-->
     </main>
@@ -528,20 +491,7 @@ $runningBalance = 0;
   <!-- JavaScript -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-    integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
 
   <script src="/jengopay/landlord/assets/main.js"></script>
 

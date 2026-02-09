@@ -209,51 +209,6 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
             color: #6c757d;
             font-size: 0.9rem;
         }
-        
-        /* filters */
-        .form-select,
-        .form-control {
-            background: rgba(255, 193, 7, 0.05);
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            border-color: var(--accent-color);
-            box-shadow: none;
-            outline: none;
-            background: rgba(255, 193, 7, 0.1);
-        }
-
-        .filters-scroll {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .filters-row {
-            flex-wrap: nowrap;
-        }
-
-        /* Default (desktop/tablet) */
-        .filter-col {
-            min-width: 220px;
-        }
-
-        /* Phones: make each filter narrower */
-        @media (max-width: 576px) {
-            .filter-col {
-                min-width: 160px;
-            }
-
-            .filter-col input,
-            .filter-col select {
-                font-size: 0.9rem;
-                padding: .375rem .5rem;
-            }
-        }
-
-        .filters-scroll {
-            mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);
-        }
     </style>
 </head>
 
@@ -309,7 +264,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Home</a>
+                            <a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Home</a>
                         </li>
                         <li class="breadcrumb-item active">Expenses</li>
                     </ol>

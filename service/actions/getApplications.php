@@ -46,11 +46,11 @@ try {
     $declined = 0;
 
     foreach ($applications as $app) {
-        if ($app['status'] === 'pending') {
+        if ($app['status'] === 'Pending') {
             $pending++;
-        } elseif ($app['status'] === 'accepted') {
+        } elseif ($app['status'] === 'Accepted') {
             $accepted++;
-        } elseif ($app['status'] === 'declined') {
+        } elseif ($app['status'] === 'Rejected') {
             $declined++;
         }
     }

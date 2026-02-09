@@ -25,7 +25,7 @@ include_once './actions/reApply.php';
 include './actions/getRequests1.php';
 
 // Pagination logic
-$itemsPerPage = 2;
+$itemsPerPage = 5;
 $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $totalItems = count($requests);
 $totalPages = ceil($totalItems / $itemsPerPage);
@@ -996,13 +996,13 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
             <div class="row g-3 mb-4">
               <div class="col-md-6">
                 <div class="p-3 rounded text-white h-100" style="background-color:#00192D;">
-                  <div class="small text-warning fw-semibold">Client’s Budget</div>
+                  <div class="small text-warning fw-semibold">Client’s Budget (KSH)</div>
                   <div class="fs-4 fw-bold" id="modalClientBudget"></div>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="p-3 rounded text-white h-100" style="background-color:#003d5c;">
-                  <div class="small text-warning fw-semibold">Expected Duration</div>
+                  <div class="small text-warning fw-semibold">Expected Duration (HRS)</div>
                   <div class="fs-5 fw-bold" id="modalClientDuration"></div>
                 </div>
               </div>

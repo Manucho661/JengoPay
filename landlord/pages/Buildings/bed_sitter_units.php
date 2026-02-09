@@ -246,15 +246,100 @@ include_once '../processes/encrypt_decrypt_function.php';
                         </div>
                     </div>
                 </div>
-                <!-- Container Box -->
-                <div class="card shadow">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <b>All Bed Sitter Units</b>
+
+                <div class="row g-3 mb-4">
+                    <!-- Filter by Building -->
+                    <div class="col-md-12 col-sm-12">
+                        <div class="card border-0 mb-4">
+                            <div class="card-body ">
+                                <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filter Buildings</h5>
+                                <form method="GET">
+                                    <!-- always reset to page 1 when applying filters -->
+                                    <input type="hidden" name="page" value="1">
+
+                                    <div class="filters-scroll">
+                                        <div class="row g-3 mb-3 filters-row">
+
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Search</label>
+                                                <input
+                                                    type="text"
+                                                    name="search"
+                                                    class="form-control"
+                                                    placeholder="Unit no..."
+                                                    value="">
+                                            </div>
+
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Buildings</label>
+                                                <select class="form-select shadow-sm" name="building_id">
+                                                    <option value="">All Buildings</option>
+
+                                                </select>
+                                            </div>
+
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Purpose</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Statuses</option>
+
+                                                    <!-- Use values that match your DB exactly -->
+                                                    <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
+                                                    <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
+                                                    <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
+                                                    <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Occupancy status</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Modes</option>
+
+                                                    <!-- Use values that match your DB exactly -->
+                                                    <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
+                                                    <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
+                                                    <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
+                                                    <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Ownership Mode</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Modes</option>
+
+                                                    <!-- Use values that match your DB exactly -->
+                                                    <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
+                                                    <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
+                                                    <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
+                                                    <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                                                </select>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <!-- Replace with your real page name -->
+                                        <a href="expenses.php" class="btn btn-secondary">
+                                            <i class="fas fa-redo"></i> Reset
+                                        </a>
+
+                                        <button type="submit" class="actionBtn">
+                                            <i class="fas fa-search"></i> Apply Filters
+                                        </button>
+                                    </div>
+                                </form>
+
                             </div>
-                            <div class="col-md-6 text-right"></div>
                         </div>
+                    </div>
+                </div>
+                <!-- Container Box -->
+                <div class="card border-0">
+                    <div class="card-header" style="background-color: #00192D; color:#fff;">
+                        <b>All Bed Sitter Units (<span class="text-warning">0</span>)</b></b>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -606,7 +691,7 @@ include_once '../processes/encrypt_decrypt_function.php';
                         </script>";
                                     } else {
                                         // Update with the new status
-                                        $update = "UPDATE bedsitter_units SET occupancy_status = :occupancy_status WHERE id = :id";
+                                        $update = "UPDATE building_units SET occupancy_status = :occupancy_status WHERE id = :id";
                                         $stmt = $pdo->prepare($update);
                                         $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
                                         $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);

@@ -325,6 +325,12 @@ require_once 'actions/assignProvider.php';
             Set Available
           </button>
 
+          <button
+            type="button"
+            class="btn seTAvailable text-white fw-bold rounded-4"
+            style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;">
+            Close Request
+          </button>
 
           <button
             type="button"
@@ -333,12 +339,6 @@ require_once 'actions/assignProvider.php';
             Cancel Request
           </button>
 
-          <button
-            type="button"
-            class="btn seTAvailable text-white fw-bold rounded-4"
-            style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;">
-            All Requests
-          </button>
         </div>
       </div>
 
@@ -563,15 +563,26 @@ require_once 'actions/assignProvider.php';
                       <span class="info-label">Budget:</span>
                       <span id="budget">KSH <?= htmlspecialchars($request['budget']) ?></span>
                     </div>
+
                     <div class="info-row">
                       <span class="info-label">Duration:</span>
                       <span id="duration"><?= htmlspecialchars($request['duration']) ?> HRS</span>
                     </div>
-                    <div class="info-row">
-                      <span class="info-label">Deadline:</span>
-                      <span class="text-danger"><?= htmlspecialchars($request['category'] ?? 'N/A') ?></span>
-                    </div>
+
+                    <?php if (!is_null($request['assigned_at'])): ?>
+                      <?php
+                      $assignedAt = new DateTime($request['assigned_at']);
+                      $durationHours = (int)$request['duration'];
+                      $assignedAt->modify("+{$durationHours} hours");
+                      $deadline = $assignedAt->format("M d, Y h:i A");
+                      ?>
+                      <div class="info-row">
+                        <span class="info-label">Deadline:</span>
+                        <span class="text-danger"><?= $deadline ?></span>
+                      </div>
+                    <?php endif; ?>
                   </div>
+
                   <div>
                     <button class="setBudget-btn" data-bs-toggle="modal" data-bs-target="#durationBudgetModal">
                       Reset Budget and Duration
@@ -854,7 +865,7 @@ require_once 'actions/assignProvider.php';
         <form method="POST" action="" id="acceptProposalForm">
           <input type="hidden" id="assignRequestId" name="request_id" value="<?php htmlspecialchars($request['id']) ?>">
           <input type="hidden" name="provider_id" id="providerId" value="">
-          <input type="hidden" name="proposal_id"id="proposalId" value="">
+          <input type="hidden" name="proposal_id" id="proposalId" value="">
           <button type="submit" name="assignProvider" class="acceptProposalBtn w-100">
             <i class="fas fa-check"></i> Accept This Proposal
           </button>

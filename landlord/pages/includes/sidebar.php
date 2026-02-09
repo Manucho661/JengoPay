@@ -6,15 +6,10 @@
     <div class="menu-item">
         <span><i class="fas fa-building"> </i> <a href="/Jengopay/landlord/pages/Buildings/buildings.php">Buildings </a> </span>
     </div>
+    <div class="menu-item">
+        <span><i class="fas fa-users"></i> <a href="/Jengopay/landlord/pages/Buildings/all_tenants.php">Tenants</a> </span>
+    </div>
     
-    <div class="menu-item" onclick="toggleSubmenu('users')">
-        <span><i class="fas fa-users"></i> Users</span>
-        <i class="fas fa-chevron-down chevron" id="users-chevron"></i>
-    </div>
-    <div class="submenu" id="users-submenu">
-        <div class="submenu-item"><a href="/Jengopay/landlord/pages/buildings/all_tenants.php">Tenants</a></div>
-        <div class="submenu-item">Service Providers</div>
-    </div>
     <div class="menu-item" onclick="toggleSubmenu('communication')">
         <span><i class="fas fa-comments"></i> Communication</span>
         <i class="fas fa-chevron-down chevron" id="communication-chevron"></i>

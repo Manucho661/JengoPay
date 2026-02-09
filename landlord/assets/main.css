@@ -534,3 +534,93 @@
             color: var(--primary-color);
             transform: translateY(-2px);
         }
+
+        .dangerActionBtn{
+            background: #c94a4a; /* soft danger red */
+            color: white;
+            border: none;
+            padding: 0.3rem 1.4rem;
+            border-radius: 5px;
+            font-weight: 400;
+            transition: all 0.3s;
+        }
+        .dangerActionBtn:hover{
+            
+            transform: translateY(-2px);
+        }
+
+        /* generral action links */
+        .action-links {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 25, 45, 0.08);
+        }
+
+        .action-link {
+            display: inline-block;
+            padding: 6px 15px;
+            margin: 5px;
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--main-color);
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .action-link:hover {
+            background: var(--accent-color);
+            color: var(--main-color);
+            border-color: var(--accent-color);
+        }
+
+        .action-link i {
+            margin-right: 8px;
+        }
+
+        /* general filter section styles */
+        .form-select,
+        .form-control {
+            background: rgba(255, 193, 7, 0.05) !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--accent-color) !important;
+            box-shadow: none !important;
+            outline: none !important;
+            background: rgba(255, 193, 7, 0.1) !important;
+        }
+
+        .filters-scroll {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+
+        .filters-row {
+            flex-wrap: nowrap !important;
+        }
+
+        /* Default (desktop/tablet) */
+        .filter-col {
+            min-width: 220px !important;
+        }
+
+        /* Phones: make each filter narrower */
+        @media (max-width: 576px) {
+            .filter-col {
+                min-width: 160px !important;
+            }
+
+            .filter-col input,
+            .filter-col select {
+                font-size: 0.9rem !important;
+                padding: .375rem .5rem !important;
+            }
+        }
+
+        .filters-scroll {
+            mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%) !important;
+        }

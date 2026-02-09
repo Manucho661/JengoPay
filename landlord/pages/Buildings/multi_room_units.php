@@ -293,6 +293,97 @@ require_once "../db/connect.php";
                     </div>
                 </div>
 
+                <div class="row g-3 mb-4">
+                    <!-- Filter by Building -->
+                    <div class="col-md-12 col-sm-12">
+                        <div class="card border-0 mb-4">
+                            <div class="card-body ">
+                                <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filter Buildings</h5>
+                                <form method="GET">
+                                    <!-- always reset to page 1 when applying filters -->
+                                    <input type="hidden" name="page" value="1">
+
+                                    <div class="filters-scroll">
+                                        <div class="row g-3 mb-3 filters-row">
+
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Search</label>
+                                                <input
+                                                    type="text"
+                                                    name="search"
+                                                    class="form-control"
+                                                    placeholder="Unit no..."
+                                                    value="">
+                                            </div>
+
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Buildings</label>
+                                                <select class="form-select shadow-sm" name="building_id">
+                                                    <option value="">All Buildings</option>
+
+                                                </select>
+                                            </div>
+
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Purpose</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Statuses</option>
+
+                                                    <!-- Use values that match your DB exactly -->
+                                                    <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
+                                                    <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
+                                                    <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
+                                                    <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Occupancy status</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Modes</option>
+
+                                                    <!-- Use values that match your DB exactly -->
+                                                    <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
+                                                    <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
+                                                    <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
+                                                    <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Ownership Mode</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Modes</option>
+
+                                                    <!-- Use values that match your DB exactly -->
+                                                    <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
+                                                    <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
+                                                    <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
+                                                    <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                                                </select>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <!-- Replace with your real page name -->
+                                        <a href="expenses.php" class="btn btn-secondary">
+                                            <i class="fas fa-redo"></i> Reset
+                                        </a>
+
+                                        <button type="submit" class="actionBtn">
+                                            <i class="fas fa-search"></i> Apply Filters
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- THird row -->
                 <div class="row ">
                     <div class="col-md-12 ">
                         <!-- Main content -->
@@ -355,16 +446,13 @@ require_once "../db/connect.php";
                         ?>
 
                         <!-- Container Box -->
-                        <div class="card shadow">
-                            <div class="card-header">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <b>All Multi Room Units</b>
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                    </div>
-                                </div>
+                        <div class="card border-0">
+
+
+                            <div class="card-header" style="background-color: #00192D; color:#fff;">
+                                <b>All Multi Room Units (<span class="text-warning">0</span>)</b></b>
                             </div>
+
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-hover" id="dataTable">
@@ -395,11 +483,11 @@ require_once "../db/connect.php";
 
                                                 // 3) Get unit category id (multi_room)
                                                 $categoryStmt = $pdo->prepare("
-    SELECT id
-    FROM unit_categories
-    WHERE category_name = :category_name
-    LIMIT 1
-");
+                                                    SELECT id
+                                                    FROM unit_categories
+                                                    WHERE category_name = :category_name
+                                                    LIMIT 1
+                                                ");
                                                 $categoryStmt->execute([':category_name' => 'multi_room']);
                                                 $unitCategoryId = $categoryStmt->fetchColumn();
 
@@ -582,7 +670,7 @@ require_once "../db/connect.php";
                                                                                 <label>Bill</label>
                                                                                 <input class="form-control final_bill" name="final_bill" readonly type="text">
                                                                             </div>
-                                                                            <input type="hidden" name="building_id" value="<?= $building_link; ?>">
+                                                                            <input type="hidden" name="building_id" value="<?= $building_name; ?>">
                                                                             <input type="hidden" name="created_at">
                                                                         </fieldset>
                                                                     </div>
@@ -596,127 +684,125 @@ require_once "../db/connect.php";
                                                             </div>
                                                         </div>
                                                     </div>
-                                </div>
-
-                                <!-- Mark as Vacant Modal -->
-                                <div class="modal fade shadow" id="markAsVacant<?php echo $id; ?>">
-                                    <div class="modal-dialog modal-md">
-                                        <div class="modal-content">
-                                            <div class="modal-header"
-                                                style="background-color:#00192D; color: #fff;">
-                                                <b class="modal-title">Mark Unit <?= htmlspecialchars($row['unit_number']); ?> as Vacant</b>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close" style="color:#fff;">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
-                                                <div class="modal-body">
-                                                    <p class="text-center">Change the Unit Occupancy Status to Vacant. This will Prepare the Unit for Another Possible Tenant</p>
-                                                    <input type="hidden" name="id"
-                                                        value="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>">
-                                                    <div class="form-group">
-                                                        <label>Mark as Vacant</label>
-                                                        <input class="form-control" id="occupancy_status" name="occupancy_status" value="Vacant" readonly>
+                                                    <!-- Mark as Vacant Modal -->
+                                                    <div class="modal fade shadow" id="markAsVacant<?php echo $id; ?>">
+                                                        <div class="modal-dialog modal-md">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header"
+                                                                    style="background-color:#00192D; color: #fff;">
+                                                                    <b class="modal-title">Mark Unit <?= htmlspecialchars($row['unit_number']); ?> as Vacant</b>
+                                                                    <button type="button" class="close" data-dismiss="modal"
+                                                                        aria-label="Close" style="color:#fff;">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+                                                                    <div class="modal-body">
+                                                                        <p class="text-center">Change the Unit Occupancy Status to Vacant. This will Prepare the Unit for Another Possible Tenant</p>
+                                                                        <input type="hidden" name="id"
+                                                                            value="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>">
+                                                                        <div class="form-group">
+                                                                            <label>Mark as Vacant</label>
+                                                                            <input class="form-control" id="occupancy_status" name="occupancy_status" value="Vacant" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer text-right">
+                                                                        <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="update_vacant_status"><i class="bi bi-send"></i> Update</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer text-right">
-                                                    <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="update_vacant_status"><i class="bi bi-send"></i> Update</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- Under Maintenance Modal -->
-                                <div class="modal fade shadow" id="underMaintenance<?php echo $id; ?>">
-                                    <div class="modal-dialog modal-md">
-                                        <div class="modal-content">
-                                            <div class="modal-header"
-                                                style="background-color:#00192D; color: #fff;">
-                                                <p class="modal-title">Mark Unit
-                                                    <?= htmlspecialchars($row['unit_number']); ?> as
-                                                    Under Maintenance</p>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <form action="" method="post" enctype="multipart/form-data"
-                                                autocomplete="off">
-                                                <div class="modal-body">
-                                                    <p class="text-center">Change the Unit Status to Under Maintenance. Meaning there are Some Works Being done on the Unit</p>
-                                                    <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>">
-                                                    <div class="form-group">
-                                                        <label>Status</label>
-                                                        <input class="form-control" id="occupancy_status" name="occupancy_status" value="Under Maintenance" readonly>
+                                                    <!-- Under Maintenance Modal -->
+                                                    <div class="modal fade shadow" id="underMaintenance<?php echo $id; ?>">
+                                                        <div class="modal-dialog modal-md">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header"
+                                                                    style="background-color:#00192D; color: #fff;">
+                                                                    <p class="modal-title">Mark Unit
+                                                                        <?= htmlspecialchars($row['unit_number']); ?> as
+                                                                        Under Maintenance</p>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form action="" method="post" enctype="multipart/form-data"
+                                                                    autocomplete="off">
+                                                                    <div class="modal-body">
+                                                                        <p class="text-center">Change the Unit Status to Under Maintenance. Meaning there are Some Works Being done on the Unit</p>
+                                                                        <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>">
+                                                                        <div class="form-group">
+                                                                            <label>Status</label>
+                                                                            <input class="form-control" id="occupancy_status" name="occupancy_status" value="Under Maintenance" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer text-right">
+                                                                        <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="update_maintenance_status"><i class="bi bi-send"></i> Update</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer text-right">
-                                                    <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;" name="update_maintenance_status"><i class="bi bi-send"></i> Update</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- Rent Single Unit Modal -->
-                                <div class="modal fade shadow" id="rentUnit<?php echo $id; ?>">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header"
-                                                style="background-color:#00192D; color: #fff;">
-                                                <p class="modal-title">Rent Out <?= $unit_number; ?></p>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close" style="color:#fff;">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
-                                                <div class="modal-body">
-                                                    <p>Rent out this Unit&hellip;</p>
-                                                </div>
-                                                <div class="modal-footer text-right">
-                                                    <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;">
-                                                        <i class="bi bi-send"></i> Submit
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                        <?php
+                                                    <!-- Rent Single Unit Modal -->
+                                                    <div class="modal fade shadow" id="rentUnit<?php echo $id; ?>">
+                                                        <div class="modal-dialog modal-lg">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header"
+                                                                    style="background-color:#00192D; color: #fff;">
+                                                                    <p class="modal-title">Rent Out <?= $unit_number; ?></p>
+                                                                    <button type="button" class="close" data-dismiss="modal"
+                                                                        aria-label="Close" style="color:#fff;">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+                                                                    <div class="modal-body">
+                                                                        <p>Rent out this Unit&hellip;</p>
+                                                                    </div>
+                                                                    <div class="modal-footer text-right">
+                                                                        <button type="submit" class="btn btn-sm" style="border:1px solid #00192D; color: #00192D;">
+                                                                            <i class="bi bi-send"></i> Submit
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            <?php
                                                 }
                                             } catch (PDOException $e) {
                                                 echo '<div class="alert alert-danger>
-                                                        Selection Failed! "' . $e->getMessage() . '"
-                                                        </div>';
+                                                                Selection Failed! "' . $e->getMessage() . '"
+                                                                </div>';
                                             }
-                        ?>
-                        </tbody>
-                        </table>
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
 
-    </div>
+            <!-- Container Box -->
+            <?php
+            //This is the PHP Script that will change the occupancy Status when one clicks Rent Out
+            if (isset($_POST['update_occupied_status'])) {
+                $id = encryptor('encrypt', $_POST['id']);
+                try {
+                    // Update with the new status
+                    $update = "UPDATE building_units SET occupancy_status = :occupancy_status WHERE id = :id";
+                    $stmtUpdate = $pdo->prepare($update);
+                    $stmtUpdate->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
+                    $stmtUpdate->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
+                    $stmtUpdate->execute();
 
-    <!-- Container Box -->
-    <?php
-    //This is the PHP Script that will change the occupancy Status when one clicks Rent Out
-    if (isset($_POST['update_occupied_status'])) {
-        $id = encryptor('encrypt', $_POST['id']);
-        try {
-            // Update with the new status
-            $update = "UPDATE multi_rooms_units SET occupancy_status = :occupancy_status WHERE id = :id";
-            $stmtUpdate = $pdo->prepare($update);
-            $stmtUpdate->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
-            $stmtUpdate->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
-            $stmtUpdate->execute();
-
-            if ($stmtUpdate->rowCount() > 0) {
-                echo "
+                    if ($stmtUpdate->rowCount() > 0) {
+                        echo "
                     <script>
                         Swal.fire({
                             icon: 'success',
@@ -729,8 +815,8 @@ require_once "../db/connect.php";
                             }
                         });
                     </script>";
-            } else {
-                echo "
+                    } else {
+                        echo "
                     <script>
                         Swal.fire({
                             icon: 'error',
@@ -739,9 +825,9 @@ require_once "../db/connect.php";
                             confirmButtonText: 'OK'
                         });
                     </script>";
-            }
-        } catch (Exception $e) {
-            echo "
+                    }
+                } catch (Exception $e) {
+                    echo "
                 <script>
                     Swal.fire({
                         icon: 'error',
@@ -750,19 +836,19 @@ require_once "../db/connect.php";
                         confirmButtonText: 'Close'
                     });
                 </script>";
-        }
-    }
+                }
+            }
 
-    //Change the Occupancy Status to Vacant if the Unit is Occupied and when the user clicks Mark as Vacant
-    if (isset($_POST['update_vacant_status'])) {
-        try {
-            // Fetch current status of the unit
-            $check = $pdo->prepare("SELECT occupancy_status FROM multi_rooms_units WHERE id = :id");
-            $check->execute([':id' => $_POST['id']]);
-            $current_status = $check->fetchColumn();
-            if ($current_status === $_POST['occupancy_status']) {
-                // No change made
-                echo "
+            //Change the Occupancy Status to Vacant if the Unit is Occupied and when the user clicks Mark as Vacant
+            if (isset($_POST['update_vacant_status'])) {
+                try {
+                    // Fetch current status of the unit
+                    $check = $pdo->prepare("SELECT occupancy_status FROM building_units WHERE id = :id");
+                    $check->execute([':id' => $_POST['id']]);
+                    $current_status = $check->fetchColumn();
+                    if ($current_status === $_POST['occupancy_status']) {
+                        // No change made
+                        echo "
                     <script>
                         Swal.fire({
                             title: 'Warning!',
@@ -773,15 +859,15 @@ require_once "../db/connect.php";
                         window.history.back();
                         });
                     </script>";
-            } else {
-                // Update with the new status
-                $update = "UPDATE multi_rooms_units SET occupancy_status = :occupancy_status WHERE id = :id";
-                $stmt = $pdo->prepare($update);
-                $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
-                $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
-                $stmt->execute();
-                // Success message
-                echo "
+                    } else {
+                        // Update with the new status
+                        $update = "UPDATE building_units SET occupancy_status = :occupancy_status WHERE id = :id";
+                        $stmt = $pdo->prepare($update);
+                        $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
+                        $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
+                        $stmt->execute();
+                        // Success message
+                        echo "
                     <script>
                         Swal.fire({
                             icon: 'success',
@@ -799,9 +885,9 @@ require_once "../db/connect.php";
                             }
                         });
                     </script>";
-            }
-        } catch (PDOException $e) {
-            echo "
+                    }
+                } catch (PDOException $e) {
+                    echo "
                 <script>
                     Swal.fire({
                     icon: 'error',
@@ -810,25 +896,25 @@ require_once "../db/connect.php";
                     confirmButtonText: 'Close'
                     });
                 </script>";
-        }
-    }
+                }
+            }
 
-    //Change the Unit Status to Under Maintenance when the User clicks the Relavant Button
-    if (isset($_POST['update_maintenance_status'])) {
-        try {
-            // Fetch current status of the unit
-            $check = $pdo->prepare("SELECT occupancy_status FROM multi_rooms_units WHERE id = :id");
-            $check->execute([':id' => $_POST['id']]);
-            $current_status = $check->fetchColumn();
+            //Change the Unit Status to Under Maintenance when the User clicks the Relavant Button
+            if (isset($_POST['update_maintenance_status'])) {
+                try {
+                    // Fetch current status of the unit
+                    $check = $pdo->prepare("SELECT occupancy_status FROM building_units WHERE id = :id");
+                    $check->execute([':id' => $_POST['id']]);
+                    $current_status = $check->fetchColumn();
 
-            // Update with the new status
-            $update = "UPDATE multi_rooms_units SET occupancy_status = :occupancy_status WHERE id = :id";
-            $stmt = $pdo->prepare($update);
-            $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
-            $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
-            $stmt->execute();
-            // Success message
-            echo "
+                    // Update with the new status
+                    $update = "UPDATE multi_rooms_units SET occupancy_status = :occupancy_status WHERE id = :id";
+                    $stmt = $pdo->prepare($update);
+                    $stmt->bindParam(':occupancy_status', $_POST['occupancy_status'], PDO::PARAM_STR);
+                    $stmt->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
+                    $stmt->execute();
+                    // Success message
+                    echo "
                     <script>
                         Swal.fire({
                             icon: 'success',
@@ -846,8 +932,8 @@ require_once "../db/connect.php";
                             }
                         });
                     </script>";
-        } catch (PDOException $e) {
-            echo "
+                } catch (PDOException $e) {
+                    echo "
                     <script>
                         Swal.fire({
                         icon: 'error',
@@ -856,16 +942,16 @@ require_once "../db/connect.php";
                         confirmButtonText: 'Close'
                         });
                     </script>";
-        }
-    }
-    ?>
+                }
+            }
+            ?>
 
-    </main>
-    <!--end::App Main-->
+        </main>
+        <!--end::App Main-->
 
-    <!--begin::Footer-->
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
-    <!-- end::footer -->
+        <!--begin::Footer-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+        <!-- end::footer -->
 
     </div>
     <!--end::App Wrapper-->
@@ -873,12 +959,9 @@ require_once "../db/connect.php";
 
 
     <!-- Main Js File -->
-    <script src="../../js/adminlte.js"></script>
     <script src="js/main.js"></script>
-    <script src="../../../landlord/assets/main.js"></script>
+    <script src="../../assets/main.js"></script>
 
-    <!-- html2pdf depends on html2canvas and jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="module" src="./js/main.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

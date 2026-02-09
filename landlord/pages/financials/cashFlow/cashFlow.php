@@ -1,22 +1,25 @@
 <?php
-require_once "actions/operatingOutFlow.php";
-require_once  "actions/operatingInflow.php";
-require_once "actions/investingInflow.php";
-require_once "actions/investingOutflow.php";
-require_once "actions/financiangInflow.php";
-require_once "actions/financingOutflow.php";
+session_start();
+include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 
-$openingBalance = "";
+// require_once "actions/operatingOutFlow.php";
+// require_once  "actions/operatingInflow.php";
+// require_once "actions/investingInflow.php";
+// require_once "actions/investingOutflow.php";
+// require_once "actions/financiangInflow.php";
+// require_once "actions/financingOutflow.php";
 
-$TotalInflows = $totalTenantDeposits + $cumulativeOperatingInflow + $totalInvestingOutflows + $totalFinancingInflows;
-$TotalOutflows = $cumulativeOutflow + $totalInvestingOutflows + $totalFinancingOutflows;
+// $openingBalance = "";
 
-$netCash = $TotalInflows - $TotalOutflows;
+// $TotalInflows = $totalTenantDeposits + $cumulativeOperatingInflow + $totalInvestingOutflows + $totalFinancingInflows;
+// $TotalOutflows = $cumulativeOutflow + $totalInvestingOutflows + $totalFinancingOutflows;
 
-// Now format for display (not before calculations)
-$TotalInflows = number_format($TotalInflows, 2);
-$TotalOutflows = number_format($TotalOutflows, 2);
-$netCash = number_format($netCash, 2);
+// $netCash = $TotalInflows - $TotalOutflows;
+
+// // Now format for display (not before calculations)
+// $TotalInflows = number_format($TotalInflows, 2);
+// $TotalOutflows = number_format($TotalOutflows, 2);
+// $netCash = number_format($netCash, 2);
 
 ?>
 
