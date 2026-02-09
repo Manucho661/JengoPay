@@ -299,12 +299,11 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
         <!-- sixth Row: Table -->
         <div class="row">
           <div class="col-md-12">
-            <div class="Table-section bg-white p-2 rounded-2">
-              <div class="table-section-header rounded d-flex py-2" style="background-color: #00192D; color:#FFA000;">
-                <div class="filtered-items text-white mx-3">
-                  All Requests
-                </div>
-              </div>
+            <div class="details-container bg-white p-2 rounded-2">
+              <h3 class="details-container_header text-start">
+                <span id="displayed_building">All Requests</span> &nbsp; |&nbsp;
+                <span style="color:#FFC107"> <span id="enteries"><?= count($currentRequests) ?></span> entries</span>
+              </h3>
               <?php if (empty($currentRequests)): ?>
                 <!-- Empty State Message -->
                 <div class="text-center py-5" style="margin: 3rem 0;">
@@ -327,7 +326,6 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                     <thead class="mb-2">
                       <tr>
                         <th>Request Date</th>
-                        <th>Property</th>
                         <th>Title</th>
                         <th>Provider</th>
                         <th>Priority</th>
@@ -348,12 +346,6 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                               ? htmlspecialchars(date('M j, Y', strtotime($req['created_at'])))
                               : ''
                             ?>
-                          </td>
-
-
-                          <td>
-                            <div><?= htmlspecialchars($req['building_name'] ?? '') ?></div>
-                            <div style="color: green;"><?= htmlspecialchars($req['unit'] ?? '') ?></div>
                           </td>
 
                           <td>

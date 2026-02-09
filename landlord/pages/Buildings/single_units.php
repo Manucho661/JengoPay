@@ -1,6 +1,9 @@
-<?php session_start()?>
 <?php
+session_start();
+include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
+
 require_once "../db/connect.php";
+
 ?>
 
 <?php
@@ -635,34 +638,47 @@ if (isset($_POST['submit_reading'])) {
 
                                                     try {
                                                         // get unit category id
+                                                        $userId = (int)$_SESSION['user']['id'];
+
+                                                        // 2) Fetch landlord id linked to logged-in user
+                                                        $landlordStmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ? LIMIT 1");
+                                                        $landlordStmt->execute([$userId]);
+                                                        $landlordId = $landlordStmt->fetchColumn();
+
+                                                        if (!$landlordId) {
+                                                            throw new Exception("Landlord account not found for this user.");
+                                                        }
+
+                                                        // 3) Get unit category id (single_unit)
                                                         $categoryStmt = $pdo->prepare("
-                                                            SELECT id 
-                                                            FROM unit_categories 
+                                                            SELECT id
+                                                            FROM unit_categories
                                                             WHERE category_name = :category_name
                                                             LIMIT 1
                                                         ");
-                                                        $categoryStmt->execute([
-                                                            ':category_name' => 'single_unit'
-                                                        ]);
-
+                                                        $categoryStmt->execute([':category_name' => 'single_unit']);
                                                         $unitCategoryId = $categoryStmt->fetchColumn();
 
                                                         if (!$unitCategoryId) {
-                                                            throw new Exception('Unit category not found');
+                                                            throw new Exception("Unit category not found.");
                                                         }
-                                                        $select = "
+
+                                                        // 4) Fetch building units for this landlord + category, with building name
+                                                        $sql = "
                                                                 SELECT 
                                                                     bu.*,
                                                                     b.building_name
                                                                 FROM building_units bu
-                                                                INNER JOIN buildings b 
-                                                                    ON bu.building_id = b.id
+                                                                INNER JOIN buildings b ON bu.building_id = b.id
                                                                 WHERE bu.unit_category_id = :unit_category_id
+                                                                AND bu.landlord_id = :landlord_id
+                                                                ORDER BY b.building_name ASC, bu.unit_number ASC
                                                             ";
 
-                                                        $stmt = $pdo->prepare($select);
+                                                        $stmt = $pdo->prepare($sql);
                                                         $stmt->execute([
-                                                            ':unit_category_id' => $unitCategoryId
+                                                            ':unit_category_id' => (int)$unitCategoryId,
+                                                            ':landlord_id'      => (int)$landlordId,
                                                         ]);
                                                         // $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         // var_dump($rows); // dumps all rows
@@ -748,90 +764,90 @@ if (isset($_POST['submit_reading'])) {
                                                                 </td>
                                                             </tr>
                                                             <!-- Meter Readings Modal -->
-                                                          <div class="modal fade shadow" id="meterReadingModal<?= htmlspecialchars($id); ?>">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color:#00192D; color: #fff;">
-                <b>Add Meter Reading for Unit <?= htmlspecialchars($unit_number); ?></b>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                                                            <div class="modal fade shadow" id="meterReadingModal<?= htmlspecialchars($id); ?>">
+                                                                <div class="modal-dialog modal-md">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header" style="background-color:#00192D; color: #fff;">
+                                                                            <b>Add Meter Reading for Unit <?= htmlspecialchars($unit_number); ?></b>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
 
-            <form action="" method="POST" enctype="multipart/form-data" autocomplete="off">
-                <!-- Use htmlspecialchars to prevent XSS -->
-                <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>">
+                                                                        <form action="" method="POST" enctype="multipart/form-data" autocomplete="off">
+                                                                            <!-- Use htmlspecialchars to prevent XSS -->
+                                                                            <input type="hidden" name="id" value="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>">
 
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="reading_date_<?= htmlspecialchars($id); ?>">Reading Date</label>
-                        <input type="date" class="form-control" name="reading_date" id="reading_date_<?= htmlspecialchars($id); ?>" required>
-                    </div>
+                                                                            <div class="modal-body">
+                                                                                <div class="form-group">
+                                                                                    <label for="reading_date_<?= htmlspecialchars($id); ?>">Reading Date</label>
+                                                                                    <input type="date" class="form-control" name="reading_date" id="reading_date_<?= htmlspecialchars($id); ?>" required>
+                                                                                </div>
 
-                    <div class="form-group">
-                        <label for="meter_type_<?= htmlspecialchars($id); ?>">Meter Type</label>
-                        <select class="form-control meter_type" name="meter_type" id="meter_type_<?= htmlspecialchars($id); ?>" required>
-                            <option value="" selected hidden>Meter Type</option>
-                            <option value="Water">Water</option>
-                            <option value="Electricity">Electricity</option>
-                        </select>
-                    </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="meter_type_<?= htmlspecialchars($id); ?>">Meter Type</label>
+                                                                                    <select class="form-control meter_type" name="meter_type" id="meter_type_<?= htmlspecialchars($id); ?>" required>
+                                                                                        <option value="" selected hidden>Meter Type</option>
+                                                                                        <option value="Water">Water</option>
+                                                                                        <option value="Electricity">Electricity</option>
+                                                                                    </select>
+                                                                                </div>
 
-                    <hr>
+                                                                                <hr>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="current_reading_<?= htmlspecialchars($id); ?>">Current Reading</label>
-                                <input type="number" name="current_reading" id="current_reading_<?= htmlspecialchars($id); ?>" placeholder="Current Reading" class="form-control" required>
-                            </div>
-                        </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-md-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="current_reading_<?= htmlspecialchars($id); ?>">Current Reading</label>
+                                                                                            <input type="number" name="current_reading" id="current_reading_<?= htmlspecialchars($id); ?>" placeholder="Current Reading" class="form-control" required>
+                                                                                        </div>
+                                                                                    </div>
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="previous_reading_<?= htmlspecialchars($id); ?>">Previous Reading</label>
-                                <input type="number" name="previous_reading" id="previous_reading_<?= htmlspecialchars($id); ?>" placeholder="Previous Reading" class="form-control">
-                            </div>
-                        </div>
-                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="previous_reading_<?= htmlspecialchars($id); ?>">Previous Reading</label>
+                                                                                            <input type="number" name="previous_reading" id="previous_reading_<?= htmlspecialchars($id); ?>" placeholder="Previous Reading" class="form-control">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
 
-                    <hr>
+                                                                                <hr>
 
-                    <fieldset class="border p-1">
-                        <legend class="w-auto" style="font-size: 18px; font-weight: bold; padding: 3px;">Calculations</legend>
+                                                                                <fieldset class="border p-1">
+                                                                                    <legend class="w-auto" style="font-size: 18px; font-weight: bold; padding: 3px;">Calculations</legend>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="units_consumed_<?= htmlspecialchars($id); ?>">Units Consumed</label>
-                                    <input type="number" class="form-control" name="units_consumed" id="units_consumed_<?= htmlspecialchars($id); ?>" readonly>
-                                </div>
-                            </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-6">
+                                                                                            <div class="form-group">
+                                                                                                <label for="units_consumed_<?= htmlspecialchars($id); ?>">Units Consumed</label>
+                                                                                                <input type="number" class="form-control" name="units_consumed" id="units_consumed_<?= htmlspecialchars($id); ?>" readonly>
+                                                                                            </div>
+                                                                                        </div>
 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="cost_per_unit_<?= htmlspecialchars($id); ?>">Cost Per Unit</label>
-                                    <input type="number" class="form-control" name="cost_per_unit" id="cost_per_unit_<?= htmlspecialchars($id); ?>" step="0.01">
-                                </div>
-                            </div>
-                        </div>
+                                                                                        <div class="col-md-6">
+                                                                                            <div class="form-group">
+                                                                                                <label for="cost_per_unit_<?= htmlspecialchars($id); ?>">Cost Per Unit</label>
+                                                                                                <input type="number" class="form-control" name="cost_per_unit" id="cost_per_unit_<?= htmlspecialchars($id); ?>" step="0.01">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
 
-                        <div class="form-group">
-                            <label for="final_bill_<?= htmlspecialchars($id); ?>">Bill</label>
-                            <input type="number" class="form-control" name="final_bill" id="final_bill_<?= htmlspecialchars($id); ?>" readonly>
-                        </div>
-                    </fieldset>
-                </div>
+                                                                                    <div class="form-group">
+                                                                                        <label for="final_bill_<?= htmlspecialchars($id); ?>">Bill</label>
+                                                                                        <input type="number" class="form-control" name="final_bill" id="final_bill_<?= htmlspecialchars($id); ?>" readonly>
+                                                                                    </div>
+                                                                                </fieldset>
+                                                                            </div>
 
-                <div class="modal-footer text-right">
-                    <button type="submit" name="submit_reading" class="btn btn-sm btn-outline-dark">
-                        <i class="bi bi-send"></i> Submit
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+                                                                            <div class="modal-footer text-right">
+                                                                                <button type="submit" name="submit_reading" class="btn btn-sm btn-outline-dark">
+                                                                                    <i class="bi bi-send"></i> Submit
+                                                                                </button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
 
                                                             <!-- Mark as Vacant Modal -->
@@ -948,45 +964,45 @@ if (isset($_POST['submit_reading'])) {
 
 
     <script>
-document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function() {
 
-    // Function to calculate bill for a specific modal
-    function calculateBill(modalId) {
-        const currentEl = document.getElementById(`current_reading_${modalId}`);
-        const previousEl = document.getElementById(`previous_reading_${modalId}`);
-        const costEl = document.getElementById(`cost_per_unit_${modalId}`);
-        const unitsEl = document.getElementById(`units_consumed_${modalId}`);
-        const finalEl = document.getElementById(`final_bill_${modalId}`);
+            // Function to calculate bill for a specific modal
+            function calculateBill(modalId) {
+                const currentEl = document.getElementById(`current_reading_${modalId}`);
+                const previousEl = document.getElementById(`previous_reading_${modalId}`);
+                const costEl = document.getElementById(`cost_per_unit_${modalId}`);
+                const unitsEl = document.getElementById(`units_consumed_${modalId}`);
+                const finalEl = document.getElementById(`final_bill_${modalId}`);
 
-        if (!currentEl || !previousEl || !costEl || !unitsEl || !finalEl) return;
+                if (!currentEl || !previousEl || !costEl || !unitsEl || !finalEl) return;
 
-        let current = parseFloat(currentEl.value) || 0;
-        let previous = parseFloat(previousEl.value) || 0;
-        let cost = parseFloat(costEl.value) || 0;
+                let current = parseFloat(currentEl.value) || 0;
+                let previous = parseFloat(previousEl.value) || 0;
+                let cost = parseFloat(costEl.value) || 0;
 
-        // Calculate Units Consumed
-        let units = current - previous;
-        unitsEl.value = units > 0 ? units : 0;
+                // Calculate Units Consumed
+                let units = current - previous;
+                unitsEl.value = units > 0 ? units : 0;
 
-        // Calculate Final Bill
-        let finalBill = units * cost;
-        finalEl.value = finalBill.toFixed(2);
-    }
-
-    // Attach event listeners to all modals
-    document.querySelectorAll('.modal').forEach(modal => {
-        const modalId = modal.id.split('meterReadingModal')[1]; // Extract ID from modal
-
-        ['current_reading_', 'previous_reading_', 'cost_per_unit_'].forEach(prefix => {
-            const el = document.getElementById(`${prefix}${modalId}`);
-            if (el) {
-                el.addEventListener('input', () => calculateBill(modalId));
+                // Calculate Final Bill
+                let finalBill = units * cost;
+                finalEl.value = finalBill.toFixed(2);
             }
-        });
-    });
 
-});
-</script>
+            // Attach event listeners to all modals
+            document.querySelectorAll('.modal').forEach(modal => {
+                const modalId = modal.id.split('meterReadingModal')[1]; // Extract ID from modal
+
+                ['current_reading_', 'previous_reading_', 'cost_per_unit_'].forEach(prefix => {
+                    const el = document.getElementById(`${prefix}${modalId}`);
+                    if (el) {
+                        el.addEventListener('input', () => calculateBill(modalId));
+                    }
+                });
+            });
+
+        });
+    </script>
 
 
     <!-- plugin for pdf -->

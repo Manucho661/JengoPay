@@ -313,7 +313,8 @@
                 margin-bottom: 0.5rem;
             }
 
-            /* stats */
+
+            /* stats cards*/
 
         .stats-grid {
             display: grid;
@@ -514,4 +515,22 @@
             .logout-btn span {
                 display: none;
             }
+        }
+
+
+        /* General button styles */
+    .actionBtn {
+            background: var(--main-color);
+            color: white;
+            border: none;
+            padding: 0.3rem 1.4rem;
+            border-radius: 5px;
+            font-weight: 400;
+            transition: all 0.3s;
+        }
+
+        .actionBtn:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
         }

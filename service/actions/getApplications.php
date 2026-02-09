@@ -12,6 +12,7 @@ try {
      */
     $stmt = $pdo->prepare("
         SELECT 
+            mrp.id AS proposal_id,
             mrp.proposed_budget,
             mrp.proposed_duration,
             mrp.created_at,

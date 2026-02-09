@@ -386,6 +386,14 @@ $netProfit = $income - $expenses;
     body {
       font-size: 16px;
     }
+
+    .main-row td:first-child {
+      font-weight: 600;
+      font-size: 14px;
+      color: #002B5B;
+      /* navy */
+      margin-left: 10px;
+    }
   </style>
 </head>
 
@@ -425,95 +433,67 @@ $netProfit = $income - $expenses;
           </div>
         </div>
 
-        <!-- Second row Summary-->
-        <!-- <div class="row">
-          <div class="col-sm-8">
-            <div class="row Summary mt-6">
-              <div class="col-md-12 ">
+        <!-- Filters -->
+        <div class="row g-3 mb-4">
+          <!-- Filter by Building -->
+          <div class="col-md-12 col-sm-12">
+            <div class="card border-0 mb-4">
+              <div class="card-body ">
+                <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filters</h5>
+                <form method="GET">
+                  <!-- always reset to page 1 when applying filters -->
+                  <input type="hidden" name="page" value="1">
 
-                <div class="summary-section text-center p-2 row g-3">
-                  <div class="col-6 col-md-4 ">
-                    <div class="summary-item assets">
+                  <div class="filters-scroll">
+                    <div class="row g-3 mb-3 filters-row align-items-end">
 
-                      <div class="label "> <i class="fas fa-calculator"></i> INCOME </div>
-                      <div class="value"><b>Ksh<?= $formattedTotalIncome ?></b></div>
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Buildings</label>
+                        <select class="form-select shadow-sm" name="building_id">
+                          <option value="">All Buildings</option>
+                        </select>
+                      </div>
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Date From</label>
+                        <input type="date" name="date_from" class="form-control">
+                      </div>
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Date To</label>
+                        <input type="date" name="date_to" class="form-control">
+                      </div>
+
+                      <div class="col-auto filter-col d-flex gap-2">
+                        <button type="submit" class="actionBtn">
+                          <i class="fas fa-search"></i> Apply Filters
+                        </button>
+
+                        <a href="expenses.php" class="btn btn-secondary">
+                          <i class="fas fa-redo"></i> Reset
+                        </a>
+                      </div>
+
                     </div>
 
                   </div>
+                </form>
 
-                  <div class="col-6 col-md-4 ">
-                    <div class="summary-item liabilities">
-
-
-                      <div class="label"> <i class="fas fa-calculator"></i>EXPENSES</div>
-                      <div class="value"> <b>Ksh<?= $formattedTotalExpenses ?></b></div>
-                    </div>
-                  </div>
-                  <div class="col-6 col-md-4 ">
-                    <div class="summary-item equity">
-
-                      <div class="label"> <i class="fas fa-calculator"></i> NET PROFIT</div>
-
-                      <div class="value"> Ksh<?= $formattedNetProfit ?></div>
-                    </div>
-
-                  </div>
-                </div>
               </div>
             </div>
-
           </div>
-        </div> -->
-
-        <!-- Filters -->
-        <div class="row">
-          <div class="col-3 col-md-3">
-            <label for="buildingFilter" class="form-label">Property</label>
-            <?php
-            $buildings = $pdo->query("SELECT id, building_name FROM buildings ORDER BY building_name")->fetchAll(PDO::FETCH_ASSOC);
-            ?>
-            <select id="buildingFilter" class="form-control">
-              <option value="">-- Select Property --</option>
-
-            </select>
-          </div>
-
-          <!-- Start Date -->
-          <div class="col-3 col-md-3">
-            <label class="form-label startDate me-2">Start Date</label>
-            <input type="date" class="form-control" id="startDate" />
-          </div>
-
-          <!-- End Date -->
-          <div class="col-3 col-md-3">
-            <label class="form-label endDate me-2">End Date</label>
-            <input type="date" class="form-control" id="endDate" />
-          </div>
-
-          <!-- Filter Button -->
-          <div class="col-3 col-md-3">
-            <label class="form-label d-block">&nbsp;</label>
-            <button id="filterBtn" class="btn btn-outline-dark"
-              style="color: #FFC107; background-color: #00192D;">
-              <i class="fas fa-filter"></i> Filter
-            </button>
-          </div>
-
         </div>
         <!-- Third row, main content -->
         <div class="row mt-4">
-          <div class="col-12">
-            <div>
-              <h3 class="text-start balancesheet-header">December 31, 2024</h3>
-              <!-- <div class="table-responsive"> -->
-
-              <!-- Collapsible Table -->
-              <div class="table-responsive">
-                <table id="myTable" class="table table-bordered" style="width: 100%;">
+          <div class="col-md-12">
+            <div class="card border-0 min-vh-100">
+              <div class="card-body">
+                <table id="myTable" class="table table-striped" style="width: 100%;">
+                  <span class="text-success fw-bold">Feb, 2026</span>
                   <thead style="background-color: rgba(128, 128, 128, 0.2); color: black;">
                     <tr>
                       <th style="font-size: 16px;">Description</th>
-                      <th style="font-size: 16px;">Amount</th>
+                      <th style="font-size: 16px;">Amount </th>
                     </tr>
                   </thead>
                   <tbody id="accordionFinance">
@@ -552,7 +532,7 @@ $netProfit = $income - $expenses;
                     <?php if ($waterTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#waterDetails" aria-expanded="false" aria-controls="waterDetails" style="cursor:pointer;">
                         <td>Water Charges (Revenue)</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedWater ?></td>
+                        <td class="p-0">Ksh <?= $formattedWater ?></td>
                       </tr>
 
                       <tr>
@@ -578,7 +558,7 @@ $netProfit = $income - $expenses;
                     <?php if ($garbageTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#garbageDetails" aria-expanded="false" aria-controls="garbageDetails" style="cursor:pointer;">
                         <td>Garbage Charges (Revenue)</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedGarbage ?></td>
+                        <td class="p-0">Ksh <?= $formattedGarbage ?></td>
                       </tr>
 
                       <tr>
@@ -604,7 +584,7 @@ $netProfit = $income - $expenses;
                     <?php if ($lateFees > 0): ?>
                       <tr class="main-row" data-bs-target="#lateDetails" aria-expanded="false" aria-controls="lateDetails" style="cursor:pointer;">
                         <td>Late Payment Fees</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLateFees ?></td>
+                        <td class="p-0">Ksh <?= $formattedLateFees ?></td>
                       </tr>
 
                       <tr>
@@ -630,7 +610,7 @@ $netProfit = $income - $expenses;
                     <?php if ($managementFees > 0): ?>
                       <tr class="main-row" data-bs-target="#managementDetails" aria-expanded="false" aria-controls="managementDetails" style="cursor:pointer;">
                         <td>Commissions and Management Fees</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedManagementFees ?></td>
+                        <td class="p-0">Ksh <?= $formattedManagementFees ?></td>
                       </tr>
 
                       <tr>
@@ -656,7 +636,7 @@ $netProfit = $income - $expenses;
                     <?php if ($otherIncome > 0): ?>
                       <tr class="main-row" data-bs-target="#otherDetails" aria-expanded="false" aria-controls="otherDetails" style="cursor:pointer;">
                         <td>Other Income (Advertising, Penalties)</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedOtherIncome ?></td>
+                        <td class="p-0">Ksh <?= $formattedOtherIncome ?></td>
                       </tr>
 
                       <tr>
@@ -682,7 +662,7 @@ $netProfit = $income - $expenses;
                     <!-- Total Income -->
                     <tr class="category">
                       <td><b>Total Income</b></td>
-                      <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;"><b>Ksh <?= $formattedTotalIncome ?></b></td>
+                      <td class="p-0"><b>Ksh <?= $formattedTotalIncome ?></b></td>
                     </tr>
 
                     <!-- Expenses header -->
@@ -694,7 +674,7 @@ $netProfit = $income - $expenses;
                     <?php if ($maintenanceTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#maintenanceDetails" aria-expanded="false" aria-controls="maintenanceDetails" style="cursor:pointer;">
                         <td>Maintenance and Repair Costs</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedMaintenance ?></td>
+                        <td class="p-0">Ksh <?= $formattedMaintenance ?></td>
                       </tr>
 
                       <tr class="collapse" id="maintenanceDetails">
@@ -718,7 +698,7 @@ $netProfit = $income - $expenses;
                     <?php if ($salaryTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#salaryDetails" aria-expanded="false" aria-controls="salaryDetails" style="cursor:pointer;">
                         <td>Staff Salaries and Wages</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSalaryTotal ?></td>
+                        <td class="p-0">Ksh <?= $formattedSalaryTotal ?></td>
                       </tr>
 
                       <tr class="collapse" id="salaryDetails">
@@ -742,7 +722,7 @@ $netProfit = $income - $expenses;
                     <?php if ($electricityTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#electricityDetails" aria-expanded="false" aria-controls="electricityDetails" style="cursor:pointer;">
                         <td>Electricity Expense</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedElectricity ?></td>
+                        <td class="p-0">Ksh <?= $formattedElectricity ?></td>
                       </tr>
 
                       <tr class="collapse" id="electricityDetails">
@@ -766,7 +746,7 @@ $netProfit = $income - $expenses;
                     <?php if ($waterExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#waterExpDetails" aria-expanded="false" aria-controls="waterExpDetails" style="cursor:pointer;">
                         <td>Water Expense</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedWaterExpense ?></td>
+                        <td class="p-0">Ksh <?= $formattedWaterExpense ?></td>
                       </tr>
 
                       <tr class="collapse" id="waterExpDetails">
@@ -790,7 +770,7 @@ $netProfit = $income - $expenses;
                     <?php if ($garbageExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#garbageExpDetails" aria-expanded="false" aria-controls="garbageExpDetails" style="cursor:pointer;">
                         <td>Garbage Collection Expense</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedGarbageExpense ?></td>
+                        <td class="p-0">Ksh <?= $formattedGarbageExpense ?></td>
                       </tr>
 
                       <tr class="collapse" id="garbageExpDetails">
@@ -814,7 +794,7 @@ $netProfit = $income - $expenses;
                     <?php if ($internetExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#internetDetails" aria-expanded="false" aria-controls="internetDetails" style="cursor:pointer;">
                         <td>Internet Expense</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedInternetExpense ?></td>
+                        <td class="p-0">Ksh <?= $formattedInternetExpense ?></td>
                       </tr>
 
                       <tr class="collapse" id="internetDetails">
@@ -838,7 +818,7 @@ $netProfit = $income - $expenses;
                     <?php if ($securityExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#securityDetails" aria-expanded="false" aria-controls="securityDetails" style="cursor:pointer;">
                         <td>Security Expense</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSecurityExpense ?></td>
+                        <td class="p-0">Ksh <?= $formattedSecurityExpense ?></td>
                       </tr>
 
                       <tr class="collapse" id="securityDetails">
@@ -862,7 +842,7 @@ $netProfit = $income - $expenses;
                     <?php if ($softwareExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#softwareDetails" aria-expanded="false" aria-controls="softwareDetails" style="cursor:pointer;">
                         <td>Property Management Software Subscription</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedSoftwareExpense ?></td>
+                        <td class="p-0">Ksh <?= $formattedSoftwareExpense ?></td>
                       </tr>
 
                       <tr class="collapse" id="softwareDetails">
@@ -886,7 +866,7 @@ $netProfit = $income - $expenses;
                     <?php if ($marketingExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#marketingDetails" aria-expanded="false" aria-controls="marketingDetails" style="cursor:pointer;">
                         <td>Marketing and Advertising Costs</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedMarketingExpense ?></td>
+                        <td class="p-0">Ksh <?= $formattedMarketingExpense ?></td>
                       </tr>
 
                       <tr class="collapse" id="marketingDetails">
@@ -910,7 +890,7 @@ $netProfit = $income - $expenses;
                     <?php if ($legalExpenseTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#legalDetails" aria-expanded="false" aria-controls="legalDetails" style="cursor:pointer;">
                         <td>Legal and Compliance Fees</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedLegalExpense ?></td>
+                        <td class="p-0">Ksh <?= $formattedLegalExpense ?></td>
                       </tr>
 
                       <tr class="collapse" id="legalDetails">
@@ -958,7 +938,7 @@ $netProfit = $income - $expenses;
                     <?php if ($bankChargesTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#bankDetails" aria-expanded="false" aria-controls="bankDetails" style="cursor:pointer;">
                         <td>Bank/Mpesa Charges</td>
-                        <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;">Ksh <?= $formattedBankCharges ?></td>
+                        <td class="p-0">Ksh <?= $formattedBankCharges ?></td>
                       </tr>
 
                       <tr class="collapse" id="bankDetails">
@@ -1015,18 +995,19 @@ $netProfit = $income - $expenses;
 
                     <tr class="category">
                       <td><b>Total Expenses</b></td>
-                      <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;"><b>Ksh <?= $formattedTotalExpenses ?></b></td>
+                      <td class="p-0"><b>Ksh <?= $formattedTotalExpenses ?></b></td>
                     </tr>
 
                     <tr class="category">
                       <td><b>Net Profit</b></td>
-                      <td style="text-align:right; padding-right: 20px; min-width: 150px; font-family: monospace; white-space: nowrap;"><b>Ksh <?= $formattedNetProfit ?></b></td>
+                      <td class="p-0"><b>Ksh <?= $formattedNetProfit ?></b></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
             </div>
+
           </div>
         </div>
       </div>

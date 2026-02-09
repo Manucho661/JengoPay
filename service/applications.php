@@ -16,6 +16,7 @@ if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') 
 
 // actions
 include_once './actions/getApplications.php';
+include_once './actions/withdrawApplication.php';
 
 ?>
 
@@ -945,6 +946,7 @@ include_once './actions/getApplications.php';
               <div class="action-buttons">
                 <button class="btn-action btn-view" data-bs-toggle="offcanvas"
                   data-bs-target="#applicationDetailsOffcanvas"
+                  data-proposal-id="<?php echo htmlspecialchars($application['proposal_id']); ?>"
                   data-title="<?php echo htmlspecialchars($application['title']); ?>"
                   data-property="<?php echo htmlspecialchars($application['building_name']); ?>"
                   data-unit="<?php echo htmlspecialchars($application['unit_number']); ?>"
@@ -957,14 +959,17 @@ include_once './actions/getApplications.php';
 
                   <i class="fas fa-eye"></i> View Details
                 </button>
-                <?php if ($application['status'] === 'accepted'): ?>
+                <?php if ($application['status'] === 'Accepted'): ?>
                   <button class="btn-action btn-message">
                     <i class="fas fa-comments"></i> Message Client
                   </button>
-                <?php elseif ($application['status'] === 'pending'): ?>
-                  <button class="btn-action btn-withdraw">
-                    <i class="fas fa-trash"></i> Withdraw
-                  </button>
+                <?php elseif ($application['status'] === 'Pending'): ?>
+                  <form method="POST" action="">
+                    <input type="hidden" name="proposal_id" value="<?php echo htmlspecialchars($application['proposal_id']); ?>">
+                    <button class="btn-action btn-withdraw" type="submit" name="withdraw_application">
+                      <i class="fas fa-trash"></i> Withdraw
+                    </button>
+                  </form>
                 <?php endif; ?>
               </div>
             </div>
@@ -1143,9 +1148,12 @@ include_once './actions/getApplications.php';
         <button class="action-btn-offcanvas btn-message-client" id="btnMessageOffcanvas" style="display: none;">
           <i class="fas fa-comments"></i> Message Client
         </button>
-        <button class="action-btn-offcanvas btn-withdraw-app" id="btnWithdrawOffcanvas" style="display: none;">
-          <i class="fas fa-trash"></i> Withdraw Application
-        </button>
+        <form method="POST" action="" id="acceptProposalForm">
+          <input type="hidden" name="proposal_id" id="proposal_id" value="">
+          <button class="action-btn-offcanvas btn-withdraw-app" type="submit" id="btnWithApplication" style="display: none;">
+            <i class="fas fa-trash"></i> Withdraw Application
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -1168,25 +1176,7 @@ include_once './actions/getApplications.php';
     }
 
     // Action buttons functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      // View Details buttons
-
-      // Withdraw buttons
-      document.querySelectorAll('.btn-withdraw').forEach(button => {
-        button.addEventListener('click', function() {
-          if (confirm('Are you sure you want to withdraw this application?')) {
-            alert('Application withdrawn successfully');
-          }
-        });
-      });
-
-      // Message buttons
-      document.querySelectorAll('.btn-message').forEach(button => {
-        button.addEventListener('click', function() {
-          alert('Open messaging interface');
-        });
-      });
-    });
+    
   </script>
 
   <!-- Toast message -->
@@ -1269,6 +1259,7 @@ include_once './actions/getApplications.php';
       const message = button.getAttribute('data-message');
       const appliedDate = button.getAttribute('data-applied-date');
       const imagesJSON = button.getAttribute('data-images');
+      const proposalId = button.getAttribute('data-proposal-id');
       const images = JSON.parse(imagesJSON);
 
       // Setup image slider
@@ -1339,13 +1330,16 @@ include_once './actions/getApplications.php';
       document.getElementById('offcanvasYourBudget').textContent = yourBudget;
       document.getElementById('offcanvasDuration').textContent = duration;
       document.getElementById('offcanvasAppliedDate').textContent = 'Applied on ' + appliedDate;
+      document.getElementById('proposal_id').value = proposalId;
+      const btnWithApplication = document.getElementById('btnWithApplication').name = 'withdraw_application';
+
 
       // Set status with proper styling
       let statusHTML = '';
       let statusIcon = '';
       let statusText = '';
 
-      if (status === 'pending') {
+      if (status === 'Pending') {
         statusIcon = '<i class="fas fa-clock"></i>';
         statusText = 'Pending Review';
         statusHTML = '<div class="status-indicator pending">' + statusIcon + ' ' + statusText + '</div>';
@@ -1373,12 +1367,12 @@ include_once './actions/getApplications.php';
 
       // Show/hide action buttons based on status
       const btnMessage = document.getElementById('btnMessageOffcanvas');
-      const btnWithdraw = document.getElementById('btnWithdrawOffcanvas');
+      const btnWithdraw = document.getElementById('btnWithApplication');
 
       if (status === 'accepted') {
         btnMessage.style.display = 'block';
         btnWithdraw.style.display = 'none';
-      } else if (status === 'pending') {
+      } else if (status === 'Pending') {
         btnMessage.style.display = 'none';
         btnWithdraw.style.display = 'block';
       } else {
@@ -1393,14 +1387,14 @@ include_once './actions/getApplications.php';
     });
 
     // Withdraw button in offcanvas
-    document.getElementById('btnWithdrawOffcanvas').addEventListener('click', function() {
-      if (confirm('Are you sure you want to withdraw this application?')) {
-        alert('Application withdrawn successfully');
-        // Close offcanvas
-        const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
-        offcanvas.hide();
-      }
-    });
+    // document.getElementById('btnWithdrawOffcanvas').addEventListener('click', function() {
+    //   if (confirm('Are you sure you want to withdraw this application?')) {
+    //     alert('Application withdrawn successfully');
+    //     // Close offcanvas
+    //     const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+    //     offcanvas.hide();
+    //   }
+    // });
 
     // Filter applications by status
     function filterApplications(status) {

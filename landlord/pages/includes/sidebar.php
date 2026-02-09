@@ -3,18 +3,10 @@
     <div class="menu-item active">
         <span><a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;"><i class="fas fa-home"></i> Dashboard</a></span>
     </div>
-    <div class="menu-item" onclick="toggleSubmenu('properties')">
-        <span><i class="fas fa-building"></i>Properties</span>
-        <i class="fas fa-chevron-down chevron" id="properties-chevron"></i>
+    <div class="menu-item">
+        <span><i class="fas fa-building"> </i> <a href="/Jengopay/landlord/pages/Buildings/buildings.php">Buildings </a> </span>
     </div>
-    <div class="submenu" id="properties-submenu">
-        <div class="submenu-item"><a href="/Jengopay/landlord/pages/buildings/single_units.php">Single Units</a></div>
-        <div class="submenu-item"> <a href="/Jengopay/landlord/pages/buildings/bed_sitter_units.php">BedSitters</a></div>
-        <div class="submenu-item"> <a href="/Jengopay/landlord/pages/buildings/multi_room_units.php"> Multirooms</a></div>
-    </div>
-    <!-- <div class="menu-item">
-        <span><a href="/Jengopay/landlord/pages/Buildings/buildings.php"><i class="fas fa-building"></i> Properties</a></span>
-    </div> -->
+    
     <div class="menu-item" onclick="toggleSubmenu('users')">
         <span><i class="fas fa-users"></i> Users</span>
         <i class="fas fa-chevron-down chevron" id="users-chevron"></i>
@@ -55,7 +47,7 @@
         <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/agedpayable/aged_payable.php"> Aged Payable</a></div>
     </div>
     <div class="menu-item">
-      <span><i class="fas fa-tools"></i> <a href="/Jengopay/landlord/pages/maintenance/maintenance.php">Maintenance </a> </span>  
+        <span><i class="fas fa-tools"></i> <a href="/Jengopay/landlord/pages/maintenance/maintenance.php">Maintenance </a> </span>
     </div>
     <div class="menu-item">
         <span><i class="fas fa-cog"></i> Settings</span>

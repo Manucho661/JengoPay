@@ -5,7 +5,7 @@ require_once '../db/connect.php'; // $pdo is PDO
 $error = '';
 $success = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_reapplication'])) {
 
     // Collect data from POST
     $maintenance_request_id = (int) ($_POST['job_request_id'] ?? 0);
@@ -28,31 +28,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])
         if (!$provider) {
             $error = 'No service provider found for this user.';
         } else {
-            $provider_id = $provider['id'];
+            $provider_id = (int)$provider['id'];
 
             // Validation
-            if (empty($maintenance_request_id) || empty($proposed_budget) || empty($proposed_duration)) {
+            if (empty($maintenance_request_id) || $proposed_budget === '' || $proposed_duration === '') {
                 $error = 'All fields are required.';
             } else {
                 try {
-                    $sql = "INSERT INTO maintenance_request_proposals
-                            (maintenance_request_id, service_provider_id, proposed_budget, proposed_duration, cover_letter, provider_availability)
-                            VALUES (:maintenance_request_id, :service_provider_id, :proposed_budget, :proposed_duration, :cover_letter, :provider_availability)";
 
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->execute([
+                    // ✅ Ensure a proposal exists to update (optional but clearer messaging)
+                    $checkStmt = $pdo->prepare("
+                        SELECT id 
+                        FROM maintenance_request_proposals
+                        WHERE maintenance_request_id = :maintenance_request_id
+                          AND service_provider_id = :service_provider_id
+                        LIMIT 1
+                    ");
+                    $checkStmt->execute([
                         ':maintenance_request_id' => $maintenance_request_id,
-                        ':service_provider_id'    => $provider_id,
-                        ':proposed_budget'        => $proposed_budget,
-                        ':proposed_duration'      => $proposed_duration,
-                        ':cover_letter'           => $cover_letter,
-                        ':provider_availability'   => $provider_availability
+                        ':service_provider_id'    => $provider_id
                     ]);
 
-                    $success = 'Your proposal has been submitted successfully.';
+                    $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+                    if (!$existing) {
+                        $error = 'No existing proposal found to update. Please apply first.';
+                    } else {
+                        // ✅ UPDATE instead of INSERT
+                        $sql = "UPDATE maintenance_request_proposals
+                                SET proposed_budget = :proposed_budget,
+                                    proposed_duration = :proposed_duration,
+                                    cover_letter = :cover_letter,
+                                    provider_availability = :provider_availability,
+                                    updated_at = NOW()
+                                WHERE maintenance_request_id = :maintenance_request_id
+                                  AND service_provider_id = :service_provider_id
+                                LIMIT 1";
+
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute([
+                            ':proposed_budget'         => $proposed_budget,
+                            ':proposed_duration'       => $proposed_duration,
+                            ':cover_letter'            => $cover_letter,
+                            ':provider_availability'   => $provider_availability,
+                            ':maintenance_request_id'  => $maintenance_request_id,
+                            ':service_provider_id'     => $provider_id
+                        ]);
+
+                        $success = 'Your proposal has been updated successfully.';
+                    }
+
                 } catch (PDOException $e) {
                     $error = 'Something went wrong. Please try again.';
-                    // For debugging only: $error = $e->getMessage();
+                    // For debugging only: echo $e->getMessage(); exit;
 
                     echo $e->getMessage();
                     exit;

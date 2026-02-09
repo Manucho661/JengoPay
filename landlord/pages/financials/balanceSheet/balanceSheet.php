@@ -252,6 +252,7 @@ require_once  './actions/getEquity.php';
               <div>
                 <div class="table-responsive">
                   <table class="table table-striped" id="">
+                     <span class="text-success fw-bold">December, 2023</span>
                     <thead>
                       <tr>
                         <th>Description</th>

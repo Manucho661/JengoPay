@@ -209,24 +209,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
             color: #6c757d;
             font-size: 0.9rem;
         }
-
-        /* btn styles */
-        .applyFilterBtn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.3rem 1.4rem;
-            border-radius: 5px;
-            font-weight: 400;
-            transition: all 0.3s;
-        }
-
-        .applyFilterBtn:hover {
-            background: var(--accent-color);
-            color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-
+        
         /* filters */
         .form-select,
         .form-control {
@@ -350,16 +333,15 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
 
                     <!-- Desktop buttons -->
                     <div class="d-none d-md-flex gap-2">
-                        <button class="btn bg-warning text-white seTAvailable fw-bold rounded-4"
+                        <button class="actionBtn"
                             id="supplier-list-open-btn"
-                            style="background: linear-gradient(135deg, #00192D, #002B5B); color:white; width:100%; white-space: nowrap;">
+                            style="">
                             Registered Suppliers
                         </button>
 
                         <button
                             type="button"
-                            class="btn fw-bold rounded-4 text-white"
-                            style="background: linear-gradient(135deg, #00192D, #002B5B); width:100%; white-space: nowrap;"
+                            class="actionBtn"
                             data-bs-toggle="offcanvas"
                             data-bs-target="#supplierOffcanvas"
                             aria-controls="supplierOffcanvas">
@@ -734,7 +716,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                             <i class="fas fa-redo"></i> Reset
                                         </a>
 
-                                        <button type="submit" class="applyFilterBtn">
+                                        <button type="submit" class="actionBtn">
                                             <i class="fas fa-search"></i> Apply Filters
                                         </button>
                                     </div>
@@ -858,10 +840,9 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
 
                                                     <td>
                                                         <button
-                                                            class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
-                                                            style="background-color: #00192D; color: white; border: none; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
+                                                            class="actionBtn"
                                                             onclick="openExpenseModal(<?= $exp['id'] ?>)">
-                                                            <i class="bi bi-eye-fill"></i> View
+                                                            <i class="bi bi-eye-fill"></i> 
                                                         </button>
                                                     </td>
                                                 </tr>

@@ -1,9 +1,7 @@
-import { assignProvider } from "./api/assignProvider.js";
 import { updateAvailabilty } from "./api/updateAvailabilty.js";
 import { getProviderDetails } from "./api/getProviderDetails.js";
 import { sendText } from "./api/sendText.js";
 import { getTextMessages } from "./api/getTextMessages.js";
-import { toggleProposalsORotherRequests, confirmAssignBox, hideAssignBox } from "./uiControl.js";
 import { terminateContract, terminateContractBox, hideTerminateBox } from "./api/terminateProvider.js";
 
 // 🔥 Clean event listeners grouped in one place
@@ -15,10 +13,6 @@ function setupEvents() {
   document.getElementById("otherRequests")?.addEventListener("click", () =>
     toggleProposalsORotherRequests("requestList")
   );
-
-  document.getElementById("assignBtn").addEventListener("click", confirmAssignBox);
-  document.getElementById("cancelAssignBtn").addEventListener("click", hideAssignBox);
-  document.getElementById("actualAssignBtn").addEventListener("click", assignProvider);
 
   document.getElementById("availabilityBtn").addEventListener("click", updateAvailabilty);
   document.getElementById("viewDetails-btn").addEventListener("click", getProviderDetails);

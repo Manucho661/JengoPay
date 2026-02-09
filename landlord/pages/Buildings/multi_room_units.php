@@ -381,53 +381,65 @@ require_once "../db/connect.php";
                                         <tbody>
                                             <?php
 
-                                                    try {
-                                                        // get unit category id
-                                                        $categoryStmt = $pdo->prepare("
-                                                            SELECT id 
-                                                            FROM unit_categories 
-                                                            WHERE category_name = :category_name
-                                                            LIMIT 1
-                                                        ");
-                                                        $categoryStmt->execute([
-                                                            ':category_name' => 'multi_room'
-                                                        ]);
+                                            try {
+                                                $userId = (int)$_SESSION['user']['id'];
 
-                                                        $unitCategoryId = $categoryStmt->fetchColumn();
+                                                // 2) Get landlord id linked to this user
+                                                $landlordStmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ? LIMIT 1");
+                                                $landlordStmt->execute([$userId]);
+                                                $landlordId = $landlordStmt->fetchColumn();
 
-                                                        if (!$unitCategoryId) {
-                                                            throw new Exception('Unit category not found');
-                                                        }
-                                                        $select = "
-                                                                SELECT 
-                                                                    bu.*,
-                                                                    b.building_name
-                                                                FROM building_units bu
-                                                                INNER JOIN buildings b 
-                                                                    ON bu.building_id = b.id
-                                                                WHERE bu.unit_category_id = :unit_category_id
-                                                            ";
+                                                if (!$landlordId) {
+                                                    throw new Exception("Landlord account not found for this user.");
+                                                }
 
-                                                        $stmt = $pdo->prepare($select);
-                                                        $stmt->execute([
-                                                            ':unit_category_id' => $unitCategoryId
-                                                        ]);
-                                                        // $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                                        // var_dump($rows); // dumps all rows
-                                                        // exit;
+                                                // 3) Get unit category id (multi_room)
+                                                $categoryStmt = $pdo->prepare("
+    SELECT id
+    FROM unit_categories
+    WHERE category_name = :category_name
+    LIMIT 1
+");
+                                                $categoryStmt->execute([':category_name' => 'multi_room']);
+                                                $unitCategoryId = $categoryStmt->fetchColumn();
 
-                                                        while ($row = $stmt->fetch()) {
+                                                if (!$unitCategoryId) {
+                                                    throw new Exception("Unit category not found.");
+                                                }
 
-                                                            $id = encryptor('encrypt', $row['id']);
-                                                            $unit_number = $row['unit_number'];
-                                                            $purpose = $row['purpose'];
-                                                            $location = $row['location'];
-                                                            $monthly_rent = $row['monthly_rent'];
-                                                            $water_meter = $row['water_meter'];
-                                                            $occupancy_status = $row['occupancy_status'];
-                                                            $created_at = $row['created_at'];
-                                                            $building_name = $row['building_name'];
-                                                    ?>
+                                                // 4) Fetch units belonging to this landlord + category
+                                                $sql = "
+                                                    SELECT 
+                                                        bu.*,
+                                                        b.building_name
+                                                    FROM building_units bu
+                                                    INNER JOIN buildings b ON bu.building_id = b.id
+                                                    WHERE bu.unit_category_id = :unit_category_id
+                                                    AND bu.landlord_id = :landlord_id
+                                                    ORDER BY b.building_name ASC, bu.unit_number ASC
+                                                ";
+
+                                                $stmt = $pdo->prepare($sql);
+                                                $stmt->execute([
+                                                    ':unit_category_id' => (int)$unitCategoryId,
+                                                    ':landlord_id'      => (int)$landlordId,
+                                                ]);
+                                                // $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                                // var_dump($rows); // dumps all rows
+                                                // exit;
+
+                                                while ($row = $stmt->fetch()) {
+
+                                                    $id = encryptor('encrypt', $row['id']);
+                                                    $unit_number = $row['unit_number'];
+                                                    $purpose = $row['purpose'];
+                                                    $location = $row['location'];
+                                                    $monthly_rent = $row['monthly_rent'];
+                                                    $water_meter = $row['water_meter'];
+                                                    $occupancy_status = $row['occupancy_status'];
+                                                    $created_at = $row['created_at'];
+                                                    $building_name = $row['building_name'];
+                                            ?>
                                                     <tr>
                                                         <td><i class="bi bi-house-door"></i><?= htmlspecialchars($unit_number) ?></td>
                                                         <td><i class="bi bi-building"></i>

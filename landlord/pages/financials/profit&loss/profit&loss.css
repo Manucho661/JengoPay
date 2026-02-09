@@ -1,4 +1,4 @@
-.container.balancesheet{
+.container.profitAndLoss{
   /* max-width: 850px; */
   background: #ffffff;
   padding: 25px;
@@ -28,9 +28,7 @@ thead {
 tbody tr:nth-child(even) {
   background-color: #ecf0f1;
 }
-.fw-bold {
-  background-color: #d5dbdb;
-}
+
 th {
   /* vertical-align: middle; */
   padding: 12px;

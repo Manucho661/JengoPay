@@ -19,6 +19,8 @@ if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') 
 
 // dedicated file to submit application request
 include_once './actions/submitApplication.php';
+// Reapply
+include_once './actions/reApply.php';
 // dedicated file for fetching requests
 include './actions/getRequests1.php';
 
@@ -637,8 +639,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
           <div class="nav-links">
             <a href="" class="active"><i class="fas fa-search"></i> Find a Job</a>
             <a href="applications.php"><i class="fas fa-file-alt"></i> Your Applications</a>
-            <a href="assignedRequests.php"><i class="fas fa-briefcase"></i> Assigned Jobs</a>
-            <a href="previousRequests.php"><i class="fas fa-history"></i> Previous Jobs</a>
+            <a href="assignedRequests.php"><i class="fas fa-briefcase"></i> Your Profile</a>
           </div>
         </div>
       </nav>
@@ -721,8 +722,15 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                       </div>
                       <div class="meta-item">
                         <i class="fas fa-clock"></i>
-                        <span><?php echo $request['duration']; ?></span>
+                        <span>
+                          <?php
+                          echo ($request['duration'] === null)
+                            ? "Not set"
+                            : htmlspecialchars($request['duration']);
+                          ?>
+                        </span>
                       </div>
+
                     </div>
 
                     <?php
@@ -789,29 +797,33 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                       <div class="budget-info">
                         <i class="fas fa-money-bill-wave"></i>
                         <?php
-                        if (empty($request['budget'])) {
+                        if ($request['budget'] === null) {
                           echo "Not set";
                         } else {
                           echo htmlspecialchars($request['budget']);
                         }
                         ?>
+
                       </div>
 
                       <button
                         class="apply-btn <?php echo $request['has_applied'] ? 'reapply' : ''; ?>"
                         data-bs-toggle="modal"
                         data-bs-target="#applicationModal"
+
+                        data-has-applied="<?php echo $request['has_applied'] ? '1' : '0'; ?>"
+
                         data-job-id="<?php echo htmlspecialchars($request['id']); ?>"
                         data-job-title="<?php echo htmlspecialchars($request['title']); ?>"
                         data-job-property="<?php echo htmlspecialchars($request['building_name']); ?>"
                         data-job-unit="<?php echo htmlspecialchars($request['unit_number']); ?>"
                         data-job-budget="<?php echo ($request['budget'] === null || $request['budget'] === '') ? 'Not set' : htmlspecialchars($request['budget']); ?>"
-                        data-job-duration="<?php echo htmlspecialchars($request['duration']); ?>"
+                        data-job-duration="<?php echo ($request['duration'] === null || $request['duration'] === '') ? 'Not set' : htmlspecialchars($request['duration']); ?>"
                         data-job-category="<?php echo htmlspecialchars($request['category']); ?>">
-
                         <i class="fas fa-paper-plane"></i>
                         <?php echo $request['has_applied'] ? 'Reapply' : 'Apply Now'; ?>
                       </button>
+
 
                     </div>
 
@@ -1065,10 +1077,12 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
               Cancel
             </button>
             <button type="submit" name="submit_application" form="applicationForm"
+              id="submitApplicationBtn"
               class="btn fw-semibold text-dark" style="background-color:#FFC107;">
               <i class="fas fa-paper-plane me-1"></i>
               Submit Application
             </button>
+
           </div>
 
         </div>
@@ -1219,6 +1233,9 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
       const jobDuration = button.getAttribute('data-job-duration');
       const jobCategory = button.getAttribute('data-job-category');
 
+      // ✅ NEW: get has_applied state from button
+      const hasApplied = button.getAttribute('data-has-applied') === '1';
+
       // Update modal display content
       document.getElementById('modalJobTitle').textContent = jobTitle;
       document.getElementById('modalJobTitle').textContent = jobTitle;
@@ -1229,6 +1246,18 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
 
       // Update hidden form fields for PHP submission
       document.getElementById('hiddenJobRequestId').value = requestId;
+
+      // ✅ NEW: update submit button label + name based on hasApplied
+      const submitBtn = document.getElementById('submitApplicationBtn');
+      if (submitBtn) {
+        if (hasApplied) {
+          submitBtn.innerHTML = '<i class="fas fa-paper-plane me-1"></i> Submit Reapplication';
+          submitBtn.name = 'submit_reapplication';
+        } else {
+          submitBtn.innerHTML = '<i class="fas fa-paper-plane me-1"></i> Submit Application';
+          submitBtn.name = 'submit_application';
+        }
+      }
     });
 
     // Reset form when modal is closed
@@ -1237,6 +1266,13 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
       document.querySelectorAll('.duration-option').forEach(opt => {
         opt.classList.remove('selected');
       });
+
+      // ✅ OPTIONAL: reset submit button back to default
+      const submitBtn = document.getElementById('submitApplicationBtn');
+      if (submitBtn) {
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-1"></i> Submit Application';
+        submitBtn.name = 'submit_application';
+      }
     });
 
     // Duration selection
@@ -1248,6 +1284,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
       document.getElementById('customDuration').value = duration;
     }
   </script>
+
   <!-- Toast message -->
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -1259,6 +1296,10 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
     });
   </script>
 
+  <!-- make the submit show appropriate text depending if the provider applied or not -->
+  <script>
+
+  </script>
 </body>
 
 </html>

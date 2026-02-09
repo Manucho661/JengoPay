@@ -82,7 +82,6 @@ try {
     ");
         $stmt->execute(['pid' => $request['provider_id']]);
         $assignedProvider = $stmt->fetch(PDO::FETCH_ASSOC);
-
     } else {
 
         // Fetch proposals only if NOT assigned
@@ -90,6 +89,9 @@ try {
         SELECT 
             sp.name AS service_provider_name,
             sp.id AS service_provider_id,
+            sp.jobs_completed,
+            sp.jobs_not_completed,
+            mrp.id AS proposal_id,
             mrp.proposed_budget,
             mrp.proposed_duration,
             mrp.provider_availability
@@ -107,6 +109,27 @@ try {
     $stmt = $pdo->prepare("SELECT * FROM maintenance_request_payments WHERE maintenance_request_id = :id");
     $stmt->execute(['id' => $requestId]);
     $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // other requests
+    $stmt = $pdo->prepare("
+        SELECT 
+            mr.id,
+            mr.title,
+            mr.status,
+            mr.created_at,
+            b.building_name,
+            bu.unit_number
+        FROM maintenance_requests mr
+        LEFT JOIN buildings b 
+            ON mr.building_id = b.id
+        LEFT JOIN building_units bu 
+            ON mr.building_unit_id = bu.id
+        ORDER BY mr.created_at DESC
+        LIMIT 4
+    ");
+
+    $stmt->execute();
+    $other_maintenance_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Step 5: Response
     $response = [

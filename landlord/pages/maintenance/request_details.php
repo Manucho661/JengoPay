@@ -162,7 +162,8 @@ require_once 'actions/assignProvider.php';
 
   .setBudget-btn,
   .viewDetails-btn,
-  .messageProviderBtn {
+  .messageProviderBtn,
+  .processPayment-btn {
     background: var(--primary);
     color: white;
     border: none;
@@ -182,10 +183,28 @@ require_once 'actions/assignProvider.php';
     transition: all 0.3s;
   }
 
+  .recordPayment-btn {
+    background: var(--accent-color);
+    color: var(--primary-color);
+    border: none;
+    padding: 0.3rem 1.4rem;
+    border-radius: 5px;
+    font-weight: 400;
+    transition: all 0.3s;
+
+  }
+
+  .recordPayment-btn:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+  }
+
   .setBudget-btn:hover,
   .viewDetails-btn:hover,
   .messageProviderBtn:hover,
-  .acceptProposalBtn:hover {
+  .acceptProposalBtn:hover,
+  .processPayment-btn:hover {
     background: var(--accent-color);
     color: var(--primary-color);
     transform: translateY(-2px);
@@ -328,7 +347,23 @@ require_once 'actions/assignProvider.php';
         <div class="row">
           <div class="col-md-8">
             <div class="content-card">
-              <h5>Request Information (<span class="mx-2" style="font-size: 12px;"><?= htmlspecialchars($request['status'] ?? 'N/A') ?></span>)</h5>
+              <?php
+              $status = strtolower(trim($request['status'] ?? ''));
+
+              $successStatuses = ['submitted', 'assigned', 'open'];
+
+              $badgeClass = in_array($status, $successStatuses)
+                ? 'text-success'
+                : 'text-danger';
+              ?>
+              <h5>
+                Request Information (
+                <span class="mx-2 <?= $badgeClass ?>" style="font-size: 12px;">
+                  <?= htmlspecialchars($request['status'] ?? 'N/A') ?>
+                </span>
+                )
+              </h5>
+
               <div class="info-row">
                 <span class="info-label">Category:</span>
                 <span><?= htmlspecialchars($request['category'] ?? 'N/A') ?></span>
@@ -356,12 +391,33 @@ require_once 'actions/assignProvider.php';
               <h5>Description & Photo</h5>
               <div>
                 <p><?= htmlspecialchars($request['description'] ?? 'No description provided.') ?></p>
+
                 <?php if (!empty($photos)): ?>
-                  <img src="/jengopay/landlord/maintenance/<?= htmlspecialchars($photos[0]['photo_path']) ?>" alt="Request Image" class="request-image mt-3">
+                  <img src="/jengopay/landlord/maintenance/<?= htmlspecialchars($photos[0]['photo_path']) ?>"
+                    alt="Request Image"
+                    class="request-image mt-3">
+
                 <?php else: ?>
-                  <p>No image provided.</p>
+                  <div class="text-center py-5" style="margin: 3rem 0;">
+                    <div style="background-color: #f8f9fa; border-radius: 16px; padding: 3rem 2rem; max-width: 500px; margin: 0 auto;">
+
+                      <div style="font-size: 4rem; color: #6c757d; margin-bottom: 1rem;">
+                        <i class="bi bi-image"></i>
+                      </div>
+
+                      <h5 style="color: #00192D; font-weight: 600; margin-bottom: 0.5rem;">
+                        No Photos Uploaded
+                      </h5>
+
+                      <p style="color: #6c757d; font-size: 0.95rem;">
+                        This maintenance request does not have any photos attached.
+                      </p>
+
+                    </div>
+                  </div>
                 <?php endif; ?>
               </div>
+
             </div>
             <div class="content-card">
 
@@ -432,16 +488,37 @@ require_once 'actions/assignProvider.php';
                               <span class="text-muted">(4.5)</span>
                             </div>
 
-                            <p class="mb-2">
-                              We can fix your blocked sink using professional equipment. We'll also inspect the pipes to prevent future blockages.
-                            </p>
+                            <!-- Performance stats instead of description -->
+                            <div class="mb-2 small text-muted">
+                              <i class="fas fa-check-circle text-success"></i>
+                              Jobs Completed:
+                              <strong><?= (int)$proposal['jobs_completed'] ?></strong>
+
+                              <span class="mx-2">|</span>
+
+                              <i class="fas fa-chart-line text-primary"></i>
+                              Completion Rate:
+                              <strong>
+                                <?=
+                                ($proposal['jobs_completed'] + $proposal['jobs_not_completed']) > 0
+                                  ? number_format(
+                                    ($proposal['jobs_completed'] /
+                                      ($proposal['jobs_completed'] + $proposal['jobs_not_completed'])) * 100,
+                                    1
+                                  )
+                                  : '0.0'
+                                ?>%
+                              </strong>
+                            </div>
 
                             <div>
-                              <span class="badge bg-success">
-                                Budget: KES <?= htmlspecialchars($proposal['proposed_budget']) ?>
+                              <span>
+                                <i class="fas fa-money-bill-wave text-warning"></i>
+                                KES <?= htmlspecialchars($proposal['proposed_budget']) ?>
                               </span>
-                              <span class="badge bg-info ms-2">
-                                Duration: <?= htmlspecialchars($proposal['proposed_duration']) ?>
+                              <span class="mx-4">
+                                <i class="fas fa-clock text-warning"></i>
+                                <?= htmlspecialchars($proposal['proposed_duration']) ?>
                               </span>
                             </div>
                           </div>
@@ -450,12 +527,14 @@ require_once 'actions/assignProvider.php';
                             data-bs-toggle="offcanvas"
                             data-bs-target="#providerOffcanvas"
                             data-request-id="<?= htmlspecialchars($request['id']); ?>"
+                            data-proposal-id="<?= htmlspecialchars($proposal['proposal_id']); ?>"
                             data-provider-id="<?= htmlspecialchars($proposal['service_provider_id']); ?>"
                             data-provider-name="<?= htmlspecialchars($proposal['service_provider_name']); ?>">
                             View Details
                           </button>
                         </div>
                       </div>
+
                     </div>
                   <?php endforeach; ?>
 
@@ -563,7 +642,7 @@ require_once 'actions/assignProvider.php';
               <?php endif; ?>
             </div>
             <!-- Status & Payment -->
-            <?php if (!empty($request['payment_status'])): ?>
+            <?php if (isset($request['payment_status']) && $request['payment_status'] !== null && $request['payment_status'] !== ''): ?>
               <div class="content-card">
                 <h5>Status & Payment</h5>
 
@@ -575,9 +654,11 @@ require_once 'actions/assignProvider.php';
 
                   <div class="info-row">
                     <span class="info-label">Payment:</span>
-                    <span><span class="badge bg-danger">
+                    <span>
+                      <span class="badge bg-danger">
                         <?= htmlspecialchars($request['payment_status']) ?>
-                      </span></span>
+                      </span>
+                    </span>
                   </div>
 
                   <div class="info-row">
@@ -590,7 +671,8 @@ require_once 'actions/assignProvider.php';
                     <span>M-Pesa</span>
                   </div>
 
-                  <button class="btn btn-primary w-100 mt-3">Process Payment</button>
+                  <button class="processPayment-btn w-100 mb-2">Process Payment</button>
+                  <button class="recordPayment-btn w-100">Record Payment</button>
                 </div>
               </div>
             <?php endif; ?>
@@ -601,45 +683,62 @@ require_once 'actions/assignProvider.php';
 
               <div class="p-0">
                 <div class="list-group list-group-flush">
-                  <a href="#" class="list-group-item list-group-item-action other-request">
-                    <div class="d-flex justify-content-between">
-                      <div>
-                        <h6 class="mb-1">Leaking Faucet</h6>
-                        <small class="text-muted">Apt 2A - Dec 7</small>
-                      </div>
-                      <span class="badge bg-success align-self-center">Completed</span>
+
+                  <?php if (empty($other_maintenance_requests)): ?>
+                    <div class="text-center py-4 text-muted">
+                      <i class="bi bi-tools fs-2 d-block mb-2"></i>
+                      No recent maintenance requests found.
                     </div>
-                  </a>
-                  <a href="#" class="list-group-item list-group-item-action other-request">
-                    <div class="d-flex justify-content-between">
-                      <div>
-                        <h6 class="mb-1">Broken Window</h6>
-                        <small class="text-muted">Apt 5C - Dec 6</small>
-                      </div>
-                      <span class="badge bg-warning align-self-center">In Progress</span>
+                  <?php else: ?>
+
+                    <?php foreach ($other_maintenance_requests as $req): ?>
+
+                      <?php
+                      $status = strtolower(trim($req['status'] ?? ''));
+                      $badgeClass = ($status === 'cancelled') ? 'text-danger' : 'text-success';
+
+                      $requestId = (int)($req['id'] ?? 0);
+                      $href = "request_details.php?id=" . $requestId;
+                      ?>
+
+                      <a href="<?= htmlspecialchars($href) ?>" class="list-group-item list-group-item-action other-request">
+                        <div class="d-flex justify-content-between">
+                          <div>
+                            <h6 class="mb-1">
+                              <?= htmlspecialchars($req['title'] ?? 'No Title') ?>
+                            </h6>
+
+                            <small class="text-muted">
+                              <?= htmlspecialchars(($req['building_name'] ?? 'Unknown Building') . ' - ' . ($req['unit_number'] ?? 'N/A')) ?>
+                              •
+                              <?= !empty($req['created_at']) ? date('M j', strtotime($req['created_at'])) : '' ?>
+                            </small>
+                          </div>
+
+                          <span class="badge <?= $badgeClass ?> align-self-center">
+                            <?= htmlspecialchars($req['status'] ?? 'N/A') ?>
+                          </span>
+                        </div>
+                      </a>
+
+                    <?php endforeach; ?>
+
+                    <!-- View All Requests Button -->
+                    <div class="text-center mt-3 mb-2">
+                      <a href="maintenance.php"
+                        class="btn rounded w-100 allRequests-btn"
+                        style="background:#00192D;color:white;border-radius:10px;padding:8px 18px;">
+                        View All Requests
+                      </a>
                     </div>
-                  </a>
-                  <a href="#" class="list-group-item list-group-item-action other-request">
-                    <div class="d-flex justify-content-between">
-                      <div>
-                        <h6 class="mb-1">AC Not Working</h6>
-                        <small class="text-muted">Apt 1B - Dec 5</small>
-                      </div>
-                      <span class="badge bg-info align-self-center">Open</span>
-                    </div>
-                  </a>
-                  <a href="#" class="list-group-item list-group-item-action other-request">
-                    <div class="d-flex justify-content-between">
-                      <div>
-                        <h6 class="mb-1">Door Lock Issue</h6>
-                        <small class="text-muted">Apt 4D - Dec 4</small>
-                      </div>
-                      <span class="badge bg-success align-self-center">Completed</span>
-                    </div>
-                  </a>
+
+                  <?php endif; ?>
+
                 </div>
               </div>
+
             </div>
+
           </div>
         </div>
       </div>
@@ -755,6 +854,7 @@ require_once 'actions/assignProvider.php';
         <form method="POST" action="" id="acceptProposalForm">
           <input type="hidden" id="assignRequestId" name="request_id" value="<?php htmlspecialchars($request['id']) ?>">
           <input type="hidden" name="provider_id" id="providerId" value="">
+          <input type="hidden" name="proposal_id"id="proposalId" value="">
           <button type="submit" name="assignProvider" class="acceptProposalBtn w-100">
             <i class="fas fa-check"></i> Accept This Proposal
           </button>
@@ -767,133 +867,6 @@ require_once 'actions/assignProvider.php';
   </div>
 
   <!-- MODALS -->
-  <!--Provider Modal -->
-  <div class="modal fade" id="proposalModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content custom-modal">
-
-        <!-- Header -->
-        <div class="modal-header border-bottom">
-          <h5 class="modal-title text-navy fw-bold">Provider Application</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <!-- Body -->
-        <div class="modal-body text-dark">
-          <div class="d-flex align-items-start mb-3">
-            <img id="modalPhoto"
-              src="images/download.webp"
-              alt="Profile Picture"
-              class="rounded-circle me-3 border border-2 border-navy"
-              style="width:70px; height:70px;">
-            <div>
-              <h5 id="modalName" class="mb-0">
-                Jane Doe
-                <span id="modalBadge" class="badge bg-warning text-dark ms-2">Top Rated</span>
-              </h5>
-              <p id="modalTitle" class="text-muted mb-0">Full Stack Developer | React & Node.js</p>
-              <p class="mb-0">
-                <strong>Email:</strong> <span id="providerModalEmail" class="text-accent">jane.doe@email.com</span>
-              </p>
-              <p class="mb-0">
-                <strong>Phone:</strong> <span id="providerModalPhone" class="text-accent">+254 700 123 456</span>
-              </p>
-            </div>
-            <div class="ms-auto text-end">
-              <h6 id="modalRate" class="text-accent mb-0">KSH 25/hr</h6>
-              <small id="modalDelivery" class="d-block text-muted">5 days delivery</small>
-              <small id="modalJobs" class="text-success">✅ 42 jobs completed</small>
-            </div>
-          </div>
-
-          <hr>
-
-          <p><strong>Location:</strong>
-            <span id="modalLocation" class="text-accent">Nairobi, Kenya</span>
-          </p>
-        </div>
-
-        <!-- Footer -->
-        <div class="modal-footer border-top" id="proposalModalFooter">
-          <div id="assignBox">
-            <button type="button" class="btn btn-outline-navy" data-bs-toggle="modal" data-bs-target="#chatModal">Message</button>
-            <button type="button" id="assignBtn" class="assignBtn btn btn-accent">Assign</button>
-            <button type="button" class="btn btn-outline-danger">Reject</button>
-          </div>
-          <div id="confirmAssign" style="display:none; align-items: center; gap: 0.5rem;">
-            <p class="mb-0">You're about to assign the request to the above provider, are sure?</p>
-            <button class="actualAssignBtn m-1 btn btn-success" id="actualAssignBtn">Yes, Assign</button>
-            <button id="cancelAssignBtn" class="m-1 btn btn-outline-danger">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- provider details-->
-  <div class="modal fade" id="providerModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content custom-modal">
-
-        <!-- Header -->
-        <div class="modal-header border-bottom">
-          <h5 class="modal-title text-navy fw-bold">Provider Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <!-- Body -->
-        <div class="modal-body text-dark">
-          <div class="d-flex align-items-start mb-3">
-            <img id="providerModalPhoto"
-              src="https://i.pravatar.cc/70"
-              alt="Profile Picture"
-              class="rounded-circle me-3 border border-2 border-navy"
-              style="width:70px; height:70px;">
-            <div>
-              <h5 id="providerModalName" class="mb-0">
-                Jane Doe
-                <span id="modalBadge" class="badge bg-warning text-dark ms-2">Top Rated</span>
-              </h5>
-              <p id="providerModalTitle" class="text-muted mb-1">Full Stack Developer | React & Node.js</p>
-
-              <!-- ✅ New contact details -->
-              <p class="mb-0">
-                <strong>Email:</strong> <span id="providerModalEmail" class="text-accent">jane.doe@email.com</span>
-              </p>
-              <p class="mb-0">
-                <strong>Phone:</strong> <span id="providerModalPhone" class="text-accent">+254 700 123 456</span>
-              </p>
-            </div>
-            <div class="ms-auto text-end">
-              <h6 id="providerModalRate" class="text-accent mb-0">$25/hr</h6>
-              <small id="providerModalDelivery" class="d-block text-muted">5 days delivery</small>
-              <small id="providerModalJobs" class="text-success">✅ 42 jobs completed</small>
-            </div>
-          </div>
-
-          <hr>
-
-          <p><strong>Location:</strong>
-            <span id="providerModalLocation" class="text-accent">Nairobi, Kenya</span>
-          </p>
-        </div>
-
-        <!-- Footer -->
-        <div class="modal-footer border-top">
-          <div id="terminateBox">
-            <button type="button" class="messageBtn btn btn-outline-navy">Message</button>
-            <button type="button" id="terminateBtn" class="terminateBtn btn btn-outline-danger">Terminate</button>
-          </div>
-          <div id="confirmTerminateBox" style="display:none; align-items: center; gap: 0.5rem;">
-            <p class="mb-0">You're about to terminate the assignment to <span id="providerName"></span> are sure?</p>
-            <button class="actualTerminateBtn m-1 btn text-white" id="actualTerminateBtn">Yes, terminate</button>
-            <button class="terminateCancel m-1 btn btn-outline-danger text-dark" style="" id="cancelTerminateBtn">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 
   <!-- Payment Modals -->
   <!-- Record Payment Modal -->
@@ -1014,9 +987,19 @@ require_once 'actions/assignProvider.php';
   <div class="modal fade" id="durationBudgetModal" tabindex="-1" aria-labelledby="availabilityModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header" style="background: linear-gradient(135deg, #00192D 0%, #003d5c 100%)">
-          <h5 class="modal-title" id="availabilityModalLabel" style="color: white;">Set Budget and Duration</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-header d-flex align-items-center"
+          style="background: linear-gradient(135deg, #00192D 0%, #003d5c 100%)">
+
+          <h5 class="modal-title text-white mb-0" id="availabilityModalLabel">
+            Set Budget and Duration
+          </h5>
+
+          <button type="button"
+            class="btn-close bg-white"
+            data-bs-dismiss="modal"
+            aria-label="Close">
+          </button>
+
         </div>
 
         <form
@@ -1245,12 +1228,14 @@ require_once 'actions/assignProvider.php';
         btn.addEventListener('click', function() {
           const requestId = this.getAttribute('data-request-id');
           const providerId = this.getAttribute('data-provider-id');
+          const proposalId = this.getAttribute('data-proposal-id');
 
           // Update provider name in offcanvas
           if (providerName) {
             // document.getElementById('providerName').textContent = providerName;
             document.getElementById('providerId').value = providerId;
             document.getElementById('assignRequestId').value = requestId;
+            document.getElementById('proposalId').value = proposalId;
 
             // Update avatar with provider name
             const avatarImg = document.getElementById('providerAvatar');

@@ -13,9 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['assignProvider'])) {
 try {
     $requestId  = $_POST['request_id'] ?? null;
     $providerId = $_POST['provider_id'] ?? null;
+    $proposalId = $_POST['proposal_id'] ?? null;
 
-    if (!$requestId || !$providerId) {
-        echo "Missing request_id or provider_id";
+    if (!$requestId || !$providerId || !$proposalId) {
+        echo "Missing request_id, provider_id, or proposal_id";
         exit;
     }
 
@@ -31,10 +32,11 @@ try {
         ':service_provider_id'    => (int)$providerId,
     ]);
 
-    // 2) Update main request to track assigned provider
+    // 2) Update main request to track assigned provider AND status
     $stmt2 = $pdo->prepare("
         UPDATE maintenance_requests
-        SET assigned_to_provider_id = :provider_id
+        SET assigned_to_provider_id = :provider_id,
+            status = 'Assigned'
         WHERE id = :request_id
     ");
     $stmt2->execute([
@@ -42,15 +44,26 @@ try {
         ':request_id'  => (int)$requestId,
     ]);
 
+    // 3) Update proposal status to 'Accepted'
+    $stmt3 = $pdo->prepare("
+        UPDATE maintenance_request_proposals
+        SET status = 'Accepted'
+        WHERE id = :proposal_id
+    ");
+    $stmt3->execute([
+        ':proposal_id' => (int)$proposalId,
+    ]);
+
     $pdo->commit();
 
-    $_SESSION['success'] = "Maintenance request assigned successfully.";
+    $_SESSION['success'] = "Maintenance request assigned and proposal accepted successfully.";
     header('Location: ' . $_SERVER['REQUEST_URI']);
     exit;
-} catch (Throwable $e) {
-    $_SESSION['error'] =
-        'Failed to assign the provider: ' . $e->getMessage();
 
+} catch (Throwable $e) {
+    $pdo->rollBack();
+
+    $_SESSION['error'] = 'Failed to assign the provider and update the proposal status: ' . $e->getMessage();
     header('Location: ' . $_SERVER['REQUEST_URI']);
     exit;
 }

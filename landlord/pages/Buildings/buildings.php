@@ -119,6 +119,16 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
 
     <!--Tailwind CSS  -->
     <style>
+        :root {
+            --sidebar-width: 260px;
+            --main-color: #00192D;
+            --accent-color: #FFC107;
+            --white-color: #FFFFFF;
+            --light-bg: #f8f9fa;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+        }
+
         .app-wrapper {
             background-color: rgba(128, 128, 128, 0.1);
         }
@@ -242,6 +252,86 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
             color: #6c757d;
             font-size: 0.9rem;
         }
+
+        /* Action Buttons */
+        .action-links {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 25, 45, 0.08);
+        }
+
+        .action-link {
+            display: inline-block;
+            padding: 6px 15px;
+            margin: 5px;
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--main-color);
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .action-link:hover {
+            background: var(--accent-color);
+            color: var(--main-color);
+            border-color: var(--accent-color);
+        }
+
+        .action-link i {
+            margin-right: 8px;
+        }
+
+        /* Bootstrap Button Overrides */
+        .btn-primary {
+            background: var(--main-color);
+            border-color: var(--main-color);
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active {
+            background: #001a3a;
+            border-color: #001a3a;
+        }
+
+        .btn-success {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: var(--main-color);
+            font-weight: 600;
+        }
+
+        .btn-success:hover,
+        .btn-success:focus,
+        .btn-success:active {
+            background: #e6ad06;
+            border-color: #e6ad06;
+            color: var(--main-color);
+        }
+
+        .btn-outline-primary {
+            color: var(--main-color);
+            border-color: var(--main-color);
+        }
+
+        .btn-outline-primary:hover,
+        .btn-outline-primary:focus,
+        .btn-outline-primary:active {
+            background: var(--main-color);
+            border-color: var(--main-color);
+            color: white;
+        }
+
+        /* Remove Bootstrap focus styles */
+        .btn:focus,
+        .btn:active,
+        .btn-close:focus {
+            box-shadow: none;
+            outline: none;
+        }
     </style>
 </head>
 
@@ -363,49 +453,105 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                     </div>
                 </div>
 
-                <hr style="border: 1px solid #000;">
-
-                <!-- filter and search section -->
                 <div class="row mb-3 mt-3">
-                    <div class="col-md-4 d-flex">
-                        <input
-                            type="text"
-                            class="form-control filter-shadow"
-                            placeholder="Search requests..."
-                            style="border-radius: 25px 0 0 25px;">
-
-                        <!-- Search Button -->
-                        <button
-                            class="btn text-white"
-                            style="border-radius: 0 25px 25px 0; background: linear-gradient(135deg, #00192D, #002B5B)">
-                            Search
-                        </button>
+                    <div class="col-md-12">
+                        <div class="card border-0 mb-4">
+                            <div class="card-body ">
+                                <h6 class="mb-3" style="color: var(--main-color); font-weight: 600;">
+                                    Units
+                                </h6>
+                                <a href="#" class="action-link">
+                                    <i class="fas fa-th"></i> All Units (40)
+                                </a>
+                                <a href="single_units.php" class="action-link">
+                                    <i class="fas fa-door-open"></i> Single Units (50)
+                                </a>
+                                <a href="bed_sitter_units.php" class="action-link">
+                                    <i class="fas fa-bed"></i> Bedsitter Units (80)
+                                </a>
+                                <a href="multi_room_units.php" class="action-link">
+                                    <i class="fas fa-door-closed"></i> Multi-Room Units (70)
+                                </a>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="col-md-2">
-                        <select class="form-select filter-shadow">
-                            <option selected>buidling type</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-2">
-                        <select class="form-select filter-shadow">
-                            <option selected>Filter by Category</option>
-                        </select>
-                    </div>
-
-                    <!-- Filter by Tenant -->
-                    <div class="col-md-2">
-                        <select class="form-select filter-shadow">
-                            <option selected>Filter by Ownership</option>
-                        </select>
-                    </div>
-                    <!-- Filter by Tenant -->
-                    <div class="col-md-2">
-                        <button class="btn btn-primary">Apply</button>
-                    </div>
-
                 </div>
+
+                <div class="row g-3 mb-4">
+                    <!-- Filter by Building -->
+                    <div class="col-md-12 col-sm-12">
+                        <div class="card border-0 mb-4">
+                            <div class="card-body ">
+                                <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filter Buildings</h5>
+                                <form method="GET">
+                                    <!-- always reset to page 1 when applying filters -->
+                                    <input type="hidden" name="page" value="1">
+
+                                    <div class="filters-scroll">
+                                        <div class="row g-3 mb-3 filters-row">
+
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Search</label>
+                                                <input
+                                                    type="text"
+                                                    name="search"
+                                                    class="form-control"
+                                                    placeholder="Building..."
+                                                    value="">
+                                            </div>
+
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Buildings</label>
+                                                <select class="form-select shadow-sm" name="building_id">
+                                                    <option value="">All Buildings</option>
+
+                                                </select>
+                                            </div>
+
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Category</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Statuses</option>
+
+                                                    <!-- Use values that match your DB exactly -->
+                                                    <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
+                                                    <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
+                                                    <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
+                                                    <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-auto filter-col">
+                                                <label class="form-label text-muted small">Ownership Mode</label>
+                                                <input
+                                                    type="date"
+                                                    name="date_from"
+                                                    class="form-control"
+                                                    value="<?= htmlspecialchars($date_from ?? '') ?>">
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <!-- Replace with your real page name -->
+                                        <a href="expenses.php" class="btn btn-secondary">
+                                            <i class="fas fa-redo"></i> Reset
+                                        </a>
+
+                                        <button type="submit" class="applyFilterBtn">
+                                            <i class="fas fa-search"></i> Apply Filters
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- filter and search section -->
+
                 <!-- buildings -->
                 <div class="row g-3 mt-4">
                     <div class="col-md-12">
