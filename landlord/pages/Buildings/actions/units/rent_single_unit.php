@@ -1,5 +1,22 @@
 <?php
+
+
 if (isset($_POST['rent_unit'])) {
+  // get landlord
+  // Session variables to use
+  $userId = $_SESSION['user']['id'];
+
+  // Fetch landlord ID linked to the logged-in user
+  $stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
+  $stmt->execute([$userId]);
+  $landlord = $stmt->fetch();
+
+  // Check if landlord exists for the user
+  if (!$landlord) {
+    throw new Exception("Landlord account not found for this user.");
+  }
+
+  $landlord_id = $landlord['id']; // Store the landlord_id from the session
 
   $tm = md5(time()); // Unique prefix for uploaded files
 
@@ -45,6 +62,7 @@ if (isset($_POST['rent_unit'])) {
   // COLLECT FORM DATA
   // --------------------------------------------
   $tenantData = [
+    'landlord_id'  => $landlord_id,
     'first_name'   => $_POST['tfirst_name'] ?? null,
     'middle_name'  => $_POST['tmiddle_name'] ?? null,
     'last_name'    => $_POST['tlast_name'] ?? null,
@@ -107,6 +125,40 @@ if (isset($_POST['rent_unit'])) {
     $pdo->beginTransaction();
 
     // --------------------------------------------
+    // CHECK IF EMAIL EXISTS IN USERS TABLE
+    // --------------------------------------------
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = :email LIMIT 1");
+    $stmt->execute([':email' => $tenantData['email']]);
+    $userId = $stmt->fetchColumn();
+
+    // If the user doesn't exist, insert a new user with hashed password and role 'tenant'
+    // If the user doesn't exist, insert a new user with hashed password and role 'tenant'
+    if (!$userId) {
+      // Hash the password
+      $passwordHash = password_hash('password123', PASSWORD_DEFAULT);
+
+      // Insert new user into the users table
+      $stmt = $pdo->prepare("
+            INSERT INTO users (email, password, role)
+            VALUES (:email, :password, 'tenant')
+        ");
+      $stmt->execute([
+        ':email' => $tenantData['email'],
+        ':password' => $passwordHash,
+      ]);
+
+      // Get the newly inserted user's ID
+      $userId = $pdo->lastInsertId();
+    }
+
+    // --------------------------------------------
+    // Add user_id to the tenantData array
+    // --------------------------------------------
+    $tenantData['user_id'] = $userId;
+
+
+
+    // --------------------------------------------
     // CHECK OR INSERT TENANT
     // --------------------------------------------
     $stmt = $pdo->prepare("SELECT id FROM tenants WHERE national_id = :national_id LIMIT 1");
@@ -116,8 +168,8 @@ if (isset($_POST['rent_unit'])) {
     if (!$tenantId) {
       $stmt = $pdo->prepare("
                 INSERT INTO tenants 
-                (first_name, middle_name, last_name, phone, alt_phone, email, national_id, tenant_reg)
-                VALUES (:first_name, :middle_name, :last_name, :phone, :alt_phone, :email, :national_id, :tenant_reg)
+                (user_id, landlord_id, first_name, middle_name, last_name, phone, alt_phone, email, national_id, tenant_reg)
+                VALUES (:user_id, :landlord_id, :first_name, :middle_name, :last_name, :phone, :alt_phone, :email, :national_id, :tenant_reg)
             ");
       $stmt->execute($tenantData);
       $tenantId = $pdo->lastInsertId();
@@ -179,12 +231,6 @@ if (isset($_POST['rent_unit'])) {
     exit;
   } catch (Exception $e) {
     $pdo->rollBack();
-    echo "<script>
-            Swal.fire({
-                icon:'error',
-                title:'Error!',
-                html:`" . addslashes($e->getMessage()) . "`
-            });
-        </script>";
+    echo $e->getMessage();
   }
 }

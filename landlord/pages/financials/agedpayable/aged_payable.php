@@ -11,70 +11,58 @@ require_once '../../db/connect.php';
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE | Dashboard v2</title>
-    <!--begin::Primary Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" content="AdminLTE | Dashboard v2" />
-    <meta name="author" content="ColorlibHQ" />
-    <meta
-        name="description"
-        content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-    <meta
-        name="keywords"
-        content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
-    <!--end::Primary Meta Tags-->
-    <!--begin::Fonts-->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
-        crossorigin="anonymous" />
-    <!--end::Fonts-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
-        crossorigin="anonymous" />
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-    <!--begin::Third Party Plugin(Bootstrap Icons)-->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
-        crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <title>AdminLTE | Dashboard v2</title>
+  <!--begin::Primary Meta Tags-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="title" content="AdminLTE | Dashboard v2" />
+  <meta name="author" content="ColorlibHQ" />
+  <meta
+    name="description"
+    content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
+  <meta
+    name="keywords"
+    content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
+  <!--end::Primary Meta Tags-->
+  <!--begin::Fonts-->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+    integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
+    crossorigin="anonymous" />
+  <!--end::Fonts-->
+  <!--begin::Third Party Plugin(OverlayScrollbars)-->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
+    integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
+    crossorigin="anonymous" />
+  <!--end::Third Party Plugin(OverlayScrollbars)-->
+  <!--begin::Third Party Plugin(Bootstrap Icons)-->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
+    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 
-    <!--end::Third Party Plugin(Bootstrap Icons)-->
-    <!--begin::Required Plugin(AdminLTE)-->
-    <!-- <link rel="stylesheet" href="../../../css/adminlte.css" /> -->
-    <link rel="stylesheet" href="../../../../landlord/assets/main.css" />
-    <!-- <link rel="stylesheet" href="text.css" /> -->
-    <!--end::Required Plugin(AdminLTE)-->
-    <!-- apexcharts -->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-        crossorigin="anonymous" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <!--Css files-->
+  <link rel="stylesheet" href="/jengopay/landlord/assets/main.css" />
+  <link rel="stylesheet" href="balancesheet.css">
 
-    <link rel="stylesheet" href="maintenance.css">
-    <!-- scripts for data_table -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- jQuery (required for Bootstrap's JS plugins) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Bootstrap 5.3.3 JS (includes Popper.js for tooltips and popovers) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- scripts for data_table -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <!-- Include XLSX and FileSaver.js for Excel export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
 
     <style>
@@ -176,6 +164,10 @@ require_once '../../db/connect.php';
             white-space: nowrap;
             /* Prevent the label text from wrapping */
         }
+
+        a {
+            text-decoration: none !important;
+        }
     </style>
     </style>
 </head>
@@ -187,7 +179,7 @@ require_once '../../db/connect.php';
         <!--begin::Header-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
         <!--end::Header-->
-        
+
         <!--begin::Sidebar-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
         <!--end::Sidebar-->
@@ -195,21 +187,97 @@ require_once '../../db/connect.php';
         <!--begin::App Main-->
         <main class="main">
             <!--begin::App Content Header-->
-            <div class="app-content-header" style="">
-                <!--begin::Container-->
-                <div class="container-fluid">
-                    <!--begin::Row-->
-                    <div class="row align-items-center mb-1">
-                        <div class="col-sm-7">
-                            <h3 class="mb-0">🖊️ <span class="contact_section_header">Aged Payable Accounts</span></h3>
-                            <p class="text-muted"> Manage your Payable accounts</p>
+            <div class="container">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" style="">
+                        <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Aged Payable Accounts</li>
+                    </ol>
+                </nav>
+            </div>
+            <!-- Fifth Row: filter -->
+            <div class="row g-3 mb-4">
+                <!-- Filter by Building -->
+                <div class="col-md-12 col-sm-12">
+                    <div class="card border-0 mb-4">
+                        <div class="card-body ">
+                            <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filters</h5>
+                            <form method="GET">
+                                <!-- always reset to page 1 when applying filters -->
+                                <input type="hidden" name="page" value="1">
+
+                                <div class="filters-scroll">
+                                    <div class="row g-3 mb-3 filters-row">
+
+                                        <div class="col-auto filter-col">
+                                            <label class="form-label text-muted small">Search</label>
+                                            <input
+                                                type="text"
+                                                name="search"
+                                                class="form-control"
+                                                placeholder="Supplier or expense no..."
+                                                value="<?= htmlspecialchars($search ?? '') ?>">
+                                        </div>
+
+                                        <div class="col-auto filter-col">
+                                            <label class="form-label text-muted small">Buildings</label>
+                                            <select class="form-select shadow-sm" name="building_id">
+                                                <option value="">All Buildings</option>
+                                                
+                                            </select>
+                                        </div>
+
+                                        <div class="col-auto filter-col">
+                                            <label class="form-label text-muted small">Status</label>
+                                            <select name="status" class="form-select">
+                                                <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Statuses</option>
+
+                                                <!-- Use values that match your DB exactly -->
+                                                <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
+                                                <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
+                                                <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
+                                                <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-auto filter-col">
+                                            <label class="form-label text-muted small">Date From</label>
+                                            <input
+                                                type="date"
+                                                name="date_from"
+                                                class="form-control"
+                                                value="<?= htmlspecialchars($date_from ?? '') ?>">
+                                        </div>
+
+                                        <div class="col-auto filter-col">
+                                            <label class="form-label text-muted small">Date To</label>
+                                            <input
+                                                type="date"
+                                                name="date_to"
+                                                class="form-control"
+                                                value="<?= htmlspecialchars($date_to ?? '') ?>">
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <!-- Replace with your real page name -->
+                                    <a href="expenses.php" class="btn btn-secondary">
+                                        <i class="fas fa-redo"></i> Reset
+                                    </a>
+
+                                    <button type="submit" class="actionBtn">
+                                        <i class="fas fa-search"></i> Apply Filters
+                                    </button>
+                                </div>
+                            </form>
+
                         </div>
                     </div>
-
-                    <!--end::Row-->
                 </div>
-                <!--end::Container-->
             </div>
+
             <div class="app-content" style="">
                 <!--begin::Container-->
                 <div class="container-fluid details bg-white rounded-2 p-2" style="height: 100%;">

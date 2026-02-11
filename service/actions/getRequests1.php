@@ -92,25 +92,27 @@ try {
     }
 
     /* ===============================
-       6. Fetch THIS provider’s proposals
+    6. Fetch THIS provider’s proposals (exclude Withdrawn)
     =============================== */
     $params = array_merge([$serviceProviderId], $requestIds);
 
     $stmt = $pdo->prepare("
-        SELECT 
-            maintenance_request_id,
-            proposed_budget,
-            status
-        FROM maintenance_request_proposals
-        WHERE service_provider_id = ?
-          AND maintenance_request_id IN ($placeholders)
-    ");
+    SELECT 
+        maintenance_request_id,
+        proposed_budget,
+        status
+    FROM maintenance_request_proposals
+    WHERE service_provider_id = ?
+      AND maintenance_request_id IN ($placeholders)
+      AND LOWER(TRIM(status)) <> 'withdrawn'
+        ");
     $stmt->execute($params);
 
     $providerProposals = [];
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $proposal) {
         $providerProposals[$proposal['maintenance_request_id']] = $proposal;
     }
+
 
     /* ===============================
        7. Attach everything to requests

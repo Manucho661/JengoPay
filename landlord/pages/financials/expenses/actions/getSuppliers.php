@@ -23,6 +23,7 @@ try {
     $stm = $pdo->prepare("SELECT * FROM suppliers WHERE landlord_id = ? ORDER BY supplier_name ASC");
     $stm->execute([$landlord_id]);
     $suppliers = $stm->fetchAll(PDO::FETCH_ASSOC);
+    $totalSuppliers = count($suppliers);
 
 } catch (Exception $e) {
     $suppliers = [];              // fallback if error

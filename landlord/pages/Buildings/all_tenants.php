@@ -210,136 +210,322 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
     <!--end::Header-->
     <!--begin::Sidebar-->
-     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?> 
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
     <!--end::Sidebar-->
     <!--begin::App Main-->
-    <main class="app-main mt-4">
-      <div class="content-wrapper">
-        <!-- Main content -->
-        <section class="content">
-          <div class="container-fluid">
-            <h1>Build your App Here</h1>
+    <main class="main">
+      <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb" style="">
+            <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Home</a></li>
+            <li class="breadcrumb-item active">Tenants</li>
+          </ol>
+        </nav>
+        <!--First Row-->
+        <div class="row align-items-center mb-3">
+          <div class="col-12 d-flex align-items-center">
+            <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+            <h3 class="mb-0 ms-3">Tenants</h3>
+          </div>
+        </div>
+
+        <!-- Third Row: stats -->
+        <div class="row g-3">
+
+          <!-- Total Requests -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+              <div>
+                <i class="bi bi-clipboard-check fs-1 me-3 text-warning"></i>
+              </div>
+              <div>
+                <p class="mb-0" style="font-weight: bold;">Total Requests</p>
+                <b></b>
+              </div>
+            </div>
+          </div>
+
+          <!-- Open -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+              <div>
+                <i class="bi bi-hourglass-split fs-1 me-3 text-warning"></i>
+              </div>
+              <div>
+                <p class="mb-0" style="font-weight: bold;">Open</p>
+                <b></b>
+              </div>
+            </div>
+          </div>
+
+          <!-- Completed -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+              <div>
+                <i class="bi bi-check-circle-fill fs-1 me-3 text-warning"></i>
+              </div>
+              <div>
+                <p class="mb-0" style="font-weight: bold;">Completed</p>
+                <b></b>
+              </div>
+            </div>
+          </div>
+
+          <!-- Closed -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
+              <div>
+                <i class="bi bi-x-circle-fill fs-1 me-3 text-warning"></i>
+              </div>
+              <div>
+                <p class="mb-0" style="font-weight: bold;">Closed</p>
+                <b></b>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row mb-3 mt-3">
+          <div class="col-md-12">
+            <div class="card border-0 mb-4">
+              <div class="card-body ">
+                <h6 class="mb-3" style="color: var(--main-color); font-weight: 600;">
+                  Units
+                </h6>
+                <a class="action-link allUnits-link" style="text-decoration: none;">
+                  <i class="fas fa-th"></i> All Tenants (40)
+                </a>
+                <a href="single_units_tenants.php" class="action-link" style="text-decoration: none;">
+                  <i class="fas fa-door-open"></i> Single Units (50)
+                </a>
+                <a href="bed_sitter_units.php" class="action-link" style="text-decoration: none;">
+                  <i class="fas fa-bed"></i> Bedsitter Units (80)
+                </a>
+                <a href="multi_room_units.php" class="action-link" style="text-decoration: none;">
+                  <i class="fas fa-door-closed"></i> Multi-Room Units (70)
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Fifth Row: filter -->
+        <div class="row g-3 mb-4">
+          <!-- Filter by Building -->
+          <div class="col-md-12 col-sm-12">
+            <div class="card border-0 mb-4">
+              <div class="card-body ">
+                <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filters</h5>
+                <form method="GET">
+                  <!-- always reset to page 1 when applying filters -->
+                  <input type="hidden" name="page" value="1">
+
+                  <div class="filters-scroll">
+                    <div class="row g-3 mb-3 filters-row">
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Search</label>
+                        <input
+                          type="text"
+                          name="search"
+                          class="form-control"
+                          placeholder="Supplier or expense no..."
+                          value="<?= htmlspecialchars($search ?? '') ?>">
+                      </div>
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Buildings</label>
+                        <select class="form-select shadow-sm" name="building_id">
+                          <option value="">All Buildings</option>
+
+                        </select>
+                      </div>
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Status</label>
+                        <select name="status" class="form-select">
+                          <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Statuses</option>
+
+                          <!-- Use values that match your DB exactly -->
+                          <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
+                          <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
+                          <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
+                          <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                        </select>
+                      </div>
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Date From</label>
+                        <input
+                          type="date"
+                          name="date_from"
+                          class="form-control"
+                          value="<?= htmlspecialchars($date_from ?? '') ?>">
+                      </div>
+
+                      <div class="col-auto filter-col">
+                        <label class="form-label text-muted small">Date To</label>
+                        <input
+                          type="date"
+                          name="date_to"
+                          class="form-control"
+                          value="<?= htmlspecialchars($date_to ?? '') ?>">
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div class="d-flex gap-2 justify-content-end">
+                    <!-- Replace with your real page name -->
+                    <a href="expenses.php" class="btn btn-secondary">
+                      <i class="fas fa-redo"></i> Reset
+                    </a>
+
+                    <button type="submit" class="actionBtn">
+                      <i class="fas fa-search"></i> Apply Filters
+                    </button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
             <?php
             try {
-              // Combine all three tables
               $sql = "
-              SELECT id, first_name, middle_name, phone, alt_phone, idMode, id_no, tenant_reg, status FROM tenants
-              ORDER BY created_at ASC, tenant_reg DESC";
+                        SELECT
+                            t.*,
+                            tn.move_in_date,
+                            tn.created_at AS tenancy_created_at,
+
+                            bu.unit_number,
+                            b.building_name
+                        FROM tenants t
+                        INNER JOIN tenancies tn
+                            ON tn.tenant_id = t.id
+                        LEFT JOIN building_units bu
+                            ON bu.id = tn.unit_id
+                        LEFT JOIN buildings b
+                            ON b.id = bu.building_id
+                        WHERE tn.status = 'Active'
+                        ORDER BY t.created_at ASC, t.tenant_reg DESC
+                    ";
 
               $stmt = $pdo->prepare($sql);
               $stmt->execute();
               $allTenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+              $tenantCount = count($allTenants);
             } catch (PDOException $e) {
               die("Database Error: " . $e->getMessage());
             }
             ?>
+            <div class="card border-0 ">
+              <div class="card-header" style="background-color: #00192D; color:#fff;">
+                <b>All tenants (<span class="text-warning"><?= $tenantCount ?></span>)</b>
+              </div>
+              <div class="card-body">
 
-            <!-- Display Results in HTML -->
-            <div class="table-responsive mt-3">
-              <table class="table table-striped" id="dataTable">
-                <thead style="background-color:#00192D; color:#fff;">
-                  <tr>
-                    <th>Name</th>
-                    <th>Unit | Building</th>
-                    <th>Unit Category</th>
-                    <th>Contacts</th>
-                    <th>Identification</th>
-                    <th>Move In Date</th>
-                    <th>Added On</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php include_once 'processes/encrypt_decrypt_function.php'; ?>
-                  <?php if (count($allTenants) > 0): ?>
-                    <?php $i = 1;
-                    foreach ($allTenants as $tenant): ?>
+
+                <!-- Display Results in HTML -->
+                <div class="table-responsive mt-3">
+                  <table class="table table-striped" id="dataTable">
+                    <thead style="background-color:#00192D; color:#fff;">
                       <tr>
-                        <td><?= htmlspecialchars($tenant['first_name']) . ' ' . htmlspecialchars($tenant['middle_name']);; ?></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                          <?= htmlspecialchars($tenant['phone']) . ' ' . htmlspecialchars($tenant['alt_phone']); ?>
-                        </td>
-                        <td><i class="bi bi-person-vcard"></i> 
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                          <?php if ($tenant['status'] == 'Active'): ?>
-                            <button class="btn btn-xs shadow" style="background-color:#24953E; color:#fff"><i class="bi bi-person-check"></i> <?= $tenant['status']; ?></button>
-                          <?php else: ?>
-                            <button class="btn btn-xs shadow" style="background-color: #cc0001; color:#fff"><i class="bi bi-person-exclamation"></i> <?= $tenant['status']; ?></button>
-                          <?php endif; ?>
-                        </td>
-                        <td>
-                          <div class="btn-group shadow">
-                            <button type="button" class="btn btn-default btn-xs" style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
-                            <button type="button" class="btn btn-default dropdown-toggle dropdown-icon btn-xs" data-toggle="dropdown" style="border:1px solid rgb(0, 25, 45 ,.3);">
-                              <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
-                              <?php
-                              if ($tenant['status'] == 'Active') {
-                              ?>
-                                <a class="dropdown-item" href="<?= 'https://wa.me/' . $tenant['phone'] . '/?text=Hello,' . " " . $tenant['first_name'] . '' ?>" target="_blank"><i class="bi bi-whatsapp"></i> WhatsApp</a>
-                                <a class="dropdown-item open-chat"
-                                  data-tenant="<?= $tenant['first_name']; ?>"
-                                  href="#">
-                                  <i class="bi bi-envelope"></i> Message
-                                </a>
-                                <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $tenant['id']); ?>"><i class="fas fa-newspaper"></i> Profile</a>
-                                <a class="dropdown-item" href="\Jengopay\landlord\pages\Buildings/ten_invoice.php?invoice=<?= encryptor('encrypt', $tenant['id']); ?>&tenant_type=single_unit">
-                                  <i class="bi bi-newspaper"></i> Invoice
-                                </a> <a class="dropdown-item" href="all_individual_tenant_invoices.php?invoice=<?= encryptor('encrypt', $tenant['id']); ?>"><i class="bi bi-receipt"></i> All Invoices</a>
-                                <a class="dropdown-item" data-toggle="modal" data-target="#vacateTenantModal<?= htmlspecialchars($tenant['id']); ?>" href="#"><i class="bi bi-arrow-right"></i> Vacate</a>
-                                <a class="dropdown-item" data-toggle="modal" data-target="#shiftTenantModal<?= htmlspecialchars($tenant['id']); ?>" href="#"><i class="fa fa-refresh"></i> Shift</a>
-                                <a class="dropdown-item" href="email_tenant.php?email=<?= encryptor('encrypt', $tenant['id']); ?>"><i class="bi bi-envelope-open"></i> Email</a>
-                                <a class="dropdown-item" href="tenant_payment.php?payment=<?= encryptor('encrypt', $tenant['id']); ?>"><i class="fas fa-money"></i> Payment</a>
-                                <!--<div class="dropdown-divider"></div>-->
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addInfoModal<?= htmlspecialchars($tenant['id']); ?>"><i class="bi bi-plus-square"></i> Add Info</a>
-                              <?php
-                              } else {
-                              ?>
-                                <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $row['id']); ?>"><i class="fas fa-newspaper"></i> Profile</a>
-                                <a class="dropdown-item" href="all_individual_tenant_invoices.php?invoice=<?= encryptor('encrypt', $row['id']); ?>"><i class="bi bi-receipt"></i> All Invoices</a>
-                              <?php
-                              }
-                              ?>
-                            </div>
-                          </div>
-                        </td>
+                        <th>Name</th>
+                        <th>Building</th>
+                        <th>Contacts</th>
+                        <th>Identification</th>
+                        <th>Move In</th>
+
+                        <th>Status</th>
+                        <th>Action</th>
                       </tr>
-                    <?php endforeach; ?>
-                  <?php else: ?>
-                    <tr>
-                      <td colspan="10" class="text-center text-muted">No tenant records found</td>
-                    </tr>
-                  <?php endif; ?>
-                </tbody>
-              </table>
+                    </thead>
+                    <tbody>
+                      <?php include_once 'processes/encrypt_decrypt_function.php'; ?>
+                      <?php if (count($allTenants) > 0): ?>
+                        <?php $i = 1;
+                        foreach ($allTenants as $tenant): ?>
+                          <tr>
+                            <td><?= htmlspecialchars($tenant['first_name']) . ' ' . htmlspecialchars($tenant['middle_name']);; ?></td>
+                            <td><?= htmlspecialchars($tenant['building_name']); ?> (<span class="text-success"><?= htmlspecialchars($tenant['unit_number']); ?></span>)</td>
+                            <td>
+                              <?= htmlspecialchars($tenant['phone']); ?>
+                            </td>
+                            <td>
+                              <?= htmlspecialchars($tenant['national_id']); ?>
+                            </td>
+                            <td><?= htmlspecialchars($tenant['move_in_date']); ?></td>
+
+                            <td>
+                              <?php if ($tenant['status'] == 'Active'): ?>
+                                <button class="btn btn-xs shadow" style="background-color:#24953E; color:#fff"><i class="bi bi-person-check"></i> <?= $tenant['status']; ?></button>
+                              <?php else: ?>
+                                <button class="btn btn-xs shadow" style="background-color: #cc0001; color:#fff"><i class="bi bi-person-exclamation"></i> <?= $tenant['status']; ?></button>
+                              <?php endif; ?>
+                            </td>
+                            <td>
+                              <div class="btn-group shadow">
+                                <button type="button" class="btn btn-default btn-xs" style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
+                                <button type="button" class="btn btn-default dropdown-toggle dropdown-icon btn-xs" data-toggle="dropdown" style="border:1px solid rgb(0, 25, 45 ,.3);">
+                                  <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
+                                  <?php
+                                  if ($tenant['status'] == 'Active') {
+                                  ?>
+                                    <a class="dropdown-item" href="<?= 'https://wa.me/' . $tenant['phone'] . '/?text=Hello,' . " " . $tenant['first_name'] . '' ?>" target="_blank"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                                    <a class="dropdown-item open-chat"
+                                      data-tenant="<?= $tenant['first_name']; ?>"
+                                      href="#">
+                                      <i class="bi bi-envelope"></i> Message
+                                    </a>
+                                    <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $tenant['id']); ?>"><i class="fas fa-newspaper"></i> Profile</a>
+                                    <a class="dropdown-item" href="\Jengopay\landlord\pages\Buildings/ten_invoice.php?invoice=<?= encryptor('encrypt', $tenant['id']); ?>&tenant_type=single_unit">
+                                      <i class="bi bi-newspaper"></i> Invoice
+                                    </a> <a class="dropdown-item" href="all_individual_tenant_invoices.php?invoice=<?= encryptor('encrypt', $tenant['id']); ?>"><i class="bi bi-receipt"></i> All Invoices</a>
+                                    <a class="dropdown-item" data-toggle="modal" data-target="#vacateTenantModal<?= htmlspecialchars($tenant['id']); ?>" href="#"><i class="bi bi-arrow-right"></i> Vacate</a>
+                                    <a class="dropdown-item" data-toggle="modal" data-target="#shiftTenantModal<?= htmlspecialchars($tenant['id']); ?>" href="#"><i class="fa fa-refresh"></i> Shift</a>
+                                    <a class="dropdown-item" href="email_tenant.php?email=<?= encryptor('encrypt', $tenant['id']); ?>"><i class="bi bi-envelope-open"></i> Email</a>
+                                    <a class="dropdown-item" href="tenant_payment.php?payment=<?= encryptor('encrypt', $tenant['id']); ?>"><i class="fas fa-money"></i> Payment</a>
+                                    <!--<div class="dropdown-divider"></div>-->
+                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addInfoModal<?= htmlspecialchars($tenant['id']); ?>"><i class="bi bi-plus-square"></i> Add Info</a>
+                                  <?php
+                                  } else {
+                                  ?>
+                                    <a class="dropdown-item" href="tenant_profile.php?profile=<?= encryptor('encrypt', $row['id']); ?>"><i class="fas fa-newspaper"></i> Profile</a>
+                                    <a class="dropdown-item" href="all_individual_tenant_invoices.php?invoice=<?= encryptor('encrypt', $row['id']); ?>"><i class="bi bi-receipt"></i> All Invoices</a>
+                                  <?php
+                                  }
+                                  ?>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        <?php endforeach; ?>
+                      <?php else: ?>
+                        <tr>
+                          <td colspan="10" class="text-center text-muted">No tenant records found</td>
+                        </tr>
+                      <?php endif; ?>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
 
           </div>
-        </section>
+        </div>
       </div>
     </main>
     <!--end::App Main-->
-    <!--begin::Footer-->
-    <footer class="app-footer">
-      <!--begin::To the end-->
-      <div class="float-end d-none d-sm-inline">Anything you want</div>
-      <!--end::To the end-->
-      <!--begin::Copyright-->
-      <strong>
-        Copyright &copy; 2014-2024&nbsp;
-        <a href="https://adminlte.io" class="text-decoration-none" style="color: #00192D;">JENGO PAY</a>.
-      </strong>
-      All rights reserved.
-      <!--end::Copyright-->
-    </footer>
 
+    <!--begin::Footer-->
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+    <!-- end footer -->
   </div>
   <!--end::App Wrapper-->
 
@@ -527,8 +713,9 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 
 
   <!-- Main Js File -->
-  <script src="../../js/adminlte.js"></script>
+  <script src="../../assets/main.js"></script>
   <script src="js/main.js"></script>
+
   <!-- html2pdf depends on html2canvas and jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script type="module" src="./js/main.js"></script>

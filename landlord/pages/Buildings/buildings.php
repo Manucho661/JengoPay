@@ -3,14 +3,23 @@ session_start();
 require_once "../db/connect.php";
 // 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
+
+$error   = $_SESSION['error'] ?? '';
+$success = $_SESSION['success'] ?? '';
+
+unset($_SESSION['error'], $_SESSION['success']);
 ?>
 
 <!-- add builiding -->
 <?php
 // Actions
 include_once 'processes/encrypt_decrypt_function.php';
+
+// get buildings
+require_once "./actions/getBuildings.php";
 // script to insert a building to database
 include_once './actions/addBuilding.php';
+
 
 // Get landlord id from session
 $userId = $_SESSION['user']['id'];
@@ -28,12 +37,7 @@ $results_show_buildings->execute([$landlord_id]);
 $results_show_buildings = $results_show_buildings->fetchAll(PDO::FETCH_ASSOC);
 
 // Pagination logic
-$itemsPerPage = 5;
-$currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$totalItems = count($results_show_buildings);
-$totalPages = ceil($totalItems / $itemsPerPage);
-$offset = ($currentPage - 1) * $itemsPerPage;
-$currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage);
+
 
 ?>
 <!doctype html>
@@ -312,6 +316,38 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
+
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+
+        <?php if (!empty($error)): ?>
+            <div id="flashToastError"
+                class="toast align-items-center text-bg-danger border-0"
+                role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body small">
+                        <?= htmlspecialchars($error) ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($success)): ?>
+            <div id="flashToastSuccess"
+                class="toast align-items-center text-bg-success border-0"
+                role="alert" aria-live="polite" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body small">
+                        <?= htmlspecialchars($success) ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        <?php endif; ?>
+
+    </div>
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
@@ -353,10 +389,10 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
 
                 // Fetch count of buildings per type for the specific landlord
                 $count_buildings = "
-                    SELECT building_type, COUNT(*) AS total 
+                    SELECT category, COUNT(*) AS total 
                     FROM buildings 
                     WHERE landlord_id = :landlord_id
-                    GROUP BY building_type
+                    GROUP BY category
                 ";
 
                 $result = $pdo->prepare($count_buildings);
@@ -371,7 +407,7 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                 ];
 
                 while ($row = $result->fetch()) {
-                    $counts[$row['building_type']] = $row['total'];
+                    $counts[$row['category']] = $row['total'];
                 }
                 ?>
 
@@ -433,20 +469,21 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                     <div class="col-md-12">
                         <div class="card border-0 mb-4">
                             <div class="card-body ">
+
                                 <h6 class="mb-3" style="color: var(--main-color); font-weight: 600;">
                                     Units
                                 </h6>
                                 <a class="action-link allUnits-link" style="text-decoration: none;">
-                                    <i class="fas fa-th"></i> All Units (40)
+                                    <i class="fas fa-th"></i> All Units (<?= $totalUnits ?>)
                                 </a>
                                 <a href="single_units.php" class="action-link" style="text-decoration: none;">
-                                    <i class="fas fa-door-open"></i> Single Units (50)
+                                    <i class="fas fa-door-open"></i> Single Units (<?= $singleUnits ?>)
                                 </a>
                                 <a href="bed_sitter_units.php" class="action-link" style="text-decoration: none;">
-                                    <i class="fas fa-bed"></i> Bedsitter Units (80)
+                                    <i class="fas fa-bed"></i> Bedsitter Units (<?= $bedSitterUnits  ?>)
                                 </a>
                                 <a href="multi_room_units.php" class="action-link" style="text-decoration: none;">
-                                    <i class="fas fa-door-closed"></i> Multi-Room Units (70)
+                                    <i class="fas fa-door-closed"></i> Multi-Room Units (<?= $multiRoomUnits ?>)
                                 </a>
                             </div>
                         </div>
@@ -454,11 +491,11 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                 </div>
 
                 <div class="row g-3 mb-4">
-                    <!-- Filter by Building -->
                     <div class="col-md-12 col-sm-12">
                         <div class="card border-0 mb-4">
-                            <div class="card-body ">
+                            <div class="card-body">
                                 <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filter Buildings</h5>
+
                                 <form method="GET">
                                     <!-- always reset to page 1 when applying filters -->
                                     <input type="hidden" name="page" value="1">
@@ -466,6 +503,7 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                                     <div class="filters-scroll">
                                         <div class="row g-3 mb-3 filters-row">
 
+                                            <!-- Search -->
                                             <div class="col-auto filter-col">
                                                 <label class="form-label text-muted small">Search</label>
                                                 <input
@@ -473,62 +511,61 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                                                     name="search"
                                                     class="form-control"
                                                     placeholder="Building..."
-                                                    value="">
+                                                    value="<?= htmlspecialchars($search ?? '') ?>">
                                             </div>
 
+                                            <!-- Buildings dropdown -->
                                             <div class="col-auto filter-col">
                                                 <label class="form-label text-muted small">Buildings</label>
                                                 <select class="form-select shadow-sm" name="building_id">
                                                     <option value="">All Buildings</option>
-
+                                                    <?php foreach (($allBuildingsForDropdown ?? []) as $b): ?>
+                                                        <option
+                                                            value="<?= (int)$b['id'] ?>"
+                                                            <?= ((string)($buildingId ?? '') === (string)$b['id']) ? 'selected' : '' ?>>
+                                                            <?= htmlspecialchars($b['building_name']) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
 
+                                            <!-- Category -->
                                             <div class="col-auto filter-col">
                                                 <label class="form-label text-muted small">Category</label>
-                                                <select name="status" class="form-select">
-                                                    <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Statuses</option>
-
-                                                    <!-- Use values that match your DB exactly -->
-                                                    <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
-                                                    <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
-                                                    <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
-                                                    <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                                                <select name="category" class="form-select">
+                                                    <option value="" <?= (($category ?? '') === '') ? 'selected' : '' ?>>All Categories</option>
+                                                    <option value="residential" <?= (($category ?? '') === 'residential') ? 'selected' : '' ?>>Residential</option>
+                                                    <option value="industrial" <?= (($category ?? '') === 'industrial') ? 'selected' : '' ?>>Industrial</option>
+                                                    <option value="commercial" <?= (($category ?? '') === 'commercial') ? 'selected' : '' ?>>Commercial</option>
+                                                    <option value="mixed_use" <?= (($category ?? '') === 'mixed_use') ? 'selected' : '' ?>>Mixed Use</option>
                                                 </select>
                                             </div>
 
+                                            <!-- Ownership Mode -->
                                             <div class="col-auto filter-col">
                                                 <label class="form-label text-muted small">Ownership Mode</label>
-                                                <select name="status" class="form-select">
-                                                    <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Modes</option>
-
-                                                    <!-- Use values that match your DB exactly -->
-                                                    <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
-                                                    <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
-                                                    <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
-                                                    <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                                                <select name="ownership_mode" class="form-select">
+                                                    <option value="" <?= (($ownershipMode ?? '') === '') ? 'selected' : '' ?>>All Modes</option>
+                                                    <option value="individual" <?= (($ownershipMode ?? '') === 'individual') ? 'selected' : '' ?>>Individual</option>
+                                                    <option value="entity" <?= (($ownershipMode ?? '') === 'entity') ? 'selected' : '' ?>>Entity</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Structure Type -->
                                             <div class="col-auto filter-col">
-                                                <label class="form-label text-muted small">Ownership Mode</label>
-                                                <select name="status" class="form-select">
-                                                    <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Modes</option>
-
-                                                    <!-- Use values that match your DB exactly -->
-                                                    <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
-                                                    <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
-                                                    <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
-                                                    <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                                                <label class="form-label text-muted small">Structure type</label>
+                                                <select name="structure_type" class="form-select">
+                                                    <option value="" <?= (($structure_type ?? '') === '') ? 'selected' : '' ?>>All Structures</option>
+                                                    <option value="high rise" <?= (($structure_type ?? '') === 'high_rise') ? 'selected' : '' ?>>High Rise</option>
+                                                    <option value="low structure" <?= (($structure_type ?? '') === 'low_structure') ? 'selected' : '' ?>>Low Structure</option>
                                                 </select>
                                             </div>
-
 
                                         </div>
                                     </div>
 
                                     <div class="d-flex gap-2 justify-content-end">
-                                        <!-- Replace with your real page name -->
-                                        <a href="expenses.php" class="btn btn-secondary">
+                                        <a href="buildings.php" class="btn btn-secondary">
                                             <i class="fas fa-redo"></i> Reset
                                         </a>
 
@@ -542,6 +579,7 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                         </div>
                     </div>
                 </div>
+
                 <!-- filter and search section -->
 
                 <!-- buildings -->
@@ -552,7 +590,7 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                                 <div class="row">
                                     <div class="col-md-6 mt-2"><b class="text-white">Registered Buildings (<span class="text-warning"><?= $totalItems ?></span>)</b></div>
                                     <div class="col-md-6 text-right mt-2">
-                                        <?php if (empty($currentBuildings)): ?>
+                                        <?php if (empty($filteredBuildings)): ?>
                                         <?php else: ?>
                                             <button class="btn btn-sm" style="border: 1px solid #fff; color:#fff; font-weight:bold;" data-toggle="modal" data-target="#addBuildingModal"><i class="fas fa-building"></i>
                                                 Add Building</button>
@@ -561,7 +599,7 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                                 </div>
                             </div>
                             <div class="card-body">
-                                <?php if (empty($currentBuildings)): ?>
+                                <?php if (empty($filteredBuildings)): ?>
                                     <!-- Empty State Message -->
                                     <div class="text-center py-5" style="margin: 3rem 0;">
                                         <div style="background-color: #f8f9fa; border-radius: 16px; padding: 3rem 2rem; max-width: 500px; margin: 0 auto;">
@@ -596,19 +634,19 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                foreach ($currentBuildings as $row) {
+                                                foreach ($filteredBuildings as $row) {
                                                     // Fetch data from database for each building
                                                     $id = encryptor('encrypt', $row['id']);
                                                     $building_name = $row['building_name'];
                                                     $structure_type = $row['structure_type'];
                                                     $no_of_units = $row['no_of_units'];
-                                                    $building_type = $row['building_type'];
-                                                    $ownership_info = $row['ownership_info'];
+                                                    $category = $row['category'];
+                                                    $ownership_info = $row['ownership_mode'];
                                                     $added_on = $row['added_on'];
                                                 ?>
                                                     <tr>
                                                         <td><i class="fas fa-building"></i> <?php echo $building_name; ?></td>
-                                                        <td><i class="fas fa-home"></i> <?php echo $building_type; ?></td>
+                                                        <td><i class="fas fa-home"></i> <?php echo $category; ?></td>
                                                         <td><i class="fas fa-home"></i><?php echo $structure_type; ?></td>
                                                         <td><i class="fas fa-home"></i> <?php echo $no_of_units; ?></td>
                                                         <td>
@@ -634,6 +672,9 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                                                                     <span class="sr-only">Toggle Dropdown</span>
                                                                 </button>
                                                                 <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
+                                                                    <a href="buildingProfile.php?id=<?php echo urlencode($id); ?>" class="dropdown-item">
+                                                                        <i class="bi bi-eye"></i> View
+                                                                    </a>
                                                                     <a href="add_single_unit.php?add_single_unit=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddUnit(event, '<?php echo $building_name; ?>')"><i class="bi bi-house"></i> Add Single Unit</a>
                                                                     <a href="add_bed_sitter.php?add_bed_sitter=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddBedsitter(event, '<?php echo $building_name; ?>')"> <i class="bi bi-house"></i> Add Bedsitter</a>
                                                                     <a href="add_multi_rooms.php?add_multi_rooms=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddMultiRooms(event, '<?php echo $building_name; ?>')"> <i class="bi bi-houses"></i> Add Multi Rooms
@@ -820,7 +861,7 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
                                             </div>
                                             <div class="col-md-4">
                                                 <label>Building Type</label>
-                                                <select id="building_type" name="building_type" class="form-control">
+                                                <select id="category" name="category" class="form-control">
                                                     <option value="" selected hidden>--Select Building
                                                         Type--</option>
                                                     <option value="Residential">Residential</option>
@@ -1636,7 +1677,26 @@ $currentBuildings = array_slice($results_show_buildings, $offset, $itemsPerPage)
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
     <!-- pdf download plugin -->
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const successEl = document.getElementById("flashToastSuccess");
+            const errorEl = document.getElementById("flashToastError");
 
+            if (successEl && window.bootstrap) {
+                new bootstrap.Toast(successEl, {
+                    delay: 8000,
+                    autohide: true
+                }).show();
+            }
+
+            if (errorEl && window.bootstrap) {
+                new bootstrap.Toast(errorEl, {
+                    delay: 10000,
+                    autohide: true
+                }).show();
+            }
+        });
+    </script>
     <!-- Scripts -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

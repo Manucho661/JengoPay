@@ -402,6 +402,9 @@ $netProfit = $income - $expenses;
       font-variant-numeric: tabular-nums;
       font-feature-settings: "tnum";
     }
+    a{
+      text-decoration: none !important;
+    }
   </style>
 </head>
 
@@ -543,7 +546,7 @@ $netProfit = $income - $expenses;
                         <td class="p-0">
                           <div class="d-flex justify-content-start">
                             <div class="d-flex justify-content-end amount-box">
-                              
+
                               <?= $formattedWater ?>
                             </div>
                           </div>
@@ -680,7 +683,7 @@ $netProfit = $income - $expenses;
                       <td class="p-0">
                         <div class="d-flex justify-content-start">
                           <div class="d-flex justify-content-end amount-box">
-                             <?= $formattedTotalIncome ?>
+                            <?= $formattedTotalIncome ?>
                           </div>
                         </div>
                       </td>
@@ -695,7 +698,13 @@ $netProfit = $income - $expenses;
                     <?php if ($maintenanceTotal > 0): ?>
                       <tr class="main-row" data-bs-target="#maintenanceDetails" aria-expanded="false" aria-controls="maintenanceDetails" style="cursor:pointer;">
                         <td>Maintenance and Repair Costs</td>
-                        <td class="p-0"> <?= $formattedMaintenance ?></td>
+                        <td class="p-0">
+                          <div class="d-flex justify-content-start">
+                            <div class="d-flex justify-content-end amount-box">
+                              <?= $formattedMaintenance ?>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
 
                       <tr class="collapse" id="maintenanceDetails">
@@ -746,7 +755,7 @@ $netProfit = $income - $expenses;
                         <td class="p-0">
                           <div class="d-flex justify-content-start">
                             <div class="d-flex justify-content-end amount-box">
-                               <?= $formattedElectricity ?>
+                              <?= $formattedElectricity ?>
                             </div>
                           </div>
                         </td>
@@ -776,7 +785,7 @@ $netProfit = $income - $expenses;
                         <td class="p-0">
                           <div class="d-flex justify-content-start">
                             <div class="d-flex justify-content-end amount-box">
-                               <?= $formattedWaterExpense ?>
+                              <?= $formattedWaterExpense ?>
                             </div>
                           </div>
                         </td>
@@ -806,7 +815,7 @@ $netProfit = $income - $expenses;
                         <td class="p-0">
                           <div class="d-flex justify-content-start">
                             <div class="d-flex justify-content-end amount-box">
-                               <?= $formattedGarbageExpense ?>
+                              <?= $formattedGarbageExpense ?>
                             </div>
                           </div>
                         </td>
@@ -836,7 +845,7 @@ $netProfit = $income - $expenses;
                         <td class="p-0">
                           <div class="d-flex justify-content-start">
                             <div class="d-flex justify-content-end amount-box">
-                               <?= $formattedInternetExpense ?>
+                              <?= $formattedInternetExpense ?>
                             </div>
                           </div>
                         </td>
@@ -866,7 +875,7 @@ $netProfit = $income - $expenses;
                         <td class="p-0">
                           <div class="d-flex justify-content-start">
                             <div class="d-flex justify-content-end amount-box">
-                            <?= $formattedSecurityExpense ?>
+                              <?= $formattedSecurityExpense ?>
                             </div>
                           </div>
                         </td>
@@ -896,7 +905,7 @@ $netProfit = $income - $expenses;
                         <td class="p-0">
                           <div class="d-flex justify-content-start">
                             <div class="d-flex justify-content-end amount-box">
-                               <?= $formattedSoftwareExpense ?>
+                              <?= $formattedSoftwareExpense ?>
                             </div>
                           </div>
                         </td>
@@ -926,7 +935,7 @@ $netProfit = $income - $expenses;
                         <td class="p-0">
                           <div class="d-flex justify-content-start">
                             <div class="d-flex justify-content-end amount-box">
-                               <?= $formattedMarketingExpense ?>
+                              <?= $formattedMarketingExpense ?>
                             </div>
                           </div>
                         </td>
@@ -956,7 +965,7 @@ $netProfit = $income - $expenses;
                         <td class="p-0">
                           <div class="d-flex justify-content-start">
                             <div class="d-flex justify-content-end amount-box">
-                               <?= $formattedLegalExpense ?>
+                              <?= $formattedLegalExpense ?>
                             </div>
                           </div>
                         </td>
@@ -986,7 +995,7 @@ $netProfit = $income - $expenses;
                         <td class="p-0">
                           <div class="d-flex justify-content-start">
                             <div class="d-flex justify-content-end amount-box">
-                               <?= $formattedLoanInterest ?>
+                              <?= $formattedLoanInterest ?>
                             </div>
                           </div>
                         </td>
@@ -1016,7 +1025,7 @@ $netProfit = $income - $expenses;
                         <td class="p-0">
                           <div class="d-flex justify-content-start">
                             <div class="d-flex justify-content-end amount-box">
-                               <?= $formattedBankCharges ?>
+                              <?= $formattedBankCharges ?>
                             </div>
                           </div>
                         </td>
@@ -1348,7 +1357,7 @@ $netProfit = $income - $expenses;
       })
     });
   </script>
-  
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {

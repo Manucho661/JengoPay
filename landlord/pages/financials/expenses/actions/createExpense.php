@@ -150,6 +150,7 @@ try {
         addJournalLine(
             $pdo,
             $journalId,
+            $building_id,
             $landlord_id,  // Ensure landlord_id is passed
             $item_account_codes[$i],
             $total_item_amount,
@@ -162,6 +163,7 @@ try {
         addJournalLine(
             $pdo,
             $journalId,
+            $building_id,
             $landlord_id,  // Ensure landlord_id is passed
             300,
             0.0,
@@ -175,6 +177,7 @@ try {
             addJournalLine(
                 $pdo,
                 $journalId,
+                $building_id,
                 $landlord_id,  // Ensure landlord_id is passed
                 325,
                 $tax_amount,

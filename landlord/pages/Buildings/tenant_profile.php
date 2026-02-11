@@ -227,7 +227,7 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
               $id = $_GET['profile'];
               $id = encryptor('decrypt', $id);
               try {
-                $tenant_profile = $pdo->prepare("SELECT * FROM single_units WHERE id =:id");
+                $tenant_profile = $pdo->prepare("SELECT * FROM tenants WHERE id =:id");
                 $tenant_profile->execute([':id' => $id]);
                 $tenant = $tenant_profile->fetch(PDO::FETCH_ASSOC);
               } catch (Exception $e) {
@@ -245,7 +245,7 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                        alt="User profile picture">
                 </div>-->
 
-                    <h3 class="profile-username text-center"><?= htmlspecialchars($tenant['tfirst_name'] . ' ' . $tenant['tmiddle_name'] . ' ' . $tenant['tlast_name']); ?></h3>
+                    <h3 class="profile-username text-center"><?= htmlspecialchars($tenant['first_name'] . ' ' . $tenant['middle_name'] . ' ' . $tenant['last_name']); ?></h3>
                     <p class="text-muted text-center">
                       <?php
                       if (htmlspecialchars($tenant['income']) == 'formal') {

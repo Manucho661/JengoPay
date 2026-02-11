@@ -38,15 +38,22 @@
                             required>
 
                         <!-- Name -->
-                        <label for="userName" class="text-sm font-medium mb-1 block">Your name/Business name</label>
+                        <label for="first_name" class="text-sm font-medium mb-1 block">Your name/Business name</label>
                         <input
                             type="text"
                             id="userName"
                             placeholder="Nairobi Plumbers Center"
-                            name="userName"
+                            name="first_name"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-yellow-500 focus:outline-none transition-colors mb-4"
                             required>
 
+                        <input
+                            type="hidden"
+                            id="secondName"
+                            placeholder="Nairobi Plumbers Center"
+                            name="second_name"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-yellow-500 focus:outline-none transition-colors mb-4"
+                            required>
                         <!-- Email -->
                         <label for="email" class="text-sm font-medium mb-1 block">Email Address</label>
                         <input

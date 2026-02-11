@@ -728,12 +728,14 @@ include_once './actions/withdrawApplication.php';
       transform: translateY(-2px);
     }
 
-    .btn-withdraw-app {
+    .btn-withdraw-app,
+    .btn-decline-ass {
       background: #dc3545;
       color: white;
     }
 
-    .btn-withdraw-app:hover {
+    .btn-withdraw-app:hover,
+    .btn-decline-ass:hover {
       background: #c82333;
       transform: translateY(-2px);
     }
@@ -798,7 +800,6 @@ include_once './actions/withdrawApplication.php';
             <a href="requestOrders.php"><i class="fas fa-search"></i> Find a Job</a>
             <a href="applications.php" class="active"><i class="fas fa-file-alt"></i> Your Applications</a>
             <a href="#"><i class="fas fa-briefcase"></i> Assigned Jobs</a>
-            <a href="#"><i class="fas fa-history"></i> Previous Jobs</a>
           </div>
         </div>
       </nav>
@@ -850,10 +851,10 @@ include_once './actions/withdrawApplication.php';
           <!-- Declined -->
           <div class="stat-card d-flex align-items-center rounded-2 p-3">
             <div>
-              <i class="fas fa-times-circle fs-1 me-3 text-warning"></i>
+              <i class="fas fa-check-circle fs-1 me-3 text-warning"></i>
             </div>
             <div>
-              <p class="mb-0" style="font-weight: bold;">Declined</p>
+              <p class="mb-0" style="font-weight: bold;">Assigned</p>
               <b><?= $declined ?></b>
             </div>
           </div>
@@ -874,7 +875,7 @@ include_once './actions/withdrawApplication.php';
               Accepted <span style="background: #d4edda; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;"><?= $accepted ?></span>
             </button>
             <button class="filter-tab" onclick="filterApplications('rejected')">
-              Declined <span style="background: #f8d7da; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;"><?= $declined ?></span>
+              Assigned <span style="background: #f8d7da; padding: 0.2rem 0.6rem; border-radius: 10px; margin-left: 0.3rem;"><?= $declined ?></span>
             </button>
           </div>
 
@@ -952,7 +953,8 @@ include_once './actions/withdrawApplication.php';
                   data-unit="<?php echo htmlspecialchars($application['unit_number']); ?>"
                   data-category="<?php echo htmlspecialchars($application['category']); ?>"
                   data-status="<?php echo $application['status']; ?>"
-                  data-client-budget="<?php echo htmlspecialchars($application['budget']); ?>"
+                  data-job-budget="<?php echo ($application['budget'] === null || $application['budget'] === '') ? 'Not set' : htmlspecialchars($request['budget']); ?>"
+
                   data-your-budget="<?php echo htmlspecialchars($application['proposed_budget']); ?>"
                   data-duration="<?php echo htmlspecialchars($application['proposed_duration']); ?>"
                   data-applied-date="<?php echo date('M d, Y', strtotime($application['created_at'])); ?>">
@@ -1145,13 +1147,20 @@ include_once './actions/withdrawApplication.php';
         <h3 class="detail-section-title">
           <i class="fas fa-tasks"></i> Actions
         </h3>
-        <button class="action-btn-offcanvas btn-message-client" id="btnMessageOffcanvas" style="display: none;">
-          <i class="fas fa-comments"></i> Message Client
+        <button class="action-btn-offcanvas btn-message-client" id="btnAcceptOffcanvas" style="display: none;">
+          <i class="fas fa-comments"></i> Accept the assignement
         </button>
+
+        <form method="POST" action="" id="declineAssignmentForm" style="display: none;">
+          <input type="hidden" name="assigned_request_id" id="assigned_request_id" value="">
+          <button class="action-btn-offcanvas btn-decline-ass" type="submit" id="btnDeclineAssignment">
+            <i class="fas fa-trash"></i> Decline the assignement
+          </button>
+        </form>
         <form method="POST" action="" id="acceptProposalForm">
           <input type="hidden" name="proposal_id" id="proposal_id" value="">
           <button class="action-btn-offcanvas btn-withdraw-app" type="submit" id="btnWithApplication" style="display: none;">
-            <i class="fas fa-trash"></i> Withdraw Application
+            <i class="fas fa-trash"></i> Withdraw the Application
           </button>
         </form>
       </div>
@@ -1176,7 +1185,6 @@ include_once './actions/withdrawApplication.php';
     }
 
     // Action buttons functionality
-    
   </script>
 
   <!-- Toast message -->
@@ -1262,6 +1270,8 @@ include_once './actions/withdrawApplication.php';
       const proposalId = button.getAttribute('data-proposal-id');
       const images = JSON.parse(imagesJSON);
 
+      console.log(status);
+
       // Setup image slider
       const imageSlider = document.getElementById('offcanvasImageSlider');
       const indicatorsContainer = document.getElementById('offcanvasIndicators');
@@ -1332,6 +1342,8 @@ include_once './actions/withdrawApplication.php';
       document.getElementById('offcanvasAppliedDate').textContent = 'Applied on ' + appliedDate;
       document.getElementById('proposal_id').value = proposalId;
       const btnWithApplication = document.getElementById('btnWithApplication').name = 'withdraw_application';
+      const btnDeclineAssigment = document.getElementById('btnDeclineAssignment');
+      btnDeclineAssigment.name = 'decline_assignment';
 
 
       // Set status with proper styling
@@ -1343,7 +1355,7 @@ include_once './actions/withdrawApplication.php';
         statusIcon = '<i class="fas fa-clock"></i>';
         statusText = 'Pending Review';
         statusHTML = '<div class="status-indicator pending">' + statusIcon + ' ' + statusText + '</div>';
-      } else if (status === 'accepted') {
+      } else if (status === 'Accepted') {
         statusIcon = '<i class="fas fa-check-circle"></i>';
         statusText = 'Accepted';
         statusHTML = '<div class="status-indicator accepted">' + statusIcon + ' ' + statusText + '</div>';
@@ -1366,17 +1378,20 @@ include_once './actions/withdrawApplication.php';
       document.getElementById('offcanvasStatus').innerHTML = statusHTML;
 
       // Show/hide action buttons based on status
-      const btnMessage = document.getElementById('btnMessageOffcanvas');
+      const btnAccept = document.getElementById('btnAcceptOffcanvas');
+      const declineAssignmentForm = document.getElementById('declineAssignmentForm')
       const btnWithdraw = document.getElementById('btnWithApplication');
 
-      if (status === 'accepted') {
-        btnMessage.style.display = 'block';
+      if (status === 'Accepted') {
+        btnAccept.style.display = 'block';
+        declineAssignmentForm.style.display = 'block';
+        btnDeclineAssigment.style.display = 'block';
         btnWithdraw.style.display = 'none';
       } else if (status === 'Pending') {
-        btnMessage.style.display = 'none';
+        btnAccept.style.display = 'none';
         btnWithdraw.style.display = 'block';
       } else {
-        btnMessage.style.display = 'none';
+        btnAccept.style.display = 'none';
         btnWithdraw.style.display = 'none';
       }
     });

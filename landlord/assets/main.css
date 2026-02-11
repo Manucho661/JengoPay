@@ -624,3 +624,5 @@
         .filters-scroll {
             mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%) !important;
         }
+
+         

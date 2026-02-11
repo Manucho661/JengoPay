@@ -25,13 +25,13 @@ function createJournalEntry($pdo, $data)
 }
 
 // Function to add a journal line
-function addJournalLine($pdo, $journalId, $landlord_id, $accountId, $debit, $credit, $source_table, $source_id)
+function addJournalLine($pdo, $journalId, $building_id, $landlord_id, $accountId, $debit, $credit, $source_table, $source_id)
 {
     // Correct order: journal_entry_id, landlord_id comes immediately after it
     $stmt = $pdo->prepare("
-        INSERT INTO journal_lines (journal_entry_id, landlord_id, account_id, debit, credit, source_table, source_table_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO journal_lines (journal_entry_id, building_id, landlord_id, account_id, debit, credit, source_table, source_table_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ");
-    $stmt->execute([$journalId, $landlord_id, $accountId, $debit, $credit, $source_table, $source_id]);
+    $stmt->execute([$journalId, $building_id, $landlord_id,  $accountId, $debit, $credit, $source_table, $source_id]);
 }
 ?>

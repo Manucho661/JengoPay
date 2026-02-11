@@ -3,6 +3,12 @@ session_start();
 require_once "../../../auth/auth_check.php";   // Protect this page
 ?>
 
+<?php
+// get summry
+require_once "./actions/dashboardSummary.php";
+// revenue
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/balancesheet/actions/getEquity.php';
+?>
 
 <!doctype html>
 <html lang="en">
@@ -16,7 +22,7 @@ require_once "../../../auth/auth_check.php";   // Protect this page
   <!--begin::Primary Meta Tags-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="title" content="AdminLTE | Dashboard v2" />
-  
+
   <!-- LINKS -->
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
@@ -38,12 +44,9 @@ require_once "../../../auth/auth_check.php";   // Protect this page
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 
-  <!--end::Third Party Plugin(Bootstrap Icons)-->
-  <!--begin::Required Plugin(AdminLTE)-->
+  <!-- Main css file -->
   <link rel="stylesheet" href="../../../landlord/assets/main.css" />
-  <!-- <link rel="stylesheet" href="text.css" /> -->
-  <!--end::Required Plugin(AdminLTE)-->
-  <!-- apexcharts -->
+
 
   <link
     rel="stylesheet"
@@ -54,9 +57,7 @@ require_once "../../../auth/auth_check.php";   // Protect this page
 
   <!-- scripts for data_table -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
-  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-  <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
+
 
   <!-- Pdf pluggin -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -130,6 +131,7 @@ require_once "../../../auth/auth_check.php";   // Protect this page
       font-size: 1.5rem;
       margin-bottom: 10px;
     }
+
     .stat-card h3 {
       color: var(--main-color);
       font-size: 1.8rem;
@@ -273,6 +275,9 @@ require_once "../../../auth/auth_check.php";   // Protect this page
       /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); */
       margin-bottom: 20px;
     }
+    a{
+      text-decoration: none;
+    }
   </style>
 </head>
 
@@ -313,7 +318,7 @@ require_once "../../../auth/auth_check.php";   // Protect this page
                   </div>
                   <div>
                     <p class="mb-0" style="font-weight: bold;">Total Properties</p>
-                    <b>0</b>
+                    <b><?= $buildingCount ?></b>
                   </div>
                 </div>
               </div>
@@ -326,7 +331,7 @@ require_once "../../../auth/auth_check.php";   // Protect this page
                   </div>
                   <div>
                     <p class="mb-0" style="font-weight: bold;">Active Tenants</p>
-                    <b>0</b>
+                    <b><?= $tenantCount ?></b>
                   </div>
                 </div>
               </div>
@@ -339,7 +344,22 @@ require_once "../../../auth/auth_check.php";   // Protect this page
                   </div>
                   <div>
                     <p class="mb-0" style="font-weight: bold;">Monthly Revenue</p>
-                    <b>0</b>
+                    <?php
+                    $value = (float)$retainedEarnings;
+                    $isNegative = $value < 0;
+
+                    // convert to K format
+                    $formatted = number_format(abs($value) / 1000, 2) . 'K';
+
+                    // add brackets if negative
+                    if ($isNegative) {
+                      $formatted = "($formatted)";
+                    }
+                    ?>
+
+                    <b style=" color: <?= $isNegative ? 'red' : 'var(--main-color)' ?>;">
+                      KSH <?= $formatted ?>
+                    </b>
                   </div>
                 </div>
               </div>
@@ -351,8 +371,8 @@ require_once "../../../auth/auth_check.php";   // Protect this page
                     <i class="bi bi-exclamation-triangle-fill fs-1 me-3 text-warning"></i>
                   </div>
                   <div>
-                    <p class="mb-0" style="font-weight: bold;">Pending Requests</p>
-                    <b>0</b>
+                    <p class="mb-0" style="font-weight: bold;">Submitted Requests</p>
+                    <b><?= $requestCount ?></b>
                   </div>
                 </div>
               </div>

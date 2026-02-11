@@ -15,19 +15,23 @@ function recordExpensePaymentJournal($pdo, $expected_amount, $expense_id, $amoun
 
     try {
         // Insert into journal_entries
-        $stmtEntry = $pdo->prepare("INSERT INTO journal_entries 
-            (description, reference, entry_date, source_table, source_id, created_at) 
-            VALUES (?, ?, ?, ?, ?, NOW())");
+        $stmtEntry = $pdo->prepare("
+            INSERT INTO journal_entries 
+            (description, reference, entry_date, source_table, source_id, cashflow_category, created_at) 
+            VALUES (?, ?, ?, ?, ?, ?, NOW())
+        ");
 
         $stmtEntry->execute([
-            "Payment for Expense #{$expense_id}",
-            "EXP-PAY-{$expense_id}",
-            $payment_date,
-            "expenses_payments",
-            $expPayId
+            "Payment for Expense #{$expense_id}",  // description
+            "EXP-PAY-{$expense_id}",               // reference
+            $payment_date,                         // entry_date
+            "expenses_payments",                   // source_table
+            $expPayId,                             // source_id
+            "OPERATING"                            // cashflow_category
         ]);
 
         $journalEntryId = $pdo->lastInsertId();
+
 
         // Insert into journal_lines
         $stmtLine = $pdo->prepare("INSERT INTO journal_lines 

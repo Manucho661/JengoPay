@@ -173,7 +173,7 @@ require_once "../db/connect.php";
         <!--end::Sidebar-->
 
         <!--begin::App Main-->
-        <main class="app-main mt-4">
+        <main class="main">
             <div class="content-wrapper">
                 <!-- Main content -->
                 <section class="content">

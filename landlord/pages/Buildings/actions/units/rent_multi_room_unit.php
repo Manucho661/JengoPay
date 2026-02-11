@@ -1,6 +1,21 @@
 <?php
 if (isset($_POST['rent_unit'])) {
 
+  // Session variables to use
+  $userId = $_SESSION['user']['id'];
+
+  // Fetch landlord ID linked to the logged-in user
+  $stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
+  $stmt->execute([$userId]);
+  $landlord = $stmt->fetch();
+
+  // Check if landlord exists for the user
+  if (!$landlord) {
+    throw new Exception("Landlord account not found for this user.");
+  }
+
+  $landlord_id = $landlord['id']; // Store the landlord_id from the session
+
   $tm = md5(time()); // Unique prefix for uploaded files
 
   // --------------------------------------------
@@ -45,6 +60,7 @@ if (isset($_POST['rent_unit'])) {
   // COLLECT FORM DATA
   // --------------------------------------------
   $tenantData = [
+    'landlord_id'  => $landlord_id,
     'first_name'   => $_POST['tfirst_name'] ?? null,
     'middle_name'  => $_POST['tmiddle_name'] ?? null,
     'last_name'    => $_POST['tlast_name'] ?? null,
@@ -69,6 +85,7 @@ if (isset($_POST['rent_unit'])) {
   // $unitNumber = 'B25';
 
   $tenancyData = [
+    
     'unit_id'            => $_POST['id'] ?? null,
 
     // Generate a unique, human-readable account number per tenancy
@@ -109,8 +126,8 @@ if (isset($_POST['rent_unit'])) {
     if (!$tenantId) {
       $stmt = $pdo->prepare("
                 INSERT INTO tenants 
-                (first_name, middle_name, last_name, phone, alt_phone, email, national_id, tenant_reg)
-                VALUES (:first_name, :middle_name, :last_name, :phone, :alt_phone, :email, :national_id, :tenant_reg)
+                (landlord_id, first_name, middle_name, last_name, phone, alt_phone, email, national_id, tenant_reg)
+                VALUES (:landlord_id, :first_name, :middle_name, :last_name, :phone, :alt_phone, :email, :national_id, :tenant_reg)
             ");
       $stmt->execute($tenantData);
       $tenantId = $pdo->lastInsertId();
@@ -172,7 +189,7 @@ if (isset($_POST['rent_unit'])) {
     exit;
   } catch (Exception $e) {
     $pdo->rollBack();
-     echo "Transaction failed. Please try again.";
+    echo "Transaction failed. Please try again.";
     // For debugging (optional):
     echo $e->getMessage();
     exit;

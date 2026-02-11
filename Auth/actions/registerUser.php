@@ -17,8 +17,8 @@ try {
     if (empty($_POST['role'])) {
         $errors[] = "role is required.";
     }
-    if (empty($_POST['userName'])) {
-        $errors[] = "Username is required.";
+    if (empty($_POST['first_name'])) {
+        $errors[] = "first_name is required.";
     }
 
     if (empty($_POST['email'])) {
@@ -41,10 +41,11 @@ try {
     // -----------------------------
     // Clean Inputs
     // -----------------------------
-    $role     = trim($_POST['role']);
-    $username = trim($_POST['userName']);
-    $email    = trim($_POST['email']);
-    $password = $_POST['password'];
+    $role       = trim($_POST['role']);
+    $first_name = trim($_POST['first_name']);
+    $second_name = !empty($_POST['second_name']) ? trim($_POST['second_name']) : null;
+    $email      = trim($_POST['email']);
+    $password   = $_POST['password'];
 
 
     // -----------------------------
@@ -70,10 +71,10 @@ try {
     // Insert User
     // -----------------------------
     $stmt = $pdo->prepare("
-        INSERT INTO users (name, email, password, role)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO users (email, password, role)
+        VALUES (?, ?, ?)
     ");
-    $stmt->execute([$username, $email, $hashedPassword, $role]);
+    $stmt->execute([$email, $hashedPassword, $role]);
 
     $user_id = $pdo->lastInsertId();
 
@@ -82,14 +83,14 @@ try {
     // -----------------------------
     if ($role === "landlord") {
         $landlordStmt = $pdo->prepare("
-            INSERT INTO landlords (user_id) VALUES (?)
+            INSERT INTO landlords (user_id, first_name, second_name) VALUES (?, ?, ?)
         ");
-        $landlordStmt->execute([$user_id]);
+        $landlordStmt->execute([$user_id, $first_name, $second_name]);
     } elseif ($role === "provider") {
         $providerStmt = $pdo->prepare("
-            INSERT INTO service_providers (user_id) VALUES (?)
+            INSERT INTO service_providers (user_id, name) VALUES (?, ?)
         ");
-        $providerStmt->execute([$user_id]);
+        $providerStmt->execute([$user_id, $first_name]);
     }
 
     // -----------------------------
@@ -108,6 +109,6 @@ try {
     // Client-safe response incase an error occurs (uncomment the error message);
     echo json_encode([
         // "status"  => "error",
-        // "errorMessage" => $e->getMessage()
+        "errorMessage" => $e->getMessage()
     ]);
 }

@@ -1,3 +1,10 @@
+
+<!--  -->
+  <?php
+session_start();
+require_once '../../db/connect.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
+  ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -215,50 +222,17 @@
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
   <div class="app-wrapper">
-    <!-- Header -->
-    <nav class="app-header navbar navbar-expand bg-body">
-      <div class="container-fluid">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
-              <i class="bi bi-list"></i>
-            </a>
-          </li>
-        </ul>
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item dropdown user-menu">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-              <img src="17.jpg" class="user-image rounded-circle shadow" alt="User Image" />
-              <span class="d-none d-md-inline"><b>JENGO PAY</b></span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-              <li class="user-header text-bg-primary">
-                <img src="../../dist/assets/img/user2-160x160.jpg" class="rounded-circle shadow" alt="User Image" />
-                <p>Alexander Pierce - Web Developer<small>Member since Nov. 2023</small></p>
-              </li>
-              <li class="user-footer">
-                <a href="#" class="btn btn-default btn-flat">Profile</a>
-                <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </nav>
+     <!--begin::Header-->
+    <?php
+    include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php';
+    ?>
+    <!--end::Header-->
 
-    <!-- Sidebar -->
-    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-      <div class="sidebar-brand">
-        <a href="./index.html" class="brand-link">
-          <span class="brand-text font-weight-light">
-            <b class="p-2" style="background-color:#FFC107; border:2px solid #FFC107; border-top-left-radius:5px; font-weight:bold; color:#00192D;">BT</b>
-            <b class="p-2" style="border-bottom-right-radius:5px; font-weight:bold; border:2px solid #FFC107; color: #FFC107;">JENGOPAY</b>
-          </span>
-        </a>
-      </div>
-      <div><?php include_once '../../includes/sidebar.php'; ?></div>
-    </aside>
-
+    <!--begin::Sidebar-->
+    <?php
+    include_once '../../includes/sidebar.php';
+    ?>
+    <!--end::Sidebar-->
     <!-- Main Content -->
     <?php 
 include '../../db/connect.php';
@@ -304,7 +278,7 @@ $stmt->execute($params);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<main class="container py-4">
+<main class="main">
   <h1 class="main-title">Trial Balance Report</h1>
 
   <!-- FILTER FORM -->

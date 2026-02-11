@@ -209,6 +209,9 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
             color: #6c757d;
             font-size: 0.9rem;
         }
+        a{
+            text-decoration: none !important;
+        }
     </style>
 </head>
 
@@ -291,7 +294,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                         <button class="actionBtn"
                             id="supplier-list-open-btn"
                             style="">
-                            Registered Suppliers
+                            Registered Suppliers (<span class="text-warning"><?= $totalSuppliers ?></span>)
                         </button>
 
                         <button

@@ -188,7 +188,7 @@ require_once "../db/connect.php";
         </div>
 
         <?php
-        $single_unit_tenants = "SELECT tenant_status, COUNT(*) AS total FROM tenants GROUP BY tenant_status";
+        $single_unit_tenants = "SELECT status, COUNT(*) AS total FROM tenants GROUP BY status";
         $stmt = $pdo->prepare($single_unit_tenants);
         $stmt->execute();
 
@@ -198,7 +198,7 @@ require_once "../db/connect.php";
         ];
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-          $counts[$row['tenant_status']] = $row['total'];
+          $counts[$row['status']] = $row['total'];
         }
 
         $icons = [
@@ -487,12 +487,12 @@ require_once "../db/connect.php";
   if (isset($_POST['vacate_tenant'])) {
     $tenant_id = $_POST['id'] ?? '';
     $occupancy_status = $_POST['occupancy_status'] ?? '';
-    $tenant_status = $_POST['tenant_status'] ?? '';
+    $status = $_POST['status'] ?? '';
     try {
-      $update = $pdo->prepare("UPDATE tenants SET occupancy_status =:occupancy_status, tenant_status = :tenant_status, vacated_on = NOW() WHERE id = :id");
+      $update = $pdo->prepare("UPDATE tenants SET occupancy_status =:occupancy_status, status = :status, vacated_on = NOW() WHERE id = :id");
       $updated = $update->execute([
         ':occupancy_status' => $occupancy_status,
-        ':tenant_status' => $tenant_status,
+        ':status' => $status,
         ':id' => $tenant_id
       ]);
 
@@ -535,7 +535,7 @@ require_once "../db/connect.php";
   //=============== PHP Shift Tenant to a Single Vacant Unit ====================
   if (isset($_POST['shift_to_single_unit'])) {
     $tenant_id = $_POST['id'] ?? '';
-    $tenant_status = $_POST['tenant_status'] ?? '';
+    $status = $_POST['status'] ?? '';
     $newoccupancy_status = 'Occupied';
 
     try {

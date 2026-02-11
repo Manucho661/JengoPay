@@ -11,29 +11,31 @@ try {
      * 1) MAIN QUERY (no building/unit joins)
      */
     $stmt = $pdo->prepare("
-        SELECT 
-            mrp.id AS proposal_id,
-            mrp.proposed_budget,
-            mrp.proposed_duration,
-            mrp.created_at,
-            mr.id,
-            mr.created_at AS request_created_at,
-            mr.category,
-            mr.title,
-            mr.description,
-            mr.budget,
-            mr.duration,
-            mrp.status,
-            mp.photo_path,
-            mr.building_id,
-            mr.building_unit_id
-        FROM maintenance_request_proposals AS mrp
-        LEFT JOIN maintenance_requests AS mr
-            ON mrp.maintenance_request_id = mr.id 
-        LEFT JOIN maintenance_request_photos AS mp
-            ON mr.id = mp.maintenance_request_id
-        WHERE mr.availability = 'available'
-    ");
+    SELECT 
+        mrp.id AS proposal_id,
+        mrp.proposed_budget,
+        mrp.proposed_duration,
+        mrp.created_at,
+        mr.id,
+        mr.created_at AS request_created_at,
+        mr.category,
+        mr.title,
+        mr.description,
+        mr.budget,
+        mr.duration,
+        mrp.status,
+        mp.photo_path,
+        mr.building_id,
+        mr.building_unit_id
+    FROM maintenance_request_proposals AS mrp
+    LEFT JOIN maintenance_requests AS mr
+        ON mrp.maintenance_request_id = mr.id 
+    LEFT JOIN maintenance_request_photos AS mp
+        ON mr.id = mp.maintenance_request_id
+    WHERE mr.availability = 'available'
+      AND (mrp.status IS NULL OR LOWER(TRIM(mrp.status)) <> 'Withdrawn')
+");
+
     $stmt->execute();
     $applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -111,7 +113,6 @@ try {
         $app['unit_number']   = $unitsMap[$app['building_unit_id']] ?? null;
     }
     unset($app);
-
 } catch (Throwable $e) {
     $error = $e->getMessage();
 }

@@ -47,9 +47,9 @@ if (isset($_POST['submit_building'])) {
     $structure_type  = $_POST['structure_type'] ?? null;
     $floors_no       = $_POST['floors_no'] ?? null;
     $no_of_units     = $_POST['no_of_units'] ?? null;
-    $building_type   = $_POST['building_type'] ?? null;
+    $building_type   = $_POST['category'] ?? null;
     $tax_rate        = $_POST['tax_rate'] ?? null;
-    $ownership_info  = $_POST['ownership_info'] ?? null;
+    $ownership_mode  = $_POST['ownership_info'] ?? null;
     $first_name      = $_POST['first_name'] ?? null;
     $last_name       = $_POST['last_name'] ?? null;
     $id_number       = $_POST['id_number'] ?? null;
@@ -79,7 +79,17 @@ if (isset($_POST['submit_building'])) {
         $landlord = $stmt->fetch();
         $landlord_id = $landlord['id'];
 
-        $sql = "INSERT INTO buildings (landlord_id, building_name, county, constituency, ward, structure_type, floors_no, no_of_units, building_type, tax_rate, ownership_info, first_name, last_name, id_number, primary_contact, other_contact, owner_email, postal_address, entity_name, entity_phone, entity_phoneother, entity_email, entity_rep, rep_role, entity_postal, ownership_proof, title_deed, legal_document, utilities, photo_one, photo_two, photo_three, photo_four, confirm) VALUES (:landlord_id, :building_name, :county, :constituency, :ward, :structure_type, :floors_no, :no_of_units, :building_type, :tax_rate, :ownership_info, :first_name, :last_name, :id_number, :primary_contact, :other_contact, :owner_email, :postal_address, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :entity_rep, :rep_role, :entity_postal, :ownership_proof, :title_deed, :legal_document, :utilities, :photo_one, :photo_two, :photo_three, :photo_four, :confirm)";
+        $sql = "INSERT INTO buildings (
+    landlord_id, building_name, county, constituency, ward, structure_type, floors_no, no_of_units, category, 
+    tax_rate, ownership_mode, first_name, last_name, id_number, primary_contact, other_contact, owner_email, 
+    postal_address, entity_name, entity_phone, entity_phoneother, entity_email, entity_rep, rep_role, entity_postal, 
+    ownership_proof, title_deed, legal_document, utilities, photo_one, photo_two, photo_three, photo_four, confirm
+) VALUES (
+    :landlord_id, :building_name, :county, :constituency, :ward, :structure_type, :floors_no, :no_of_units, :category, 
+    :tax_rate, :ownership_mode, :first_name, :last_name, :id_number, :primary_contact, :other_contact, :owner_email, 
+    :postal_address, :entity_name, :entity_phone, :entity_phoneother, :entity_email, :entity_rep, :rep_role, :entity_postal, 
+    :ownership_proof, :title_deed, :legal_document, :utilities, :photo_one, :photo_two, :photo_three, :photo_four, :confirm
+)";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -91,9 +101,9 @@ if (isset($_POST['submit_building'])) {
             ':structure_type'  => $structure_type,
             ':floors_no'       => $floors_no,
             ':no_of_units'     => $no_of_units,
-            ':building_type'   => $building_type,
+            ':category'        => $building_type, // Correct the variable name here
             ':tax_rate'        => $tax_rate,
-            ':ownership_info'  => $ownership_info,
+            ':ownership_mode'  => $ownership_mode, // Ensure the variable matches
             ':first_name'      => $first_name,
             ':last_name'       => $last_name,
             ':id_number'       => $id_number,
@@ -121,29 +131,16 @@ if (isset($_POST['submit_building'])) {
 
         $building_id = $pdo->lastInsertId();
 
-        echo "
-                        <script>
-                        Swal.fire({
-                            title: 'Success!',
-                            text: 'Building registered successfully! ID: $building_id',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                            }).then(() => {
-                                document.getElementById('buildingForm').reset();
-                                });
-                                </script>";
+        $_SESSION['success'] =
+            "Maintenance request submitted successfully.";
+
+        header('Location: ' . $_SERVER['REQUEST_URI']);
+        exit;
     } catch (PDOException $e) {
-        echo "
-                                <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-                                <script>
-                                Swal.fire({
-                                    title: 'Database Error!',
-                                    text: '" . addslashes($e->getMessage()) . "',
-                                    icon: 'error',
-                                    confirmButtonText: 'Close'
-                                    });
-                                    </script>";
+        $_SESSION['error'] =
+            'Failed to submit maintenance request: ' . $e->getMessage();
+
+        header('Location: ' . $_SERVER['REQUEST_URI']);
+        exit;
     }
-    header("Location: buildings.php");
-    exit;
 }

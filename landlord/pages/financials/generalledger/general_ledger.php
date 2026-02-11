@@ -319,6 +319,9 @@ $runningBalance = 0;
         width: 100%;
       }
     }
+    a{
+      text-decoration: none !important;
+    }
   </style>
 </head>
 

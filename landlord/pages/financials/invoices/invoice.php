@@ -1112,13 +1112,29 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!--end::Sidebar-->
     <!--begin::App Main-->
     <main class="main">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Home</a>
+          </li>
+          <li class="breadcrumb-item active">Invoices</li>
+        </ol>
+      </nav>
 
+      <!--begin::first Row-->
+      <div class="row align-items-center mb-3">
+        <div class="col-12 d-flex align-items-center">
+          <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+          <h3 class="mb-0 ms-3">Invoices</h3>
+        </div>
+      </div>
       <!-- Main Content -->
       <div class="main-content">
+
         <!-- Invoice List View (Default) -->
         <div id="invoice-list-view">
           <div class="page-header">
-            <h1 class="page-title"> 🧾 Invoices</h1>
+           
             <div class="page-actions">
               <!-- Search and Filter Bar -->
               <div class="d-flex justify-content-center align-items-center mb-3" style="gap: 8px;">
@@ -1258,10 +1274,10 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <p class="text-muted">Try different search terms</p>
               </div>
               <?php
-// ----------------------------------------------------
-// 1) Fetch invoices with tenant details and payment summary - FIXED VERSION
-// ----------------------------------------------------
-$stmt = $pdo->query("
+              // ----------------------------------------------------
+              // 1) Fetch invoices with tenant details and payment summary - FIXED VERSION
+              // ----------------------------------------------------
+              $stmt = $pdo->query("
     SELECT
         i.id,
         i.invoice_no,
@@ -1320,142 +1336,144 @@ $stmt = $pdo->query("
     LEFT JOIN tenants t ON i.tenant_id = t.id
     ORDER BY i.created_at DESC
 ");
-$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+              $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (empty($invoices)) {
-    echo '<div class="invoice-item text-center py-4">
+              if (empty($invoices)) {
+                echo '<div class="invoice-item text-center py-4">
             <div class="col-12"><b>No invoice found!</b></div>
           </div>';
-} else {
-    // ----------------------------------------------------
-    // 2) Output each invoice item
-    // ----------------------------------------------------
-    foreach ($invoices as $invoice) {
-        // Use the actual tenant name from the join
-        $tenantName = !empty($invoice['tenant_name']) ? $invoice['tenant_name'] : 'Unknown Tenant';
-        
-        // If tenant_name is empty but receiver has an ID, you could display "Tenant ID: X"
-        if (empty($tenantName) && !empty($invoice['tenant_id'])) {
-            $tenantName = 'Tenant ID: ' . $invoice['tenant_id'];
-        }
-        
-        // Format dates
-        $invoiceDate = 'Draft';
-        $dueDate = 'Not set';
-        
-        if (!empty($invoice['invoice_date']) && $invoice['invoice_date'] != '0000-00-00') {
-            $invoiceDate = date('M d, Y', strtotime($invoice['invoice_date']));
-        }
-        
-        if (!empty($invoice['due_date']) && $invoice['due_date'] != '0000-00-00') {
-            $dueDate = date('M d, Y', strtotime($invoice['due_date']));
-        }
-        
-        // Use display values for amounts
-        $subtotal = floatval($invoice['display_subtotal']);
-        $total = floatval($invoice['display_total']);
-        $taxes = floatval($invoice['display_taxes']);
-        
-        $subtotalFormatted = number_format($subtotal, 2);
-        $totalFormatted = number_format($total, 2);
-        $taxFormatted = number_format($taxes, 2);
-        
-        $paidAmount = floatval($invoice['paid_amount']);
-        $paidFormatted = number_format($paidAmount, 2);
-        $balance = $total - $paidAmount;
-        $balanceFormatted = number_format($balance, 2);
-        
-        // Calculate overdue status
-        $isOverdue = false;
-        $overdueDays = 0;
-        if (!empty($invoice['due_date']) && $invoice['due_date'] != '0000-00-00' && 
-            $invoice['status'] != 'paid' && $invoice['status'] != 'cancelled') {
-            $today = new DateTime();
-            $dueDateObj = new DateTime($invoice['due_date']);
-            if ($today > $dueDateObj) {
-                $isOverdue = true;
-                $overdueDays = $today->diff($dueDateObj)->days;
-            }
-        }
-        
-        // Determine status badge
-        $status = !empty($invoice['status']) ? $invoice['status'] : 'draft';
-        $statusClass = 'badge-';
-        $statusText = ucfirst($status);
-        
-        switch ($status) {
-            case 'draft':
-                $statusClass .= 'draft';
-                break;
-            case 'sent':
-                $statusClass .= $isOverdue ? 'overdue' : 'sent';
-                $statusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Sent';
-                break;
-            case 'paid':
-                $statusClass .= 'paid';
-                break;
-            case 'cancelled':
-                $statusClass .= 'cancelled';
-                break;
-            default:
-                $statusClass .= 'draft';
-        }
-        
-        // Payment status with amounts
-        $paymentStatusClass = 'badge-';
-        $paymentStatusText = '';
-        
-        // First check if any payment has been made
-        if ($paidAmount > 0) {
-            if ($paidAmount >= $total) {
-                // Fully paid
-                $paymentStatusClass .= 'paid';
-                $paymentStatusText = 'Paid (KES ' . $paidFormatted . ')';
-            } else {
-                // Partial payment
-                $paymentStatusClass .= 'partial';
-                $paymentStatusText = 'Partial (KES ' . $paidFormatted . ' of ' . $totalFormatted . ')';
-            }
-        } else {
-            // No payments made
-            $paymentStatusClass .= 'unpaid';
-            $paymentStatusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Unpaid';
-        }
-        
-        echo '<div class="invoice-item" onclick="openInvoiceDetails(' . $invoice['id'] . ')">';
-        
-        echo '<div class="invoice-checkbox col-checkbox">
+              } else {
+                // ----------------------------------------------------
+                // 2) Output each invoice item
+                // ----------------------------------------------------
+                foreach ($invoices as $invoice) {
+                  // Use the actual tenant name from the join
+                  $tenantName = !empty($invoice['tenant_name']) ? $invoice['tenant_name'] : 'Unknown Tenant';
+
+                  // If tenant_name is empty but receiver has an ID, you could display "Tenant ID: X"
+                  if (empty($tenantName) && !empty($invoice['tenant_id'])) {
+                    $tenantName = 'Tenant ID: ' . $invoice['tenant_id'];
+                  }
+
+                  // Format dates
+                  $invoiceDate = 'Draft';
+                  $dueDate = 'Not set';
+
+                  if (!empty($invoice['invoice_date']) && $invoice['invoice_date'] != '0000-00-00') {
+                    $invoiceDate = date('M d, Y', strtotime($invoice['invoice_date']));
+                  }
+
+                  if (!empty($invoice['due_date']) && $invoice['due_date'] != '0000-00-00') {
+                    $dueDate = date('M d, Y', strtotime($invoice['due_date']));
+                  }
+
+                  // Use display values for amounts
+                  $subtotal = floatval($invoice['display_subtotal']);
+                  $total = floatval($invoice['display_total']);
+                  $taxes = floatval($invoice['display_taxes']);
+
+                  $subtotalFormatted = number_format($subtotal, 2);
+                  $totalFormatted = number_format($total, 2);
+                  $taxFormatted = number_format($taxes, 2);
+
+                  $paidAmount = floatval($invoice['paid_amount']);
+                  $paidFormatted = number_format($paidAmount, 2);
+                  $balance = $total - $paidAmount;
+                  $balanceFormatted = number_format($balance, 2);
+
+                  // Calculate overdue status
+                  $isOverdue = false;
+                  $overdueDays = 0;
+                  if (
+                    !empty($invoice['due_date']) && $invoice['due_date'] != '0000-00-00' &&
+                    $invoice['status'] != 'paid' && $invoice['status'] != 'cancelled'
+                  ) {
+                    $today = new DateTime();
+                    $dueDateObj = new DateTime($invoice['due_date']);
+                    if ($today > $dueDateObj) {
+                      $isOverdue = true;
+                      $overdueDays = $today->diff($dueDateObj)->days;
+                    }
+                  }
+
+                  // Determine status badge
+                  $status = !empty($invoice['status']) ? $invoice['status'] : 'draft';
+                  $statusClass = 'badge-';
+                  $statusText = ucfirst($status);
+
+                  switch ($status) {
+                    case 'draft':
+                      $statusClass .= 'draft';
+                      break;
+                    case 'sent':
+                      $statusClass .= $isOverdue ? 'overdue' : 'sent';
+                      $statusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Sent';
+                      break;
+                    case 'paid':
+                      $statusClass .= 'paid';
+                      break;
+                    case 'cancelled':
+                      $statusClass .= 'cancelled';
+                      break;
+                    default:
+                      $statusClass .= 'draft';
+                  }
+
+                  // Payment status with amounts
+                  $paymentStatusClass = 'badge-';
+                  $paymentStatusText = '';
+
+                  // First check if any payment has been made
+                  if ($paidAmount > 0) {
+                    if ($paidAmount >= $total) {
+                      // Fully paid
+                      $paymentStatusClass .= 'paid';
+                      $paymentStatusText = 'Paid (KES ' . $paidFormatted . ')';
+                    } else {
+                      // Partial payment
+                      $paymentStatusClass .= 'partial';
+                      $paymentStatusText = 'Partial (KES ' . $paidFormatted . ' of ' . $totalFormatted . ')';
+                    }
+                  } else {
+                    // No payments made
+                    $paymentStatusClass .= 'unpaid';
+                    $paymentStatusText = $isOverdue ? 'Overdue (' . $overdueDays . 'd)' : 'Unpaid';
+                  }
+
+                  echo '<div class="invoice-item" onclick="openInvoiceDetails(' . $invoice['id'] . ')">';
+
+                  echo '<div class="invoice-checkbox col-checkbox">
                 <input type="checkbox" onclick="event.stopPropagation()">
               </div>';
-        
-        echo '<div class="invoice-number col-number">' . htmlspecialchars($invoice['invoice_no']) . '</div>';
-        
-        echo '<div class="invoice-customer col-customer" title="' . htmlspecialchars($invoice['description']) . '">'
-            . htmlspecialchars($tenantName) . '
+
+                  echo '<div class="invoice-number col-number">' . htmlspecialchars($invoice['invoice_no']) . '</div>';
+
+                  echo '<div class="invoice-customer col-customer" title="' . htmlspecialchars($invoice['description']) . '">'
+                    . htmlspecialchars($tenantName) . '
             </div>';
-        
-        echo '<div class="invoice-date col-date">' . $invoiceDate . '</div>';
-        
-        echo '<div class="invoice-date col-due-date' . ($isOverdue ? ' text-danger' : '') . '">' . $dueDate . '</div>';
-        
-        echo '<div class="invoice-sub-total col-sub-total">' . $subtotalFormatted . '</div>';
-        
-        echo '<div class="invoice-taxes col-taxes">' . $taxFormatted . '</div>';
-        
-        echo '<div class="invoice-amount col-amount">' . $totalFormatted . '</div>';
-        
-        echo '<div class="invoice-status col-status">
+
+                  echo '<div class="invoice-date col-date">' . $invoiceDate . '</div>';
+
+                  echo '<div class="invoice-date col-due-date' . ($isOverdue ? ' text-danger' : '') . '">' . $dueDate . '</div>';
+
+                  echo '<div class="invoice-sub-total col-sub-total">' . $subtotalFormatted . '</div>';
+
+                  echo '<div class="invoice-taxes col-taxes">' . $taxFormatted . '</div>';
+
+                  echo '<div class="invoice-amount col-amount">' . $totalFormatted . '</div>';
+
+                  echo '<div class="invoice-status col-status">
                 <span class="status-badge ' . $statusClass . '">' . $statusText . '</span>
               </div>';
-        
-        echo '<div class="invoice-status col-payment-status">
+
+                  echo '<div class="invoice-status col-payment-status">
                 <span class="status-badge ' . $paymentStatusClass . '">' . $paymentStatusText . '</span>';
-        
-        // Show payment button if applicable
-        if ($status !== 'draft' && $status !== 'cancelled' && $paidAmount < $total) {
-            $buttonText = $paidAmount > 0 ? 'Add Payment' : 'Pay';
-            
-            echo '<br>
+
+                  // Show payment button if applicable
+                  if ($status !== 'draft' && $status !== 'cancelled' && $paidAmount < $total) {
+                    $buttonText = $paidAmount > 0 ? 'Add Payment' : 'Pay';
+
+                    echo '<br>
                 <button class="btn pay-btn btn-sm mt-1"
                     onclick="event.stopPropagation(); openPayModal(this)"
                     data-invoice-id="' . $invoice['id'] . '"
@@ -1467,9 +1485,9 @@ if (empty($invoices)) {
                     <i class="fas fa-credit-card me-1"></i>
                     ' . $buttonText . '
                 </button>';
-        }
-        
-        echo '</div>
+                  }
+
+                  echo '</div>
             <div class="invoice-actions col-actions dropdown">
                 <button class="action-btn dropdown-toggle" onclick="event.stopPropagation()" data-bs-toggle="dropdown">
                     <i class="fas fa-ellipsis-v"></i>
@@ -1478,39 +1496,39 @@ if (empty($invoices)) {
                     <li><a class="dropdown-item" href="#" onclick="viewInvoice(' . $invoice['id'] . ')">
                         <i class="fas fa-eye me-2"></i>View Details
                     </a></li>';
-        
-        if ($status === 'draft' || ($status === 'sent' && $paidAmount == 0)) {
-            echo '<li><a class="dropdown-item" href="/Jengopay/landlord/pages/financials/invoices/invoice_edit.php?id=' . $invoice['id'] . '">
+
+                  if ($status === 'draft' || ($status === 'sent' && $paidAmount == 0)) {
+                    echo '<li><a class="dropdown-item" href="/Jengopay/landlord/pages/financials/invoices/invoice_edit.php?id=' . $invoice['id'] . '">
                   <i class="fas fa-edit me-2"></i>Edit Invoice
               </a></li>';
-        }
-        
-        echo '<li><hr class="dropdown-divider"></li>';
-        
-        // Delete option - only for drafts and cancelled invoices
-        if ($status === 'draft' || $status === 'cancelled') {
-            echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
+                  }
+
+                  echo '<li><hr class="dropdown-divider"></li>';
+
+                  // Delete option - only for drafts and cancelled invoices
+                  if ($status === 'draft' || $status === 'cancelled') {
+                    echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmDeleteInvoice(' . $invoice['id'] . ')">
                   <i class="fas fa-trash-alt me-2"></i>Delete Invoice
               </a></li>';
-        }
-        
-        // Cancel/Restore options
-        if ($status !== 'cancelled' && $status !== 'paid') {
-            echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmCancelInvoice(' . $invoice['id'] . ')">
+                  }
+
+                  // Cancel/Restore options
+                  if ($status !== 'cancelled' && $status !== 'paid') {
+                    echo '<li><a class="dropdown-item text-danger" href="#" onclick="confirmCancelInvoice(' . $invoice['id'] . ')">
                   <i class="fas fa-ban me-2"></i>Cancel Invoice
               </a></li>';
-        } else if ($status === 'cancelled') {
-            echo '<li><a class="dropdown-item" href="#" onclick="restoreInvoice(' . $invoice['id'] . ')">
+                  } else if ($status === 'cancelled') {
+                    echo '<li><a class="dropdown-item" href="#" onclick="restoreInvoice(' . $invoice['id'] . ')">
                   <i class="fas fa-undo me-2"></i>Restore Invoice
               </a></li>';
-        }
-        
-        echo '</ul>
+                  }
+
+                  echo '</ul>
             </div>
         </div>';
-    }
-}
-?>
+                }
+              }
+              ?>
             </div>
 
             <div class="invoice-list">
@@ -1575,300 +1593,300 @@ if (empty($invoices)) {
           </div>
 
 
-    <!--start footer -->
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
-    <!-- end footer -->
-  </div>
-
-
-
-  <!-- MODALS -->
-
-  <!-- ✅ Payments History Modal -->
-  <div class="modal fade" id="paymentsHistoryModal" tabindex="-1" aria-labelledby="paymentsHistoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-      <div class="modal-content">
-
-        <!-- Modal Header -->
-        <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
-          <h5 class="modal-title" id="paymentsHistoryModalLabel">Payments History</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          <!--start footer -->
+          <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+          <!-- end footer -->
         </div>
 
-        <!-- Modal Body -->
-        <div class="modal-body">
-
-          <!-- ✅ Filters Row -->
-          <div class="row g-3 mb-3">
-            <div class="col-12 col-md-4">
-              <label for="filterMonth" class="form-label">Filter by Month</label>
-              <input type="month" id="filterMonth" class="form-control">
-            </div>
-            <div class="col-12 col-md-4">
-              <label for="filterMethod" class="form-label">Payment Method</label>
-              <select id="filterMethod" class="form-control">
-                <option value="">All</option>
-                <option value="cash">Cash</option>
-                <option value="bank">Bank Transfer</option>
-                <option value="mpesa">M-Pesa</option>
-              </select>
-            </div>
-            <div class="col-12 col-md-4 d-flex align-items-end">
-              <button id="applyFilters" class="btn w-100" style="color: #FFC107; background-color:#00192D;">
-                <i class="fas fa-filter"></i> Apply Filters
-              </button>
-            </div>
-          </div>
-
-          <!-- ✅ Responsive Table -->
-          <div class="table-responsive">
-            <table class="table table-striped table-bordered align-middle text-nowrap" id="paymentsTable">
-              <thead style="background-color: #00192D; color: #FFC107;">
-                <tr>
-                  <th>Tenant</th>
-                  <th>Amount</th>
-                  <th>Payment Method</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Modal Footer -->
-        <div class="modal-footer flex-wrap">
-          <button class="btn btn-success me-2 mb-2" onclick="window.location.href='/Jengopay/landlord/pages/financials/invoices/payments_report.php'">
-            <i class="fas fa-file-excel"></i> Download Excel
-          </button>
-          <button type="button" class="btn btn-secondary mb-2" data-bs-dismiss="modal">Close</button>
-        </div>
-
-      </div>
-    </div>
-  </div>
 
 
-  <!-- ✅ Edit Payment Modal -->
-  <div class="modal fade" id="editPaymentModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <form id="editPaymentForm" action="update_payment.php" method="POST">
-        <div class="modal-content">
-          <div class="modal-header bg-warning">
-            <h5 class="modal-title">Edit Payment</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
+        <!-- MODALS -->
 
-          <!-- Modal Body -->
-          <div class="modal-body px-4 py-4 bg-light-subtle">
-            <input type="hidden" name="id" id="editPaymentId">
-            <input type="hidden" id="invoiceId" name="invoice_id">
-            <input type="hidden" id="invoiceTotal" name="total_amount" value="0">
+        <!-- ✅ Payments History Modal -->
+        <div class="modal fade" id="paymentsHistoryModal" tabindex="-1" aria-labelledby="paymentsHistoryModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
 
-            <div class="row g-4">
-              <!-- Payment Date -->
-              <div class="col-md-6">
-                <label class="form-label fw-semibold text-dark">
-                  <i class="fa-regular fa-calendar-days text-warning me-1"></i> Payment Date
-                </label>
-                <input type="date" class="form-control border-warning" id="paymentDate" name="payment_date" required>
-                <div class="form-text text-danger small" id="dateError" style="display: none;">
-                  ⚠️ Future dates are not allowed.
+              <!-- Modal Header -->
+              <div class="modal-header" style="background-color: #00192D; color: #FFC107;">
+                <h5 class="modal-title" id="paymentsHistoryModalLabel">Payments History</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+              </div>
+
+              <!-- Modal Body -->
+              <div class="modal-body">
+
+                <!-- ✅ Filters Row -->
+                <div class="row g-3 mb-3">
+                  <div class="col-12 col-md-4">
+                    <label for="filterMonth" class="form-label">Filter by Month</label>
+                    <input type="month" id="filterMonth" class="form-control">
+                  </div>
+                  <div class="col-12 col-md-4">
+                    <label for="filterMethod" class="form-label">Payment Method</label>
+                    <select id="filterMethod" class="form-control">
+                      <option value="">All</option>
+                      <option value="cash">Cash</option>
+                      <option value="bank">Bank Transfer</option>
+                      <option value="mpesa">M-Pesa</option>
+                    </select>
+                  </div>
+                  <div class="col-12 col-md-4 d-flex align-items-end">
+                    <button id="applyFilters" class="btn w-100" style="color: #FFC107; background-color:#00192D;">
+                      <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                  </div>
+                </div>
+
+                <!-- ✅ Responsive Table -->
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered align-middle text-nowrap" id="paymentsTable">
+                    <thead style="background-color: #00192D; color: #FFC107;">
+                      <tr>
+                        <th>Tenant</th>
+                        <th>Amount</th>
+                        <th>Payment Method</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
                 </div>
               </div>
 
-              <!-- Tenant Name -->
-              <div class="col-md-6">
-                <label class="form-label fw-semibold text-dark">
-                  <i class="fa-solid fa-user-tag text-warning me-1"></i> Tenant Name
-                </label>
-                <input type="text" class="form-control border-warning" id="tenantName" name="tenant" readonly required>
+              <!-- Modal Footer -->
+              <div class="modal-footer flex-wrap">
+                <button class="btn btn-success me-2 mb-2" onclick="window.location.href='/Jengopay/landlord/pages/financials/invoices/payments_report.php'">
+                  <i class="fas fa-file-excel"></i> Download Excel
+                </button>
+                <button type="button" class="btn btn-secondary mb-2" data-bs-dismiss="modal">Close</button>
               </div>
 
-              <!-- Payment Method -->
-              <div class="col-md-6">
-                <label class="form-label fw-semibold text-dark">
-                  <i class="fa-solid fa-hand-holding-dollar text-warning me-1"></i> Payment Method
-                </label>
-                <select class="form-select border-warning text-dark" id="paymentMethod" name="payment_method" required>
-                  <option value="">-- Choose Method --</option>
-                  <option value="mpesa">📱 MPESA</option>
-                  <option value="bank">🏦 Bank</option>
-                  <option value="cash">💵 Cash</option>
-                </select>
-              </div>
-
-              <!-- Amount -->
-              <div class="col-md-6">
-                <label class="form-label fw-semibold text-dark">
-                  <i class="fa-solid fa-sack-dollar text-warning me-1"></i> Amount (KES)
-                </label>
-                <input type="number" class="form-control border-warning" id="editAmount" name="amount" step="0.01" min="0" required>
-                <div id="paymentStatus" class="mt-2 small fw-semibold"></div>
-              </div>
-
-              <!-- Reference Number -->
-              <div class="col-12">
-                <label class="form-label fw-semibold text-dark">
-                  <i class="fa-solid fa-barcode text-warning me-1"></i> Reference Number
-                </label>
-                <input type="text" class="form-control border-warning" id="referenceNumber" name="reference_number" placeholder="e.g. MPESA code or bank slip" required>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">UPDATE PAYMENT</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Column Selector Modal -->
-  <div class="modal fade" id="columnSelectorModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Select Columns</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label">Visible Columns</label>
-            <div id="columnCheckboxes" class="d-flex flex-column gap-2">
-              <!-- Checkboxes will be added dynamically -->
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button id="applyColumns" class="btn" style="color: #FFC107; background-color:#00192D;">Apply</button>
-          <button class="btn" data-bs-dismiss="modal" style="color: #FFC107; background-color:#00192D;">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- ✅ PAYMENT MODAL -->
-  <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <form id="paymentForm" method="post" action="/Jengopay/landlord/pages/financials/invoices/action/submit_payment.php">
-        <div class="modal-content shadow-lg border-0 rounded-4">
 
-          <!-- Modal Header -->
-          <div class="modal-header" style="background-color: #00192D;">
-            <h5 class="modal-title text-warning fw-semibold" id="paymentModalLabel">
-              <i class="fa-solid fa-file-invoice-dollar me-2"></i> Make Payment
-            </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
 
-          <!-- Modal Body -->
-          <div class="modal-body px-4 py-4 bg-light-subtle">
-            <input type="hidden" name="invoice_id" id="invoiceId">
-            <input type="hidden" id="invoiceTotal" name="total_amount" value="0">
+        <!-- ✅ Edit Payment Modal -->
+        <div class="modal fade" id="editPaymentModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <form id="editPaymentForm" action="update_payment.php" method="POST">
+              <div class="modal-content">
+                <div class="modal-header bg-warning">
+                  <h5 class="modal-title">Edit Payment</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
 
-            <div class="row g-4">
-              <!-- Payment Date -->
-              <div class="col-md-6">
-                <label class="form-label fw-semibold text-dark">
-                  <i class="fa-regular fa-calendar-days text-warning me-1"></i> Payment Date
-                </label>
-                <input type="date" class="form-control border-warning" id="paymentDate" name="payment_date" required>
-                <div class="form-text text-danger small" id="dateError" style="display: none;">
-                  ⚠️ Future dates are not allowed.
+                <!-- Modal Body -->
+                <div class="modal-body px-4 py-4 bg-light-subtle">
+                  <input type="hidden" name="id" id="editPaymentId">
+                  <input type="hidden" id="invoiceId" name="invoice_id">
+                  <input type="hidden" id="invoiceTotal" name="total_amount" value="0">
+
+                  <div class="row g-4">
+                    <!-- Payment Date -->
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold text-dark">
+                        <i class="fa-regular fa-calendar-days text-warning me-1"></i> Payment Date
+                      </label>
+                      <input type="date" class="form-control border-warning" id="paymentDate" name="payment_date" required>
+                      <div class="form-text text-danger small" id="dateError" style="display: none;">
+                        ⚠️ Future dates are not allowed.
+                      </div>
+                    </div>
+
+                    <!-- Tenant Name -->
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold text-dark">
+                        <i class="fa-solid fa-user-tag text-warning me-1"></i> Tenant Name
+                      </label>
+                      <input type="text" class="form-control border-warning" id="tenantName" name="tenant" readonly required>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold text-dark">
+                        <i class="fa-solid fa-hand-holding-dollar text-warning me-1"></i> Payment Method
+                      </label>
+                      <select class="form-select border-warning text-dark" id="paymentMethod" name="payment_method" required>
+                        <option value="">-- Choose Method --</option>
+                        <option value="mpesa">📱 MPESA</option>
+                        <option value="bank">🏦 Bank</option>
+                        <option value="cash">💵 Cash</option>
+                      </select>
+                    </div>
+
+                    <!-- Amount -->
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold text-dark">
+                        <i class="fa-solid fa-sack-dollar text-warning me-1"></i> Amount (KES)
+                      </label>
+                      <input type="number" class="form-control border-warning" id="editAmount" name="amount" step="0.01" min="0" required>
+                      <div id="paymentStatus" class="mt-2 small fw-semibold"></div>
+                    </div>
+
+                    <!-- Reference Number -->
+                    <div class="col-12">
+                      <label class="form-label fw-semibold text-dark">
+                        <i class="fa-solid fa-barcode text-warning me-1"></i> Reference Number
+                      </label>
+                      <input type="text" class="form-control border-warning" id="referenceNumber" name="reference_number" placeholder="e.g. MPESA code or bank slip" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="submit" class="btn" style="background-color: #00192D; color: #FFC107;">UPDATE PAYMENT</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </div>
               </div>
+            </form>
+          </div>
+        </div>
 
-              <!-- Tenant Name -->
-              <div class="col-md-6">
-                <label class="form-label fw-semibold text-dark">
-                  <i class="fa-solid fa-user-tag text-warning me-1"></i> Tenant Name
-                </label>
-                <input type="text" class="form-control border-warning" id="tenantName" name="tenant" readonly>
+        <!-- Column Selector Modal -->
+        <div class="modal fade" id="columnSelectorModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Select Columns</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
-
-              <!-- Payment Method -->
-              <div class="col-md-6">
-                <label class="form-label fw-semibold text-dark">
-                  <i class="fa-solid fa-hand-holding-dollar text-warning me-1"></i> Payment Method
-                </label>
-                <select class="form-select border-warning text-dark" name="payment_method" required>
-                  <option value="">-- Choose Method --</option>
-                  <option value="110">📱 MPESA</option>
-                  <option value="120">🏦 Bank</option>
-                  <option value="100">💵 Cash</option>
-                </select>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label class="form-label">Visible Columns</label>
+                  <div id="columnCheckboxes" class="d-flex flex-column gap-2">
+                    <!-- Checkboxes will be added dynamically -->
+                  </div>
+                </div>
               </div>
-
-              <!-- Amount -->
-              <div class="col-md-6">
-                <label class="form-label fw-semibold text-dark">
-                  <i class="fa-solid fa-sack-dollar text-warning me-1"></i> Amount (KES)
-                </label>
-                <input type="number" class="form-control border-warning" id="amount" name="amount" step="0.01" min="0" required>
-                <div id="paymentStatus" class="mt-2 small fw-semibold"></div>
-              </div>
-
-              <!-- Reference Number -->
-              <div class="col-12">
-                <label class="form-label fw-semibold text-dark">
-                  <i class="fa-solid fa-barcode text-warning me-1"></i> Reference Number
-                </label>
-                <input type="text" class="form-control border-warning" name="reference_number" placeholder="e.g. MPESA code or bank slip" required>
+              <div class="modal-footer">
+                <button id="applyColumns" class="btn" style="color: #FFC107; background-color:#00192D;">Apply</button>
+                <button class="btn" data-bs-dismiss="modal" style="color: #FFC107; background-color:#00192D;">Close</button>
               </div>
             </div>
           </div>
-
-          <!-- Modal Footer -->
-          <div class="modal-footer px-4 py-3" style="background-color: #00192D;">
-            <button type="submit" class="btn fw-semibold" style="background-color: #FFC107; color: #00192D;">
-              <i class="fa-solid fa-paper-plane me-1"></i> Submit Payment
-            </button>
-            <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
-              <i class="fa-solid fa-xmark-circle me-1"></i> Cancel
-            </button>
-          </div>
-
         </div>
-      </form>
-    </div>
-  </div>
+        <!-- ✅ PAYMENT MODAL -->
+        <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <form id="paymentForm" method="post" action="/Jengopay/landlord/pages/financials/invoices/action/submit_payment.php">
+              <div class="modal-content shadow-lg border-0 rounded-4">
+
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #00192D;">
+                  <h5 class="modal-title text-warning fw-semibold" id="paymentModalLabel">
+                    <i class="fa-solid fa-file-invoice-dollar me-2"></i> Make Payment
+                  </h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body px-4 py-4 bg-light-subtle">
+                  <input type="hidden" name="invoice_id" id="invoiceId">
+                  <input type="hidden" id="invoiceTotal" name="total_amount" value="0">
+
+                  <div class="row g-4">
+                    <!-- Payment Date -->
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold text-dark">
+                        <i class="fa-regular fa-calendar-days text-warning me-1"></i> Payment Date
+                      </label>
+                      <input type="date" class="form-control border-warning" id="paymentDate" name="payment_date" required>
+                      <div class="form-text text-danger small" id="dateError" style="display: none;">
+                        ⚠️ Future dates are not allowed.
+                      </div>
+                    </div>
+
+                    <!-- Tenant Name -->
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold text-dark">
+                        <i class="fa-solid fa-user-tag text-warning me-1"></i> Tenant Name
+                      </label>
+                      <input type="text" class="form-control border-warning" id="tenantName" name="tenant" readonly>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold text-dark">
+                        <i class="fa-solid fa-hand-holding-dollar text-warning me-1"></i> Payment Method
+                      </label>
+                      <select class="form-select border-warning text-dark" name="payment_method" required>
+                        <option value="">-- Choose Method --</option>
+                        <option value="110">📱 MPESA</option>
+                        <option value="120">🏦 Bank</option>
+                        <option value="100">💵 Cash</option>
+                      </select>
+                    </div>
+
+                    <!-- Amount -->
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold text-dark">
+                        <i class="fa-solid fa-sack-dollar text-warning me-1"></i> Amount (KES)
+                      </label>
+                      <input type="number" class="form-control border-warning" id="amount" name="amount" step="0.01" min="0" required>
+                      <div id="paymentStatus" class="mt-2 small fw-semibold"></div>
+                    </div>
+
+                    <!-- Reference Number -->
+                    <div class="col-12">
+                      <label class="form-label fw-semibold text-dark">
+                        <i class="fa-solid fa-barcode text-warning me-1"></i> Reference Number
+                      </label>
+                      <input type="text" class="form-control border-warning" name="reference_number" placeholder="e.g. MPESA code or bank slip" required>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer px-4 py-3" style="background-color: #00192D;">
+                  <button type="submit" class="btn fw-semibold" style="background-color: #FFC107; color: #00192D;">
+                    <i class="fa-solid fa-paper-plane me-1"></i> Submit Payment
+                  </button>
+                  <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-xmark-circle me-1"></i> Cancel
+                  </button>
+                </div>
+
+              </div>
+            </form>
+          </div>
+        </div>
 
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // Open modal and load payments
-      document.getElementById("paymentsHistoryModal").addEventListener("show.bs.modal", function() {
-        loadPayments(); // default load without filters
-      });
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            // Open modal and load payments
+            document.getElementById("paymentsHistoryModal").addEventListener("show.bs.modal", function() {
+              loadPayments(); // default load without filters
+            });
 
-      // 🔹 Apply Filters button
-      document.getElementById("applyFilters").addEventListener("click", function() {
-        loadPayments();
-      });
+            // 🔹 Apply Filters button
+            document.getElementById("applyFilters").addEventListener("click", function() {
+              loadPayments();
+            });
 
-      // 🔹 Load payments (with optional filters)
-      function loadPayments() {
-        let month = document.getElementById("filterMonth").value;
-        let method = document.getElementById("filterMethod").value;
+            // 🔹 Load payments (with optional filters)
+            function loadPayments() {
+              let month = document.getElementById("filterMonth").value;
+              let method = document.getElementById("filterMethod").value;
 
-        fetch("/Jengopay/landlord/pages/financials/invoices/get_payments.php?month=" +
-            encodeURIComponent(month) + "&method=" + encodeURIComponent(method))
-          .then(res => res.json())
-          .then(data => {
-            let tbody = document.querySelector("#paymentsTable tbody");
-            tbody.innerHTML = "";
+              fetch("/Jengopay/landlord/pages/financials/invoices/get_payments.php?month=" +
+                  encodeURIComponent(month) + "&method=" + encodeURIComponent(method))
+                .then(res => res.json())
+                .then(data => {
+                  let tbody = document.querySelector("#paymentsTable tbody");
+                  tbody.innerHTML = "";
 
-            if (!data || data.length === 0) {
-              tbody.innerHTML = `<tr><td colspan="6" class="text-center">No records found</td></tr>`;
-              return;
-            }
+                  if (!data || data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center">No records found</td></tr>`;
+                    return;
+                  }
 
-            data.forEach(p => {
-              tbody.innerHTML += `
+                  data.forEach(p => {
+                    tbody.innerHTML += `
             <tr>
               <td>${p.tenant}</td>
               <td>Ksh ${parseFloat(p.amount).toLocaleString()}</td>
@@ -1887,202 +1905,202 @@ if (empty($invoices)) {
                 </button>
               </td>
             </tr>`;
-            });
+                  });
 
-            // Re-bind edit buttons
-            document.querySelectorAll(".edit-payment").forEach(btn => {
-              btn.addEventListener("click", function() {
-                openEdit(
-                  this.dataset.id,
-                  this.dataset.amount,
-                  this.dataset.tenant,
-                  this.dataset.date,
-                  this.dataset.method,
-                  this.dataset.ref
-                );
-              });
-            });
-          });
-      }
-
-      // 🔹 Open edit modal
-      window.openEdit = function(id, amount, tenant, payment_date, method, ref) {
-        document.getElementById("editPaymentId").value = id;
-        document.getElementById("editAmount").value = amount;
-        document.getElementById("tenantName").value = tenant;
-        document.getElementById("paymentDate").value = payment_date;
-        document.getElementById("paymentMethod").value = method;
-        document.getElementById("referenceNumber").value = ref;
-        new bootstrap.Modal(document.getElementById("editPaymentModal")).show();
-      };
-
-      // 🔹 Submit edit form
-      document.getElementById("editPaymentForm").addEventListener("submit", function(e) {
-        e.preventDefault();
-
-        let amount = document.getElementById("editAmount").value;
-        if (!confirm(`Are you sure you want to record this amount: KES ${amount}?`)) {
-          return;
-        }
-
-        let formData = new FormData(this);
-
-        fetch("/Jengopay/landlord/pages/financials/invoices/update_payment.php", {
-            method: "POST",
-            body: formData
-          })
-          .then(res => res.json())
-          .then(result => {
-            if (result.success) {
-              alert("✅ Payment updated successfully!");
-              bootstrap.Modal.getInstance(document.getElementById("editPaymentModal")).hide();
-              loadPayments(); // refresh table with current filters
-            } else {
-              alert("❌ Update failed: " + result.message);
+                  // Re-bind edit buttons
+                  document.querySelectorAll(".edit-payment").forEach(btn => {
+                    btn.addEventListener("click", function() {
+                      openEdit(
+                        this.dataset.id,
+                        this.dataset.amount,
+                        this.dataset.tenant,
+                        this.dataset.date,
+                        this.dataset.method,
+                        this.dataset.ref
+                      );
+                    });
+                  });
+                });
             }
-          })
-          .catch(err => {
-            console.error("Error updating payment:", err);
-          });
-      });
-    });
-  </script>
 
+            // 🔹 Open edit modal
+            window.openEdit = function(id, amount, tenant, payment_date, method, ref) {
+              document.getElementById("editPaymentId").value = id;
+              document.getElementById("editAmount").value = amount;
+              document.getElementById("tenantName").value = tenant;
+              document.getElementById("paymentDate").value = payment_date;
+              document.getElementById("paymentMethod").value = method;
+              document.getElementById("referenceNumber").value = ref;
+              new bootstrap.Modal(document.getElementById("editPaymentModal")).show();
+            };
 
-  <script>
-    console.log('Buildings data:', <?php echo json_encode($buildings ?? []); ?>);
+            // 🔹 Submit edit form
+            document.getElementById("editPaymentForm").addEventListener("submit", function(e) {
+              e.preventDefault();
 
-    document.getElementById('building').addEventListener('change', function() {
+              let amount = document.getElementById("editAmount").value;
+              if (!confirm(`Are you sure you want to record this amount: KES ${amount}?`)) {
+                return;
+              }
 
-      const buildingId = this.value;
-      const tenantSelect = document.getElementById('customer');
+              let formData = new FormData(this);
 
-      console.log('Building selected:', buildingId);
-
-      tenantSelect.innerHTML = '<option value="">Loading tenants...</option>';
-      tenantSelect.disabled = true;
-
-      if (!buildingId) {
-        tenantSelect.innerHTML = '<option value="">Select a Building First</option>';
-        return;
-      }
-
-      fetch(`/Jengopay/landlord/pages/financials/invoices/action/get_tenants.php?building_id=${buildingId}`)
-        .then(response => {
-          if (!response.ok) throw new Error("Network error: " + response.status);
-          return response.json();
-        })
-        .then(tenants => {
-          console.log('Tenants received:', tenants);
-
-          tenantSelect.innerHTML = '<option value="">Select a Tenant</option>';
-
-          if (tenants.length > 0 && !tenants.error) {
-
-            tenants.forEach(tenant => {
-              const option = document.createElement('option');
-
-              option.value = tenant.id;
-              option.textContent = `${tenant.full_name} - (${tenant.unit_number}, ${tenant.unit_type})`;
-
-              tenantSelect.appendChild(option);
+              fetch("/Jengopay/landlord/pages/financials/invoices/update_payment.php", {
+                  method: "POST",
+                  body: formData
+                })
+                .then(res => res.json())
+                .then(result => {
+                  if (result.success) {
+                    alert("✅ Payment updated successfully!");
+                    bootstrap.Modal.getInstance(document.getElementById("editPaymentModal")).hide();
+                    loadPayments(); // refresh table with current filters
+                  } else {
+                    alert("❌ Update failed: " + result.message);
+                  }
+                })
+                .catch(err => {
+                  console.error("Error updating payment:", err);
+                });
             });
+          });
+        </script>
 
-            tenantSelect.disabled = false;
 
-          } else {
-            tenantSelect.innerHTML = '<option value="">No tenants found for this building</option>';
-            tenantSelect.disabled = false;
+        <script>
+          console.log('Buildings data:', <?php echo json_encode($buildings ?? []); ?>);
+
+          document.getElementById('building').addEventListener('change', function() {
+
+            const buildingId = this.value;
+            const tenantSelect = document.getElementById('customer');
+
+            console.log('Building selected:', buildingId);
+
+            tenantSelect.innerHTML = '<option value="">Loading tenants...</option>';
+            tenantSelect.disabled = true;
+
+            if (!buildingId) {
+              tenantSelect.innerHTML = '<option value="">Select a Building First</option>';
+              return;
+            }
+
+            fetch(`/Jengopay/landlord/pages/financials/invoices/action/get_tenants.php?building_id=${buildingId}`)
+              .then(response => {
+                if (!response.ok) throw new Error("Network error: " + response.status);
+                return response.json();
+              })
+              .then(tenants => {
+                console.log('Tenants received:', tenants);
+
+                tenantSelect.innerHTML = '<option value="">Select a Tenant</option>';
+
+                if (tenants.length > 0 && !tenants.error) {
+
+                  tenants.forEach(tenant => {
+                    const option = document.createElement('option');
+
+                    option.value = tenant.id;
+                    option.textContent = `${tenant.full_name} - (${tenant.unit_number}, ${tenant.unit_type})`;
+
+                    tenantSelect.appendChild(option);
+                  });
+
+                  tenantSelect.disabled = false;
+
+                } else {
+                  tenantSelect.innerHTML = '<option value="">No tenants found for this building</option>';
+                  tenantSelect.disabled = false;
+                }
+              })
+              .catch(error => {
+                console.error("Error fetching tenants:", error);
+                tenantSelect.innerHTML = '<option value="">Error loading tenants</option>';
+                tenantSelect.disabled = false;
+              });
+          });
+        </script>
+
+        <script>
+          document.getElementById('fileInput').addEventListener('change', function(e) {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+
+            if (this.files.length > 0) {
+              const list = document.createElement('ul');
+              list.className = 'list-group';
+
+              for (let i = 0; i < this.files.length; i++) {
+                const item = document.createElement('li');
+                item.className = 'list-group-item';
+                item.textContent = this.files[i].name;
+                list.appendChild(item);
+              }
+
+              fileList.appendChild(list);
+            } else {
+              fileList.textContent = 'No files selected';
+            }
+          });
+        </script>
+
+
+        <!-- JS TOGGLE -->
+        <script>
+          document.getElementById("paymentsToggle").addEventListener("click", function() {
+            const container = document.getElementById("paymentsContainer");
+            container.style.display = (container.style.display === "none" || container.style.display === "") ? "block" : "none";
+          });
+        </script>
+
+
+
+
+
+        <script>
+          function filterInvoices(status, paymentStatus, searchText) {
+            document.querySelectorAll(".invoice-item:not(.invoice-header)").forEach(item => {
+              const invoiceStatus = item.querySelector(".invoice-status span")?.innerText.toLowerCase() || "";
+              const paymentStatusText = item.querySelectorAll(".invoice-status span")[1]?.innerText.toLowerCase() || "";
+              const tenantName = item.querySelector(".invoice-customer")?.innerText.toLowerCase() || "";
+              const invoiceNumber = item.querySelector(".invoice-number")?.innerText.toLowerCase() || "";
+
+              // ✅ Capture Paid Amount text (second .invoice-status may contain it, or inside button text)
+              const paidAmountText = paymentStatusText.match(/kes\s*[\d,]+(\.\d+)?/i)?.[0].toLowerCase() || "";
+
+              const matchStatus = !status || invoiceStatus.includes(status);
+              const matchPayment = !paymentStatus || paymentStatusText.includes(paymentStatus);
+              const matchSearch = !searchText ||
+                tenantName.includes(searchText) ||
+                invoiceNumber.includes(searchText) ||
+                paymentStatusText.includes(searchText) ||
+                paidAmountText.includes(searchText); // ✅ Added
+
+              item.style.display = matchStatus && matchPayment && matchSearch ? "" : "none";
+            });
           }
-        })
-        .catch(error => {
-          console.error("Error fetching tenants:", error);
-          tenantSelect.innerHTML = '<option value="">Error loading tenants</option>';
-          tenantSelect.disabled = false;
-        });
-    });
-  </script>
-
-  <script>
-    document.getElementById('fileInput').addEventListener('change', function(e) {
-      const fileList = document.getElementById('fileList');
-      fileList.innerHTML = '';
-
-      if (this.files.length > 0) {
-        const list = document.createElement('ul');
-        list.className = 'list-group';
-
-        for (let i = 0; i < this.files.length; i++) {
-          const item = document.createElement('li');
-          item.className = 'list-group-item';
-          item.textContent = this.files[i].name;
-          list.appendChild(item);
-        }
-
-        fileList.appendChild(list);
-      } else {
-        fileList.textContent = 'No files selected';
-      }
-    });
-  </script>
+        </script>
 
 
-  <!-- JS TOGGLE -->
-  <script>
-    document.getElementById("paymentsToggle").addEventListener("click", function() {
-      const container = document.getElementById("paymentsContainer");
-      container.style.display = (container.style.display === "none" || container.style.display === "") ? "block" : "none";
-    });
-  </script>
+        <script>
+          document.getElementById("applyFilters").addEventListener("click", function() {
+            let month = document.getElementById("filterMonth").value;
+            let method = document.getElementById("filterMethod").value;
 
+            fetch("/Jengopay/landlord/pages/financials/invoices/get_payments.php?month=" +
+                encodeURIComponent(month) + "&method=" + encodeURIComponent(method))
+              .then(response => response.json())
+              .then(data => {
+                let tbody = document.querySelector("#paymentsTable tbody");
+                tbody.innerHTML = "";
 
+                if (data.length === 0) {
+                  tbody.innerHTML = `<tr><td colspan="6" class="text-center">No records found</td></tr>`;
+                  return;
+                }
 
-
-
-  <script>
-    function filterInvoices(status, paymentStatus, searchText) {
-      document.querySelectorAll(".invoice-item:not(.invoice-header)").forEach(item => {
-        const invoiceStatus = item.querySelector(".invoice-status span")?.innerText.toLowerCase() || "";
-        const paymentStatusText = item.querySelectorAll(".invoice-status span")[1]?.innerText.toLowerCase() || "";
-        const tenantName = item.querySelector(".invoice-customer")?.innerText.toLowerCase() || "";
-        const invoiceNumber = item.querySelector(".invoice-number")?.innerText.toLowerCase() || "";
-
-        // ✅ Capture Paid Amount text (second .invoice-status may contain it, or inside button text)
-        const paidAmountText = paymentStatusText.match(/kes\s*[\d,]+(\.\d+)?/i)?.[0].toLowerCase() || "";
-
-        const matchStatus = !status || invoiceStatus.includes(status);
-        const matchPayment = !paymentStatus || paymentStatusText.includes(paymentStatus);
-        const matchSearch = !searchText ||
-          tenantName.includes(searchText) ||
-          invoiceNumber.includes(searchText) ||
-          paymentStatusText.includes(searchText) ||
-          paidAmountText.includes(searchText); // ✅ Added
-
-        item.style.display = matchStatus && matchPayment && matchSearch ? "" : "none";
-      });
-    }
-  </script>
-
-
-  <script>
-    document.getElementById("applyFilters").addEventListener("click", function() {
-      let month = document.getElementById("filterMonth").value;
-      let method = document.getElementById("filterMethod").value;
-
-      fetch("/Jengopay/landlord/pages/financials/invoices/get_payments.php?month=" +
-          encodeURIComponent(month) + "&method=" + encodeURIComponent(method))
-        .then(response => response.json())
-        .then(data => {
-          let tbody = document.querySelector("#paymentsTable tbody");
-          tbody.innerHTML = "";
-
-          if (data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="text-center">No records found</td></tr>`;
-            return;
-          }
-
-          data.forEach(row => {
-            tbody.innerHTML += `
+                data.forEach(row => {
+                  tbody.innerHTML += `
           <tr>
             <td>${row.tenant || "-"}</td>
             <td>Ksh ${parseFloat(row.amount).toLocaleString()}</td>
@@ -2096,54 +2114,54 @@ if (empty($invoices)) {
             </td>
           </tr>
         `;
+                });
+
+                // ✅ Re-bind edit button click after refreshing table
+                document.querySelectorAll(".edit-payment").forEach(btn => {
+                  btn.addEventListener("click", function() {
+                    let id = this.getAttribute("data-id");
+                    loadPaymentForEdit(id);
+                    new bootstrap.Modal(document.getElementById("editPaymentModal")).show();
+                  });
+                });
+              })
+              .catch(err => {
+                console.error("Error fetching payments:", err);
+              });
           });
 
-          // ✅ Re-bind edit button click after refreshing table
-          document.querySelectorAll(".edit-payment").forEach(btn => {
-            btn.addEventListener("click", function() {
-              let id = this.getAttribute("data-id");
-              loadPaymentForEdit(id);
-              new bootstrap.Modal(document.getElementById("editPaymentModal")).show();
-            });
-          });
-        })
-        .catch(err => {
-          console.error("Error fetching payments:", err);
-        });
-    });
 
+          // ✅ Define how payment details load into edit modal
+          function loadPaymentForEdit(id) {
+            fetch("/Jengopay/landlord/pages/financials/invoices/get_payments.php?id=" + encodeURIComponent(id))
+              .then(response => response.json())
+              .then(data => {
+                if (!data) {
+                  alert("Could not load payment details.");
+                  return;
+                }
 
-    // ✅ Define how payment details load into edit modal
-    function loadPaymentForEdit(id) {
-      fetch("/Jengopay/landlord/pages/financials/invoices/get_payments.php?id=" + encodeURIComponent(id))
-        .then(response => response.json())
-        .then(data => {
-          if (!data) {
-            alert("Could not load payment details.");
-            return;
+                // ✅ Match modal inputs
+                document.getElementById("editPaymentId").value = data.id;
+                document.getElementById("invoiceId").value = data.invoice_id;
+                document.getElementById("tenantName").value = data.tenant;
+                document.getElementById("editAmount").value = data.amount;
+                document.getElementById("paymentMethod").value = data.payment_method;
+                document.getElementById("paymentDate").value = data.payment_date;
+                document.getElementById("referenceNumber").value = data.reference_number;
+              })
+              .catch(err => {
+                console.error("Error loading payment details:", err);
+              });
           }
-
-          // ✅ Match modal inputs
-          document.getElementById("editPaymentId").value = data.id;
-          document.getElementById("invoiceId").value = data.invoice_id;
-          document.getElementById("tenantName").value = data.tenant;
-          document.getElementById("editAmount").value = data.amount;
-          document.getElementById("paymentMethod").value = data.payment_method;
-          document.getElementById("paymentDate").value = data.payment_date;
-          document.getElementById("referenceNumber").value = data.reference_number;
-        })
-        .catch(err => {
-          console.error("Error loading payment details:", err);
-        });
-    }
-  </script>
+        </script>
 
 
 
 
 
-  <script src="/Jengopay/landlord/pages/financials/invoices/js/invoice.js"></script>
-  <!-- <script>
+        <script src="/Jengopay/landlord/pages/financials/invoices/js/invoice.js"></script>
+        <!-- <script>
 document.addEventListener("DOMContentLoaded", function () {
     const addMoreBtn = document.getElementById("addMoreBtn");
     const itemsBody = document.getElementById("itemsBody");
@@ -2192,7 +2210,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script> -->
 
 
-  <!-- <script>
+        <!-- <script>
 // Store the original invoices data
 let originalInvoices = <?php echo json_encode($invoices); ?>;
 let displayedInvoices = [...originalInvoices];
@@ -2533,19 +2551,19 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script> -->
 
-  <script>
-    document.getElementById('resetFilter').addEventListener('click', function() {
-      document.getElementById('statusFilter').value = '';
-      document.getElementById('paymentFilter').value = '';
-      document.getElementById('dateFrom').value = '';
-      document.getElementById('dateTo').value = '';
-    });
-  </script>
+        <script>
+          document.getElementById('resetFilter').addEventListener('click', function() {
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('paymentFilter').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+          });
+        </script>
 
 
-  </script>
+        </script>
 
-  <!-- <script>
+        <!-- <script>
 // Toggle filter panel visibility
 document.getElementById('filterBtn').addEventListener('click', function() {
     const filterPanel = document.getElementById('filterPanel');
@@ -2640,8 +2658,8 @@ document.getElementById('searchInput').addEventListener('keyup', function(e) {
 });
 </script> -->
 
-  <!-- Add this script to handle the filtering -->
-  <!-- <script>
+        <!-- Add this script to handle the filtering -->
+        <!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const filterBtn = document.getElementById('filterBtn');
     const invoiceItemsList = document.getElementById('invoice-items-list');
@@ -2769,7 +2787,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script> -->
 
-  <!-- <script>
+        <!-- <script>
 document.getElementById('building').addEventListener('change', function() {
     const buildingId = this.value;
     const tenantSelect = document.getElementById('customer');
@@ -2803,112 +2821,112 @@ document.getElementById('building').addEventListener('change', function() {
 
 
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const addMoreBtn = document.getElementById("addMoreBtn");
-      const itemsBody = document.getElementById("itemsBody");
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            const addMoreBtn = document.getElementById("addMoreBtn");
+            const itemsBody = document.getElementById("itemsBody");
 
-      function formatNumber(num) {
-        return num.toLocaleString('en-KE', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
-      }
-
-      function calculateRow(row) {
-        const unitInput = row.querySelector(".unit-price");
-        const quantityInput = row.querySelector(".quantity");
-        const vatSelect = row.querySelector(".vat-option");
-        const totalInput = row.querySelector(".total");
-
-        const unitPrice = parseFloat(unitInput?.value) || 0;
-        const quantity = parseFloat(quantityInput?.value) || 0;
-        let subtotal = unitPrice * quantity;
-
-        let vatAmount = 0;
-        let total = subtotal;
-        const vatType = vatSelect?.value;
-
-        if (vatType === "inclusive") {
-          subtotal = subtotal / 1.16;
-          vatAmount = total - subtotal;
-        } else if (vatType === "exclusive") {
-          vatAmount = subtotal * 0.16;
-          total += vatAmount;
-        } else if (vatType === "zero" || vatType === "exempted") {
-          vatAmount = 0;
-          total = subtotal;
-        }
-
-        totalInput.value = formatNumber(total);
-        return {
-          subtotal,
-          vatAmount,
-          total,
-          vatType
-        };
-      }
-
-      function updateTotalAmount() {
-        let subtotalSum = 0,
-          taxSum = 0,
-          grandTotal = 0;
-        let vat16Used = false,
-          vat0Used = false,
-          exemptedUsed = false;
-
-        document.querySelectorAll("#itemsBody tr").forEach(row => {
-          if (row.querySelector(".unit-price")) {
-            const {
-              subtotal,
-              vatAmount,
-              total,
-              vatType
-            } = calculateRow(row);
-            subtotalSum += subtotal;
-            taxSum += vatAmount;
-            grandTotal += total;
-
-            if (vatType === "inclusive" || vatType === "exclusive") {
-              vat16Used = true;
-            } else if (vatType === "zero") {
-              vat0Used = true;
-            } else if (vatType === "exempted") {
-              exemptedUsed = true;
+            function formatNumber(num) {
+              return num.toLocaleString('en-KE', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              });
             }
-          }
-        });
 
-        createOrUpdateSummaryTable({
-          subtotalSum,
-          taxSum,
-          grandTotal,
-          vat16Used,
-          vat0Used,
-          exemptedUsed
-        });
-      }
+            function calculateRow(row) {
+              const unitInput = row.querySelector(".unit-price");
+              const quantityInput = row.querySelector(".quantity");
+              const vatSelect = row.querySelector(".vat-option");
+              const totalInput = row.querySelector(".total");
 
-      function createOrUpdateSummaryTable({
-        subtotalSum,
-        taxSum,
-        grandTotal,
-        vat16Used,
-        vat0Used,
-        exemptedUsed
-      }) {
-        let summaryTable = document.querySelector(".summary-table");
+              const unitPrice = parseFloat(unitInput?.value) || 0;
+              const quantity = parseFloat(quantityInput?.value) || 0;
+              let subtotal = unitPrice * quantity;
 
-        if (!summaryTable) {
-          summaryTable = document.createElement("table");
-          summaryTable.className = "summary-table table table-bordered";
-          summaryTable.style = "width: 20%; float: right; font-size: 0.8rem; margin-top: 10px;";
-          summaryTable.innerHTML = `<tbody></tbody>`;
-          document.querySelector(".items-table").after(summaryTable);
-        }
+              let vatAmount = 0;
+              let total = subtotal;
+              const vatType = vatSelect?.value;
 
-        const tbody = summaryTable.querySelector("tbody");
-        tbody.innerHTML = `
+              if (vatType === "inclusive") {
+                subtotal = subtotal / 1.16;
+                vatAmount = total - subtotal;
+              } else if (vatType === "exclusive") {
+                vatAmount = subtotal * 0.16;
+                total += vatAmount;
+              } else if (vatType === "zero" || vatType === "exempted") {
+                vatAmount = 0;
+                total = subtotal;
+              }
+
+              totalInput.value = formatNumber(total);
+              return {
+                subtotal,
+                vatAmount,
+                total,
+                vatType
+              };
+            }
+
+            function updateTotalAmount() {
+              let subtotalSum = 0,
+                taxSum = 0,
+                grandTotal = 0;
+              let vat16Used = false,
+                vat0Used = false,
+                exemptedUsed = false;
+
+              document.querySelectorAll("#itemsBody tr").forEach(row => {
+                if (row.querySelector(".unit-price")) {
+                  const {
+                    subtotal,
+                    vatAmount,
+                    total,
+                    vatType
+                  } = calculateRow(row);
+                  subtotalSum += subtotal;
+                  taxSum += vatAmount;
+                  grandTotal += total;
+
+                  if (vatType === "inclusive" || vatType === "exclusive") {
+                    vat16Used = true;
+                  } else if (vatType === "zero") {
+                    vat0Used = true;
+                  } else if (vatType === "exempted") {
+                    exemptedUsed = true;
+                  }
+                }
+              });
+
+              createOrUpdateSummaryTable({
+                subtotalSum,
+                taxSum,
+                grandTotal,
+                vat16Used,
+                vat0Used,
+                exemptedUsed
+              });
+            }
+
+            function createOrUpdateSummaryTable({
+              subtotalSum,
+              taxSum,
+              grandTotal,
+              vat16Used,
+              vat0Used,
+              exemptedUsed
+            }) {
+              let summaryTable = document.querySelector(".summary-table");
+
+              if (!summaryTable) {
+                summaryTable = document.createElement("table");
+                summaryTable.className = "summary-table table table-bordered";
+                summaryTable.style = "width: 20%; float: right; font-size: 0.8rem; margin-top: 10px;";
+                summaryTable.innerHTML = `<tbody></tbody>`;
+                document.querySelector(".items-table").after(summaryTable);
+              }
+
+              const tbody = summaryTable.querySelector("tbody");
+              tbody.innerHTML = `
         <tr>
           <th style="width: 50%; padding: 5px; text-align: left;">Sub-total</th>
           <td><input type="text" class="form-control" value="${formatNumber(subtotalSum)}" readonly style="padding: 5px;"></td>
@@ -2933,20 +2951,20 @@ document.getElementById('building').addEventListener('change', function() {
           <td><input type="text" class="form-control" value="${formatNumber(grandTotal)}" readonly style="padding: 5px;"></td>
         </tr>
       `;
-      }
+            }
 
-      function attachEvents(row) {
-        ["input", "change"].forEach(evt => {
-          row.querySelectorAll(".unit-price, .quantity, .vat-option").forEach(input => {
-            input.addEventListener(evt, updateTotalAmount);
-          });
-        });
-      }
+            function attachEvents(row) {
+              ["input", "change"].forEach(evt => {
+                row.querySelectorAll(".unit-price, .quantity, .vat-option").forEach(input => {
+                  input.addEventListener(evt, updateTotalAmount);
+                });
+              });
+            }
 
-      addMoreBtn.addEventListener("click", function() {
-        const newRow = document.createElement("tr");
+            addMoreBtn.addEventListener("click", function() {
+              const newRow = document.createElement("tr");
 
-        newRow.innerHTML = `
+              newRow.innerHTML = `
        <td style="min-width: 180px;">
     <select name="account_item[]" class="form-select searchable-select" required>
       <option value="" disabled selected>Select Account Item</option>
@@ -2991,335 +3009,335 @@ document.getElementById('building').addEventListener('change', function() {
   </td>
       `;
 
-        itemsBody.appendChild(newRow);
-        attachEvents(newRow);
-        updateTotalAmount();
-      });
+              itemsBody.appendChild(newRow);
+              attachEvents(newRow);
+              updateTotalAmount();
+            });
 
-      // Delete row
-      itemsBody.addEventListener("click", function(e) {
-        if (e.target.closest(".delete-btn")) {
-          e.target.closest("tr").remove();
-          updateTotalAmount();
-        }
-      });
-
-      // Attach events to any existing rows
-      document.querySelectorAll("#itemsBody tr").forEach(attachEvents);
-      updateTotalAmount();
-    });
-  </script>
-
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const itemsBody = document.getElementById("itemsBody");
-
-      // Trigger calculation on input changes
-      itemsBody.addEventListener("input", function(e) {
-        if (e.target.classList.contains("quantity") ||
-          e.target.classList.contains("unit-price") ||
-          e.target.classList.contains("vat-option")) {
-
-          const row = e.target.closest("tr");
-          calculateRowTotal(row);
-        }
-      });
-
-      // Recalculate total when tax option changes
-      itemsBody.addEventListener("change", function(e) {
-        if (e.target.classList.contains("vat-option")) {
-          const row = e.target.closest("tr");
-          calculateRowTotal(row);
-        }
-      });
-
-      function calculateRowTotal(row) {
-        const qty = parseFloat(row.querySelector(".quantity")?.value) || 0;
-        const price = parseFloat(row.querySelector(".unit-price")?.value) || 0;
-        const tax = row.querySelector(".vat-option")?.value;
-
-        let total = qty * price;
-
-        if (tax === "exclusive") {
-          total *= 1.16;
-        } // inclusive means total is already inclusive
-        // zero & exempted = no tax change
-
-        row.querySelector(".total").value = total.toFixed(2);
-      }
-    });
-  </script>
-
-
-  <script>
-    // Edit Invoice
-    // function editInvoice(invoiceId) {
-    //     // Redirect to edit page or open edit modal
-    //     window.location.href = 'edit_invoice.php?id=' + invoiceId;
-    // }
-
-    // Confirm Delete Invoice
-    // Confirm Delete Invoice (Soft Delete with 30-day retention)
-    function confirmDeleteInvoice(invoiceId) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "This invoice will be marked for deletion and permanently removed after 30 days (only allowed for drafts or cancelled invoices with no payments).",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          fetch('/Jengopay/landlord/pages/financials/invoices/action/delete_invoice.php', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-              },
-              body: 'id=' + encodeURIComponent(invoiceId)
-            })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                Swal.fire(
-                  'Deleted!',
-                  'The invoice has been marked for deletion.',
-                  'success'
-                ).then(() => location.reload());
-              } else {
-                Swal.fire(
-                  'Not Allowed',
-                  data.message || 'This invoice cannot be deleted.',
-                  'warning'
-                );
+            // Delete row
+            itemsBody.addEventListener("click", function(e) {
+              if (e.target.closest(".delete-btn")) {
+                e.target.closest("tr").remove();
+                updateTotalAmount();
               }
-            })
-            .catch(error => {
-              Swal.fire(
-                'Error!',
-                'Request failed: ' + error,
-                'error'
-              );
             });
-        }
-      });
-    }
+
+            // Attach events to any existing rows
+            document.querySelectorAll("#itemsBody tr").forEach(attachEvents);
+            updateTotalAmount();
+          });
+        </script>
 
 
-    // Delete Invoice
-    function deleteInvoice(invoiceId) {
-      fetch('/Jengopay/landlord/pages/financials/invoices/delete_invoice.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: 'id=' + invoiceId
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            Swal.fire(
-              'Deleted!',
-              'Invoice has been deleted.',
-              'success'
-            ).then(() => {
-              location.reload(); // Refresh the page
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            const itemsBody = document.getElementById("itemsBody");
+
+            // Trigger calculation on input changes
+            itemsBody.addEventListener("input", function(e) {
+              if (e.target.classList.contains("quantity") ||
+                e.target.classList.contains("unit-price") ||
+                e.target.classList.contains("vat-option")) {
+
+                const row = e.target.closest("tr");
+                calculateRowTotal(row);
+              }
             });
-          } else {
-            Swal.fire(
-              'Error!',
-              data.message || 'Failed to delete invoice.',
-              'error'
-            );
+
+            // Recalculate total when tax option changes
+            itemsBody.addEventListener("change", function(e) {
+              if (e.target.classList.contains("vat-option")) {
+                const row = e.target.closest("tr");
+                calculateRowTotal(row);
+              }
+            });
+
+            function calculateRowTotal(row) {
+              const qty = parseFloat(row.querySelector(".quantity")?.value) || 0;
+              const price = parseFloat(row.querySelector(".unit-price")?.value) || 0;
+              const tax = row.querySelector(".vat-option")?.value;
+
+              let total = qty * price;
+
+              if (tax === "exclusive") {
+                total *= 1.16;
+              } // inclusive means total is already inclusive
+              // zero & exempted = no tax change
+
+              row.querySelector(".total").value = total.toFixed(2);
+            }
+          });
+        </script>
+
+
+        <script>
+          // Edit Invoice
+          // function editInvoice(invoiceId) {
+          //     // Redirect to edit page or open edit modal
+          //     window.location.href = 'edit_invoice.php?id=' + invoiceId;
+          // }
+
+          // Confirm Delete Invoice
+          // Confirm Delete Invoice (Soft Delete with 30-day retention)
+          function confirmDeleteInvoice(invoiceId) {
+            Swal.fire({
+              title: 'Are you sure?',
+              text: "This invoice will be marked for deletion and permanently removed after 30 days (only allowed for drafts or cancelled invoices with no payments).",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                fetch('/Jengopay/landlord/pages/financials/invoices/action/delete_invoice.php', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'id=' + encodeURIComponent(invoiceId)
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.success) {
+                      Swal.fire(
+                        'Deleted!',
+                        'The invoice has been marked for deletion.',
+                        'success'
+                      ).then(() => location.reload());
+                    } else {
+                      Swal.fire(
+                        'Not Allowed',
+                        data.message || 'This invoice cannot be deleted.',
+                        'warning'
+                      );
+                    }
+                  })
+                  .catch(error => {
+                    Swal.fire(
+                      'Error!',
+                      'Request failed: ' + error,
+                      'error'
+                    );
+                  });
+              }
+            });
           }
-        })
-        .catch(error => {
-          Swal.fire(
-            'Error!',
-            'An error occurred while deleting the invoice.',
-            'error'
-          );
-        });
-    }
 
-    // Confirm Cancel Invoice
-    function confirmCancelInvoice(invoiceId) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "This will cancel the invoice and mark it as non-payable.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, cancel it!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          cancelInvoice(invoiceId);
-        }
-      });
-    }
 
-    // Cancel Invoice - Updated version
-    function cancelInvoice(invoiceId) {
-      fetch('/Jengopay/landlord/pages/financials/invoices/action/cancel_invoice.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: 'id=' + invoiceId
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            Swal.fire(
-              'Cancelled!',
-              'Invoice has been cancelled.',
-              'success'
-            ).then(() => {
-              // Update the UI without full page reload
-              updateInvoiceStatus(invoiceId, 'cancelled');
-            });
-          } else {
-            Swal.fire(
-              'Error!',
-              data.message || 'Failed to cancel invoice.',
-              'error'
-            );
+          // Delete Invoice
+          function deleteInvoice(invoiceId) {
+            fetch('/Jengopay/landlord/pages/financials/invoices/delete_invoice.php', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + invoiceId
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  Swal.fire(
+                    'Deleted!',
+                    'Invoice has been deleted.',
+                    'success'
+                  ).then(() => {
+                    location.reload(); // Refresh the page
+                  });
+                } else {
+                  Swal.fire(
+                    'Error!',
+                    data.message || 'Failed to delete invoice.',
+                    'error'
+                  );
+                }
+              })
+              .catch(error => {
+                Swal.fire(
+                  'Error!',
+                  'An error occurred while deleting the invoice.',
+                  'error'
+                );
+              });
           }
-        })
-        .catch(error => {
-          Swal.fire(
-            'Error!',
-            'An error occurred while cancelling the invoice.',
-            'error'
-          );
-        });
-    }
 
-    // Function to update invoice status visually
-    function updateInvoiceStatus(invoiceId, newStatus) {
-      const invoiceItem = document.querySelector(`.invoice-item[data-id="${invoiceId}"]`);
-      if (!invoiceItem) {
-        location.reload(); // Fallback if element not found
-        return;
-      }
+          // Confirm Cancel Invoice
+          function confirmCancelInvoice(invoiceId) {
+            Swal.fire({
+              title: 'Are you sure?',
+              text: "This will cancel the invoice and mark it as non-payable.",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, cancel it!'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                cancelInvoice(invoiceId);
+              }
+            });
+          }
 
-      // Update status badge
-      const statusBadge = invoiceItem.querySelector('.invoice-status .status-badge');
-      if (statusBadge) {
-        // Remove all status classes
-        statusBadge.classList.remove('badge-draft', 'badge-sent', 'badge-paid', 'badge-overdue');
+          // Cancel Invoice - Updated version
+          function cancelInvoice(invoiceId) {
+            fetch('/Jengopay/landlord/pages/financials/invoices/action/cancel_invoice.php', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + invoiceId
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  Swal.fire(
+                    'Cancelled!',
+                    'Invoice has been cancelled.',
+                    'success'
+                  ).then(() => {
+                    // Update the UI without full page reload
+                    updateInvoiceStatus(invoiceId, 'cancelled');
+                  });
+                } else {
+                  Swal.fire(
+                    'Error!',
+                    data.message || 'Failed to cancel invoice.',
+                    'error'
+                  );
+                }
+              })
+              .catch(error => {
+                Swal.fire(
+                  'Error!',
+                  'An error occurred while cancelling the invoice.',
+                  'error'
+                );
+              });
+          }
 
-        // Add new status class
-        statusBadge.classList.add('badge-' + newStatus);
+          // Function to update invoice status visually
+          function updateInvoiceStatus(invoiceId, newStatus) {
+            const invoiceItem = document.querySelector(`.invoice-item[data-id="${invoiceId}"]`);
+            if (!invoiceItem) {
+              location.reload(); // Fallback if element not found
+              return;
+            }
 
-        // Update text
-        statusBadge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-      }
+            // Update status badge
+            const statusBadge = invoiceItem.querySelector('.invoice-status .status-badge');
+            if (statusBadge) {
+              // Remove all status classes
+              statusBadge.classList.remove('badge-draft', 'badge-sent', 'badge-paid', 'badge-overdue');
 
-      // Update payment status badge if exists
-      const paymentStatusBadges = invoiceItem.querySelectorAll('.invoice-status .status-badge');
-      if (paymentStatusBadges.length > 1) {
-        const paymentStatusBadge = paymentStatusBadges[1];
-        paymentStatusBadge.classList.remove('badge-paid', 'badge-partial', 'badge-unpaid');
-        paymentStatusBadge.classList.add('badge-cancelled');
-        paymentStatusBadge.textContent = 'Cancelled';
-      }
+              // Add new status class
+              statusBadge.classList.add('badge-' + newStatus);
 
-      // Remove payment button if exists
-      const payButton = invoiceItem.querySelector('.pay-btn');
-      if (payButton) {
-        payButton.remove();
-      }
+              // Update text
+              statusBadge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+            }
 
-      // Update dropdown menu options
-      const dropdownMenu = invoiceItem.querySelector('.dropdown-menu');
-      if (dropdownMenu) {
-        // Remove Cancel option
-        const cancelOption = dropdownMenu.querySelector('a[onclick*="confirmCancelInvoice"]');
-        if (cancelOption) {
-          cancelOption.parentNode.remove();
-        }
+            // Update payment status badge if exists
+            const paymentStatusBadges = invoiceItem.querySelectorAll('.invoice-status .status-badge');
+            if (paymentStatusBadges.length > 1) {
+              const paymentStatusBadge = paymentStatusBadges[1];
+              paymentStatusBadge.classList.remove('badge-paid', 'badge-partial', 'badge-unpaid');
+              paymentStatusBadge.classList.add('badge-cancelled');
+              paymentStatusBadge.textContent = 'Cancelled';
+            }
 
-        // Add Restore option
-        const divider = dropdownMenu.querySelector('.dropdown-divider');
-        if (divider) {
-          const restoreOption = document.createElement('li');
-          restoreOption.innerHTML = `
+            // Remove payment button if exists
+            const payButton = invoiceItem.querySelector('.pay-btn');
+            if (payButton) {
+              payButton.remove();
+            }
+
+            // Update dropdown menu options
+            const dropdownMenu = invoiceItem.querySelector('.dropdown-menu');
+            if (dropdownMenu) {
+              // Remove Cancel option
+              const cancelOption = dropdownMenu.querySelector('a[onclick*="confirmCancelInvoice"]');
+              if (cancelOption) {
+                cancelOption.parentNode.remove();
+              }
+
+              // Add Restore option
+              const divider = dropdownMenu.querySelector('.dropdown-divider');
+              if (divider) {
+                const restoreOption = document.createElement('li');
+                restoreOption.innerHTML = `
                 <a class="dropdown-item" href="#" onclick="restoreInvoice(${invoiceId})">
                     <i class="fas fa-undo me-2"></i>Restore Invoice
                 </a>
             `;
-          dropdownMenu.insertBefore(restoreOption, divider.nextSibling);
-        }
-      }
-    }
-
-    // Restore Invoice - Updated version
-    function restoreInvoice(invoiceId) {
-      fetch('/Jengopay/landlord/pages/financials/action/restore_invoice.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: 'id=' + invoiceId
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            Swal.fire(
-              'Restored!',
-              'Invoice has been restored.',
-              'success'
-            ).then(() => {
-              // Update the UI without full page reload
-              updateInvoiceStatus(invoiceId, data.invoice.status || 'sent');
-            });
-          } else {
-            Swal.fire(
-              'Error!',
-              data.message || 'Failed to restore invoice.',
-              'error'
-            );
+                dropdownMenu.insertBefore(restoreOption, divider.nextSibling);
+              }
+            }
           }
-        })
-        .catch(error => {
-          Swal.fire(
-            'Error!',
-            'An error occurred while restoring the invoice.',
-            'error'
-          );
-        });
-    }
 
-    // Delete for Sent Invoice
-    function deleteSentInvoice(invoiceId) {
-      Swal.fire({
-        title: 'Delete Sent Invoice?',
-        text: "This invoice has been sent to the tenant. Are you sure you want to delete it?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it anyway'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          deleteInvoice(invoiceId);
-        }
-      });
-    }
+          // Restore Invoice - Updated version
+          function restoreInvoice(invoiceId) {
+            fetch('/Jengopay/landlord/pages/financials/action/restore_invoice.php', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + invoiceId
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  Swal.fire(
+                    'Restored!',
+                    'Invoice has been restored.',
+                    'success'
+                  ).then(() => {
+                    // Update the UI without full page reload
+                    updateInvoiceStatus(invoiceId, data.invoice.status || 'sent');
+                  });
+                } else {
+                  Swal.fire(
+                    'Error!',
+                    data.message || 'Failed to restore invoice.',
+                    'error'
+                  );
+                }
+              })
+              .catch(error => {
+                Swal.fire(
+                  'Error!',
+                  'An error occurred while restoring the invoice.',
+                  'error'
+                );
+              });
+          }
 
-    // View Invoice Details
-    function viewInvoice(invoiceId) {
-      window.location.href = '/Jengopay/landlord/pages/financials/invoices/invoice_details.php?id=' + invoiceId;
-    }
-  </script>
+          // Delete for Sent Invoice
+          function deleteSentInvoice(invoiceId) {
+            Swal.fire({
+              title: 'Delete Sent Invoice?',
+              text: "This invoice has been sent to the tenant. Are you sure you want to delete it?",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, delete it anyway'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                deleteInvoice(invoiceId);
+              }
+            });
+          }
+
+          // View Invoice Details
+          function viewInvoice(invoiceId) {
+            window.location.href = '/Jengopay/landlord/pages/financials/invoices/invoice_details.php?id=' + invoiceId;
+          }
+        </script>
 
 
 
 
-  <!-- <script>
+        <!-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     const saveDraftBtn = document.getElementById('saveDraftBtn');
 
@@ -3396,223 +3414,223 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script> -->
 
-  <!-- <script>
+        <!-- <script>
 function filterFunction() {
     // Add your filter logic here
     console.log("Filter button clicked!");
     // Example: Show/hide filter options, filter a list, etc.
 }
 </script> -->
-  <script>
-    function openPayModal(button) {
-      // Get all invoice data from button attributes
-      const invoiceId = button.getAttribute('data-invoice-id');
-      const tenant = button.getAttribute('data-tenant');
-      const totalAmount = parseFloat(button.getAttribute('data-total'));
-      const paidAmount = parseFloat(button.getAttribute('data-paid'));
-      const balance = parseFloat(button.getAttribute('data-balance'));
+        <script>
+          function openPayModal(button) {
+            // Get all invoice data from button attributes
+            const invoiceId = button.getAttribute('data-invoice-id');
+            const tenant = button.getAttribute('data-tenant');
+            const totalAmount = parseFloat(button.getAttribute('data-total'));
+            const paidAmount = parseFloat(button.getAttribute('data-paid'));
+            const balance = parseFloat(button.getAttribute('data-balance'));
 
-      // Set today's date as default
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, '0');
-      const dd = String(today.getDate()).padStart(2, '0');
-      const todayStr = `${yyyy}-${mm}-${dd}`;
+            // Set today's date as default
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const todayStr = `${yyyy}-${mm}-${dd}`;
 
-      // Set modal values
-      document.getElementById('invoiceId').value = invoiceId;
-      document.getElementById('tenantName').value = tenant;
-      document.getElementById('invoiceTotal').value = totalAmount.toFixed(2);
-      document.getElementById('amount').value = balance.toFixed(2);
-      document.getElementById('paymentDate').value = todayStr;
-      document.getElementById('paymentDate').setAttribute('max', todayStr);
+            // Set modal values
+            document.getElementById('invoiceId').value = invoiceId;
+            document.getElementById('tenantName').value = tenant;
+            document.getElementById('invoiceTotal').value = totalAmount.toFixed(2);
+            document.getElementById('amount').value = balance.toFixed(2);
+            document.getElementById('paymentDate').value = todayStr;
+            document.getElementById('paymentDate').setAttribute('max', todayStr);
 
-      // Initialize payment status
-      updatePaymentStatus();
+            // Initialize payment status
+            updatePaymentStatus();
 
-      // Show modal
-      const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
-      modal.show();
-    }
-
-    function updatePaymentStatus() {
-      const amountInput = document.getElementById('amount');
-      const paymentStatus = document.getElementById('paymentStatus');
-      const invoiceTotal = parseFloat(document.getElementById('invoiceTotal').value);
-      const paymentAmount = parseFloat(amountInput.value) || 0;
-
-      if (isNaN(paymentAmount)) {
-        paymentStatus.innerHTML = '<span class="text-secondary">Enter valid payment amount</span>';
-        return;
-      }
-
-      if (paymentAmount <= 0) {
-        paymentStatus.innerHTML = '<span class="text-danger">⚠️ Amount must be greater than 0</span>';
-      } else if (paymentAmount > invoiceTotal) {
-        const overpayment = (paymentAmount - invoiceTotal).toFixed(2);
-        paymentStatus.innerHTML = `<span class="text-danger">⚠️ Overpayment (KES ${overpayment} over)</span>`;
-      } else if (paymentAmount === invoiceTotal) {
-        paymentStatus.innerHTML = '<span class="text-success">✓ Full payment will be received</span>';
-      } else {
-        const remaining = (invoiceTotal - paymentAmount).toFixed(2);
-        paymentStatus.innerHTML = `<span class="text-warning">⏳ Partial payment (KES ${remaining} remaining)</span>`;
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      // Setup amount input listener
-      document.getElementById('amount').addEventListener('input', updatePaymentStatus);
-
-      // Setup form submission
-      document.getElementById('paymentForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const form = e.target;
-        const formData = new FormData(form);
-        const invoiceId = formData.get('invoice_id');
-        const paymentAmount = parseFloat(formData.get('amount'));
-        const invoiceTotal = parseFloat(document.getElementById('invoiceTotal').value);
-
-        // Validate payment amount
-        if (paymentAmount <= 0) {
-          alert('❌ Payment amount must be greater than 0');
-          return;
-        }
-
-        if (paymentAmount > invoiceTotal) {
-          if (!confirm(`This payment will result in an overpayment of KES ${(paymentAmount - invoiceTotal).toFixed(2)}. Continue?`)) {
-            return;
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+            modal.show();
           }
-        }
 
-        // Submit payment
-        fetch(form.action, {
-            method: 'POST',
-            body: formData
-          })
-          .then(res => res.json())
-          .then(data => {
-            if (data.success) {
-              // Show success message
-              const alertDiv = document.createElement('div');
-              alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3';
-              alertDiv.style.zIndex = '9999';
-              alertDiv.innerHTML = `
+          function updatePaymentStatus() {
+            const amountInput = document.getElementById('amount');
+            const paymentStatus = document.getElementById('paymentStatus');
+            const invoiceTotal = parseFloat(document.getElementById('invoiceTotal').value);
+            const paymentAmount = parseFloat(amountInput.value) || 0;
+
+            if (isNaN(paymentAmount)) {
+              paymentStatus.innerHTML = '<span class="text-secondary">Enter valid payment amount</span>';
+              return;
+            }
+
+            if (paymentAmount <= 0) {
+              paymentStatus.innerHTML = '<span class="text-danger">⚠️ Amount must be greater than 0</span>';
+            } else if (paymentAmount > invoiceTotal) {
+              const overpayment = (paymentAmount - invoiceTotal).toFixed(2);
+              paymentStatus.innerHTML = `<span class="text-danger">⚠️ Overpayment (KES ${overpayment} over)</span>`;
+            } else if (paymentAmount === invoiceTotal) {
+              paymentStatus.innerHTML = '<span class="text-success">✓ Full payment will be received</span>';
+            } else {
+              const remaining = (invoiceTotal - paymentAmount).toFixed(2);
+              paymentStatus.innerHTML = `<span class="text-warning">⏳ Partial payment (KES ${remaining} remaining)</span>`;
+            }
+          }
+
+          document.addEventListener("DOMContentLoaded", () => {
+            // Setup amount input listener
+            document.getElementById('amount').addEventListener('input', updatePaymentStatus);
+
+            // Setup form submission
+            document.getElementById('paymentForm').addEventListener('submit', function(e) {
+              e.preventDefault();
+
+              const form = e.target;
+              const formData = new FormData(form);
+              const invoiceId = formData.get('invoice_id');
+              const paymentAmount = parseFloat(formData.get('amount'));
+              const invoiceTotal = parseFloat(document.getElementById('invoiceTotal').value);
+
+              // Validate payment amount
+              if (paymentAmount <= 0) {
+                alert('❌ Payment amount must be greater than 0');
+                return;
+              }
+
+              if (paymentAmount > invoiceTotal) {
+                if (!confirm(`This payment will result in an overpayment of KES ${(paymentAmount - invoiceTotal).toFixed(2)}. Continue?`)) {
+                  return;
+                }
+              }
+
+              // Submit payment
+              fetch(form.action, {
+                  method: 'POST',
+                  body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                  if (data.success) {
+                    // Show success message
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3';
+                    alertDiv.style.zIndex = '9999';
+                    alertDiv.innerHTML = `
           <strong>✅ Success!</strong> ${data.message}
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         `;
-              document.body.appendChild(alertDiv);
+                    document.body.appendChild(alertDiv);
 
-              // Auto-remove after 5 seconds
-              setTimeout(() => {
-                alertDiv.remove();
-              }, 5000);
+                    // Auto-remove after 5 seconds
+                    setTimeout(() => {
+                      alertDiv.remove();
+                    }, 5000);
 
-              // Close modal
-              const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
-              modal.hide();
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+                    modal.hide();
 
-              // Refresh the page to update all data
-              window.location.reload();
-            } else {
-              console.error("❌ Server returned error:", data); // <-- shows PHP error in console
-              alert('❌ ' + (data.message || 'Failed to submit payment'));
-            }
-          })
-          .catch(error => {
-            console.error('Payment error:', error);
-            alert('❌ Network or server error occurred');
+                    // Refresh the page to update all data
+                    window.location.reload();
+                  } else {
+                    console.error("❌ Server returned error:", data); // <-- shows PHP error in console
+                    alert('❌ ' + (data.message || 'Failed to submit payment'));
+                  }
+                })
+                .catch(error => {
+                  console.error('Payment error:', error);
+                  alert('❌ Network or server error occurred');
+                });
+            });
           });
-      });
-    });
-  </script>
+        </script>
 
-  <script>
-    function checkPaymentStatus() {
-      const amountInput = document.getElementById('amount');
-      const invoiceTotal = parseFloat(document.getElementById('invoiceTotal').value);
-      const paymentStatus = document.getElementById('paymentStatus');
+        <script>
+          function checkPaymentStatus() {
+            const amountInput = document.getElementById('amount');
+            const invoiceTotal = parseFloat(document.getElementById('invoiceTotal').value);
+            const paymentStatus = document.getElementById('paymentStatus');
 
-      // Remove non-numeric characters and parse the input value
-      const paidAmount = parseFloat(amountInput.value.replace(/[^0-9.]/g, '')) || 0;
+            // Remove non-numeric characters and parse the input value
+            const paidAmount = parseFloat(amountInput.value.replace(/[^0-9.]/g, '')) || 0;
 
-      if (paidAmount <= 0) {
-        paymentStatus.textContent = '';
-        paymentStatus.className = 'mt-2 small fw-semibold';
-        return;
-      }
+            if (paidAmount <= 0) {
+              paymentStatus.textContent = '';
+              paymentStatus.className = 'mt-2 small fw-semibold';
+              return;
+            }
 
-      if (paidAmount >= invoiceTotal) {
-        paymentStatus.textContent = '✅ Full payment - invoice will be marked as paid';
-        paymentStatus.className = 'mt-2 small fw-semibold text-success';
-      } else if (paidAmount > 0 && paidAmount < invoiceTotal) {
-        paymentStatus.textContent = '⚠️ Partial payment - invoice will be marked as partially paid';
-        paymentStatus.className = 'mt-2 small fw-semibold text-warning';
-      }
-    }
+            if (paidAmount >= invoiceTotal) {
+              paymentStatus.textContent = '✅ Full payment - invoice will be marked as paid';
+              paymentStatus.className = 'mt-2 small fw-semibold text-success';
+            } else if (paidAmount > 0 && paidAmount < invoiceTotal) {
+              paymentStatus.textContent = '⚠️ Partial payment - invoice will be marked as partially paid';
+              paymentStatus.className = 'mt-2 small fw-semibold text-warning';
+            }
+          }
 
-    // When opening the modal, set the invoice total
-    document.getElementById('paymentModal').addEventListener('show.bs.modal', function(event) {
-      const button = event.relatedTarget;
-      const invoiceTotal = button.getAttribute('data-invoice-total');
-      document.getElementById('invoiceTotal').value = invoiceTotal;
-    });
-  </script>
+          // When opening the modal, set the invoice total
+          document.getElementById('paymentModal').addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const invoiceTotal = button.getAttribute('data-invoice-total');
+            document.getElementById('invoiceTotal').value = invoiceTotal;
+          });
+        </script>
 
 
-  <!-- Main Js File -->
-  <!-- <script src="invoice.js"></script> -->
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
+        <!-- Main Js File -->
+        <!-- <script src="invoice.js"></script> -->
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
 
-  <!-- J  A V A S C R I PT -->
+        <!-- J  A V A S C R I PT -->
 
-  <!-- steeper plugin -->
-  <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
-  <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-  <script
-    src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-    integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-    crossorigin="anonymous">
-  </script>
+        <!-- steeper plugin -->
+        <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
+        <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+        <script
+          src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+          integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
+          crossorigin="anonymous">
+        </script>
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-    crossorigin="anonymous">
-  </script>
-  
+        <script
+          src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+          integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+          crossorigin="anonymous">
+        </script>
 
-  <script src="../../../../landlord/assets/main.js"></script> <!-- links for dataTaable buttons -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-  <!--end::OverlayScrollbars Configure-->
-  <!-- OPTIONAL SCRIPTS -->
-  <!-- apexcharts -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-    integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
-    crossorigin="anonymous"></script>
 
-  <!--end::Script-->
-  <!-- date display only future date -->
-  <script>
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById("inspectionDate").setAttribute("min", today);
-  </script>
+        <script src="../../../../landlord/assets/main.js"></script> <!-- links for dataTaable buttons -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+        <!--end::OverlayScrollbars Configure-->
+        <!-- OPTIONAL SCRIPTS -->
+        <!-- apexcharts -->
+        <script
+          src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+          integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
+          crossorigin="anonymous"></script>
 
-  <!-- <script>
+        <!--end::Script-->
+        <!-- date display only future date -->
+        <script>
+          const today = new Date().toISOString().split('T')[0];
+          document.getElementById("inspectionDate").setAttribute("min", today);
+        </script>
+
+        <!-- <script>
 // // Store the original invoices data
 // let originalInvoices = [];
 // let displayedInvoices = [];
@@ -3739,8 +3757,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </script> -->
 
 
-  <!-- pdf download plugin -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+        <!-- pdf download plugin -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 </body>
 <!--end::Body-->

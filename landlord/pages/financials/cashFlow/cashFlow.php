@@ -1,8 +1,9 @@
 <?php
 session_start();
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
+require_once '../../db/connect.php';
 
-// require_once "actions/operatingOutFlow.php";
+ require_once "actions/getOperatingActivities.php";
 // require_once  "actions/operatingInflow.php";
 // require_once "actions/investingInflow.php";
 // require_once "actions/investingOutflow.php";
@@ -288,8 +289,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
                                         <p>For the month of November 2025 (KES)</p>
                                     </div>
                                     <div style="text-align:right">
-                                        <p style="font-weight:700" class="mb-2">Opening Cash Balance: <span style="color:#ffffff">KSH 0</p>
-                                        <p style="font-weight:700">Net Cash Movement: <span style="color:#ffffff"><?= $netCash ?></span></p>
+                                        <p style="font-weight:700" class="mb-2">Opening Cash Balance: <span style="color:#ffffff">KSH <?= $openingCash ?></p>
+                                        <p style="font-weight:700">Net Cash Movement: <span style="color:#ffffff"></span></p>
                                         <p style="font-size:12px;margin-top:6px;opacity:0.9">Generated: Nov 12, 2025</p>
                                     </div>
                                 </tableheader>
@@ -307,32 +308,38 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
                                         <tr class="section">
                                             <td colspan="3">Operating Activities</td>
                                         </tr>
+                                        <!-- inflow -->
                                         <?php foreach ($operatingInflows as $inflow): ?>
                                             <tr>
-                                                <td><?= htmlspecialchars($inflow['item_type']) ?></td>
-                                                <td class="right"><?= number_format($inflow['total_amount'], 2) ?></td>
-                                                <td class="right">&mdash;</td>
+                                            <td><?= htmlspecialchars($inflow['item_type']) ?></td>
+                                            <td class="right"><?= number_format($inflow['total_amount'], 2) ?></td>
+                                            <td class="right">&mdash;</td>
                                             </tr>
                                         <?php endforeach; ?>
+
+                                        <!-- deposits (leave as is) -->
                                         <tr>
                                             <td>Rent deposits from new tenants</td>
-                                            <td class="right"> <?= number_format($totalTenantDeposits, 2) ?> </td>
+                                            <td class="right"> 1000 </td>
                                             <td class="right">&mdash;</td>
                                         </tr>
-                                        <!-- outflow -->
 
+                                        <!-- outflow -->
                                         <?php foreach ($operatingOutflows as $outflow): ?>
                                             <tr>
-                                                <td><?= htmlspecialchars($outflow['item_type']) ?></td>
-                                                <td class="right">&mdash;</td>
-                                                <td class="right"><?= number_format($outflow['total_amount'], 2) ?></td>
+                                            <td><?= htmlspecialchars($outflow['item_type']) ?></td>
+                                            <td class="right">&mdash;</td>
+                                            <td class="right"><?= number_format($outflow['total_amount'], 2) ?></td>
                                             </tr>
                                         <?php endforeach; ?>
+
 
                                         <tr class="total-row">
                                             <td>Net Cash from Operating Activities</td>
-                                            <td class="right positive"><?= number_format($totalTenantDeposits  + $cumulativeOperatingInflow, 2) ?></td>
-                                            <td class="right"><?= number_format($cumulativeOutflow, 2) ?></td>
+                                            <td class="right positive"></td>
+                                            <td class="right">
+                                                
+                                            </td>
                                         </tr>
 
                                         <!-- Investing Activities -->
@@ -340,50 +347,50 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
                                             <td colspan="3">Investing Activities</td>
                                         </tr>
                                         <!-- outflow -->
-                                        <?php foreach ($investingOutflows as $outflow): ?>
+                                        
                                             <tr>
-                                                <td><?= htmlspecialchars($outflow['item_type']) ?></td>
+                                                <td></td>
                                                 <td class="right">&mdash;</td>
-                                                <td class="right"><?= number_format($outflow['total_amount'], 2) ?></td>
+                                                <td class="right"></td>
                                             </tr>
-                                        <?php endforeach; ?>
+                                        
                                         <!-- inflow -->
-                                        <?php foreach ($investingInflows as $Inflow): ?>
+                                        
                                             <tr>
-                                                <td><?= htmlspecialchars($Inflow['item_type']) ?></td>
+                                                <td></td>
                                                 <td class="right">&mdash;</td>
-                                                <td class="right"><?= number_format($Inflow['total_amount'], 2) ?></td>
+                                                <td class="right"></td>
                                             </tr>
-                                        <?php endforeach; ?>
+                                        
                                         <tr class="total-row">
                                             <td>Net Cash from Investing Activities</td>
-                                            <td class="right"><?= number_format($totalInvestingInflows, 2) ?></td>
-                                            <td class="right negative"><?= number_format($totalInvestingOutflows, 2) ?></td>
+                                            <td class="right"></td>
+                                            <td class="right negative"></td>
                                         </tr>
                                         <!-- Financing Activities -->
                                         <tr class="section">
                                             <td colspan="3">Financing Activities</td>
                                         </tr>
                                         <!-- outflow -->
-                                        <?php foreach ($financingInflows as $outflow): ?>
+                                        
                                             <tr>
-                                                <td><?= htmlspecialchars($outflow['item_type']) ?></td>
+                                                <td></td>
                                                 <td class="right">&mdash;</td>
-                                                <td class="right"><?= number_format($outflow['total_amount'], 2) ?></td>
+                                                <td class="right"></td>
                                             </tr>
-                                        <?php endforeach; ?>
-                                        <?php foreach ($financingOutflows as $outflow): ?>
+                                        
+                                        
                                             <tr>
-                                                <td><?= htmlspecialchars($outflow['item_type']) ?></td>
+                                                <td></td>
                                                 <td class="right">&mdash;</td>
-                                                <td class="right"><?= number_format($outflow['total_amount'], 2) ?></td>
+                                                <td class="right"></td>
                                             </tr>
-                                        <?php endforeach; ?>
+                                        
 
                                         <tr class="total-row">
                                             <td>Net Cash from Financing Activities</td>
-                                            <td class="right positive"> <?= number_format($totalFinancingInflows, 2) ?> </td>
-                                            <td class="right"><?= number_format($totalFinancingOutflows, 2) ?></td>
+                                            <td class="right positive">  </td>
+                                            <td class="right"></td>
                                         </tr>
                                         <!-- Totals -->
                                         <tr style="height:8px">
@@ -393,14 +400,14 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
                                         </tr>
                                         <tr class="total-row">
                                             <td>Total Net Movement</td>
-                                            <td class="right"><?= number_format($totalFinancingInflows + $totalInvestingOutflows, 2) ?></td>
+                                            <td class="right"></td>
                                             <td class="right">
-                                                <?= number_format($cumulativeOutflow + $totalFinancingOutflows + $totalInvestingInflows, 2) ?>
+                                                
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="font-weight:700">Net Cash (Inflows - Outflows)</td>
-                                            <td class="right" colspan="2" style="font-weight:700;color:#002B5B"><?= $netCash ?></td>
+                                            <td class="right" colspan="2" style="font-weight:700;color:#002B5B"></td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -14,6 +14,7 @@
     try {
         // Get the logged-in user's landlord ID
         $userId = $_SESSION['user']['id'];
+
         // Get the landlord's id based on the logged-in user
         $stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
         $stmt->execute([$userId]);
@@ -23,13 +24,24 @@
         // Count buildings that belong to this specific landlord
         $stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM buildings WHERE landlord_id = ?");
         $stmt->execute([$landlord_id]);
-
         $totalBuildings = $stmt->fetchColumn(); // returns the count of buildings for this landlord
+
+        // Count total units for this landlord
+        $stmt = $pdo->prepare("SELECT COUNT(*) AS total_units FROM building_units WHERE landlord_id = ?");
+        $stmt->execute([$landlord_id]);
+        $totalUnits = $stmt->fetchColumn(); // returns the total count of units for this landlord
+
+        // Count occupied units for this landlord
+        $stmt = $pdo->prepare("SELECT COUNT(*) AS occupied_units FROM building_units WHERE landlord_id = ? AND occupancy_status = 'occupied'");
+        $stmt->execute([$landlord_id]);
+        $occupiedUnits = $stmt->fetchColumn(); // returns the count of units with occupancy_status = 'occupied'
+
     } catch (Throwable $e) {
         // Handle the error appropriately
         // echo $e->getMessage();
     }
     ?>
+    <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/balancesheet/actions/getEquity.php'; ?>
     <div style="display: flex; align-items: center; gap: 1rem;">
         <div class="hamburger" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
@@ -54,14 +66,30 @@
             <i class="fas fa-door-open" style="color: var(--accent-color);"></i>
             <div>
                 <div style="font-size: 0.75rem; color: #adb5bd;">Occupied</div>
-                <div style="font-weight: 600; color: var(--main-color);">0/0</div>
+                <div style="font-weight: 600; color: var(--main-color);"><?= $occupiedUnits ?>/<?= $totalUnits ?></div>
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 0.5rem; color: #6c757d;">
             <i class="fas fa-chart-line" style="color: var(--accent-color);"></i>
             <div>
                 <div style="font-size: 0.75rem; color: #adb5bd;">Monthly Revenue</div>
-                <div style="font-weight: 600; color: var(--main-color);">KSH 0.00K</div>
+                <?php
+                $value = (float)$retainedEarnings;
+                $isNegative = $value < 0;
+
+                // convert to K format
+                $formatted = number_format(abs($value) / 1000, 2) . 'K';
+
+                // add brackets if negative
+                if ($isNegative) {
+                    $formatted = "($formatted)";
+                }
+                ?>
+
+                <div style="font-weight:600; color: <?= $isNegative ? 'red' : 'var(--main-color)' ?>;">
+                    KSH <?= $formatted ?>
+                </div>
+
             </div>
         </div>
     </div>

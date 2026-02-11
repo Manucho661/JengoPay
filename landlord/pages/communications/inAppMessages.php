@@ -2,146 +2,25 @@
 session_start();
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 
+// success and error messages
+$error   = $_SESSION['error'] ?? '';
+$success = $_SESSION['success'] ?? '';
+
+unset($_SESSION['error'], $_SESSION['success']);
+
 include '../db/connect.php'; // adjust path
+// actions
 
-try {
-  $sql = "
-        SELECT id AS id, entity_name AS building_name, 'building_units' AS source_table
-        FROM building_units
-        GROUP BY entity_name
-
-        UNION
-
-        SELECT id AS id, entity_name AS building_name, 'building_units' AS source_table
-        FROM building_units
-        GROUP BY entity_name
-
-        UNION
-
-        SELECT id AS id, entity_name AS building_name, 'building_units' AS source_table
-        FROM building_units
-        GROUP BY entity_name
-    ";
-
-  $stmt = $pdo->query($sql);
-  $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-  echo "Error: " . $e->getMessage();
-}
+// get messages
+// require_once "./actions/getMessages.php";
+require_once "./actions/startNewChat.php";
 ?>
 <?php
+
 include '../db/connect.php';
 
-try {
-  $stmt = $pdo->query("SELECT id, building_name, building_type FROM buildings ORDER BY building_name ASC");
-  $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-  echo "Error: " . $e->getMessage();
-}
 ?>
-<?php
-include '../db/connect.php'; // Make sure $pdo is available
 
-// === HANDLE NEW THREAD SUBMISSION (POST) ===
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($_POST['message'])) {
-  try {
-    $title = $_POST['title'] ?? '';
-    $unit_id = $_POST['unit_id'] ?? '';
-    $tenant = $_POST['tenant'] ?? '';
-    $building_name = $_POST['building_name'] ?? '';
-    $message = $_POST['message'];
-    $uploaded_files = [];
-    $upload_dir = "uploads/";
-    // $uploadDir = "C:/xampp/htdocs/originalTwo/AdminLTE/dist/pages/communications/uploads/";
-
-    // Handle file uploads
-    if (!empty($_FILES['files']['name'][0])) {
-      foreach ($_FILES['files']['name'] as $key => $name) {
-        $tmp_name = $_FILES['files']['tmp_name'][$key];
-        $unique_name = uniqid() . '_' . basename($name);
-        $target_file = $upload_dir . $unique_name;
-
-        if (!is_dir($upload_dir)) {
-          mkdir($upload_dir, 0755, true);
-        }
-
-        if (move_uploaded_file($tmp_name, $target_file)) {
-          $uploaded_files[] = $target_file;
-        }
-      }
-    }
-
-    $files_json = json_encode($uploaded_files);
-    $now = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('Y-m-d H:i:s');
-
-    // Insert communication thread
-    $stmt = $pdo->prepare("INSERT INTO communication (title, message, files, unit_id, tenant, building_name, created_at, updated_at) VALUES (?, ?,  ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$title, $message, $files_json, $unit_id, $tenant, $building_name, $now, $now]);
-
-    $thread_id = $pdo->lastInsertId();
-    $message_id = $pdo->lastInsertId(); // Get the message ID for attachments
-
-    if (!empty($uploaded_files)) {
-      foreach ($uploaded_files as $file_path) {
-        $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp, file_path) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$thread_id, 'landlord', $message, $now, $file_path]);
-      }
-    } else {
-      $stmt = $pdo->prepare("INSERT INTO messages (thread_id, sender, content, timestamp) VALUES (?, ?, ?, ?)");
-      $stmt->execute([$thread_id, 'landlord', $message, $now]);
-    }
-
-
-    // Store attachments
-    if (!empty($uploaded_files)) {
-      $stmt_file = $pdo->prepare("INSERT INTO message_files (message_id, thread_id, file_path) VALUES (?, ?, ?)");
-      foreach ($uploaded_files as $file_path) {
-        $stmt_file->execute([$message_id, $thread_id, $file_path]);
-      }
-    }
-
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
-  } catch (PDOException $e) {
-    echo "Database error: " . $e->getMessage();
-    exit;
-  }
-}
-
-// === FETCH BUILDINGS ===
-$stmt = $pdo->prepare("SELECT id, building_name FROM buildings");
-$stmt->execute();
-$buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// === FETCH UNITS IF BUILDING SELECTED ===
-$id = $_POST['id'] ?? null;
-$units = [];
-
-if ($id) {
-  $stmt = $pdo->prepare("SELECT unit_id, unit_number FROM units WHERE id = ?");
-  $stmt->execute([$id]);
-  $units = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-// === FETCH COMMUNICATION THREADS ===
-$stmt = $pdo->prepare("
-       SELECT
-        c.thread_id,
-        c.title,
-        c.tenant,
-        c.created_at,
-        c.building_name,
-        c.message,
-        (SELECT content FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_message,
-        (SELECT file_path FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_file,
-        (SELECT timestamp FROM messages WHERE thread_id = c.thread_id ORDER BY timestamp DESC LIMIT 1) AS last_time,
-        (SELECT COUNT(*) FROM messages WHERE thread_id = c.thread_id AND is_read = 0) AS unread_count
-    FROM communication c
-    ORDER BY last_time DESC
-");
-$stmt->execute();
-$communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
 
 
 <!doctype html>
@@ -162,35 +41,17 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     crossorigin="anonymous" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-
-  <!--end::Fonts-->
-  <!--begin::Third Party Plugin(OverlayScrollbars)-->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-    integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
-    crossorigin="anonymous" />
-  <!--end::Third Party Plugin(OverlayScrollbars)-->
-  <!--begin::Third Party Plugin(Bootstrap Icons)-->
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
     crossorigin="anonymous" />
-  <!--end::Third Party Plugin(Bootstrap Icons)-->
-  <!--begin::Required Plugin(AdminLTE)-->
+
   <link rel="stylesheet" href="../../../landlord/assets/main.css" />
   <!-- <link rel="stylesheet" href="../../../landlord/css/adminlte.css" /> -->
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
-  <link rel="stylesheet" href="texts.css">
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-    integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-    crossorigin="anonymous" />
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -606,10 +467,46 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
       margin-right: 5px;
       color: #6c757d;
     }
+
+    a {
+      text-decoration: none;
+    }
   </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+
+    <?php if (!empty($error)): ?>
+      <div id="flashToastError"
+        class="toast align-items-center text-bg-danger border-0"
+        role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body small">
+            <?= htmlspecialchars($error) ?>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <?php endif; ?>
+
+    <?php if (!empty($success)): ?>
+      <div id="flashToastSuccess"
+        class="toast align-items-center text-bg-success border-0"
+        role="alert" aria-live="polite" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body small">
+            <?= htmlspecialchars($success) ?>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <?php endif; ?>
+
+  </div>
   <div id="welcomeNotification" class="alert-box">
     <span>👋 Welcome! Glad Your Here!</span>
     <button onclick="dismissWelcome()" class="close-btn">&times;</button>
@@ -667,7 +564,7 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- First Row: Search and Buttons -->
         <div class="row mb-2">
           <div class="col-md-12">
-            <div class="card shadow-sm mb-4">
+            <div class="card border-0 mb-4">
               <div class="card-body">
                 <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filter Messages</h5>
                 <form method="GET">
@@ -702,7 +599,7 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <button type="reset" class="btn btn-secondary">
                       <i class="fas fa-redo"></i> Reset
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="actionBtn">
                       <i class="fas fa-search"></i> Apply Filters
                     </button>
                   </div>
@@ -711,249 +608,87 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="row mt-2">
-        <div class="col-md-12 message-container">
-          <!-- Start Row messages-summmary -->
-          <div class="row" style="display: none;" id="go-back">
-            <div class="col-md-12 d-flex">
-              <button class="btn go-back mb-1" onclick="myBack()"> <i class="fa-solid fa-arrow-left"></i> Go Back</button>
-            </div>
-          </div>
-          <!-- end row -->
-          <!-- start row -->
-          <div class="row">
-            <div class="col-sm-12 col-md-12">
-              <div class="card">
-                <div class="card-body">
-                  <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
-                    <h5 class="card-title mb-0"><i class="fas fa-inbox"></i> Recent Messages</h5>
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newChatModal">
-                      <i class="fas fa-plus"></i> New Chat
-                    </button>
-                  </div>
-                  <div class="table-responsive">
-                    <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
-                      <thead>
-                        <tr>
-                          <th>DATE</th>
-                          <th>TITLE</th>
-                          <th>SENT BY</th>
-                          <th>SENT TO</th>
-                          <th>ACTION</th>
-                        </tr>
-                      </thead>
-                      <tbody id="conversationTableBody">
-                        <?php
-                        // if (!empty($communications)): 
-                        ?>
-                        <?php
-                        // foreach ($communications as $comm):
-                        //   $datetime = new DateTime($comm['created_at'] ?? date('Y-m-d H:i:s'));
-                        //   $date = $datetime->format('d-m-Y');
-                        //   $time = $datetime->format('h:iA');
-                        //   $sender = htmlspecialchars($comm['tenant'] ?: 'Tenant');
-                        //   $email = ''; // Add email logic if needed
-                        //   $recipient = htmlspecialchars($comm['recipient'] ?? 'Sender Name'); // Adjust key as needed
-                        //   $title = htmlspecialchars($comm['title']);
-                        //   $threadId = $comm['thread_id'];
-                        ?>
-                        <tr class="table-row" data-date="">
-                          <td class="timestamp">
-                            <div class="date"></div>
-                            <div class="time"></div>
-                          </td>
-                          <td class="title"></td>
-                          <td>
-                            <div class="recipient"></div>
-                          </td>
-                          <td>
-                            <div class="sender"></div>
-                            <div class="sender-email"></div>
-                          </td>
-                          <td>
-                            <button class="btn btn-primary view">
-                              <i class="bi bi-eye"></i> View
-                            </button>
-                            <button class="btn btn-danger delete" data-thread-id="">
-                              <i class="bi bi-trash3"></i> Delete
-                            </button>
-                          </td>
-                        </tr>
-                        <?php
-                        // endforeach; 
-                        ?>
-                        <tr id="noResultsRow" style="display: none;">
-                          <td colspan="5" class="text-center text-danger">No matching results found.</td>
-                        </tr>
-
-                        <?php
-                        // else: 
-                        ?>
-                        <tr>
-                          <td colspan="5" class="text-center">No message available</td>
-                        </tr>
-                        <?php
-                        // endif;
-                        ?>
-
-                      </tbody>
-                    </table>
-
-                  </div>
+        <div class="row mt-2">
+          <div class="col-sm-12 col-md-12">
+            <div class="card border-0">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center border-bottom">
+                  <h5 class="card-title mb-0"><i class="fas fa-inbox text-warning"></i> Recent Messages</h5>
+                  <button class="actionBtn mb-2" data-bs-toggle="modal" data-bs-target="#newChatModal">
+                    <i class="fas fa-plus"></i> New Chat
+                  </button>
                 </div>
-              </div>
-            </div>
-          </div>
-          <!-- End Row messages-summmary -->
-
-          <div class="row h-100 align-items-stretch" id="individual-message-summmary" style="border:1px solid #E2E2E2; padding: 0 !important; display: none; max-height: 95%;">
-            <div id="message-profiles" class="col-md-4  message-profiles">
-
-              <div class="topic-profiles-header-section d-flex">
-                <div class="content d-flex">
-                  <div class="individual-details-container">
-                    <div class="content d-flex">
-                      <div class="profile-initials" id="profile-initials">JM</div>
-
-                      <div class="individual-residence d-flex">
-                        <div class="individual-name body">Emmanuel,</div>
-                        <div class="initial-topic-separator">|</div>
-                        <div class="residence mt-2">
-
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-              <div class="h-80 other-topics-section">
-                <?php
-                // foreach ($communications as $comm): 
-                ?>
-                <div class="individual-topic-profiles d-flex">
-
-                  <div class="individual-topic-profile-container">
-                    <div class="individual-topic">
-                    </div>
-                    <div class="individual-message mt-2">
+                <div class="table-responsive">
+                  <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
+                    <thead>
+                      <tr>
+                        <th>DATE</th>
+                        <th>TITLE</th>
+                        <th>SENT BY</th>
+                        <th>SENT TO</th>
+                        <th>ACTION</th>
+                      </tr>
+                    </thead>
+                    <tbody id="conversationTableBody">
                       <?php
-                      // if (!empty($comm['last_file'])): 
+                      // if (!empty($communications)): 
                       ?>
-                      <!-- Show file preview if last message is a file -->
-                      <span class="file-preview">
-                        <i class="fas fa-paperclip"></i>
-                        <?php
-                        // $filename = basename($comm['last_file']);
-                        // echo htmlspecialchars(mb_strimwidth($filename, 0, 30, '...'));
-                        ?>
-                      </span>
                       <?php
-                      // elseif (!empty($comm['last_message'])): 
+                      // foreach ($communications as $comm):
+                      //   $datetime = new DateTime($comm['created_at'] ?? date('Y-m-d H:i:s'));
+                      //   $date = $datetime->format('d-m-Y');
+                      //   $time = $datetime->format('h:iA');
+                      //   $sender = htmlspecialchars($comm['tenant'] ?: 'Tenant');
+                      //   $email = ''; // Add email logic if needed
+                      //   $recipient = htmlspecialchars($comm['recipient'] ?? 'Sender Name'); // Adjust key as needed
+                      //   $title = htmlspecialchars($comm['title']);
+                      //   $threadId = $comm['thread_id'];
                       ?>
-                      <!-- Show message preview if last message is text -->
+                      <tr class="table-row" data-date="">
+                        <td class="timestamp">
+                          <div class="date"></div>
+                          <div class="time"></div>
+                        </td>
+                        <td class="title"></td>
+                        <td>
+                          <div class="recipient"></div>
+                        </td>
+                        <td>
+                          <div class="sender"></div>
+                          <div class="sender-email"></div>
+                        </td>
+                        <td>
+                          <button class="btn btn-primary view">
+                            <i class="bi bi-eye"></i> View
+                          </button>
+                          <button class="btn btn-danger delete" data-thread-id="">
+                            <i class="bi bi-trash3"></i> Delete
+                          </button>
+                        </td>
+                      </tr>
+                      <?php
+                      // endforeach; 
+                      ?>
+                      <tr id="noResultsRow" style="display: none;">
+                        <td colspan="5" class="text-center text-danger">No matching results found.</td>
+                      </tr>
 
                       <?php
                       // else: 
                       ?>
-                      <!-- Fallback if neither exists -->
-                      <span class="text-muted">No messages yet</span>
+                      <tr>
+                        <td colspan="5" class="text-center">No message available</td>
+                      </tr>
                       <?php
-                      // endif; 
+                      // endif;
                       ?>
-                    </div>
-                  </div>
-
-                  <div class="d-flex justify-content-end time-count">
-                    <div class="time">
-
-                    </div>
-                    <div class="message-count mt-2">
-
-                    </div>
-                  </div>
+                    </tbody>
+                  </table>
                 </div>
-                <?php
-                // endforeach; 
-                ?>
-              </div>
-
-
-
-            </div>
-
-            <div id="messageBody" class="col-md-8 message-body" style="padding: 0 !important; height:100%;">
-              <div class="individual-message-body-header">
-                <div class="individual-details-container">
-                  <div class="content">
-                    <div class="individual-residence d-flex" style="align-items: center;">
-                      <div class="profile-initials initials-topic" id="profile-initials-initials-topic"><b>JM</b></div>
-                      <div id="initial-topic-separator" class="initial-topic-separator">|</div>
-                      <div class="individual-topic body">Rental Arrears</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="individual-message-body" style="height: 100%;">
-                <div class="messages" id="messages">
-                  <div class="message incoming">
-                    <div class="message outgoing">
-                    </div>
-                  </div>
-                </div>
-
-                <div class="input-area">
-                  <!-- Attachment input -->
-                  <input
-                    type="file"
-                    name="file[]"
-                    id="fileInput"
-                    class="form-control"
-                    style="display: none;"
-                    onchange="showFilePreview()"
-                    multiple
-                    accept=".jpg,.jpeg,.png,.gif,.webp,.bmp,.xls,.xlsx,.pdf,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/*">
-
-                  <button class="btn attach-button" onclick="document.getElementById('fileInput').click();">
-                    <i class="fa fa-paperclip"></i>
-                  </button>
-
-                  <!-- File preview container -->
-                  <div id="filePreviewContainer" style="display: none; margin-right: 10px; max-width: 200px; flex-wrap: wrap; gap: 10px;">
-                    <div style="display: flex; align-items: center; background: #f5f5f5; padding: 5px; border-radius: 4px;">
-                      <!-- Image thumbnail (shown only for image files) -->
-                      <img id="fileThumbnail" src="" style="max-height: 40px; max-width: 40px; margin-right: 8px; display: none;">
-                      <!-- File info -->
-                      <div style="flex-grow: 1;">
-                        <div id="fileName" style="font-size: 12px; color: #333;"></div>
-                        <div style="font-size: 10px; color: #666;">Click to remove</div>
-                      </div>
-                      <button onclick="clearFileSelection()" style="background: none; border: none; color: #999; cursor: pointer; margin-left: 5px;">×</button>
-                    </div>
-                  </div>
-
-                  <div class="input-box" id="inputBox" contenteditable="true" placeholder="Type your message..."></div>
-
-                  <!-- MESSAGE SEND BUTTON -->
-                  <div class="message-input-wrapper">
-                    <button name="incoming_message" class="btn message-send-button" onclick="sendMessage()">
-                      <i class="fa fa-paper-plane"></i>
-                    </button>
-                  </div>
-                </div>
-
-
-
               </div>
             </div>
           </div>
         </div>
-        <!--end::Row-->
       </div>
     </main>
     <!--end::App Main-->
@@ -978,39 +713,47 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="modal-body">
-          <form>
-            <!-- Recipient Type + (Admin recipient auto, Tenant flow below) -->
+          <!-- IMPORTANT: method + enctype + action -->
+          <form id="newChatForm" method="POST" action="" enctype="multipart/form-data">
+            <!-- the backend checks for this -->
+            <input type="hidden" name="start_new_chat" value="1">
+
+            <!-- Recipient Type -->
             <div class="row g-2 align-items-end">
               <div class="col-12 col-md-6">
                 <label class="form-label mb-1">Recipient Type</label>
-                <select class="form-select" id="recipientType" onchange="updateRecipientOptions()">
+                <select class="form-select" id="recipientType" name="recipient_type">
                   <option value="">Choose type...</option>
                   <option value="tenant">Tenant</option>
                   <option value="admin">System Admin</option>
                 </select>
               </div>
 
-              <!-- Shows only for non-tenant types that need a dropdown.
-         For admin, we won't show this because admin is auto-selected. -->
+              <!-- Keep it (even if admin auto-selects); hidden most of the time -->
               <div class="col-12 col-md-6" id="recipientSelectDiv" style="display:none;">
                 <label class="form-label mb-1">Select Recipient</label>
-                <select class="form-select" id="recipientSelect"></select>
+                <select class="form-select" id="recipientSelect" name="admin_id"></select>
               </div>
             </div>
 
-            <!-- Tenant cascading flow (packed horizontally) -->
+            <!-- Tenant flow -->
             <div class="mt-2" id="tenantFlow" style="display:none;">
               <div class="row g-2">
                 <div class="col-12 col-md-6">
                   <label class="form-label mb-1">Building</label>
-                  <select class="form-select" id="buildingSelect" onchange="onBuildingChange()">
+                  <select class="form-select" id="buildingSelect" name="building_id">
                     <option value="">Choose building...</option>
+                    <?php foreach ($buildings as $building): ?>
+                      <option value="<?= (int)$building['id'] ?>">
+                        <?= htmlspecialchars($building['building_name']) ?>
+                      </option>
+                    <?php endforeach; ?>
                   </select>
                 </div>
 
                 <div class="col-12 col-md-6" id="unitDiv" style="display:none;">
                   <label class="form-label mb-1">Unit</label>
-                  <select class="form-select" id="unitSelect" onchange="onUnitChange()">
+                  <select class="form-select" id="unitSelect" name="unit_id">
                     <option value="">Choose unit...</option>
                   </select>
                 </div>
@@ -1018,18 +761,17 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="col-12" id="tenantNameDiv" style="display:none;">
                   <label class="form-label mb-1">Tenant</label>
                   <input class="form-control" id="tenantNameInput" type="text" readonly />
-                  <input type="hidden" id="tenantIdInput" />
+                  <!-- this is what PHP needs -->
+                  <input type="hidden" id="tenantIdInput" name="tenant_id" />
                 </div>
               </div>
             </div>
 
-            <!-- File/Image attachment (VISUAL preview) -->
+            <!-- Attach Image -->
             <div class="mt-3">
               <label class="form-label mb-1">Attach Image</label>
 
-              <!-- Clickable upload box -->
-              <div id="uploadBox" class="border rounded p-3 d-flex align-items-center justify-content-between"
-                style="cursor:pointer;">
+              <div id="uploadBox" class="border rounded p-3 d-flex align-items-center justify-content-between" style="cursor:pointer;">
                 <div class="d-flex align-items-center gap-2">
                   <i class="fas fa-image fs-4"></i>
                   <div>
@@ -1040,56 +782,52 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <button type="button" class="btn btn-outline-secondary btn-sm">Browse</button>
               </div>
 
-              <!-- Hidden file input -->
+              <!-- IMPORTANT: must have name="attachment" for PHP $_FILES['attachment'] -->
               <input
                 type="file"
                 id="attachmentInput"
+                name="attachment"
                 class="d-none"
                 accept="image/png,image/jpeg,image/jpg" />
 
-              <!-- Preview area -->
               <div id="previewWrap" class="mt-2" style="display:none;">
                 <div class="d-flex align-items-start gap-2">
-                  <img
-                    id="imgPreview"
-                    alt="preview"
-                    class="border rounded"
+                  <img id="imgPreview" alt="preview" class="border rounded"
                     style="width:160px; height:160px; object-fit:cover;" />
-
                   <div class="flex-grow-1">
                     <div class="fw-semibold" id="fileNameText"></div>
                     <small class="text-muted" id="fileMetaText"></small>
 
                     <div class="mt-2 d-flex gap-2">
-                      <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearAttachment()">
-                        Remove
-                      </button>
-                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="triggerFilePicker()">
-                        Change
-                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearAttachment()">Remove</button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="triggerFilePicker()">Change</button>
                     </div>
                   </div>
                 </div>
               </div>
-
             </div>
 
             <!-- Message -->
             <div class="mt-3">
               <label class="form-label mb-1">Message</label>
-              <textarea class="form-control" rows="4" placeholder="Type your message..."></textarea>
+              <!-- IMPORTANT: name="message" -->
+              <textarea class="form-control" name="message" rows="4" placeholder="Type your message..."></textarea>
             </div>
 
-            <!-- Optional hidden target values (useful when sending) -->
+            <!-- Optional: title (if you want it in DB). Hidden for now, but supported -->
+            <input type="hidden" name="title" id="chatTitle" value="New Conversation">
+
+            <!-- Keep these if your JS uses them, but backend uses above fields -->
             <input type="hidden" id="targetType" />
             <input type="hidden" id="targetId" />
           </form>
-
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-success">
+
+          <!-- IMPORTANT: type="submit" and form="newChatForm" -->
+          <button type="submit" form="newChatForm" class="actionBtn">
             <i class="fas fa-paper-plane"></i> Send Message
           </button>
         </div>
@@ -1099,12 +837,13 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <script src="view.js"></script>
   <script src="../../../landlord/assets/main.js"></script>
+  <script type="module" src="js/main.js"></script>
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
     integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
     crossorigin="anonymous"></script>
 
-  <!-- <script>
+  <script>
     function dismissWelcome() {
       const box = document.getElementById('welcomeNotification');
       box.style.display = 'none';
@@ -1114,196 +853,14 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
         dismissWelcome();
       }, 5000); // 5000ms = 5 seconds
     });
-  </script> -->
+  </script>
 
-  <!-- Bootstrap Bundle with Popper -->
-
-  <!--end::Script-->
 
   <script>
-    // Dummy tenant directory data
-    const tenantDirectory = [{
-        id: "b1",
-        name: "Hindocha Tower",
-        units: [{
-            id: "u204",
-            number: "204",
-            tenant: {
-              id: "t1",
-              name: "Sarah Johnson"
-            }
-          },
-          {
-            id: "u205",
-            number: "205",
-            tenant: {
-              id: "t2",
-              name: "Brian Otieno"
-            }
-          },
-        ],
-      },
-      {
-        id: "b2",
-        name: "Vista Apartments",
-        units: [{
-            id: "u305",
-            number: "305",
-            tenant: {
-              id: "t3",
-              name: "Michael Chen"
-            }
-          },
-          {
-            id: "u306",
-            number: "306",
-            tenant: {
-              id: "t4",
-              name: "Amina Ali"
-            }
-          },
-        ],
-      },
-      {
-        id: "b3",
-        name: "Green Valley Homes",
-        units: [{
-          id: "u102",
-          number: "102",
-          tenant: {
-            id: "t5",
-            name: "Emma Wilson"
-          }
-        }, ],
-      },
-    ];
-
-    const el = (id) => document.getElementById(id);
-
-    // store current preview object URL so we can revoke it
     let currentPreviewUrl = null;
 
-    function safeHide(id) {
-      const node = el(id);
-      if (node) node.style.display = "none";
-    }
-
-    function safeShow(id) {
-      const node = el(id);
-      if (node) node.style.display = "block";
-    }
-
-    function resetTenantFlowUI() {
-      if (el("buildingSelect")) {
-        el("buildingSelect").innerHTML = '<option value="">Choose building...</option>';
-        el("buildingSelect").value = "";
-      }
-
-      safeHide("unitDiv");
-      if (el("unitSelect")) el("unitSelect").innerHTML = '<option value="">Choose unit...</option>';
-
-      safeHide("tenantNameDiv");
-      if (el("tenantNameInput")) el("tenantNameInput").value = "";
-      if (el("tenantIdInput")) el("tenantIdInput").value = "";
-
-      if (el("targetType")) el("targetType").value = "";
-      if (el("targetId")) el("targetId").value = "";
-    }
-
-    function populateBuildings() {
-      const buildingSelect = el("buildingSelect");
-      if (!buildingSelect) return;
-
-      let html = '<option value="">Choose building...</option>';
-      tenantDirectory.forEach((b) => {
-        html += `<option value="${b.id}">${b.name}</option>`;
-      });
-      buildingSelect.innerHTML = html;
-    }
-
-    // MAIN: called on recipientType change
-    function updateRecipientOptions() {
-      const type = el("recipientType")?.value;
-
-      const recipientSelectDiv = el("recipientSelectDiv");
-      const recipientSelect = el("recipientSelect");
-      const tenantFlow = el("tenantFlow");
-
-      if (recipientSelectDiv) recipientSelectDiv.style.display = "none";
-      if (tenantFlow) tenantFlow.style.display = "none";
-      if (recipientSelect) recipientSelect.innerHTML = "";
-
-      resetTenantFlowUI();
-
-      if (!type) return;
-
-      if (type === "tenant") {
-        if (tenantFlow) tenantFlow.style.display = "block";
-        populateBuildings();
-        if (el("targetType")) el("targetType").value = "tenant";
-        return;
-      }
-
-      if (type === "admin") {
-        // System Admin is auto-selected (no dropdown)
-        if (el("targetType")) el("targetType").value = "admin";
-        if (el("targetId")) el("targetId").value = "admin1"; // dummy id
-        return;
-      }
-    }
-
-    function onBuildingChange() {
-      const buildingId = el("buildingSelect")?.value;
-
-      safeHide("unitDiv");
-      if (el("unitSelect")) el("unitSelect").innerHTML = '<option value="">Choose unit...</option>';
-
-      safeHide("tenantNameDiv");
-      if (el("tenantNameInput")) el("tenantNameInput").value = "";
-      if (el("tenantIdInput")) el("tenantIdInput").value = "";
-      if (el("targetId")) el("targetId").value = "";
-
-      if (!buildingId) return;
-
-      const building = tenantDirectory.find((b) => b.id === buildingId);
-      if (!building) return;
-
-      let unitOptions = '<option value="">Choose unit...</option>';
-      building.units.forEach((u) => {
-        unitOptions += `<option value="${u.id}">Unit ${u.number}</option>`;
-      });
-
-      if (el("unitSelect")) el("unitSelect").innerHTML = unitOptions;
-      safeShow("unitDiv");
-    }
-
-    function onUnitChange() {
-      const buildingId = el("buildingSelect")?.value;
-      const unitId = el("unitSelect")?.value;
-
-      safeHide("tenantNameDiv");
-      if (el("tenantNameInput")) el("tenantNameInput").value = "";
-      if (el("tenantIdInput")) el("tenantIdInput").value = "";
-      if (el("targetId")) el("targetId").value = "";
-
-      if (!buildingId || !unitId) return;
-
-      const building = tenantDirectory.find((b) => b.id === buildingId);
-      const unit = building?.units.find((u) => u.id === unitId);
-      if (!unit?.tenant) return;
-
-      if (el("tenantNameInput")) el("tenantNameInput").value = unit.tenant.name;
-      if (el("tenantIdInput")) el("tenantIdInput").value = unit.tenant.id;
-
-      if (el("targetType")) el("targetType").value = "tenant";
-      if (el("targetId")) el("targetId").value = unit.tenant.id;
-
-      safeShow("tenantNameDiv");
-    }
-
-    // ------- Attachment preview logic (fixed + reliable) -------
     function triggerFilePicker() {
-      const input = el("attachmentInput");
+      const input = document.getElementById("attachmentInput");
       if (input) input.click();
     }
 
@@ -1315,20 +872,24 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     function clearAttachment() {
-      const input = el("attachmentInput");
+      const input = document.getElementById("attachmentInput");
       if (input) input.value = "";
 
       revokePreviewUrl();
 
-      const img = el("imgPreview");
+      const img = document.getElementById("imgPreview");
       if (img) {
         img.removeAttribute("src");
         img.alt = "preview";
       }
 
-      if (el("fileNameText")) el("fileNameText").textContent = "";
-      if (el("fileMetaText")) el("fileMetaText").textContent = "";
-      safeHide("previewWrap");
+      const fileNameText = document.getElementById("fileNameText");
+      const fileMetaText = document.getElementById("fileMetaText");
+      const previewWrap = document.getElementById("previewWrap");
+
+      if (fileNameText) fileNameText.textContent = "";
+      if (fileMetaText) fileMetaText.textContent = "";
+      if (previewWrap) previewWrap.style.display = "none";
     }
 
     function formatBytes(bytes) {
@@ -1340,14 +901,14 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      // Make upload box clickable (only if it exists)
-      const uploadBox = el("uploadBox");
+      const uploadBox = document.getElementById("uploadBox");
       if (uploadBox) uploadBox.addEventListener("click", triggerFilePicker);
 
-      const fileInput = el("attachmentInput");
+      const fileInput = document.getElementById("attachmentInput");
       if (fileInput) {
         fileInput.addEventListener("change", (e) => {
           const file = e.target.files && e.target.files[0];
+
           if (!file) {
             clearAttachment();
             return;
@@ -1363,32 +924,40 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
           revokePreviewUrl();
           currentPreviewUrl = URL.createObjectURL(file);
 
-          const img = el("imgPreview");
+          const img = document.getElementById("imgPreview");
           if (img) {
             img.src = currentPreviewUrl;
             img.alt = file.name || "Selected image";
             img.loading = "lazy";
-
-            // Force the browser to render it (helps in some modal/layout cases)
             img.style.display = "block";
           }
 
-          if (el("fileNameText")) el("fileNameText").textContent = file.name;
-          if (el("fileMetaText")) el("fileMetaText").textContent =
-            `${file.type || "image"} • ${formatBytes(file.size)}`;
+          const fileNameText = document.getElementById("fileNameText");
+          const fileMetaText = document.getElementById("fileMetaText");
+          const previewWrap = document.getElementById("previewWrap");
 
-          safeShow("previewWrap");
+          if (fileNameText) fileNameText.textContent = file.name;
+          if (fileMetaText) fileMetaText.textContent = `${file.type || "image"} • ${formatBytes(file.size)}`;
+
+          if (previewWrap) previewWrap.style.display = "block";
         });
       }
 
       // Reset everything on modal close
-      const modal = el("newChatModal");
+      const modal = document.getElementById("newChatModal");
       if (modal) {
         modal.addEventListener("hidden.bs.modal", () => {
-          if (el("recipientType")) el("recipientType").value = "";
-          safeHide("recipientSelectDiv");
-          safeHide("tenantFlow");
-          resetTenantFlowUI();
+          const recipientType = document.getElementById("recipientType");
+          const recipientSelectDiv = document.getElementById("recipientSelectDiv");
+          const tenantFlow = document.getElementById("tenantFlow");
+
+          if (recipientType) recipientType.value = "";
+          if (recipientSelectDiv) recipientSelectDiv.style.display = "none";
+          if (tenantFlow) tenantFlow.style.display = "none";
+
+          // Only call if it exists
+          if (typeof resetTenantFlowUI === "function") resetTenantFlowUI();
+
           clearAttachment();
         });
       }
@@ -1397,6 +966,27 @@ $communications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
+  <!-- Toast message -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const successEl = document.getElementById("flashToastSuccess");
+      const errorEl = document.getElementById("flashToastError");
+
+      if (successEl && window.bootstrap) {
+        new bootstrap.Toast(successEl, {
+          delay: 8000,
+          autohide: true
+        }).show();
+      }
+
+      if (errorEl && window.bootstrap) {
+        new bootstrap.Toast(errorEl, {
+          delay: 10000,
+          autohide: true
+        }).show();
+      }
+    });
+  </script>
 </body>
 <!--end::Body-->
 

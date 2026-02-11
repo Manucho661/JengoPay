@@ -85,6 +85,9 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
       color: #6c757d;
       font-size: 0.9rem;
     }
+    a{
+      text-decoration: none !important;
+    }
   </style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">

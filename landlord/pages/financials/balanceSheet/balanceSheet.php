@@ -170,6 +170,10 @@ require_once  './actions/getEquity.php';
     background-color: #fff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
+
+  a {
+    text-decoration: none !important;
+  }
 </style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -252,7 +256,6 @@ require_once  './actions/getEquity.php';
               <div>
                 <div class="table-responsive">
                   <table class="table table-striped" id="">
-                     <span class="text-success fw-bold">December, 2023</span>
                     <thead>
                       <tr>
                         <th>Description</th>
@@ -271,7 +274,7 @@ require_once  './actions/getEquity.php';
 
                       <?php foreach ($nonCurrentAssets as $asset): ?>
                         <tr class="main-row clickable-row"
-                          data-href="/jengopay/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['amount']) ?>"
+                          data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['account_id']) ?>"
                           style="cursor:pointer;">
                           <td><?= htmlspecialchars($asset['name']) ?></td>
                           <td class="d-flex justify-content-start">
@@ -308,7 +311,7 @@ require_once  './actions/getEquity.php';
                       </tr>
 
                       <?php foreach ($CurrentAssets as $asset): ?>
-                        <tr class="main-row clickable-row" style="cursor:pointer;">
+                        <tr class="main-row clickable-row" data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['account_id']) ?>" style="cursor:pointer;">
                           <td><?= htmlspecialchars($asset['name']) ?></td>
                           <td class="p-0">
                             <div class="d-flex justify-content-start">
@@ -365,7 +368,7 @@ require_once  './actions/getEquity.php';
                       </tr>
 
                       <?php foreach ($currentLiabilities as $liability): ?>
-                        <tr class="main-row clickable-row" style="cursor:pointer;">
+                        <tr class="main-row clickable-row" style="cursor:pointer;" data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($liability['account_id']) ?>">
                           <td><?= htmlspecialchars($liability['account_name']) ?></td>
                           <td class="p-0">
                             <div class="d-flex justify-content-start">
@@ -408,7 +411,7 @@ require_once  './actions/getEquity.php';
                       </tr>
 
                       <?php foreach ($nonCurrentLiabilities as $liability): ?>
-                        <tr class="main-row clickable-row" style="cursor:pointer;">
+                        <tr class="main-row clickable-row" data-href="/jengopay/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['amount']) ?>" style="cursor:pointer;">
                           <td><?= htmlspecialchars($liability['account_name']) ?></td>
                           <td class="p-0">
                             <div class="d-flex justify-content-start">
@@ -496,7 +499,7 @@ require_once  './actions/getEquity.php';
                           <div class="d-flex justify-content-start">
                             <div class="d-flex justify-content-end amount-box">
                               <?php
-                              $amount = (float)($owners_capital+ $retainedEarnings);
+                              $amount = (float)($owners_capital + $retainedEarnings);
                               $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
                               echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
                               ?>
@@ -544,18 +547,6 @@ require_once  './actions/getEquity.php';
   <!-- View announcements script -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script>
-    // Function to toggle the visibility of the overlay
-    function toggleOverlay() {
-      var overlay = document.getElementById('overlay');
-      // If overlay is hidden, show it
-      if (overlay.style.display === "none" || overlay.style.display === "") {
-        overlay.style.display = "flex";
-      } else {
-        overlay.style.display = "none";
-      }
-    }
-  </script>
 
 
   <script
@@ -578,17 +569,7 @@ require_once  './actions/getEquity.php';
 
   <!-- Js files -->
   <script src="../../../assets/main.js"></script>
-  <script type="module" src="./js/main.js"></script>
-
-  <!-- handle link to gl -->
-  <script>
-    document.addEventListener("click", function(e) {
-      const row = e.target.closest(".clickable-row");
-      if (row && row.dataset.href) {
-        window.location.href = row.dataset.href;
-      }
-    });
-  </script>
+  <!-- <script type="module" src="./js/main.js"></script> -->
 
   <script
     src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
@@ -596,6 +577,22 @@ require_once  './actions/getEquity.php';
     crossorigin="anonymous"></script>
 
   <!--end::Script-->
+
+  <!-- script to help you route to chat of accounts -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll("tr.clickable-row[data-href]").forEach(row => {
+        row.addEventListener("click", (e) => {
+          // If user clicks a link/button inside the row, let that work normally
+          if (e.target.closest("a, button, input, select, textarea, label")) return;
+
+          const href = row.getAttribute("data-href");
+          if (href) window.location.href = href;
+        });
+      });
+    });
+  </script>
+
 </body>
 <!--end::Body-->
 

@@ -40,11 +40,35 @@ try {
     }
 
     // -----------------------------
+    // Fetch name based on role
+    // -----------------------------
+    $name = '';
+    if ($user['role'] === 'landlord') {
+        // Fetch name from landlords table
+        $stmt = $pdo->prepare("SELECT first_name, second_name FROM landlords WHERE user_id = ?");
+        $stmt->execute([$user['id']]);
+        $landlord = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($landlord) {
+            $name = trim($landlord['first_name'] . ' ' . $landlord['second_name']);
+        }
+    } elseif ($user['role'] === 'provider') {
+        // Fetch name from service_providers table
+        $stmt = $pdo->prepare("SELECT name FROM service_providers WHERE user_id = ?");
+        $stmt->execute([$user['id']]);
+        $provider = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($provider) {
+            $name = $provider['name'];
+        }
+    }
+
+    // -----------------------------
     // Login successful
     // -----------------------------
     $_SESSION['user'] = [
         "id" => $user['id'],
-        "name" => $user['name'],
+        "name" => $name, // Set the name based on the role
         "role" => $user['role'] // server-side only
     ];
 

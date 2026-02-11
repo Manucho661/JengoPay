@@ -9,16 +9,13 @@
     <div class="menu-item">
         <span><i class="fas fa-users"></i> <a href="/Jengopay/landlord/pages/Buildings/all_tenants.php">Tenants</a> </span>
     </div>
+
+    <div class="menu-item">
+        <span>
+            <i class="fas fa-comments"></i> <a href="/Jengopay/landlord/pages/communications/inAppMessages.php">Communication</a>
+        </span>
+    </div>
     
-    <div class="menu-item" onclick="toggleSubmenu('communication')">
-        <span><i class="fas fa-comments"></i> Communication</span>
-        <i class="fas fa-chevron-down chevron" id="communication-chevron"></i>
-    </div>
-    <div class="submenu" id="communication-submenu">
-        <div class="submenu-item"> <a href="/Jengopay/landlord/pages/communications/inAppMessages.php"> In-app Messages</a></div>
-        <div class="submenu-item"><a href="/Jengopay/landlord/pages/communications/announcements/announcements.php">Announcements</a></div>
-        <div class="submenu-item">Emails</div>
-    </div>
     <div class="menu-item" onclick="toggleSubmenu('financials')">
         <span><i class="fas fa-dollar-sign"></i> Financials</span>
         <i class="fas fa-chevron-down chevron" id="financials-chevron"></i>
@@ -27,7 +24,6 @@
         <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/invoices/invoice.php">Invoices</a></div>
         <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/expenses/expenses.php">Expenses</a></div>
         <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/balanceSheet/balanceSheet.php">Balance Sheet</a></div>
-        <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/Rent.php">Rental Income</a></div>
         <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/cashflow/cashflow.php"> Cash flow</a></div>
         <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/profit&loss/profit&loss.php"> Profit&Loss</a></div>
     </div>
