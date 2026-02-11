@@ -26,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_unit'])) {
         if (!$buildingId) {
             throw new Exception("Building context missing.");
         }
-      
-        
+
+
         /*
         |--------------------------------------------------------------------------
         | PREVENT DUPLICATE UNIT
@@ -61,27 +61,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_unit'])) {
         $catStmt->execute([$category]);
         $unit_category_id = $catStmt->fetchColumn();
 
-        if (!$unit_category_id) {
-            $pdo->prepare("
-                INSERT INTO unit_categories (category_name, description, created_at)
-                VALUES (?, ?, NOW())
-            ")->execute([$category, ucfirst($category) . " unit"]);
-
-            $unit_category_id = $pdo->lastInsertId();
-        }
+        $pdo->prepare("
+            INSERT INTO unit_categories (category_name, created_at)
+            VALUES (?, NOW())
+        ")->execute([$category]);  // Only bind $category here
 
         /*
-        |--------------------------------------------------------------------------
-        | INSERT BUILDING UNIT
-        |--------------------------------------------------------------------------
-        */
-        var_export($landlord_id);
-        exit;
+|--------------------------------------------------------------------------
+| INSERT BUILDING UNIT
+|--------------------------------------------------------------------------
+*/
         $unitStmt = $pdo->prepare("
-            INSERT INTO building_units
-            (landlord_id, building_id, unit_category_id, unit_number, purpose, location, monthly_rent, occupancy_status, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
-        ");
+    INSERT INTO building_units
+    (landlord_id, building_id, unit_category_id, unit_number, purpose, location, monthly_rent, occupancy_status, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
+");
         $unitStmt->execute([
             $landlord_id,
             $buildingId,
@@ -93,92 +87,89 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_unit'])) {
             $_POST['occupancy_status']
         ]);
 
-        $building_unit_id = $pdo->lastInsertId();
+        // Now we can correctly assign $unit_id
+        $unit_id = $pdo->lastInsertId(); // Correctly assign the unit_id after insertion
 
-       /*
+        /*
 |--------------------------------------------------------------------------
 | INSERT RECURRING BILLS (USING ACCOUNT CODE ONLY)
 |--------------------------------------------------------------------------
 */
-if (!empty($_POST['account_code']) && is_array($_POST['account_code'])) {
+        if (!empty($_POST['account_code']) && is_array($_POST['account_code'])) {
 
-    $billStmt = $pdo->prepare("
+            $billStmt = $pdo->prepare("
         INSERT INTO recurring_bills
         (unit_id, bill_name, account_code, bill_name_other, quantity, unit_price, subtotal, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
     ");
 
-    foreach ($_POST['account_code'] as $i => $accountCode) {
+            foreach ($_POST['account_code'] as $i => $accountCode) {
 
-        if (empty($accountCode)) continue;
+                if (empty($accountCode)) continue;
 
-        $billOther = $_POST['bill_name_other'][$i] ?? null;
-        $qty       = floatval($_POST['quantity'][$i] ?? 0);
-        $price     = floatval($_POST['unit_price'][$i] ?? 0);
+                $billOther = $_POST['bill_name_other'][$i] ?? null;
+                $qty       = floatval($_POST['quantity'][$i] ?? 0);
+                $price     = floatval($_POST['unit_price'][$i] ?? 0);
 
-        if ($qty <= 0 || $price <= 0) continue;
+                if ($qty <= 0 || $price <= 0) continue;
 
-        $subtotal = $qty * $price;
+                $subtotal = $qty * $price;
 
-        $billStmt->execute([
-            $unit_id,
-            $accountCode,   // 👈 bill_name now stores account_code
-            $accountCode,   // 👈 account_code
-            $billOther,
-            $qty,
-            $price,
-            $subtotal
-        ]);
-    }
-}
+                // Now that $unit_id is properly assigned, execute the bill insert
+                $billStmt->execute([
+                    $unit_id,  // Now correctly passing the unit_id
+                    $accountCode,   // 👈 bill_name now stores account_code
+                    $accountCode,   // 👈 account_code
+                    $billOther,
+                    $qty,
+                    $price,
+                    $subtotal
+                ]);
+            }
+        }
+
 
         /*
         |--------------------------------------------------------------------------
         | CREATE RENT JOURNAL ENTRY
         |--------------------------------------------------------------------------
         */
-        $payment_method = $_POST['payment_method'] ?? 'cash';
-        $payment_date   = $_POST['payment_date'] ?? date('Y-m-d');
-        $monthly_rent   = floatval($_POST['monthly_rent']);
+        // $payment_method = $_POST['payment_method'] ?? 'cash';
+        // $payment_date   = $_POST['payment_date'] ?? date('Y-m-d');
+        // $monthly_rent   = floatval($_POST['monthly_rent']);
 
-        $cash_account = match ($payment_method) {
-            'mpesa' => 110,
-            'bank'  => 120,
-            default => 100,
-        };
+        // $cash_account = match ($payment_method) {
+        //     'mpesa' => 110,
+        //     'bank'  => 120,
+        //     default => 100,
+        // };
 
-        $entries = [
-            ['account_code' => $cash_account, 'debit' => $monthly_rent, 'credit' => 0],
-            ['account_code' => 500, 'debit' => 0, 'credit' => $monthly_rent],
-        ];
+        // $entries = [
+        //     ['account_code' => $cash_account, 'debit' => $monthly_rent, 'credit' => 0],
+        //     ['account_code' => 500, 'debit' => 0, 'credit' => $monthly_rent],
+        // ];
 
-        createJournalEntry(
-            $pdo,
-            $payment_date,
-            "Rent for Unit " . $_POST['unit_number'],
-            $entries
-        );
+        // createJournalEntry(
+        //     $pdo,
+        //     $payment_date,
+        //     "Rent for Unit " . $_POST['unit_number'],
+        //     $entries
+        // );
 
-        $pdo->commit();
+        // $pdo->commit();
 
-        echo "<script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'Unit, bills and accounting entry saved successfully!',
-            }).then(() => window.location='single_units.php');
-        </script>";
-        exit;
+        // $_SESSION['success'] =
+        //     "Single unit created successfully.";
 
+        // header('Location: single_units.php');
+        // exit;
     } catch (Exception $e) {
         if ($pdo->inTransaction()) $pdo->rollBack();
 
-        echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                html: '".addslashes($e->getMessage())."'
-            });
-        </script>";
+        $_SESSION['error'] =
+            'Failed to create the unit: ' . $e->getMessage();
+
+        header('Location: single_units.php');
+        exit;
     }
 }

@@ -19,6 +19,13 @@ require_once "./actions/startNewChat.php";
 
 include '../db/connect.php';
 
+try {
+  $stmt = $pdo->query("SELECT id, building_name, category FROM buildings ORDER BY building_name ASC");
+  $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+  echo "Error: " . $e->getMessage();
+}
+
 ?>
 
 

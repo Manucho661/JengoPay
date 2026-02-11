@@ -21,7 +21,7 @@
         <i class="fas fa-chevron-down chevron" id="financials-chevron"></i>
     </div>
     <div class="submenu" id="financials-submenu">
-        <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/invoices/invoice.php">Invoices</a></div>
+        <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/invoices/invoices.php">Invoices</a></div>
         <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/expenses/expenses.php">Expenses</a></div>
         <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/balanceSheet/balanceSheet.php">Balance Sheet</a></div>
         <div class="submenu-item"><a href="/Jengopay/landlord/pages/financials/cashflow/cashflow.php"> Cash flow</a></div>

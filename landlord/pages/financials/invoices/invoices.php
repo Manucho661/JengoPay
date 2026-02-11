@@ -1164,13 +1164,6 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   style="background-color:#00192D; color:#FFC107; padding: 3px 12px; font-size: 14px;">
                   <i class="fas fa-columns me-1"></i>Custom Column Filter
                 </button>
-
-
-                <!-- Filter Button -->
-                <!-- <button id="filterBtn" class="btn d-flex align-items-center rounded-pill"
-            style="background-color:#00192D; color:#FFC107; padding: 3px 12px; font-size: 14px;">
-        <i class="fas fa-filter me-1"></i>Filter
-        </button> -->
               </div>
 
               <!-- Active Filter Tags -->
@@ -1277,71 +1270,12 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
               // ----------------------------------------------------
               // 1) Fetch invoices with tenant details and payment summary - FIXED VERSION
               // ----------------------------------------------------
-              $stmt = $pdo->query("
-    SELECT
-        i.id,
-        i.invoice_no,
-        -- Get tenant name from tenants table
-        CONCAT(t.first_name, ' ', t.last_name) AS tenant_name,
-        COALESCE(t.phone, i.phone) AS tenant_phone,
-        COALESCE(t.email, i.email) AS tenant_email,
-        i.invoice_date,
-        i.due_date,
-        i.notes AS description,
-        COALESCE(i.subtotal, 0) AS subtotal,
-        COALESCE(i.total, 0) AS total,
-        COALESCE(i.taxes, 0) AS taxes,
-        i.status,
-        i.payment_status,
-        t.account_no AS account_no,
-        
-        -- Payment calculations
-        (SELECT COALESCE(SUM(p.amount), 0)
-         FROM payments p
-         WHERE p.invoice_id = i.id) AS paid_amount,
-        
-        -- Invoice items totals (alternative calculation)
-        (SELECT COALESCE(SUM(unit_price * quantity), 0) 
-         FROM invoice_items 
-         WHERE invoice_id = i.id) AS items_subtotal,
-        
-        (SELECT COALESCE(SUM(tax_amount), 0) 
-         FROM invoice_items 
-         WHERE invoice_id = i.id) AS items_taxes,
-        
-        (SELECT COALESCE(SUM(total_price), 0) 
-         FROM invoice_items 
-         WHERE invoice_id = i.id) AS items_total,
-        
-        -- Final display values (use items if they exist, otherwise use invoice totals)
-        CASE
-            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = i.id)
-            THEN (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_id = i.id)
-            ELSE i.subtotal
-        END AS display_subtotal,
-        
-        CASE
-            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = i.id)
-            THEN (SELECT COALESCE(SUM(tax_amount), 0) FROM invoice_items WHERE invoice_id = i.id)
-            ELSE i.taxes
-        END AS display_taxes,
-        
-        CASE
-            WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = i.id)
-            THEN (SELECT COALESCE(SUM(total_price), 0) FROM invoice_items WHERE invoice_id = i.id)
-            ELSE i.total
-        END AS display_total
-        
-    FROM invoice i
-    LEFT JOIN tenants t ON i.tenant_id = t.id
-    ORDER BY i.created_at DESC
-");
-              $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+              require_once "./action/getInvoices.php";
 
               if (empty($invoices)) {
                 echo '<div class="invoice-item text-center py-4">
-            <div class="col-12"><b>No invoice found!</b></div>
-          </div>';
+                <div class="col-12"><b>No invoice found!</b></div>
+              </div>';
               } else {
                 // ----------------------------------------------------
                 // 2) Output each invoice item
@@ -1534,31 +1468,10 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="invoice-list">
               <!-- Invoice Item -->
               <div class="invoice-item">
-
-
-                <!-- <div class="invoice-checkbox">
-                                <input type="checkbox">
-                            </div>
-                            <div class="invoice-number">INV-2023-005</div>
-                            <div class="invoice-customer">Umbrella Corp</div>
-                            <div class="invoice-date">May 25, 2023</div>
-                            <div class="invoice-amount">$1,980.00</div>
-                            <div class="invoice-status">
-                                <span class="status-badge status-pending">Pending</span>
-                            </div>
-                            <div class="invoice-actions">
-                                <button class="action-btn">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            </div> -->
               </div>
             </div>
           </div>
         </div>
-
-
-
-
         <!-- Create Invoice View (Hidden by default) -->
         <div id="create-invoice-view" style="display: none;">
           <input type="hidden" id="invoice-id" name="invoice_id">

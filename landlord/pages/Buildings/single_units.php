@@ -4,8 +4,16 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 
 require_once "../db/connect.php";
 
+$error   = $_SESSION['error'] ?? '';
+$success = $_SESSION['success'] ?? '';
+
+unset($_SESSION['error'], $_SESSION['success']);
 ?>
 
+<!-- Action scripts -->
+ <?php
+require_once "./actions/units/getSingleUnits.php";
+ ?>
 <?php
 if (isset($_POST['submit_reading'])) {
 
@@ -239,6 +247,39 @@ if (isset($_POST['submit_reading'])) {
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
+
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+
+        <?php if (!empty($error)): ?>
+            <div id="flashToastError"
+                class="toast align-items-center text-bg-danger border-0"
+                role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body small">
+                        <?= htmlspecialchars($error) ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($success)): ?>
+            <div id="flashToastSuccess"
+                class="toast align-items-center text-bg-success border-0"
+                role="alert" aria-live="polite" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body small">
+                        <?= htmlspecialchars($success) ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        <?php endif; ?>
+
+    </div>
+
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
 
@@ -269,24 +310,6 @@ if (isset($_POST['submit_reading'])) {
                 </div>
                 <button onclick="openVacateCanvas()">open off canvas</button>
                 <div class="row mb-4">
-                    <?php
-                    try {
-                        // Count Vacant
-                        $stmt = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE occupancy_status = 'Vacant'");
-                        $stmt->execute();
-                        $vacant = $stmt->fetchColumn();
-                        // Count Occupied
-                        $stmt = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE occupancy_status = 'Occupied'");
-                        $stmt->execute();
-                        $occupied = $stmt->fetchColumn();
-                        // Count Under Maintenance
-                        $stmt = $pdo->prepare("SELECT COUNT(*) FROM building_units WHERE occupancy_status = 'Under Maintenance'");
-                        $stmt->execute();
-                        $maintenance = $stmt->fetchColumn();
-                    } catch (PDOException $e) {
-                        echo "<div class='alert alert-danger'>Error: " . htmlspecialchars($e->getMessage()) . "</div>";
-                    }
-                    ?>
                     <div class="col-md-4 col-sm-6 col-12 d-flex">
                         <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
                             <div>
@@ -295,7 +318,7 @@ if (isset($_POST['submit_reading'])) {
                             </div>
                             <div>
                                 <p class="mb-0" style="font-weight: bold;">Vacant Units</p>
-                                <b><?= $vacant; ?></b>
+                                <b><?= $totalVacant ?></b>
                             </div>
                         </div>
                     </div>
@@ -307,7 +330,7 @@ if (isset($_POST['submit_reading'])) {
                             </div>
                             <div>
                                 <p class="mb-0" style="font-weight: bold;">Occupied Units</p>
-                                <b><?= htmlspecialchars($occupied); ?></b>
+                                <b><?= htmlspecialchars($totalUnderMaintenance); ?></b>
                             </div>
                         </div>
                     </div>
@@ -319,7 +342,7 @@ if (isset($_POST['submit_reading'])) {
                             </div>
                             <div>
                                 <p class="mb-0" style="font-weight: bold;">Under Maintenance</p>
-                                <b><?= htmlspecialchars($maintenance); ?></b>
+                                <b><?= htmlspecialchars($totalOccupied); ?></b>
                             </div>
                         </div>
                     </div>
@@ -1181,13 +1204,13 @@ if (isset($_POST['submit_reading'])) {
         </div>
     </div>
 
-<!-- open the vacate canvas -->
- <script>
-    function openVacateCanvas() {
-        console.log('yoyo');
-    }
- </script>
- 
+    <!-- open the vacate canvas -->
+    <script>
+        function openVacateCanvas() {
+            console.log('yoyo');
+        }
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
 
@@ -1250,6 +1273,29 @@ if (isset($_POST['submit_reading'])) {
     <!-- Scripts -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <!-- toast script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const successEl = document.getElementById("flashToastSuccess");
+            const errorEl = document.getElementById("flashToastError");
+
+            if (successEl && window.bootstrap) {
+                new bootstrap.Toast(successEl, {
+                    delay: 8000,
+                    autohide: true
+                }).show();
+            }
+
+            if (errorEl && window.bootstrap) {
+                new bootstrap.Toast(errorEl, {
+                    delay: 10000,
+                    autohide: true
+                }).show();
+            }
+        });
+    </script>
 </body>
 <!--end::Body-->
 

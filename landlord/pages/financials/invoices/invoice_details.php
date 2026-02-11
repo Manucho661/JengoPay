@@ -57,16 +57,18 @@ try {
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="Invoice Details" />
-    
+
     <!-- CSS Links -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../../assets/main.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../../../landlord/assets/main.css" />
+
 
     <style>
         .app-wrapper {
@@ -86,7 +88,7 @@ try {
             border-right: 2px solid #d0d0d0;
             overflow-y: auto;
         }
-        
+
         .soda-header {
             padding: 16px 20px;
             font-weight: 600;
@@ -96,23 +98,24 @@ try {
             align-items: center;
             background: #f8f9fa;
         }
-        
+
         .invoice-list {
             height: calc(100% - 60px);
             overflow-y: auto;
         }
-        
+
         .invoice-link {
             display: block;
             text-decoration: none;
             color: inherit;
             border-bottom: 1px solid #f3f3f3;
         }
-        
-        .invoice-link:hover, .invoice-link.active {
+
+        .invoice-link:hover,
+        .invoice-link.active {
             background: #f5f8ff;
         }
-        
+
         .invoice-item {
             display: flex;
             gap: 12px;
@@ -120,29 +123,29 @@ try {
             align-items: flex-start;
             cursor: pointer;
         }
-        
+
         .invoice-summary {
             flex: 1;
         }
-        
+
         .invoice-customer {
             font-weight: 600;
             margin-bottom: 2px;
             color: #00192D;
         }
-        
+
         .invoice-meta {
             font-size: 12px;
             color: #7a7a7a;
             margin-bottom: 4px;
         }
-        
+
         .invoice-amount {
             font-weight: 600;
             white-space: nowrap;
             color: #00192D;
         }
-        
+
         /* Status Badges */
         .status-badge {
             font-size: 11px;
@@ -154,15 +157,42 @@ try {
             display: inline-block;
             margin-right: 4px;
         }
-        
-        .badge-paid { background: #e8f5e9; color: #2e7d32; }
-        .badge-partial { background: #fff8e1; color: #ff8f00; }
-        .badge-unpaid { background: #ffebee; color: #c62828; }
-        .badge-sent { background: #e3f2fd; color: #1565c0; }
-        .badge-overdue { background: #ffebee; color: #c62828; }
-        .badge-cancelled { background: #eceff1; color: #546e7a; }
-        .badge-draft { background: #eceff1; color: #546e7a; }
-        
+
+        .badge-paid {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-partial {
+            background: #fff8e1;
+            color: #ff8f00;
+        }
+
+        .badge-unpaid {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .badge-sent {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .badge-overdue {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .badge-cancelled {
+            background: #eceff1;
+            color: #546e7a;
+        }
+
+        .badge-draft {
+            background: #eceff1;
+            color: #546e7a;
+        }
+
         /* RIGHT DETAILS PANE */
         .viewer {
             flex: 1;
@@ -170,7 +200,7 @@ try {
             padding: 24px;
             background: #fff;
         }
-        
+
         .placeholder {
             height: 100%;
             display: flex;
@@ -179,16 +209,16 @@ try {
             font-size: 18px;
             color: #9e9e9e;
         }
-        
+
         /* Invoice Card Styles */
         .invoice-card {
             background: white;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             position: relative;
         }
-        
+
         .diagonal-paid-label {
             position: absolute;
             top: 50%;
@@ -206,7 +236,7 @@ try {
             z-index: 10;
             white-space: nowrap;
         }
-        
+
         .diagonal-unpaid-label {
             position: absolute;
             top: 50%;
@@ -224,7 +254,7 @@ try {
             z-index: 10;
             white-space: nowrap;
         }
-        
+
         .diagonal-partially-paid-label {
             position: absolute;
             top: 50%;
@@ -242,44 +272,68 @@ try {
             z-index: 10;
             white-space: nowrap;
         }
-        
+
         .expense-logo {
             width: 150px;
             height: auto;
         }
-        
+
         .custom-th th {
             background-color: #00192D !important;
             color: white !important;
             font-size: small;
             border: 1px solid #FFC107 !important;
         }
-        
+
         .thick-bordered-table td {
             border: 1px solid #FFC107 !important;
+        }
+
+        a {
+            text-decoration: none !important;
         }
     </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-  <!--begin::App Wrapper-->
-  <div class="app-wrapper">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
 
-    <!--begin::Header-->
-    <?php
-    //  include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; 
-    ?>
-    <!--end::Header-->
+        <!--begin::Header-->
+        <?php
+        include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php';
+        ?>
+        <!--end::Header-->
 
-    <!--begin::Sidebar-->
-    <?php
-    // include_once '../../includes/sidebar.php';
-    ?>
-    <!--end::Sidebar-->
+        <!--begin::Sidebar Wrapper-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
+        <!--end::Sidebar-->
+
         <!--begin::App Main-->
-        <main class="app-main">
-            <div class="app-content-header">
-                <div class="container-fluid">
+        <main class="main">
+            <div class="container-fluid">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="/Jengopay/landlord/pages/financials/invoices/invoices.php" style="text-decoration: none;">Invoices</a>
+                        </li>
+                        <li class="breadcrumb-item active">Invoice details</li>
+                    </ol>
+                </nav>
+
+                <!--begin::first Row-->
+                <div class="row align-items-center mb-3">
+                    <div class="col-12 d-flex align-items-center">
+                        <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+                        <h3 class="mb-0 ms-3">Invoice details</h3>
+                    </div>
+                </div>
+
+                <!-- Second row -->
+                <div>
                     <div class="wrapper">
                         <!-- LEFT: LIST OF INVOICES -->
                         <aside class="soda">
@@ -297,9 +351,9 @@ try {
                                         $invoiceDate = $row['invoice_date'] ? date('d M Y', strtotime($row['invoice_date'])) : 'Not set';
                                         $dueDate = $row['due_date'] ? date('d M Y', strtotime($row['due_date'])) : 'Not set';
                                         $amount = isset($row['total']) ? number_format($row['total'], 2) : '0.00';
-                                        
+
                                         $status = $row['status'] ?? 'draft';
-                                        $statusClass = match(strtolower($status)) {
+                                        $statusClass = match (strtolower($status)) {
                                             'sent' => 'badge-sent',
                                             'paid' => 'badge-paid',
                                             'overdue' => 'badge-overdue',
@@ -307,9 +361,9 @@ try {
                                             default => 'badge-draft'
                                         };
                                         $statusText = ucfirst($status);
-                                        
+
                                         $paymentStatus = $row['payment_status'] ?? 'unpaid';
-                                        $paymentClass = match(strtolower($paymentStatus)) {
+                                        $paymentClass = match (strtolower($paymentStatus)) {
                                             'paid' => 'badge-paid',
                                             'partial' => 'badge-partial',
                                             default => 'badge-unpaid'
@@ -358,7 +412,7 @@ try {
                                 ");
                                 $info->execute([$id]);
                                 $inv = $info->fetch(PDO::FETCH_ASSOC);
-                                
+
                                 if (!$inv) {
                                     echo '<div class="placeholder">Invoice not found.</div>';
                                 } else {
@@ -384,12 +438,12 @@ try {
                                     } catch (Exception $e) {
                                         $items = [];
                                     }
-                                    
+
                                     $lineRows = '';
                                     $subTotal = 0;
                                     $vatTotal = 0;
                                     $grandTotal = 0;
-                                    
+
                                     if (!empty($items)) {
                                         foreach ($items as $item) {
                                             $qty = (float)$item['quantity'];
@@ -397,11 +451,11 @@ try {
                                             $tax = (float)$item['taxes'];
                                             $lineTotal = (float)$item['total'];
                                             $vatLabel = $item['tax_type'] ?? 'N/A';
-                                            
+
                                             $subTotal += $qty * $price;
                                             $vatTotal += $tax;
                                             $grandTotal += $lineTotal;
-                                            
+
                                             $lineRows .= "<tr>
                                                 <td>" . htmlspecialchars($item['account_name'] ?? 'N/A') . "</td>
                                                 <td>" . htmlspecialchars($item['description']) . "</td>
@@ -419,11 +473,11 @@ try {
                                         $grandTotal = (float)($inv['total'] ?? 0);
                                         $lineRows = "<tr><td colspan='7' class='text-center'>No line items found</td></tr>";
                                     }
-                                    
+
                                     $paymentStatus = strtolower($inv['payment_status'] ?? 'unpaid');
                                     $paymentLabelClass = '';
                                     $paymentLabelText = strtoupper($paymentStatus);
-                                    
+
                                     if ($paymentStatus === 'paid') {
                                         $paymentLabelClass = 'diagonal-paid-label';
                                     } elseif ($paymentStatus === 'partial') {
@@ -432,120 +486,120 @@ try {
                                         $paymentLabelClass = 'diagonal-unpaid-label';
                                     }
                                 ?>
-                                <div class="mb-3">
-                                    <button type="button" class="btn me-2" 
-                                            style="color: #FFC107; background-color: #00192D;" 
+                                    <div class="mb-3">
+                                        <button type="button" class="btn me-2"
+                                            style="color: #FFC107; background-color: #00192D;"
                                             onclick="printInvoice()">
-                                        <i class="bi bi-printer-fill"></i> Print Invoice
-                                    </button>
-                                    <button type="button" class="btn" 
-                                            style="color: #FFC107; background-color: #00192D;" 
+                                            <i class="bi bi-printer-fill"></i> Print Invoice
+                                        </button>
+                                        <button type="button" class="btn"
+                                            style="color: #FFC107; background-color: #00192D;"
                                             onclick="generatePDF()">
-                                        <i class="bi bi-download"></i> Download PDF
-                                    </button>
-                                </div>
-                                
-                                <div id="printArea">
-                                    <div class="invoice-card">
-                                        <!-- Header -->
-                                        <div class="d-flex justify-content-between align-items-start mb-3 position-relative" style="overflow: hidden;">
-                                            <div><img src="expenseLogo6.png" alt="JengoPay Logo" class="expense-logo"></div>
-                                            <div class="<?= $paymentLabelClass ?>"><?= $paymentLabelText ?></div>
-                                            <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
-                                                <strong>Silver Spoon Towers</strong><br>
-                                                50303 Nairobi, Kenya<br>
-                                                silver@gmail.com<br>
-                                                +254 700 123456
-                                            </div>
-                                        </div>
+                                            <i class="bi bi-download"></i> Download PDF
+                                        </button>
+                                    </div>
 
-                                        <!-- Invoice Info -->
-                                        <div class="row mb-4">
-                                            <div class="col-6">
-                                                <h6 class="mb-2"><strong><?= htmlspecialchars($inv['tenant_name'] ?? 'N/A') ?></strong></h6>
-                                                <div class="tenant-details">
-                                                    <?php if (!empty($inv['tenant_email'])): ?>
-                                                        <div><strong><?= htmlspecialchars($inv['tenant_email']) ?></strong></div>
-                                                    <?php else: ?>
-                                                        <div><strong>No email provided</strong></div>
-                                                    <?php endif; ?>
-                                                    <?php if (!empty($inv['tenant_phone'])): ?>
-                                                        <div><strong><?= htmlspecialchars($inv['tenant_phone']) ?></strong></div>
-                                                    <?php else: ?>
-                                                        <div><strong>No phone provided</strong></div>
-                                                    <?php endif; ?>
-                                                    <?php if (!empty($inv['account_no'])): ?>
-                                                        <p><strong>Account: <?= htmlspecialchars($inv['account_no']) ?></strong></p>
-                                                    <?php endif; ?>
+                                    <div id="printArea">
+                                        <div class="invoice-card">
+                                            <!-- Header -->
+                                            <div class="d-flex justify-content-between align-items-start mb-3 position-relative" style="overflow: hidden;">
+                                                <div><img src="expenseLogo6.png" alt="JengoPay Logo" class="expense-logo"></div>
+                                                <div class="<?= $paymentLabelClass ?>"><?= $paymentLabelText ?></div>
+                                                <div class="text-end" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px;">
+                                                    <strong>Silver Spoon Towers</strong><br>
+                                                    50303 Nairobi, Kenya<br>
+                                                    silver@gmail.com<br>
+                                                    +254 700 123456
                                                 </div>
                                             </div>
-                                            <div class="col-6 text-end">
-                                                <h3><strong><?= htmlspecialchars($inv['invoice_no']) ?></strong></h3>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mb-4 rounded-2 d-flex justify-content-between align-items-center"
-                                            style="border: 1px solid #FFC107; padding: 10px; background-color: #FFF4CC;">
-                                            <div class="d-flex flex-column">
-                                                <span class="mb-1"><b>Invoice Date</b></span>
-                                                <p class="m-0"><?= date('d/m/Y', strtotime($inv['invoice_date'])) ?></p>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="mb-1"><b>Due Date</b></span>
-                                                <p class="m-0"><?= date('d/m/Y', strtotime($inv['due_date'])) ?></p>
-                                            </div>
-                                            <div></div>
-                                        </div>
 
-                                        <!-- Items Table -->
-                                        <div class="table-responsive mb-4">
-                                            <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
-                                                <thead class="table">
-                                                    <tr class="custom-th">
-                                                        <th>Item</th>
-                                                        <th>Description</th>
-                                                        <th class="text-end">Qty</th>
-                                                        <th class="text-end">Unit Price</th>
-                                                        <th class="text-end">VAT</th>
-                                                        <th class="text-end">Taxes</th>
-                                                        <th class="text-end">Total</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?= $lineRows ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                        <!-- Totals -->
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div class="terms-box">
-                                                    <strong>Note:</strong><br>
-                                                    <?= !empty($inv['notes']) ? htmlspecialchars($inv['notes']) : 'Thank you for your business!' ?>
+                                            <!-- Invoice Info -->
+                                            <div class="row mb-4">
+                                                <div class="col-6">
+                                                    <h6 class="mb-2"><strong><?= htmlspecialchars($inv['tenant_name'] ?? 'N/A') ?></strong></h6>
+                                                    <div class="tenant-details">
+                                                        <?php if (!empty($inv['tenant_email'])): ?>
+                                                            <div><strong><?= htmlspecialchars($inv['tenant_email']) ?></strong></div>
+                                                        <?php else: ?>
+                                                            <div><strong>No email provided</strong></div>
+                                                        <?php endif; ?>
+                                                        <?php if (!empty($inv['tenant_phone'])): ?>
+                                                            <div><strong><?= htmlspecialchars($inv['tenant_phone']) ?></strong></div>
+                                                        <?php else: ?>
+                                                            <div><strong>No phone provided</strong></div>
+                                                        <?php endif; ?>
+                                                        <?php if (!empty($inv['account_no'])): ?>
+                                                            <p><strong>Account: <?= htmlspecialchars($inv['account_no']) ?></strong></p>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 text-end">
+                                                    <h3><strong><?= htmlspecialchars($inv['invoice_no']) ?></strong></h3>
                                                 </div>
                                             </div>
-                                            <div class="col-6">
-                                                <table class="table table-borderless table-sm text-end mb-0">
-                                                    <tr>
-                                                        <th>Subtotal:</th>
-                                                        <td>KES <?= number_format($subTotal, 2) ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>VAT (16%):</th>
-                                                        <td>KES <?= number_format($vatTotal, 2) ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Total Amount:</th>
-                                                        <td><strong>KES <?= number_format($grandTotal, 2) ?></strong></td>
-                                                    </tr>
+
+                                            <div class="mb-4 rounded-2 d-flex justify-content-between align-items-center"
+                                                style="border: 1px solid #FFC107; padding: 10px; background-color: #FFF4CC;">
+                                                <div class="d-flex flex-column">
+                                                    <span class="mb-1"><b>Invoice Date</b></span>
+                                                    <p class="m-0"><?= date('d/m/Y', strtotime($inv['invoice_date'])) ?></p>
+                                                </div>
+                                                <div class="d-flex flex-column">
+                                                    <span class="mb-1"><b>Due Date</b></span>
+                                                    <p class="m-0"><?= date('d/m/Y', strtotime($inv['due_date'])) ?></p>
+                                                </div>
+                                                <div></div>
+                                            </div>
+
+                                            <!-- Items Table -->
+                                            <div class="table-responsive mb-4">
+                                                <table class="table table-striped table-bordered rounded-2 table-sm thick-bordered-table">
+                                                    <thead class="table">
+                                                        <tr class="custom-th">
+                                                            <th>Item</th>
+                                                            <th>Description</th>
+                                                            <th class="text-end">Qty</th>
+                                                            <th class="text-end">Unit Price</th>
+                                                            <th class="text-end">VAT</th>
+                                                            <th class="text-end">Taxes</th>
+                                                            <th class="text-end">Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?= $lineRows ?>
+                                                    </tbody>
                                                 </table>
                                             </div>
+
+                                            <!-- Totals -->
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="terms-box">
+                                                        <strong>Note:</strong><br>
+                                                        <?= !empty($inv['notes']) ? htmlspecialchars($inv['notes']) : 'Thank you for your business!' ?>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <table class="table table-borderless table-sm text-end mb-0">
+                                                        <tr>
+                                                            <th>Subtotal:</th>
+                                                            <td>KES <?= number_format($subTotal, 2) ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>VAT (16%):</th>
+                                                            <td>KES <?= number_format($vatTotal, 2) ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Total Amount:</th>
+                                                            <td><strong>KES <?= number_format($grandTotal, 2) ?></strong></td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <hr>
+                                        <div class="text-center small text-muted">Thank you for your business!</div>
                                     </div>
-                                    <hr>
-                                    <div class="text-center small text-muted">Thank you for your business!</div>
-                                </div>
                                 <?php
                                 }
                                 ?>
@@ -555,11 +609,12 @@ try {
                 </div>
             </div>
         </main>
-        <!--end::App Main-->
+
 
         <!--begin::Footer-->
-     
-        <!-- end::footer -->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+        <!--end::Footer-->
+        
     </div>
     <!--end::App Wrapper-->
 
@@ -568,54 +623,63 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="../../js/adminlte.js"></script>
-    
+
     <script>
-    function generatePDF() {
-        const element = document.getElementById('printArea');
-        const printArea = element.cloneNode(true);
-        
-        // Remove the first column for cleaner PDF
-        let headers = printArea.querySelectorAll("table thead tr th");
-        if (headers.length > 0) {
-            headers[0].remove();
+        function generatePDF() {
+            const element = document.getElementById('printArea');
+            const printArea = element.cloneNode(true);
+
+            // Remove the first column for cleaner PDF
+            let headers = printArea.querySelectorAll("table thead tr th");
+            if (headers.length > 0) {
+                headers[0].remove();
+            }
+
+            let rows = printArea.querySelectorAll("table tbody tr");
+            rows.forEach(row => {
+                if (row.cells.length > 0) {
+                    row.deleteCell(0);
+                }
+            });
+
+            const opt = {
+                margin: 10,
+                filename: 'invoice_<?= isset($inv) ? htmlspecialchars($inv['invoice_no']) : 'invoice' ?>.pdf',
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait'
+                }
+            };
+
+            html2pdf().set(opt).from(printArea).save();
         }
 
-        let rows = printArea.querySelectorAll("table tbody tr");
-        rows.forEach(row => {
-            if (row.cells.length > 0) {
-                row.deleteCell(0);
+        function printInvoice() {
+            let printArea = document.getElementById("printArea").cloneNode(true);
+
+            // Remove the first column for printing
+            let headers = printArea.querySelectorAll("table thead tr th");
+            if (headers.length > 0) {
+                headers[0].remove();
             }
-        });
 
-        const opt = {
-            margin: 10,
-            filename: 'invoice_<?= isset($inv) ? htmlspecialchars($inv['invoice_no']) : 'invoice' ?>.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
+            let rows = printArea.querySelectorAll("table tbody tr");
+            rows.forEach(row => {
+                if (row.cells.length > 0) {
+                    row.deleteCell(0);
+                }
+            });
 
-        html2pdf().set(opt).from(printArea).save();
-    }
-
-    function printInvoice() {
-        let printArea = document.getElementById("printArea").cloneNode(true);
-
-        // Remove the first column for printing
-        let headers = printArea.querySelectorAll("table thead tr th");
-        if (headers.length > 0) {
-            headers[0].remove();
-        }
-
-        let rows = printArea.querySelectorAll("table tbody tr");
-        rows.forEach(row => {
-            if (row.cells.length > 0) {
-                row.deleteCell(0);
-            }
-        });
-
-        let printWindow = window.open("", "", "width=900,height=650");
-        printWindow.document.write(`
+            let printWindow = window.open("", "", "width=900,height=650");
+            printWindow.document.write(`
             <html>
             <head>
                 <title>Invoice Print</title>
@@ -629,8 +693,9 @@ try {
             </body>
             </html>
         `);
-        printWindow.document.close();
-    }
+            printWindow.document.close();
+        }
 
-</body>
-</html>
+        <
+        /body> < /
+        html >

@@ -4,6 +4,10 @@ require_once '../../db/connect.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 //  include_once 'includes/lower_right_popup_form.php';
 ?>
+<!-- actions -->
+<?php
+require_once './actions/getAllTenants.php'
+?>
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -217,7 +221,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
       <div class="container-fluid">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb" style="">
-            <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Home</a></li>
+            <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Buildings/buildings.php" style="text-decoration: none;">Buildings</a></li>
             <li class="breadcrumb-item active">Tenants</li>
           </ol>
         </nav>
@@ -232,59 +237,60 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
         <!-- Third Row: stats -->
         <div class="row g-3">
 
-          <!-- Total Requests -->
+          <!-- Total Tenants -->
           <div class="col-lg-3 col-md-6 d-flex">
             <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
               <div>
-                <i class="bi bi-clipboard-check fs-1 me-3 text-warning"></i>
+                <i class="bi bi-people-fill fs-1 me-3 text-warning"></i>
               </div>
               <div>
-                <p class="mb-0" style="font-weight: bold;">Total Requests</p>
-                <b></b>
+                <p class="mb-0" style="font-weight: bold;">Total Tenants</p>
+                <b><?= $tenantCount ?></b>
               </div>
             </div>
           </div>
 
-          <!-- Open -->
+          <!-- Single Units -->
           <div class="col-lg-3 col-md-6 d-flex">
             <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
               <div>
-                <i class="bi bi-hourglass-split fs-1 me-3 text-warning"></i>
+                <i class="bi bi-house-door-fill fs-1 me-3 text-warning"></i>
               </div>
               <div>
-                <p class="mb-0" style="font-weight: bold;">Open</p>
-                <b></b>
+                <p class="mb-0" style="font-weight: bold;">In Single Units</p>
+                <b><?= $singleUnitTenants ?></b>
               </div>
             </div>
           </div>
 
-          <!-- Completed -->
+          <!-- Bed Sitters -->
           <div class="col-lg-3 col-md-6 d-flex">
             <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
               <div>
-                <i class="bi bi-check-circle-fill fs-1 me-3 text-warning"></i>
+                <i class="bi bi-door-closed-fill fs-1 me-3 text-warning"></i>
               </div>
               <div>
-                <p class="mb-0" style="font-weight: bold;">Completed</p>
-                <b></b>
+                <p class="mb-0" style="font-weight: bold;">In Bed Sitters</p>
+                <b><?= $bedSitterTenants ?></b>
               </div>
             </div>
           </div>
 
-          <!-- Closed -->
+          <!-- Multi Rooms -->
           <div class="col-lg-3 col-md-6 d-flex">
             <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
               <div>
-                <i class="bi bi-x-circle-fill fs-1 me-3 text-warning"></i>
+                <i class="bi bi-building-fill fs-1 me-3 text-warning"></i>
               </div>
               <div>
-                <p class="mb-0" style="font-weight: bold;">Closed</p>
-                <b></b>
+                <p class="mb-0" style="font-weight: bold;">In Multi Rooms</p>
+                <b><?= $multiRoomTenants ?></b>
               </div>
             </div>
           </div>
 
         </div>
+
 
         <div class="row mb-3 mt-3">
           <div class="col-md-12">
@@ -294,16 +300,16 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
                   Units
                 </h6>
                 <a class="action-link allUnits-link" style="text-decoration: none;">
-                  <i class="fas fa-th"></i> All Tenants (40)
+                  <i class="fas fa-th"></i> All Tenants
                 </a>
                 <a href="single_units_tenants.php" class="action-link" style="text-decoration: none;">
-                  <i class="fas fa-door-open"></i> Single Units (50)
+                  <i class="fas fa-door-open"></i> Single Units
                 </a>
                 <a href="bed_sitter_units.php" class="action-link" style="text-decoration: none;">
-                  <i class="fas fa-bed"></i> Bedsitter Units (80)
+                  <i class="fas fa-bed"></i> Bedsitter Units
                 </a>
                 <a href="multi_room_units.php" class="action-link" style="text-decoration: none;">
-                  <i class="fas fa-door-closed"></i> Multi-Room Units (70)
+                  <i class="fas fa-door-closed"></i> Multi-Room Units
                 </a>
               </div>
             </div>
@@ -393,35 +399,6 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
         </div>
         <div class="row">
           <div class="col-12">
-            <?php
-            try {
-              $sql = "
-                        SELECT
-                            t.*,
-                            tn.move_in_date,
-                            tn.created_at AS tenancy_created_at,
-
-                            bu.unit_number,
-                            b.building_name
-                        FROM tenants t
-                        INNER JOIN tenancies tn
-                            ON tn.tenant_id = t.id
-                        LEFT JOIN building_units bu
-                            ON bu.id = tn.unit_id
-                        LEFT JOIN buildings b
-                            ON b.id = bu.building_id
-                        WHERE tn.status = 'Active'
-                        ORDER BY t.created_at ASC, t.tenant_reg DESC
-                    ";
-
-              $stmt = $pdo->prepare($sql);
-              $stmt->execute();
-              $allTenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
-              $tenantCount = count($allTenants);
-            } catch (PDOException $e) {
-              die("Database Error: " . $e->getMessage());
-            }
-            ?>
             <div class="card border-0 ">
               <div class="card-header" style="background-color: #00192D; color:#fff;">
                 <b>All tenants (<span class="text-warning"><?= $tenantCount ?></span>)</b>
@@ -439,7 +416,6 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
                         <th>Contacts</th>
                         <th>Identification</th>
                         <th>Move In</th>
-
                         <th>Status</th>
                         <th>Action</th>
                       </tr>

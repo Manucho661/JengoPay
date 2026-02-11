@@ -131,14 +131,14 @@ if (isset($_POST['submit_building'])) {
 
         $building_id = $pdo->lastInsertId();
 
-        $_SESSION['success'] =
-            "Maintenance request submitted successfully.";
+        $_SESSION['success'] = "Building created successfully.";
+
 
         header('Location: ' . $_SERVER['REQUEST_URI']);
         exit;
     } catch (PDOException $e) {
         $_SESSION['error'] =
-            'Failed to submit maintenance request: ' . $e->getMessage();
+            'Failed to create building: ' . $e->getMessage();
 
         header('Location: ' . $_SERVER['REQUEST_URI']);
         exit;

@@ -18,9 +18,9 @@ if (isset($_GET['add_bed_sitter']) && !empty($_GET['add_bed_sitter'])) {
                 $structure_type = $row['structure_type'];
                 $floors_no = $row['floors_no'];
                 $no_of_units = $row['no_of_units'];
-                $building_type = $row['building_type'];
+                $category = $row['category'];
                 $tax_rate = $row['tax_rate'];
-                $ownership_info = $row['ownership_info'];
+                $ownership_mode = $row['ownership_mode'];
                 $first_name = $row['first_name'];
                 $last_name = $row['last_name'];
                 $id_number = $row['id_number'];
@@ -83,27 +83,35 @@ if (isset($_POST['submit_unit'])) {
         if (!$buildingId) {
             throw new Exception('Invalid building context.');
         }
-        $check = $pdo->prepare("SELECT COUNT(*) FROM bedsitter_units WHERE unit_number = :unit_number AND building_link = :building_link");
+
+        // Check for duplicate unit in building_units table
+        $check = $pdo->prepare("
+        SELECT COUNT(*)
+        FROM building_units
+        WHERE unit_number = :unit_number
+          AND building_id = :building_id
+    ");
+
         $check->execute([
-            ':unit_number'   => $_POST['unit_number'],
-            ':building_link' => $_POST['building_link']
+            ':unit_number' => $_POST['unit_number'],
+            ':building_id' => $buildingId
         ]);
 
         if ($check->fetchColumn() > 0) {
-            // Check if Duplicate found
             echo "
-                                            <script>
-                                                Swal.fire({
-                                                    title: 'Warning!',
-                                                    text: 'No double submission of data: this unit already exists in the Database.',
-                                                    icon: 'warning',
-                                                    confirmButtonText: 'OK'
-                                                }).then(() => {
-                                                    window.history.back();
-                                                });
-                                            </script>";
+            <script>
+                Swal.fire({
+                    title: 'Warning!',
+                    text: 'No double submission of data: this unit already exists in the Database.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.history.back();
+                });
+            </script>";
             exit;
         }
+
         // Start transaction
         $pdo->beginTransaction();
 
@@ -111,10 +119,10 @@ if (isset($_POST['submit_unit'])) {
         // Get unit_category_id (bed_sitter_unit)
         // --------------------------------------------------
         $sql = "
-                                        SELECT id 
-                                        FROM unit_categories 
-                                        WHERE category_name = :category_name 
-                                        LIMIT 1
+                    SELECT id 
+                    FROM unit_categories 
+                    WHERE category_name = :category_name 
+                    LIMIT 1
                                     ";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -151,7 +159,7 @@ if (isset($_POST['submit_unit'])) {
             ':monthly_rent' => $_POST['monthly_rent'],
             ':occupancy_status' => $_POST['occupancy_status']
         ]);
-        
+
         // Get inserted unit_id from bedsitter units. This will be used to initiate recurring bills on the foreign key unit_id
         $unit_id = $pdo->lastInsertId();
 

@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
         $pdo->commit();
 
-        header("Location: /jengopay/landlord/pages/financials/invoices/invoice.php?success=1");
+        header("Location: /jengopay/landlord/pages/financials/invoices/invoices.php?success=1");
         exit;
     } catch (Exception $e) {
         $pdo->rollBack();
@@ -1055,18 +1055,10 @@ if (isset($_GET['invoice']) && !empty($_GET['invoice'])) {
                 </form>
             </div>
             <div class="offcanvas-backdrop" id="addItemDrawerBackdrop" onclick="closeAddItemDrawer()"></div>
- </div>
-            <!-- /.content -->
-            <!-- Help Pop Up Form -->
+        </main>
             <!--begin::Footer-->
             <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
             <!-- end footer -->
-
-   
-    <!-- /.content-wrapper -->
-
-    <!-- Footer -->
-
 
     </div>
     <!-- ./wrapper -->

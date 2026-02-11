@@ -343,7 +343,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/ba
                     <i class="bi bi-cash-stack fs-1 me-3 text-warning"></i>
                   </div>
                   <div>
-                    <p class="mb-0" style="font-weight: bold;">Monthly Revenue</p>
+                    <p class="mb-0" style="font-weight: bold;">KSH</p>
                     <?php
                     $value = (float)$retainedEarnings;
                     $isNegative = $value < 0;

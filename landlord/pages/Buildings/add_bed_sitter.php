@@ -251,7 +251,7 @@ require_once "./actions/units/add_bed_sitter_unit.php";
                             </div>
                             <div>
                                 <p class="mb-0" style="font-weight: bold;">Building Type</p>
-                                <h3><?= htmlspecialchars($building_type); ?></h3>
+                                <h3><?= htmlspecialchars($category); ?></h3>
                             </div>
                         </div>
                     </div>

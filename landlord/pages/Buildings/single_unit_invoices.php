@@ -1,4 +1,3 @@
-
 <?php
 
 require_once "../db/connect.php";
@@ -174,32 +173,31 @@ require_once "../db/connect.php";
 
         <!--begin::App Main-->
         <main class="main">
-            <div class="content-wrapper">
-                <!-- Main content -->
-                <section class="content">
-                    <div class="container-fluid">
-                        <div class="card shadow">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card border-0">
                             <div class="card-header" style="background-color: #00192D; color: #fff;">
                                 <b>All Invoices</b>
                             </div>
                             <div class="card-body">
                                 <?php
-                                include_once 'processes/encrypt_decrypt_function.php';
-                                // FETCH ALL INVOICES
-                                $sql = "SELECT 
-                                id,
-                                invoice_no,
-                                receiver,
-                                invoice_date,
-                                due_date,
-                                payment_status,
-                                final_total,
-                                created_at
-                            FROM single_units_invoice
-                            ORDER BY id DESC";
+                                    include_once 'processes/encrypt_decrypt_function.php';
+                                    // FETCH ALL INVOICES
+                                    $sql = "SELECT 
+                                    id,
+                                    invoice_no,
+                                    receiver,
+                                    invoice_date,
+                                    due_date,
+                                    payment_status,
+                                    final_total,
+                                    created_at
+                                    FROM single_units_invoice
+                                    ORDER BY id DESC";
 
-                                $stmt = $pdo->prepare($sql);
-                                $stmt->execute();
+                                        $stmt = $pdo->prepare($sql);
+                                        $stmt->execute();
                                 ?>
                                 <table id="dataTable" class="table table-stripped shadow">
                                     <thead>
@@ -253,42 +251,29 @@ require_once "../db/connect.php";
                             </div>
                         </div>
                     </div>
-                </section>
-
-                <!-- /.content -->
-
-                <!-- Help Pop Up Form -->
-
+                </div>
             </div>
-            <!-- /.content-wrapper -->
-
-            <!-- Footer -->
-
-
+        </main>
+        <!--end::App Main-->
     </div>
-    <!-- ./wrapper -->
+    <!--end::App Wrapper-->
     <!-- Required Scripts -->
-    <?php include_once '../includes/required_scripts.php'; ?>
-    <!-- Meter Readings JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?php
+    // include_once '../includes/required_scripts.php'; 
+    ?>
 
-
-    </div>
-    </main>
-    <!--end::App Main-->
 
     <!--begin::Footer-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
     <!-- end footer -->
 
-    </div>
-    <!--end::App Wrapper-->
 
     <!-- plugin for pdf -->
 
 
     <!-- Main Js File -->
-    <script src="../../js/adminlte.js"></script>
+     <!-- Meter Readings JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/main.js"></script>
     <!-- html2pdf depends on html2canvas and jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
