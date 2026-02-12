@@ -11,9 +11,9 @@ unset($_SESSION['error'], $_SESSION['success']);
 ?>
 
 <!-- Action scripts -->
- <?php
+<?php
 require_once "./actions/units/getSingleUnits.php";
- ?>
+?>
 <?php
 if (isset($_POST['submit_reading'])) {
 
@@ -284,7 +284,9 @@ if (isset($_POST['submit_reading'])) {
     <div class="app-wrapper">
 
         <!--begin::Header-->
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; ?>
+        <?php
+         include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; 
+        ?>
         <!--end::Header-->
 
         <!--begin::Sidebar-->
@@ -308,8 +310,8 @@ if (isset($_POST['submit_reading'])) {
                         <h3 class="mb-0 ms-3">Single units</h3>
                     </div>
                 </div>
-                <button onclick="openVacateCanvas()">open off canvas</button>
                 <div class="row mb-4">
+                    
                     <div class="col-md-4 col-sm-6 col-12 d-flex">
                         <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
                             <div>
@@ -1204,10 +1206,22 @@ if (isset($_POST['submit_reading'])) {
         </div>
     </div>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/main.js"></script>
+    <script src="../../../landlord/assets/main.js"></script>
+
+
+    <script type="module" src="./js/main.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- open the vacate canvas -->
     <script>
         function openVacateCanvas() {
             console.log('yoyo');
+            const offcanvas = new bootstrap.Offcanvas(document.getElementById('vacateOffcanvas'));
+            offcanvas.show();
         }
     </script>
 
@@ -1256,23 +1270,8 @@ if (isset($_POST['submit_reading'])) {
     <!-- plugin for pdf -->
     <!-- Main Js File -->
     <!-- Meter Readings JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../../js/adminlte.js"></script>
-    <script src="js/main.js"></script>
-    <script src="../../../landlord/assets/main.js"></script>
-
-    <!-- html2pdf depends on html2canvas and jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script type="module" src="./js/main.js"></script>
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
-    <!-- pdf download plugin -->
 
 
-    <!-- Scripts -->
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 
     <!-- toast script -->

@@ -275,7 +275,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/ba
       /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); */
       margin-bottom: 20px;
     }
-    a{
+
+    a {
       text-decoration: none;
     }
   </style>
@@ -432,48 +433,46 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/ba
                   <h5><i class="fas fa-building me-2"></i>Recent Properties</h5>
 
                   <div class="scrollable-content">
-                    <div class="property-item">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <h6 class="mb-1">Sunset Apartments #12</h6>
-                          <small class="text-muted">2 Bed, 1 Bath • $1,200/mo</small>
-                        </div>
-                        <span class="badge badge-occupied">Occupied</span>
-                      </div>
-                    </div>
+                    <?php if (!empty($lastBuildings)): ?>
 
-                    <div class="property-item">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <h6 class="mb-1">Oak Street House</h6>
-                          <small class="text-muted">3 Bed, 2 Bath • $1,850/mo</small>
+                      <?php foreach ($lastBuildings as $building): ?>
+                        <div class="property-item">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                              <h6 class="mb-1"><?= htmlspecialchars($building['building_name']) ?></h6>
+                              <small class="text-muted">Recently added property</small>
+                            </div>
+                            <span class="badge badge-occupied">Active</span>
+                          </div>
                         </div>
-                        <span class="badge badge-vacant">Vacant</span>
-                      </div>
-                    </div>
+                      <?php endforeach; ?>
 
-                    <div class="property-item">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <h6 class="mb-1">Riverside Loft #5</h6>
-                          <small class="text-muted">1 Bed, 1 Bath • $950/mo</small>
-                        </div>
-                        <span class="badge badge-occupied">Occupied</span>
-                      </div>
-                    </div>
+                    <?php else: ?>
 
-                    <div class="property-item">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <h6 class="mb-1">Downtown Studio #203</h6>
-                          <small class="text-muted">Studio • $800/mo</small>
-                        </div>
-                        <span class="badge badge-occupied">Occupied</span>
+                      <div class="text-center py-5">
+                        <i class="fas fa-building fa-2x mb-3 text-muted"></i>
+                        <h6 class="mb-2">No properties found</h6>
+                        <p class="text-muted small mb-3">
+                          Get started by adding your first property.
+                        </p>
+                        <a href="add_property.php" class="btn btn-primary btn-sm">
+                          Add Property
+                        </a>
                       </div>
-                    </div>
+
+                    <?php endif; ?>
                   </div>
 
-                  <button class="btn btn-outline-primary btn-sm mt-3 w-100">View All Properties</button>
+                  <?php if (!empty($lastBuildings)): ?>
+                    <a href="properties.php" class="actionBtn">
+                      View All Properties
+                    </a>
+                  <?php else: ?>
+                    <a href="add_property.php" class="actionBtn">
+                      Add Property
+                    </a>
+                  <?php endif; ?>
+
                 </div>
               </div>
 
@@ -483,46 +482,81 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/ba
                   <h5><i class="fas fa-tools me-2"></i>Recent Maintenance Requests</h5>
 
                   <div class="scrollable-content">
-                    <div class="maintenance-item urgent">
-                      <div class="d-flex justify-content-between">
-                        <div>
-                          <h6 class="mb-1">Water Leak - Urgent</h6>
-                          <small class="text-muted">Maple Street #8 • Sarah Johnson</small>
-                          <p class="mb-0 mt-2">Bathroom ceiling leaking water</p>
-                        </div>
-                        <span class="badge bg-danger">Urgent</span>
-                      </div>
-                      <small class="text-muted">2 hours ago</small>
-                    </div>
 
-                    <div class="maintenance-item normal">
-                      <div class="d-flex justify-content-between">
-                        <div>
-                          <h6 class="mb-1">HVAC Not Heating</h6>
-                          <small class="text-muted">Oak Street House • Mike Davis</small>
-                          <p class="mb-0 mt-2">Heater not producing warm air</p>
-                        </div>
-                        <span class="badge bg-warning text-dark">Normal</span>
-                      </div>
-                      <small class="text-muted">5 hours ago</small>
-                    </div>
+                    <?php if (!empty($lastMaintenanceRequests)): ?>
 
-                    <div class="maintenance-item low">
-                      <div class="d-flex justify-content-between">
-                        <div>
-                          <h6 class="mb-1">Lightbulb Replacement</h6>
-                          <small class="text-muted">Sunset Apt #3 • Emma Wilson</small>
-                          <p class="mb-0 mt-2">Kitchen light bulb needs replacement</p>
+                      <?php foreach ($lastMaintenanceRequests as $request): ?>
+                        <div class="maintenance-item">
+                          <div class="d-flex justify-content-between">
+                            <div>
+                              <h6 class="mb-1"><?= htmlspecialchars($request['title'] ?? 'Maintenance Request') ?></h6>
+                              <small class="text-muted">
+                                <?= htmlspecialchars($request['building_name'] ?? 'Building') ?>
+                                • Unit <?= htmlspecialchars($request['unit_number'] ?? '-') ?>
+                              </small>
+                              <p class="mb-0 mt-2">
+                                Status: <?= htmlspecialchars($request['status'] ?? 'Pending') ?>
+                              </p>
+                            </div>
+                            <span class="badge bg-secondary">
+                              <?= htmlspecialchars($request['status'] ?? 'Pending') ?>
+                            </span>
+                          </div>
+                          <small class="text-muted">
+                            <?= htmlspecialchars($request['created_at']) ?>
+                          </small>
                         </div>
-                        <span class="badge bg-success">Low</span>
-                      </div>
-                      <small class="text-muted">1 day ago</small>
-                    </div>
+                      <?php endforeach; ?>
+
+                    <?php else: ?>
+
+                      <?php if (!empty($lastBuildings)): ?>
+                        <!-- Buildings exist but no requests -->
+                        <div class="text-center py-5">
+                          <i class="fas fa-tools fa-2x mb-3 text-muted"></i>
+                          <h6 class="mb-2">No maintenance requests yet</h6>
+                          <p class="text-muted small mb-3">
+                            Maintenance requests will appear here once created.
+                          </p>
+                        </div>
+                      <?php else: ?>
+                        <!-- No buildings at all -->
+                        <div class="text-center py-5">
+                          <i class="fas fa-building fa-2x mb-3 text-muted"></i>
+                          <h6 class="mb-2">No buildings created</h6>
+                          <p class="text-muted small mb-3">
+                            Maintenance requests can only be submitted after creating buildings.
+                          </p>
+                          <a href="add_property.php" class="btn btn-primary btn-sm">
+                            Add Property
+                          </a>
+                        </div>
+                      <?php endif; ?>
+
+                    <?php endif; ?>
+
                   </div>
 
-                  <button class="btn btn-outline-primary btn-sm mt-3 w-100">View All Requests</button>
+                  <!-- Bottom Button Logic -->
+                  <?php if (!empty($lastMaintenanceRequests)): ?>
+                    <a href="maintenance_requests.php" class="btn btn-outline-primary btn-sm mt-3 w-100">
+                      View All Requests
+                    </a>
+
+                  <?php elseif (!empty($lastBuildings)): ?>
+                    <a href="create_request.php" class="btn btn-outline-primary btn-sm mt-3 w-100">
+                      Create Maintenance Request
+                    </a>
+
+                  <?php else: ?>
+                    <a href="add_property.php" class="btn btn-primary btn-sm mt-3 w-100">
+                      Add Property First
+                    </a>
+                  <?php endif; ?>
+
                 </div>
               </div>
+
             </div>
           </div>
         </div>
