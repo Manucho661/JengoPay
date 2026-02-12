@@ -3,25 +3,7 @@ session_start();
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 require_once '../../db/connect.php';
 
- require_once "actions/getOperatingActivities.php";
-// require_once  "actions/operatingInflow.php";
-// require_once "actions/investingInflow.php";
-// require_once "actions/investingOutflow.php";
-// require_once "actions/financiangInflow.php";
-// require_once "actions/financingOutflow.php";
-
-// $openingBalance = "";
-
-// $TotalInflows = $totalTenantDeposits + $cumulativeOperatingInflow + $totalInvestingOutflows + $totalFinancingInflows;
-// $TotalOutflows = $cumulativeOutflow + $totalInvestingOutflows + $totalFinancingOutflows;
-
-// $netCash = $TotalInflows - $TotalOutflows;
-
-// // Now format for display (not before calculations)
-// $TotalInflows = number_format($TotalInflows, 2);
-// $TotalOutflows = number_format($TotalOutflows, 2);
-// $netCash = number_format($netCash, 2);
-
+require_once "actions/getOperatingActivities.php";
 ?>
 
 
@@ -286,14 +268,26 @@ require_once '../../db/connect.php';
                                 <tableheader>
                                     <div>
                                         <h1>Emmanuel Properties Ltd. — Cash Flow Statement</h1>
-                                        <p>For the month of November 2025 (KES)</p>
+                                        <p>For the month of <?= date('F Y') ?> (KES)</p>
                                     </div>
+
                                     <div style="text-align:right">
-                                        <p style="font-weight:700" class="mb-2">Opening Cash Balance: <span style="color:#ffffff">KSH <?= $openingCash ?></p>
-                                        <p style="font-weight:700">Net Cash Movement: <span style="color:#ffffff"></span></p>
-                                        <p style="font-size:12px;margin-top:6px;opacity:0.9">Generated: Nov 12, 2025</p>
+                                        <p style="font-weight:700" class="mb-2">
+                                            Opening Cash Balance:
+                                            <span style="color:#ffffff">KSH <?= number_format($openingCash, 2) ?></span>
+                                        </p>
+
+                                        <p style="font-weight:700">
+                                            Net Cash Movement:
+                                            <span style="color:#ffffff"><?= number_format($netCashMovement ?? 0, 2) ?></span>
+                                        </p>
+
+                                        <p style="font-size:12px;margin-top:6px;opacity:0.9">
+                                            Generated: <?= date('M d, Y H:i') ?>
+                                        </p>
                                     </div>
                                 </tableheader>
+
 
                                 <table aria-describedby="cf-note">
                                     <caption>Cash flows grouped by activity</caption>
@@ -311,9 +305,9 @@ require_once '../../db/connect.php';
                                         <!-- inflow -->
                                         <?php foreach ($operatingInflows as $inflow): ?>
                                             <tr>
-                                            <td><?= htmlspecialchars($inflow['item_type']) ?></td>
-                                            <td class="right"><?= number_format($inflow['total_amount'], 2) ?></td>
-                                            <td class="right">&mdash;</td>
+                                                <td><?= htmlspecialchars($inflow['item_type']) ?></td>
+                                                <td class="right"><?= number_format($inflow['total_amount'], 2) ?></td>
+                                                <td class="right">&mdash;</td>
                                             </tr>
                                         <?php endforeach; ?>
 
@@ -327,9 +321,9 @@ require_once '../../db/connect.php';
                                         <!-- outflow -->
                                         <?php foreach ($operatingOutflows as $outflow): ?>
                                             <tr>
-                                            <td><?= htmlspecialchars($outflow['item_type']) ?></td>
-                                            <td class="right">&mdash;</td>
-                                            <td class="right"><?= number_format($outflow['total_amount'], 2) ?></td>
+                                                <td><?= htmlspecialchars($outflow['item_type']) ?></td>
+                                                <td class="right">&mdash;</td>
+                                                <td class="right"><?= number_format($outflow['total_amount'], 2) ?></td>
                                             </tr>
                                         <?php endforeach; ?>
 
@@ -338,7 +332,7 @@ require_once '../../db/connect.php';
                                             <td>Net Cash from Operating Activities</td>
                                             <td class="right positive"></td>
                                             <td class="right">
-                                                
+
                                             </td>
                                         </tr>
 
@@ -347,21 +341,21 @@ require_once '../../db/connect.php';
                                             <td colspan="3">Investing Activities</td>
                                         </tr>
                                         <!-- outflow -->
-                                        
-                                            <tr>
-                                                <td></td>
-                                                <td class="right">&mdash;</td>
-                                                <td class="right"></td>
-                                            </tr>
-                                        
+
+                                        <tr>
+                                            <td></td>
+                                            <td class="right">&mdash;</td>
+                                            <td class="right"></td>
+                                        </tr>
+
                                         <!-- inflow -->
-                                        
-                                            <tr>
-                                                <td></td>
-                                                <td class="right">&mdash;</td>
-                                                <td class="right"></td>
-                                            </tr>
-                                        
+
+                                        <tr>
+                                            <td></td>
+                                            <td class="right">&mdash;</td>
+                                            <td class="right"></td>
+                                        </tr>
+
                                         <tr class="total-row">
                                             <td>Net Cash from Investing Activities</td>
                                             <td class="right"></td>
@@ -372,24 +366,24 @@ require_once '../../db/connect.php';
                                             <td colspan="3">Financing Activities</td>
                                         </tr>
                                         <!-- outflow -->
-                                        
-                                            <tr>
-                                                <td></td>
-                                                <td class="right">&mdash;</td>
-                                                <td class="right"></td>
-                                            </tr>
-                                        
-                                        
-                                            <tr>
-                                                <td></td>
-                                                <td class="right">&mdash;</td>
-                                                <td class="right"></td>
-                                            </tr>
-                                        
+
+                                        <tr>
+                                            <td></td>
+                                            <td class="right">&mdash;</td>
+                                            <td class="right"></td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td></td>
+                                            <td class="right">&mdash;</td>
+                                            <td class="right"></td>
+                                        </tr>
+
 
                                         <tr class="total-row">
                                             <td>Net Cash from Financing Activities</td>
-                                            <td class="right positive">  </td>
+                                            <td class="right positive"> </td>
                                             <td class="right"></td>
                                         </tr>
                                         <!-- Totals -->
@@ -402,7 +396,7 @@ require_once '../../db/connect.php';
                                             <td>Total Net Movement</td>
                                             <td class="right"></td>
                                             <td class="right">
-                                                
+
                                             </td>
                                         </tr>
                                         <tr>

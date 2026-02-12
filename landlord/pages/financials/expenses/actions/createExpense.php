@@ -114,8 +114,8 @@ try {
     }
 
     /* -----------------------------
-     * 4. Create journal entry
-     * ----------------------------- */
+ * 4. Create journal entry
+ * ----------------------------- */
     $journalId = createJournalEntry($pdo, [
         'description'  => 'Expense Transaction',
         'reference'    => $expense_no,
@@ -125,68 +125,102 @@ try {
     ]);
 
     /* -----------------------------
-     * 5. Journal lines
-     * ----------------------------- */
+ * 5. Journal lines (FIXED)
+ * ----------------------------- */
+    $vatRate = 0.16;
+
+    // (optional) accumulate totals if you ever want to post AP as one line
+    // $totalNet = 0.0;
+    // $totalVat = 0.0;
+    // $totalGross = 0.0;
+
     for ($i = 0; $i < count($item_account_codes); $i++) {
-        $qty        = (float)($quantities[$i] ?? 0);
-        $unit_price = (float)($unit_prices[$i] ?? 0);
-        $tax_type   = strtolower(trim((string)($taxes[$i] ?? '')));
 
-        $item_untaxed_amount = $qty * $unit_price;
+        $accountCode = (int)($item_account_codes[$i] ?? 0);
+        $qty         = (float)($quantities[$i] ?? 0);
+        $unit_price  = (float)($unit_prices[$i] ?? 0);
+        $tax_type    = strtolower(trim((string)($taxes[$i] ?? 'exclusive')));
 
-        $tax_amount = 0.0;
-        $total_item_amount = 0.0;
-
-        if ($tax_type === 'exclusive') {
-            $tax_amount = $item_untaxed_amount * 0.16;
-            $total_item_amount = $item_untaxed_amount + $tax_amount;
-        } elseif ($tax_type === 'inclusive') {
-            $tax_amount = $item_untaxed_amount * (16 / 116);
-            $amount -= $tax_amount;
-            $total_item_amount = $item_untaxed_amount;
+        if ($accountCode <= 0 || $qty <= 0 || $unit_price < 0) {
+            continue; // skip invalid lines safely
         }
 
-        // Debit expense
+        // "lineTotal" is the amount as entered on the line (could be net or gross depending on tax type)
+        $lineTotal = $qty * $unit_price;
+
+        $netAmount   = 0.0;
+        $vatAmount   = 0.0;
+        $grossAmount = 0.0;
+
+        if ($tax_type === 'exclusive') {
+            // Entered amount is NET
+            $netAmount   = $lineTotal;
+            $vatAmount   = $netAmount * $vatRate;
+            $grossAmount = $netAmount + $vatAmount;
+        } elseif ($tax_type === 'inclusive') {
+            // Entered amount is GROSS
+            $grossAmount = $lineTotal;
+            $vatAmount   = $grossAmount * ($vatRate / (1 + $vatRate)); // 16/116
+            $netAmount   = $grossAmount - $vatAmount;
+        } else {
+            // If tax type unknown, treat as no VAT
+            $netAmount   = $lineTotal;
+            $vatAmount   = 0.0;
+            $grossAmount = $lineTotal;
+        }
+
+        // Optional rounding to 2dp to avoid tiny float leftovers
+        $netAmount   = round($netAmount, 2);
+        $vatAmount   = round($vatAmount, 2);
+        $grossAmount = round($grossAmount, 2);
+
+        /* 1) Debit expense (NET) */
         addJournalLine(
             $pdo,
             $journalId,
             $building_id,
-            $landlord_id,  // Ensure landlord_id is passed
-            $item_account_codes[$i],
-            $total_item_amount,
+            $landlord_id,
+            $accountCode,
+            $netAmount,
             0.0,
             'expenses',
             $expense_id
         );
 
-        // Credit accounts payable
-        addJournalLine(
-            $pdo,
-            $journalId,
-            $building_id,
-            $landlord_id,  // Ensure landlord_id is passed
-            300,
-            0.0,
-            $total_item_amount,
-            'expenses',
-            $expense_id
-        );
-
-        // VAT
-        if ($tax_amount > 0) {
+        /* 2) Debit VAT receivable/input VAT (VAT) */
+        if ($vatAmount > 0) {
             addJournalLine(
                 $pdo,
                 $journalId,
                 $building_id,
-                $landlord_id,  // Ensure landlord_id is passed
-                325,
-                $tax_amount,
+                $landlord_id,
+                325,          // VAT Input / VAT Receivable account code
+                $vatAmount,
                 0.0,
                 'expenses',
                 $expense_id
             );
         }
+
+        /* 3) Credit Accounts Payable (GROSS) */
+        addJournalLine(
+            $pdo,
+            $journalId,
+            $building_id,
+            $landlord_id,
+            300,            // Accounts Payable account code
+            0.0,
+            $grossAmount,
+            'expenses',
+            $expense_id
+        );
+
+        // Totals if needed later
+        // $totalNet += $netAmount;
+        // $totalVat += $vatAmount;
+        // $totalGross += $grossAmount;
     }
+
 
     /* -----------------------------
      * 6. Commit + flash success
