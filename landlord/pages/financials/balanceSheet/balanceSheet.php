@@ -12,6 +12,7 @@ require_once './actions/getCurrentAssets.php';
 require_once './actions/getCurrentLiabilities.php';
 require_once './actions/getNonCurrentLiabilities.php';
 require_once  './actions/getEquity.php';
+require_once 'actions/getBuildings.php';
 ?>
 
 <!doctype html>
@@ -214,210 +215,121 @@ require_once  './actions/getEquity.php';
           </div>
           <!--end::Row-->
           <!--begin::Row-->
-          <div class="row align-items-center p-2 rounded mb-3" style="background-color: #ffffff;">
-            <div class="col-md-9">
-              <div class="d-flex gap-3 align-items-center w-100">
-                <!-- Category Filter -->
-                <div class="form-group w-100">
-                  <label for="selectFilter" class="form-label p-2">Choose a Building</label>
-                  <select id="selectFilter" class="form-select w-100" aria-label="Select filter">
-                    <option selected>Select a building</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                    <option value="4">Option 4</option>
-                  </select>
-                </div>
+          <!-- Fifth Row: filter -->
+          <div class="row g-3 mb-4">
+            <!-- Filter by Building -->
+            <div class="col-md-12 col-sm-12">
+              <div class="card border-0 mb-4">
+                <div class="card-body ">
+                  <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filters</h5>
+                  <form method="GET">
+                    <!-- always reset to page 1 when applying filters -->
+                    <input type="hidden" name="page" value="1">
 
-                <!-- Date Filter -->
-                <div class="form-group w-100">
-                  <label for="filterDate" class="form-label p-2">Select Date</label>
-                  <input type="date" id="filterDate" class="form-control w-100 border-1 shadow-sm" />
-                </div>
-              </div>
-            </div>
+                    <div class="filters-scroll">
+                      <div class="row g-3 mb-3 filters-row">
 
-            <!-- Export Buttons -->
-            <div class="col-md-3 d-flex justify-content-md-end mt-3 mt-md-0">
-              <div class="d-flex gap-2">
-                <button class="btn rounded-circle shadow-sm" id="downloadBtn" style="background-color: #FFC107; border: none;">
-                  <i class="fas fa-file-pdf" style="font-size: 24px; color: #00192D;"></i>
-                </button>
-                <button class="btn rounded-circle shadow-sm" id="exportToExcel" style="background-color: #FFC107; border: none;">
-                  <i class="fas fa-file-excel" style="font-size: 24px; color: #00192D;"></i>
-                </button>
+                        <div class="col-auto filter-col">
+                          <label class="form-label text-muted small">Buildings</label>
+                          <select class="form-select shadow-sm" name="building_id">
+                            <option value="">All Buildings</option>
+                            <?php foreach ($buildings as $building): ?>
+                              <?php $bid = (string)(int)$building['id']; ?>
+                              <option value="<?= $bid ?>" <?= (($building_id ?? '') === $bid) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($building['building_name']) ?>
+                              </option>
+                            <?php endforeach; ?>
+                          </select>
+                        </div>
+
+                       
+
+                        <div class="col-auto filter-col">
+                          <label class="form-label text-muted small">Date From</label>
+                          <input
+                            type="date"
+                            name="date_from"
+                            class="form-control"
+                            value="<?= htmlspecialchars($date_from ?? '') ?>">
+                        </div>
+
+                        <div class="col-auto filter-col">
+                          <label class="form-label text-muted small">Date To</label>
+                          <input
+                            type="date"
+                            name="date_to"
+                            class="form-control"
+                            value="<?= htmlspecialchars($date_to ?? '') ?>">
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div class="d-flex gap-2 justify-content-end">
+                      <!-- Replace with your real page name -->
+                      <a href="expenses.php" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Reset
+                      </a>
+
+                      <button type="submit" class="actionBtn">
+                        <i class="fas fa-search"></i> Apply Filters
+                      </button>
+                    </div>
+                  </form>
+
+                </div>
               </div>
             </div>
           </div>
+
           <!-- /end row -->
           <div class="row">
             <!-- Start col -->
-            <div class="container balancesheet">
-              <div>
-                <div class="table-responsive">
-                  <table class="table table-striped" id="">
-                    <thead>
-                      <tr>
-                        <th>Description</th>
-                        <th>Amount (KSH)</th>
-                      </tr>
-                    </thead>
-
-                    <!-- ================= ASSETS ================= -->
-                    <tbody>
-                      <tr>
-                        <th colspan="2">Assets</th>
-                      </tr>
-                      <tr>
-                        <th colspan="2" class="section-header fs-6 fw-normal">Non-current Assets</th>
-                      </tr>
-
-                      <?php foreach ($nonCurrentAssets as $asset): ?>
-                        <tr class="main-row clickable-row"
-                          data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['account_id']) ?>"
-                          style="cursor:pointer;">
-                          <td><?= htmlspecialchars($asset['name']) ?></td>
-                          <td class="d-flex justify-content-start">
-                            <div class="">
-                              <?php
-                              $amount = (float)$asset['amount'];
-                              $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
-                              echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
-                              ?>
-                            </div>
-                          </td>
+            <div class="col-md-12">
+              <div class="card border-0 ">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-striped" id="">
+                      <thead>
+                        <tr>
+                          <th>Description</th>
+                          <th>Amount (KSH)</th>
                         </tr>
-                      <?php endforeach; ?>
+                      </thead>
 
-                      <tr class="total-row">
-                        <td>Total</td>
-                        <td class="p-0">
-                          <div class="d-flex justify-content-start">
-                            <div class="d-flex justify-content-end amount-box">
-                              <?php
-                              $amount = (float)$totalNonCurrentAssets;
-                              $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
-                              echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
-                              ?>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
+                      <!-- ================= ASSETS ================= -->
+                      <tbody>
+                        <tr>
+                          <th colspan="2">Assets</th>
+                        </tr>
+                        <tr>
+                          <th colspan="2" class="section-header fs-6 fw-normal">Non-current Assets</th>
+                        </tr>
 
-                    <tbody>
-                      <tr>
-                        <th colspan="2" class="section-header fs-6 fw-normal">Current Assets</th>
-                      </tr>
-
-                      <?php foreach ($CurrentAssets as $asset): ?>
-                        <tr class="main-row clickable-row" data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['account_id']) ?>" style="cursor:pointer;">
-                          <td><?= htmlspecialchars($asset['name']) ?></td>
-                          <td class="p-0">
-                            <div class="d-flex justify-content-start">
-                              <div class="d-flex justify-content-end amount-box">
+                        <?php foreach ($nonCurrentAssets as $asset): ?>
+                          <tr class="main-row clickable-row"
+                            data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['account_id']) ?>"
+                            style="cursor:pointer;">
+                            <td><?= htmlspecialchars($asset['name']) ?></td>
+                            <td class="d-flex justify-content-start">
+                              <div class="">
                                 <?php
                                 $amount = (float)$asset['amount'];
                                 $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
                                 echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
                                 ?>
                               </div>
-                            </div>
-                          </td>
-                        </tr>
-                      <?php endforeach; ?>
+                            </td>
+                          </tr>
+                        <?php endforeach; ?>
 
-                      <tr class="total-row">
-                        <td>Total</td>
-                        <td class="p-0">
-                          <div class="d-flex justify-content-start">
-                            <div class="d-flex justify-content-end amount-box">
-                              <?php
-                              $amount = (float)$totalCurrentAssets;
-                              $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
-                              echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
-                              ?>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-
-                      <tr class="total-row">
-                        <td class="fs-6">Total Assets</td>
-                        <td class="p-0">
-                          <div class="d-flex justify-content-start">
-                            <div class="d-flex justify-content-end amount-box">
-                              <?php
-                              $amount = (float)($totalCurrentAssets + $totalNonCurrentAssets);
-                              $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
-                              echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
-                              ?>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-
-                    <!-- ================= LIABILITIES ================= -->
-                    <tbody>
-                      <tr>
-                        <th colspan="2">Liabilities</th>
-                      </tr>
-                      <tr>
-                        <th colspan="2" class="section-header fs-6 fw-normal">Current Liabilities</th>
-                      </tr>
-
-                      <?php foreach ($currentLiabilities as $liability): ?>
-                        <tr class="main-row clickable-row" style="cursor:pointer;" data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($liability['account_id']) ?>">
-                          <td><?= htmlspecialchars($liability['account_name']) ?></td>
+                        <tr class="total-row">
+                          <td>Total</td>
                           <td class="p-0">
                             <div class="d-flex justify-content-start">
                               <div class="d-flex justify-content-end amount-box">
                                 <?php
-                                $amount = (float)$liability['amount'];
-                                $formatted = $amount < 0
-                                  ? '(' . number_format(abs($amount), 2) . ')'
-                                  : number_format($amount, 2);
-
-                                echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
-                                ?>
-                              </div>
-                            </div>
-                          </td>
-
-                        </tr>
-
-                      <?php endforeach; ?>
-
-                      <tr class="total-row">
-                        <td>Total</td>
-                        <td class="p-0">
-                          <div class="d-flex justify-content-start">
-                            <div class="d-flex justify-content-end amount-box">
-                              <?php
-                              $amount = (float)$totalCurrentLiabilities;
-                              $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
-                              echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
-                              ?>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-
-                    <tbody>
-                      <tr>
-                        <th colspan="2" class="section-header fs-6 fw-normal">Non-Current Liabilities</th>
-                      </tr>
-
-                      <?php foreach ($nonCurrentLiabilities as $liability): ?>
-                        <tr class="main-row clickable-row" data-href="/jengopay/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['amount']) ?>" style="cursor:pointer;">
-                          <td><?= htmlspecialchars($liability['account_name']) ?></td>
-                          <td class="p-0">
-                            <div class="d-flex justify-content-start">
-                              <div class="d-flex justify-content-end amount-box">
-                                <?php
-                                $amount = (float)$liability['amount'];
+                                $amount = (float)$totalNonCurrentAssets;
                                 $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
                                 echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
                                 ?>
@@ -425,106 +337,236 @@ require_once  './actions/getEquity.php';
                             </div>
                           </td>
                         </tr>
-                      <?php endforeach; ?>
+                      </tbody>
 
-                      <tr class="total-row">
-                        <td>Total</td>
-                        <td class="p-0">
-                          <div class="d-flex justify-content-start">
-                            <div class="d-flex justify-content-end amount-box">
-                              <?php
-                              $amount = (float)$totalNonCurrentLiabilities;
-                              $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
-                              echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
-                              ?>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
+                      <tbody>
+                        <tr>
+                          <th colspan="2" class="section-header fs-6 fw-normal">Current Assets</th>
+                        </tr>
 
-                      <tr class="total-row">
-                        <td>Total Liabilities</td>
-                        <td class="p-0">
-                          <div class="d-flex justify-content-start">
-                            <div class="d-flex justify-content-end amount-box">
-                              <?php
-                              $totalLiabilitiesAmount = (float)($totalCurrentLiabilities + $totalNonCurrentLiabilities);
-                              $formatted = $totalLiabilitiesAmount < 0 ? '(' . number_format(abs($totalLiabilitiesAmount), 2) . ')' : number_format($totalLiabilitiesAmount, 2);
-                              echo '<span class="' . ($totalLiabilitiesAmount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
-                              ?>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
+                        <?php foreach ($CurrentAssets as $asset): ?>
+                          <tr class="main-row clickable-row" data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['account_id']) ?>" style="cursor:pointer;">
+                            <td><?= htmlspecialchars($asset['name']) ?></td>
+                            <td class="p-0">
+                              <div class="d-flex justify-content-start">
+                                <div class="d-flex justify-content-end amount-box">
+                                  <?php
+                                  $amount = (float)$asset['amount'];
+                                  $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                                  echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
+                                  ?>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        <?php endforeach; ?>
 
-                    <!-- ================= EQUITY ================= -->
-                    <tbody>
-                      <tr>
-                        <th colspan="2">Equity</th>
-                      </tr>
+                        <tr class="total-row">
+                          <td>Total</td>
+                          <td class="p-0">
+                            <div class="d-flex justify-content-start">
+                              <div class="d-flex justify-content-end amount-box">
+                                <?php
+                                $amount = (float)$totalCurrentAssets;
+                                $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                                echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
+                                ?>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
 
-                      <tr class="main-row clickable-row">
-                        <td>Owner's Capital</td>
-                        <td class="p-0">
-                          <div class="d-flex justify-content-start">
-                            <div class="d-flex justify-content-end amount-box">
-                              <?php
-                              $amount = (float)$owners_capital;
-                              $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
-                              echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
-                              ?>
+                        <tr class="total-row">
+                          <td class="fs-6">Total Assets</td>
+                          <td class="p-0">
+                            <div class="d-flex justify-content-start">
+                              <div class="d-flex justify-content-end amount-box">
+                                <?php
+                                $amount = (float)($totalCurrentAssets + $totalNonCurrentAssets);
+                                $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                                echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
+                                ?>
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                      </tr>
+                          </td>
+                        </tr>
+                      </tbody>
 
-                      <tr class="main-row clickable-row">
-                        <td>Retained Earnings</td>
-                        <td class="p-0">
-                          <div class="d-flex justify-content-start">
-                            <div class="d-flex justify-content-end amount-box">
-                              <?php
-                              $amount = (float)$retainedEarnings;
-                              $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
-                              echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
-                              ?>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr class="total-row">
-                        <td>Total Equity</td>
-                        <td class="p-0">
-                          <div class="d-flex justify-content-start">
-                            <div class="d-flex justify-content-end amount-box">
-                              <?php
-                              $amount = (float)($owners_capital + $retainedEarnings);
-                              $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
-                              echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
-                              ?>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr class="total-row">
-                        <td>Total Liabilities and Equity</td>
-                        <td class="p-0">
-                          <div class="d-flex justify-content-start">
-                            <div class="d-flex justify-content-end amount-box">
-                              <?php
-                              $amount = (float)($totalEquity + $totalLiabilitiesAmount);
-                              $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
-                              echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
-                              ?>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                      <!-- ================= LIABILITIES ================= -->
+                      <tbody>
+                        <tr>
+                          <th colspan="2">Liabilities</th>
+                        </tr>
+                        <tr>
+                          <th colspan="2" class="section-header fs-6 fw-normal">Current Liabilities</th>
+                        </tr>
 
+                        <?php foreach ($currentLiabilities as $liability): ?>
+                          <tr class="main-row clickable-row" style="cursor:pointer;" data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($liability['account_id']) ?>">
+                            <td><?= htmlspecialchars($liability['account_name']) ?></td>
+                            <td class="p-0">
+                              <div class="d-flex justify-content-start">
+                                <div class="d-flex justify-content-end amount-box">
+                                  <?php
+                                  $amount = (float)$liability['amount'];
+                                  $formatted = $amount < 0
+                                    ? '(' . number_format(abs($amount), 2) . ')'
+                                    : number_format($amount, 2);
+
+                                  echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
+                                  ?>
+                                </div>
+                              </div>
+                            </td>
+
+                          </tr>
+
+                        <?php endforeach; ?>
+
+                        <tr class="total-row">
+                          <td>Total</td>
+                          <td class="p-0">
+                            <div class="d-flex justify-content-start">
+                              <div class="d-flex justify-content-end amount-box">
+                                <?php
+                                $amount = (float)$totalCurrentLiabilities;
+                                $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                                echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
+                                ?>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+
+                      <tbody>
+                        <tr>
+                          <th colspan="2" class="section-header fs-6 fw-normal">Non-Current Liabilities</th>
+                        </tr>
+
+                        <?php foreach ($nonCurrentLiabilities as $liability): ?>
+                          <tr class="main-row clickable-row" data-href="/jengopay/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['amount']) ?>" style="cursor:pointer;">
+                            <td><?= htmlspecialchars($liability['account_name']) ?></td>
+                            <td class="p-0">
+                              <div class="d-flex justify-content-start">
+                                <div class="d-flex justify-content-end amount-box">
+                                  <?php
+                                  $amount = (float)$liability['amount'];
+                                  $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                                  echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
+                                  ?>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        <?php endforeach; ?>
+
+                        <tr class="total-row">
+                          <td>Total</td>
+                          <td class="p-0">
+                            <div class="d-flex justify-content-start">
+                              <div class="d-flex justify-content-end amount-box">
+                                <?php
+                                $amount = (float)$totalNonCurrentLiabilities;
+                                $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                                echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
+                                ?>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr class="total-row">
+                          <td>Total Liabilities</td>
+                          <td class="p-0">
+                            <div class="d-flex justify-content-start">
+                              <div class="d-flex justify-content-end amount-box">
+                                <?php
+                                $totalLiabilitiesAmount = (float)($totalCurrentLiabilities + $totalNonCurrentLiabilities);
+                                $formatted = $totalLiabilitiesAmount < 0 ? '(' . number_format(abs($totalLiabilitiesAmount), 2) . ')' : number_format($totalLiabilitiesAmount, 2);
+                                echo '<span class="' . ($totalLiabilitiesAmount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
+                                ?>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+
+                      <!-- ================= EQUITY ================= -->
+                      <tbody>
+                        <tr>
+                          <th colspan="2">Equity</th>
+                        </tr>
+
+                        <tr class="main-row clickable-row">
+                          <td>Owner's Capital</td>
+                          <td class="p-0">
+                            <div class="d-flex justify-content-start">
+                              <div class="d-flex justify-content-end amount-box">
+                                <?php
+                                $amount = (float)$owners_capital;
+                                $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                                echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
+                                ?>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr class="main-row clickable-row">
+                          <td>Retained Earnings</td>
+                          <td class="p-0">
+                            <div class="d-flex justify-content-start">
+                              <div class="d-flex justify-content-end amount-box">
+                                <?php
+                                $amount = (float)$retainedEarnings;
+                                $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                                echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
+                                ?>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr class="total-row">
+                          <td>Total Equity</td>
+                          <td class="p-0">
+                            <div class="d-flex justify-content-start">
+                              <div class="d-flex justify-content-end amount-box">
+                                <?php
+                                $amount = (float)($owners_capital + $retainedEarnings);
+                                $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                                echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
+                                ?>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr class="total-row">
+                          <td>Total Liabilities and Equity</td>
+                          <td class="p-0">
+                            <div class="d-flex justify-content-start">
+                              <div class="d-flex justify-content-end amount-box">
+                                <?php
+                                $amount = (float)($totalEquity + $totalLiabilitiesAmount);
+                                $formatted = $amount < 0 ? '(' . number_format(abs($amount), 2) . ')' : number_format($amount, 2);
+                                echo '<span class="' . ($amount < 0 ? 'text-danger' : 'text-success') . '">' . $formatted . '</span>';
+                                ?>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                  </div>
                 </div>
+
+              </div>
+
+            </div>
+            <div class="container balancesheet">
+              <div>
+
               </div>
 
               <!-- /.col -->

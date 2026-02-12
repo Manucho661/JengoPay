@@ -14,9 +14,9 @@ $ledgerRows = [];
 
 // Determine if it's an income account (500-599) or expense account (600-699)
 if (!empty($account_code)) {
-    if (substr($account_code, 0, 1) == '5') {
-        // Income account - query invoice_items
-        $query = "
+  if (substr($account_code, 0, 1) == '5') {
+    // Income account - query invoice_items
+    $query = "
             SELECT 
                 created_at,
                 invoice_number as reference,
@@ -26,26 +26,25 @@ if (!empty($account_code)) {
             FROM invoice_items 
             WHERE account_item = ?
         ";
-        $params = [$account_code];
-        
-        // Date filter
-        if (!empty($from_date) && !empty($to_date)) {
-            $query .= " AND DATE(created_at) BETWEEN ? AND ?";
-            $params[] = $from_date;
-            $params[] = $to_date;
-        }
-        
-        // Building filter
-        if (!empty($building_id) && $building_id != 'all') {
-            $query .= " AND building_id = ?";
-            $params[] = $building_id;
-        }
-        
-        $query .= " ORDER BY created_at DESC";
-        
-    } else {
-        // Expense account - query expense_items JOINED with expenses
-        $query = "
+    $params = [$account_code];
+
+    // Date filter
+    if (!empty($from_date) && !empty($to_date)) {
+      $query .= " AND DATE(created_at) BETWEEN ? AND ?";
+      $params[] = $from_date;
+      $params[] = $to_date;
+    }
+
+    // Building filter
+    if (!empty($building_id) && $building_id != 'all') {
+      $query .= " AND building_id = ?";
+      $params[] = $building_id;
+    }
+
+    $query .= " ORDER BY created_at DESC";
+  } else {
+    // Expense account - query expense_items JOINED with expenses
+    $query = "
             SELECT 
                 ei.created_at,
                 e.expense_no as reference,
@@ -57,40 +56,39 @@ if (!empty($account_code)) {
             INNER JOIN expenses e ON ei.expense_id = e.id
             WHERE ei.item_account_code = ?
         ";
-        $params = [$account_code];
-        
-        // Date filter
-        if (!empty($from_date) && !empty($to_date)) {
-            $query .= " AND DATE(ei.created_at) BETWEEN ? AND ?";
-            $params[] = $from_date;
-            $params[] = $to_date;
-        }
-        
-        // Building filter
-        if (!empty($building_id) && $building_id != 'all') {
-            $query .= " AND ei.building_id = ?";
-            $params[] = $building_id;
-        }
-        
-        $query .= " ORDER BY ei.created_at DESC";
+    $params = [$account_code];
+
+    // Date filter
+    if (!empty($from_date) && !empty($to_date)) {
+      $query .= " AND DATE(ei.created_at) BETWEEN ? AND ?";
+      $params[] = $from_date;
+      $params[] = $to_date;
     }
 
-    try {
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
-        $ledgerRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        // Debug: Check if we're getting data
-        error_log("Account Code: " . $account_code);
-        error_log("Query: " . $query);
-        error_log("Params: " . implode(", ", $params));
-        error_log("Rows Found: " . count($ledgerRows));
-        
-    } catch (PDOException $e) {
-        $ledgerRows = [];
-        $error = "Database error: " . $e->getMessage();
-        error_log("General Ledger Error: " . $e->getMessage());
+    // Building filter
+    if (!empty($building_id) && $building_id != 'all') {
+      $query .= " AND ei.building_id = ?";
+      $params[] = $building_id;
     }
+
+    $query .= " ORDER BY ei.created_at DESC";
+  }
+
+  try {
+    $stmt = $pdo->prepare($query);
+    $stmt->execute($params);
+    $ledgerRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Debug: Check if we're getting data
+    error_log("Account Code: " . $account_code);
+    error_log("Query: " . $query);
+    error_log("Params: " . implode(", ", $params));
+    error_log("Rows Found: " . count($ledgerRows));
+  } catch (PDOException $e) {
+    $ledgerRows = [];
+    $error = "Database error: " . $e->getMessage();
+    error_log("General Ledger Error: " . $e->getMessage());
+  }
 }
 
 // Buildings for dropdown filter
@@ -103,23 +101,23 @@ $totalCredit = 0;
 $pdfData = [];
 
 foreach ($ledgerRows as $row) {
-    if ($row['type'] == 'income') {
-        $runningBalance += $row['amount'];
-        $totalDebit += $row['amount'];
-    } else {
-        $runningBalance -= $row['amount'];
-        $totalCredit += $row['amount'];
-    }
-    
-    // Prepare data for PDF export
-    $pdfData[] = [
-        'date' => date('Y-m-d', strtotime($row['created_at'])),
-        'reference' => $row['reference'],
-        'description' => $row['description'],
-        'debit' => $row['type'] == 'income' ? number_format($row['amount'], 2) : '0.00',
-        'credit' => $row['type'] == 'expense' ? number_format($row['amount'], 2) : '0.00',
-        'balance' => number_format($runningBalance, 2)
-    ];
+  if ($row['type'] == 'income') {
+    $runningBalance += $row['amount'];
+    $totalDebit += $row['amount'];
+  } else {
+    $runningBalance -= $row['amount'];
+    $totalCredit += $row['amount'];
+  }
+
+  // Prepare data for PDF export
+  $pdfData[] = [
+    'date' => date('Y-m-d', strtotime($row['created_at'])),
+    'reference' => $row['reference'],
+    'description' => $row['description'],
+    'debit' => $row['type'] == 'income' ? number_format($row['amount'], 2) : '0.00',
+    'credit' => $row['type'] == 'expense' ? number_format($row['amount'], 2) : '0.00',
+    'balance' => number_format($runningBalance, 2)
+  ];
 }
 
 // Prepare PDF data as JSON for JavaScript
@@ -127,29 +125,29 @@ $pdfDataJson = json_encode($pdfData);
 
 // Account code to name mapping
 $accountNames = [
-    '500' => 'Rental Income',
-    '510' => 'Water Charges (Revenue)',
-    '515' => 'Garbage Charges (Revenue)',
-    '505' => 'Late Payment Fees',
-    '520' => 'Commissions and Management Fees',
-    '525' => 'Other Income (Advertising, Penalties)',
-    '600' => 'Maintenance and Repair Costs',
-    '605' => 'Staff Salaries and Wages',
-    '610' => 'Electricity Expense',
-    '615' => 'Water Expense',
-    '620' => 'Garbage Collection Expense',
-    '625' => 'Internet Expense',
-    '630' => 'Security Expense',
-    '635' => 'Property Management Software Subscription',
-    '640' => 'Marketing and Advertising Costs',
-    '645' => 'Legal and Compliance Fees',
-    '655' => 'Loan Interest Payments',
-    '660' => 'Bank/Mpesa Charges',
-    '665' => 'Other Expenses (Office, Supplies, Travel)'
+  '500' => 'Rental Income',
+  '510' => 'Water Charges (Revenue)',
+  '515' => 'Garbage Charges (Revenue)',
+  '505' => 'Late Payment Fees',
+  '520' => 'Commissions and Management Fees',
+  '525' => 'Other Income (Advertising, Penalties)',
+  '600' => 'Maintenance and Repair Costs',
+  '605' => 'Staff Salaries and Wages',
+  '610' => 'Electricity Expense',
+  '615' => 'Water Expense',
+  '620' => 'Garbage Collection Expense',
+  '625' => 'Internet Expense',
+  '630' => 'Security Expense',
+  '635' => 'Property Management Software Subscription',
+  '640' => 'Marketing and Advertising Costs',
+  '645' => 'Legal and Compliance Fees',
+  '655' => 'Loan Interest Payments',
+  '660' => 'Bank/Mpesa Charges',
+  '665' => 'Other Expenses (Office, Supplies, Travel)'
 ];
 
 if (empty($account_name)) {
-    $account_name = $accountNames[$account_code] ?? 'General Ledger';
+  $account_name = $accountNames[$account_code] ?? 'General Ledger';
 }
 ?>
 
@@ -451,251 +449,253 @@ if (empty($account_name)) {
       </div>
       <!--end::Sidebar Brand-->
       <!--begin::Sidebar Wrapper-->
-      <div > <?php include_once '../../includes/sidebar.php'; ?>  </div> <!-- This is where the sidebar is inserted -->
-        <!--end::Sidebar Wrapper-->
-      </aside>
-      <!--end::Sidebar-->
-      <!--begin::App Main-->
-      <main class="app-main">
-        <!--begin::App Content Header-->
-        <div class="app-content-header">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!--begin::Row-->
-            <h2 style="color:#FFC107;">General Ledger</h2>
-            
-  <!-- Date Filter Form -->
-  <!-- Filters -->
-  <form method="get" class="row g-3 mb-3">
-    <div class="col-md-3">
-      <label for="from_date" class="form-label">From Date</label>
-      <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
-    </div>
-    <div class="col-md-3">
-      <label for="to_date" class="form-label">To Date</label>
-      <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
-    </div>
-    <div class="col-md-3">
-      <label for="account_id" class="form-label">Account</label>
-      <select id="account_id" name="account_id" class="form-select">
-        <option value="">-- All Accounts --</option>
-        <?php foreach ($accounts as $acc): ?>
-          <option value="<?= $acc['account_code'] ?>" <?= $account_id == $acc['account_code'] ? 'selected' : '' ?>>
-            <?= htmlspecialchars($acc['account_name']) ?>
-          </option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-    <div class="col-md-3 d-flex align-items-end">
-      <button type="submit" class="btn w-100"  style="color: #FFC107; background-color: #00192D;">Filter</button>
-    </div>
-  </form>
-
-  <!-- Header and Sidebar -->
-   
+      <div> <?php include_once '../../includes/sidebar.php'; ?> </div> <!-- This is where the sidebar is inserted -->
+      <!--end::Sidebar Wrapper-->
+    </aside>
+    <!--end::Sidebar-->
     <!--begin::App Main-->
     <main class="app-main">
       <!--begin::App Content Header-->
       <div class="app-content-header">
+        <!--begin::Container-->
         <div class="container-fluid">
-          <div class="row">
-            <div class="col-sm-8">
-              <h3 class="mb-0">
-                <i class="fas fa-file-invoice-dollar" style="color:#FFC107;"></i> 
-                General Ledger - <?= htmlspecialchars($account_name) ?>
-              </h3>
-              <p class="text-muted">Account Code: <?= htmlspecialchars($account_code) ?></p>
-            </div>
-            <div class="col-sm-4">
-              <ol class="breadcrumb float-sm-end">
-                <li class="breadcrumb-item"><a href="#" style="color: #00192D;"><i class="bi bi-house"></i> Home</a></li>
-                <li class="breadcrumb-item"><a href="../profit_loss.php" style="color: #00192D;">Profit & Loss</a></li>
-                <li class="breadcrumb-item active">General Ledger</li>
-              </ol>
-            </div>
-          </div>
+          <!--begin::Row-->
+          <h2 style="color:#FFC107;">General Ledger</h2>
 
+          <!-- Date Filter Form -->
           <!-- Filters -->
-          <form method="get" class="row g-3 mb-4 mt-3 p-3 rounded" style="background-color: #f8f9fa;">
-            <input type="hidden" name="account_code" value="<?= htmlspecialchars($account_code) ?>">
-            <input type="hidden" name="account_name" value="<?= htmlspecialchars($account_name) ?>">
-            
+          <form method="get" class="row g-3 mb-3">
             <div class="col-md-3">
               <label for="from_date" class="form-label">From Date</label>
               <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
             </div>
-            
             <div class="col-md-3">
               <label for="to_date" class="form-label">To Date</label>
               <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
             </div>
-            
             <div class="col-md-3">
-              <label for="building_id" class="form-label">Property</label>
-              <select id="building_id" name="building_id" class="form-select">
-                <option value="all">All Properties</option>
-                <?php foreach ($buildings as $b): ?>
-                  <option value="<?= $b['id'] ?>" <?= $building_id == $b['id'] ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($b['building_name']) ?>
+              <label for="account_id" class="form-label">Account</label>
+              <select id="account_id" name="account_id" class="form-select">
+                <option value="">-- All Accounts --</option>
+                <?php foreach ($accounts as $acc): ?>
+                  <option value="<?= $acc['account_code'] ?>" <?= $account_id == $acc['account_code'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($acc['account_name']) ?>
                   </option>
                 <?php endforeach; ?>
               </select>
             </div>
-            
             <div class="col-md-3 d-flex align-items-end">
-              <button type="submit" class="btn w-100 me-2" style="color: #FFC107; background-color: #00192D;">
-                <i class="fas fa-filter"></i> Filter
-              </button>
-              <button type="button" onclick="exportToPDF()" class="btn btn-outline-secondary">
-                <i class="fas fa-file-pdf"></i>
-              </button>
+              <button type="submit" class="btn w-100" style="color: #FFC107; background-color: #00192D;">Filter</button>
             </div>
           </form>
 
-          <!-- Summary Cards -->
-          <div class="row mb-4">
-            <div class="col-md-4">
-              <div class="card bg-success text-white">
-                <div class="card-body">
-                  <h6 class="card-title">Total Amount</h6>
-                  <h4>Ksh<?= number_format(array_sum(array_column($ledgerRows, 'amount')), 2) ?></h4>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card bg-info text-white">
-                <div class="card-body">
-                  <h6 class="card-title">Total Transactions</h6>
-                  <h4><?= count($ledgerRows) ?></h4>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card bg-warning text-dark">
-                <div class="card-body">
-                  <h6 class="card-title">Date Range</h6>
-                  <h6><?= $from_date ? htmlspecialchars($from_date) . ' to ' . htmlspecialchars($to_date) : 'All Dates' ?></h6>
-                </div>
-              </div>
-            </div>
-          </div>
+          <!-- Header and Sidebar -->
 
-          <!-- Ledger Table -->
-          <div class="table-responsive">
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>Date</th>
-                <th>Reference</th>
-                <th>Description</th>
-                <th>Debit (KSH)</th>
-                <th>Credit (KSH)</th>
-                <th>Type</th>
-                <th>Running Balance</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (empty($ledgerRows)): ?>
-                <tr>
-                    <td colspan="7" class="text-center py-4">
-                        <i class="fas fa-info-circle fa-2x text-muted mb-3"></i><br>
-                        No transactions found for the selected filters.
-                    </td>
-                </tr>
-            <?php else: ?>
-                <?php 
-                $displayRunningBalance = 0;
-                foreach ($ledgerRows as $row): 
-                    if ($row['type'] == 'income') {
-                        $displayRunningBalance += $row['amount'];
-                    } else {
-                        $displayRunningBalance -= $row['amount'];
-                    }
-                ?>
-                    <tr>
-                        <td><?= htmlspecialchars(date('Y-m-d', strtotime($row['created_at']))) ?></td>
-                        <td><?= htmlspecialchars($row['reference']) ?></td>
-                        <td><?= htmlspecialchars($row['description']) ?></td>
-                        <td class="text-end"><?= $row['type'] == 'income' ? number_format($row['amount'], 2) : '0.00' ?></td>
-                        <td class="text-end"><?= $row['type'] == 'expense' ? number_format($row['amount'], 2) : '0.00' ?></td>
-                        <td>
-                            <span class="badge <?= $row['type'] == 'income' ? 'badge-income' : 'badge-expense' ?>">
+          <!--begin::App Main-->
+          <main class="app-main">
+            <!--begin::App Content Header-->
+            <div class="app-content-header">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-sm-8">
+                    <h3 class="mb-0">
+                      <i class="fas fa-file-invoice-dollar" style="color:#FFC107;"></i>
+                      General Ledger - <?= htmlspecialchars($account_name) ?>
+                    </h3>
+                    <p class="text-muted">Account Code: <?= htmlspecialchars($account_code) ?></p>
+                  </div>
+                  <div class="col-sm-4">
+                    <ol class="breadcrumb float-sm-end">
+                      <li class="breadcrumb-item"><a href="#" style="color: #00192D;"><i class="bi bi-house"></i> Home</a></li>
+                      <li class="breadcrumb-item"><a href="../profit_loss.php" style="color: #00192D;">Profit & Loss</a></li>
+                      <li class="breadcrumb-item active">General Ledger</li>
+                    </ol>
+                  </div>
+                </div>
+
+                <!-- Filters -->
+                <form method="get" class="row g-3 mb-4 mt-3 p-3 rounded" style="background-color: #f8f9fa;">
+                  <input type="hidden" name="account_code" value="<?= htmlspecialchars($account_code) ?>">
+                  <input type="hidden" name="account_name" value="<?= htmlspecialchars($account_name) ?>">
+
+                  <div class="col-md-3">
+                    <label for="from_date" class="form-label">From Date</label>
+                    <input type="date" id="from_date" name="from_date" value="<?= htmlspecialchars($from_date) ?>" class="form-control">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label for="to_date" class="form-label">To Date</label>
+                    <input type="date" id="to_date" name="to_date" value="<?= htmlspecialchars($to_date) ?>" class="form-control">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label for="building_id" class="form-label">Property</label>
+                    <select id="building_id" name="building_id" class="form-select">
+                      <option value="all">All Properties</option>
+                      <?php foreach ($buildings as $b): ?>
+                        <option value="<?= $b['id'] ?>" <?= $building_id == $b['id'] ? 'selected' : '' ?>>
+                          <?= htmlspecialchars($b['building_name']) ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+
+                  <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn w-100 me-2" style="color: #FFC107; background-color: #00192D;">
+                      <i class="fas fa-filter"></i> Filter
+                    </button>
+                    <button type="button" onclick="exportToPDF()" class="btn btn-outline-secondary">
+                      <i class="fas fa-file-pdf"></i>
+                    </button>
+                  </div>
+                </form>
+
+                <!-- Summary Cards -->
+                <div class="row mb-4">
+                  <div class="col-md-4">
+                    <div class="card bg-success text-white">
+                      <div class="card-body">
+                        <h6 class="card-title">Total Amount</h6>
+                        <h4>Ksh<?= number_format(array_sum(array_column($ledgerRows, 'amount')), 2) ?></h4>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card bg-info text-white">
+                      <div class="card-body">
+                        <h6 class="card-title">Total Transactions</h6>
+                        <h4><?= count($ledgerRows) ?></h4>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card bg-warning text-dark">
+                      <div class="card-body">
+                        <h6 class="card-title">Date Range</h6>
+                        <h6><?= $from_date ? htmlspecialchars($from_date) . ' to ' . htmlspecialchars($to_date) : 'All Dates' ?></h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Ledger Table -->
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                      <tr>
+                        <th>Date</th>
+                        <th>Reference</th>
+                        <th>Description</th>
+                        <th>Debit (KSH)</th>
+                        <th>Credit (KSH)</th>
+                        <th>Type</th>
+                        <th>Running Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php if (empty($ledgerRows)): ?>
+                        <tr>
+                          <td colspan="7" class="text-center py-4">
+                            <i class="fas fa-info-circle fa-2x text-muted mb-3"></i><br>
+                            No transactions found for the selected filters.
+                          </td>
+                        </tr>
+                      <?php else: ?>
+                        <?php
+                        $displayRunningBalance = 0;
+                        foreach ($ledgerRows as $row):
+                          if ($row['type'] == 'income') {
+                            $displayRunningBalance += $row['amount'];
+                          } else {
+                            $displayRunningBalance -= $row['amount'];
+                          }
+                        ?>
+                          <tr>
+                            <td><?= htmlspecialchars(date('Y-m-d', strtotime($row['created_at']))) ?></td>
+                            <td><?= htmlspecialchars($row['reference']) ?></td>
+                            <td><?= htmlspecialchars($row['description']) ?></td>
+                            <td class="text-end"><?= $row['type'] == 'income' ? number_format($row['amount'], 2) : '0.00' ?></td>
+                            <td class="text-end"><?= $row['type'] == 'expense' ? number_format($row['amount'], 2) : '0.00' ?></td>
+                            <td>
+                              <span class="badge <?= $row['type'] == 'income' ? 'badge-income' : 'badge-expense' ?>">
                                 <?= ucfirst($row['type']) ?>
-                            </span>
-                        </td>
-                        <td class="text-end fw-bold"><?= number_format($displayRunningBalance, 2) ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </tbody>
-        <tfoot class="table-secondary">
-            <tr>
-                <td colspan="3" class="text-end fw-bold">Totals:</td>
-                <td class="text-end fw-bold">Ksh<?= number_format($totalDebit, 2) ?></td>
-                <td class="text-end fw-bold">Ksh<?= number_format($totalCredit, 2) ?></td>
-                <td class="text-end fw-bold">Net:</td>
-                <td class="text-end fw-bold">Ksh<?= number_format($runningBalance, 2) ?></td>
-            </tr>
-        </tfoot>
-    </table>
-</div>
+                              </span>
+                            </td>
+                            <td class="text-end fw-bold"><?= number_format($displayRunningBalance, 2) ?></td>
+                          </tr>
+                        <?php endforeach; ?>
+                      <?php endif; ?>
+                    </tbody>
+                    <tfoot class="table-secondary">
+                      <tr>
+                        <td colspan="3" class="text-end fw-bold">Totals:</td>
+                        <td class="text-end fw-bold">Ksh<?= number_format($totalDebit, 2) ?></td>
+                        <td class="text-end fw-bold">Ksh<?= number_format($totalCredit, 2) ?></td>
+                        <td class="text-end fw-bold">Net:</td>
+                        <td class="text-end fw-bold">Ksh<?= number_format($runningBalance, 2) ?></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </main>
         </div>
-      </div>
-    </main>
-  </div>
-  <!-- End view announcement -->
-  <!-- javascript codes begin here  -->
-  <!--begin::Script-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-    integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-    crossorigin="anonymous"></script>
-  <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-  <script
-    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-    crossorigin="anonymous"></script>
-  <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-  <!-- more options -->
-  </script>
+        <!-- End view announcement -->
+        <!-- javascript codes begin here  -->
+        <!--begin::Script-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script
+          src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
+          integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
+          crossorigin="anonymous"></script>
+        <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+        <script
+          src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+          integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+          crossorigin="anonymous"></script>
+        <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+        <!-- more options -->
+        </script>
 
-  <script>
-$('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
-  var accountId = $(this).data('account-id');
-  var accountName = $(this).find('td:first .fw-bold').text();
-  if (!accountId) return;
+        <script>
+          $('#trialBalance tbody').on('click', 'tr[data-account-id]', function() {
+            var accountId = $(this).data('account-id');
+            var accountName = $(this).find('td:first .fw-bold').text();
+            if (!accountId) return;
 
-  $('#modalAccountName').text(accountName);
-  $('#ledgerModal .modal-body').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading ledger details...</div>');
-  $('#ledgerModal').modal('show');
+            $('#modalAccountName').text(accountName);
+            $('#ledgerModal .modal-body').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading ledger details...</div>');
+            $('#ledgerModal').modal('show');
 
-  // Fetch ledger data from backend
-  $.ajax({
-    url: '/Jengopay/landlord/pages/financials/generalledger/get_ledger.php',
-    type: 'GET',
-    data: { account_id: accountId },
-    success: function (response) {
-      let data;
-      try {
-        data = JSON.parse(response);
-      } catch (e) {
-        $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Failed to load ledger data.</div>');
-        return;
-      }
+            // Fetch ledger data from backend
+            $.ajax({
+              url: '/Jengopay/landlord/pages/financials/generalledger/get_ledger.php',
+              type: 'GET',
+              data: {
+                account_id: accountId
+              },
+              success: function(response) {
+                let data;
+                try {
+                  data = JSON.parse(response);
+                } catch (e) {
+                  $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Failed to load ledger data.</div>');
+                  return;
+                }
 
-      if (data.error) {
-        $('#ledgerModal .modal-body').html('<div class="alert alert-warning">' + data.error + '</div>');
-        return;
-      }
+                if (data.error) {
+                  $('#ledgerModal .modal-body').html('<div class="alert alert-warning">' + data.error + '</div>');
+                  return;
+                }
 
-      if (data.length === 0) {
-        $('#ledgerModal .modal-body').html('<div class="alert alert-info">No transactions found for this account.</div>');
-        return;
-      }
+                if (data.length === 0) {
+                  $('#ledgerModal .modal-body').html('<div class="alert alert-info">No transactions found for this account.</div>');
+                  return;
+                }
 
-      // Build table
-      let tableHtml = `
+                // Build table
+                let tableHtml = `
         <table class="table table-striped table-bordered">
           <thead class="table-dark">
             <tr>
@@ -710,10 +710,10 @@ $('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
           <tbody>
       `;
 
-      let runningBalance = 0;
-      data.forEach(row => {
-        runningBalance += parseFloat(row.debit) - parseFloat(row.credit);
-        tableHtml += `
+                let runningBalance = 0;
+                data.forEach(row => {
+                  runningBalance += parseFloat(row.debit) - parseFloat(row.credit);
+                  tableHtml += `
           <tr>
             <td>${row.entry_date || '-'}</td>
             <td>${row.reference || '-'}</td>
@@ -723,107 +723,121 @@ $('#trialBalance tbody').on('click', 'tr[data-account-id]', function () {
             <td class="text-end">${runningBalance.toLocaleString()}</td>
           </tr>
         `;
-      });
+                });
 
-      tableHtml += `</tbody></table>`;
-      $('#ledgerModal .modal-body').html(tableHtml);
-    },
-    error: function () {
-      $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Error loading ledger data.</div>');
-    }
-  });
-});
+                tableHtml += `</tbody></table>`;
+                $('#ledgerModal .modal-body').html(tableHtml);
+              },
+              error: function() {
+                $('#ledgerModal .modal-body').html('<div class="alert alert-danger">Error loading ledger data.</div>');
+              }
+            });
+          });
 
 
-  function exportToExcel() {
-    const table = document.getElementById('trialBalance');
-    const wb = XLSX.utils.table_to_book(table, {sheet: "Trial Balance"});
-    XLSX.writeFile(wb, 'Trial_Balance_' + new Date().toISOString().split('T')[0] + '.xlsx');
-  }
+          function exportToExcel() {
+            const table = document.getElementById('trialBalance');
+            const wb = XLSX.utils.table_to_book(table, {
+              sheet: "Trial Balance"
+            });
+            XLSX.writeFile(wb, 'Trial_Balance_' + new Date().toISOString().split('T')[0] + '.xlsx');
+          }
 
-  function exportToPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    doc.text('Trial Balance Report', 14, 15);
-    doc.autoTable({
-      html: '#trialBalance',
-      startY: 25,
-      theme: 'grid',
-      headStyles: { fillColor: [52, 58, 64] }
-    });
-    
-    doc.save('Trial_Balance_' + new Date().toISOString().split('T')[0] + '.pdf');
-  }
-  </script>
+          function exportToPDF() {
+            const {
+              jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF();
 
-<script>
-    function exportToPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      
-      // Title
-      doc.setFontSize(16);
-      doc.setTextColor(0, 25, 45);
-      doc.text('General Ledger - <?= addslashes($account_name) ?>', 14, 15);
-      
-      // Account info
-      doc.setFontSize(12);
-      doc.setTextColor(100, 100, 100);
-      doc.text('Account Code: <?= $account_code ?>', 14, 25);
-      doc.text('Date Range: <?= addslashes($from_date ? $from_date . " to " . $to_date : "All Dates") ?>', 14, 32);
-      
-      // Table data from PHP
-      const tableData = [
-        ['Date', 'Reference', 'Description', 'Property', 'Debit', 'Credit', 'Balance']
-      ];
-      
-      // Add data rows from PHP JSON
-      const pdfData = <?= $pdfDataJson ?>;
-      pdfData.forEach(row => {
-        tableData.push([
-          row.date,
-          row.reference,
-          row.description,
-          row.building,
-          row.debit,
-          row.credit,
-          row.balance
-        ]);
-      });
-      
-      // Table
-      doc.autoTable({
-        startY: 40,
-        head: [tableData[0]],
-        body: tableData.slice(1),
-        headStyles: { fillColor: [0, 25, 45] },
-        foot: [
-          ['', '', '', 'Total:', 'Ksh<?= number_format($totalDebit, 2) ?>', 'Ksh<?= number_format($totalCredit, 2) ?>', 'Ksh<?= number_format($runningBalance, 2) ?>']
-        ],
-        footStyles: { fillColor: [200, 200, 200], textColor: [0, 0, 0] }
-      });
-      
-      doc.save('General_Ledger_<?= $account_code ?>_<?= date('Y-m-d') ?>.pdf');
-    }
-  </script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            doc.text('Trial Balance Report', 14, 15);
+            doc.autoTable({
+              html: '#trialBalance',
+              startY: 25,
+              theme: 'grid',
+              headStyles: {
+                fillColor: [52, 58, 64]
+              }
+            });
 
-  <script src="../../../../landlord/js/adminlte.js"></script>
+            doc.save('Trial_Balance_' + new Date().toISOString().split('T')[0] + '.pdf');
+          }
+        </script>
 
-  <!--end::Script-->
+        <script>
+          function exportToPDF() {
+            const {
+              jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Title
+            doc.setFontSize(16);
+            doc.setTextColor(0, 25, 45);
+            doc.text('General Ledger - <?= addslashes($account_name) ?>', 14, 15);
+
+            // Account info
+            doc.setFontSize(12);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Account Code: <?= $account_code ?>', 14, 25);
+            doc.text('Date Range: <?= addslashes($from_date ? $from_date . " to " . $to_date : "All Dates") ?>', 14, 32);
+
+            // Table data from PHP
+            const tableData = [
+              ['Date', 'Reference', 'Description', 'Property', 'Debit', 'Credit', 'Balance']
+            ];
+
+            // Add data rows from PHP JSON
+            const pdfData = <?= $pdfDataJson ?>;
+            pdfData.forEach(row => {
+              tableData.push([
+                row.date,
+                row.reference,
+                row.description,
+                row.building,
+                row.debit,
+                row.credit,
+                row.balance
+              ]);
+            });
+
+            // Table
+            doc.autoTable({
+              startY: 40,
+              head: [tableData[0]],
+              body: tableData.slice(1),
+              headStyles: {
+                fillColor: [0, 25, 45]
+              },
+              foot: [
+                ['', '', '', 'Total:', 'Ksh<?= number_format($totalDebit, 2) ?>', 'Ksh<?= number_format($totalCredit, 2) ?>', 'Ksh<?= number_format($runningBalance, 2) ?>']
+              ],
+              footStyles: {
+                fillColor: [200, 200, 200],
+                textColor: [0, 0, 0]
+              }
+            });
+
+            doc.save('General_Ledger_<?= $account_code ?>_<?= date('Y-m-d') ?>.pdf');
+          }
+        </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script src="../../../../landlord/js/adminlte.js"></script>
+
+        <!--end::Script-->
 </body>
 <!--end::Body-->
+
 </html>
