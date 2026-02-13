@@ -295,22 +295,26 @@ require_once './actions/getAllTenants.php'
         <div class="row mb-3 mt-3">
           <div class="col-md-12">
             <div class="card border-0 mb-4">
-              <div class="card-body ">
+              <div class="card-body">
                 <h6 class="mb-3" style="color: var(--main-color); font-weight: 600;">
-                  Units
+                  Tenants per unit category
                 </h6>
-                <a class="action-link allUnits-link" style="text-decoration: none;">
+
+                <button type="button" class="action-link allUnits-link" style="text-decoration: none;">
                   <i class="fas fa-th"></i> All Tenants
-                </a>
-                <a href="single_units_tenants.php" class="action-link" style="text-decoration: none;">
+                </button>
+
+                <button type="button" class="action-link" style="text-decoration: none;">
                   <i class="fas fa-door-open"></i> Single Units
-                </a>
-                <a href="bed_sitter_units.php" class="action-link" style="text-decoration: none;">
+                </button>
+
+                <button type="button" class="action-link" style="text-decoration: none;">
                   <i class="fas fa-bed"></i> Bedsitter Units
-                </a>
-                <a href="multi_room_units.php" class="action-link" style="text-decoration: none;">
+                </button>
+
+                <button type="button" class="action-link" style="text-decoration: none;">
                   <i class="fas fa-door-closed"></i> Multi-Room Units
-                </a>
+                </button>
               </div>
             </div>
           </div>

@@ -577,7 +577,7 @@ $financialData = [
                             </h6>
                             <?php
                             $amenities = json_decode($building['utilities'], true) ?? [];
-                            $amenities = array_slice($amenities, 0, 7);
+                            $amenities = array_slice($amenities, 0, 11);
                             ?>
 
                             <div class="amenities-list">
@@ -598,13 +598,26 @@ $financialData = [
                             <!-- Image Gallery -->
                             <div class="image-gallery">
                                 <h5 class="card-title mb-3"><i class="fas fa-images"></i> Photo Gallery</h5>
+                                <?php
+                                $images = [
+                                    $building['photo_one'],
+                                    $building['photo_two'],
+                                    $building['photo_three'],
+                                    $building['photo_four']
+                                ];
+
+                                // Remove empty/null images (important)
+                                $images = array_filter($images);
+                                ?>
                                 <div class="gallery-main" id="mainImage">
-                                    <img src="<?= $building['images'][0] ?>" alt="Building">
+                                    <img src="/jengopay/landlord/pages/buildings/actions/<?= $images[0] ?>" alt="Building">
                                 </div>
+
                                 <div class="gallery-thumbnails">
-                                    <?php foreach ($building['images'] as $index => $image): ?>
-                                        <div class="gallery-thumb <?= $index === 0 ? 'active' : '' ?>" onclick="changeMainImage('<?= $image ?>', this)">
-                                            <img src="<?= $image ?>" alt="Thumbnail">
+                                    <?php foreach ($images as $index => $image): ?>
+                                        <div class="gallery-thumb <?= $index === 0 ? 'active' : '' ?>"
+                                            onclick="changeMainImage('/jengopay/landlord/pages/buildings/actions/<?= $image ?>', this)">
+                                            <img src="/jengopay/landlord/pages/buildings/actions/<?= $image ?>" alt="Thumbnail">
                                         </div>
                                     <?php endforeach; ?>
                                 </div>

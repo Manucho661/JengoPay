@@ -400,7 +400,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/ba
                 <div class="content-card" style="height: 300px;">
                   <h5><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
                   <div class="d-grid gap-2">
-                    <button class="btn btn-primary"><i class="fas fa-plus me-2"></i>Add Property</button>
+                    <button class="btn btn-primary"><i class="fas fa-plus me-2"></i>Add Building</button>
                     <button class="btn btn-primary"><i class="fas fa-user-plus me-2"></i>Add Tenant</button>
                     <button class="btn btn-warning"><i class="fas fa-file-invoice-dollar me-2"></i>Create Invoice</button>
                     <button class="btn btn-primary"><i class="fas fa-wrench me-2"></i>Log Maintenance</button>
@@ -527,9 +527,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/ba
                           <p class="text-muted small mb-3">
                             Maintenance requests can only be submitted after creating buildings.
                           </p>
-                          <a href="add_property.php" class="btn btn-primary btn-sm">
-                            Add Property
-                          </a>
+                         
                         </div>
                       <?php endif; ?>
 
@@ -539,18 +537,18 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/ba
 
                   <!-- Bottom Button Logic -->
                   <?php if (!empty($lastMaintenanceRequests)): ?>
-                    <a href="maintenance_requests.php" class="btn btn-outline-primary btn-sm mt-3 w-100">
+                    <a href="maintenance_requests.php" class="actionBtn">
                       View All Requests
                     </a>
 
                   <?php elseif (!empty($lastBuildings)): ?>
-                    <a href="create_request.php" class="btn btn-outline-primary btn-sm mt-3 w-100">
+                    <a href="create_request.php" class="actionBtn ">
                       Create Maintenance Request
                     </a>
 
                   <?php else: ?>
                     <a href="add_property.php" class="btn btn-primary btn-sm mt-3 w-100">
-                      Add Property First
+                      Add Building First
                     </a>
                   <?php endif; ?>
 

@@ -6,75 +6,71 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 $sql = "
   SELECT 
     i.id, 
-    i.invoice_number, 
-    i.tenant, 
+    i.invoice_no, 
+    i.tenant_id, 
     i.description, 
     i.invoice_date, 
     i.due_date, 
-    i.total,
-    t.first_name,
-    t.middle_name,
-    t.last_name,
-    t.main_contact AS phone_number,
-    t.building
+    i.total
   FROM invoice i
-  LEFT JOIN tenants t ON i.tenant = t.id
+  LEFT JOIN tenants t ON i.tenant_id = t.id
   WHERE i.payment_status = 'unpaid'
-  ORDER BY t.first_name, t.middle_name, i.invoice_date DESC
+  ORDER BY i.invoice_date DESC
 ";
 $stmt = $pdo->query($sql);
 $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Group invoices by tenant
-$tenants = [];
-foreach ($invoices as $inv) {
-    $tenantId = $inv['tenant'];
-    $tenantName = trim($inv['first_name'] . ' ' . $inv['middle_name'] . ' ' . $inv['last_name']);
+// $tenants = [];
+// foreach ($invoices as $inv) {
+//     $tenantId = $inv['tenant'];
+//     $tenantName = trim($inv['first_name'] . ' ' . $inv['middle_name'] . ' ' . $inv['last_name']);
 
-    if (empty(trim($tenantName))) $tenantName = "Tenant #" . $tenantId;
-    if (!empty($inv['building'])) $tenantName .= " (Building: " . $inv['building'] . ")";
+//     if (empty(trim($tenantName))) $tenantName = "Tenant #" . $tenantId;
+//     if (!empty($inv['building'])) $tenantName .= " (Building: " . $inv['building'] . ")";
 
-    if (!isset($tenants[$tenantId])) {
-        $tenants[$tenantId] = [
-            'name' => $tenantName,
-            'phone' => $inv['phone_number'],
-            'building' => $inv['building'],
-            'invoices' => []
-        ];
-    }
-    $tenants[$tenantId]['invoices'][] = $inv;
-}
+//     if (!isset($tenants[$tenantId])) {
+//         $tenants[$tenantId] = [
+//             'name' => $tenantName,
+//             'phone' => $inv['phone_number'],
+//             'building' => $inv['building'],
+//             'invoices' => []
+//         ];
+//     }
+//     $tenants[$tenantId]['invoices'][] = $inv;
+// }
 
-// Calculate days overdue
-function daysOverdue($invoiceDate, $dueDate = null) {
-    $today = new DateTime();
-    $date = $dueDate ? new DateTime($dueDate) : new DateTime($invoiceDate);
-    return $date->diff($today)->days;
-}
+// // Calculate days overdue
+// function daysOverdue($invoiceDate, $dueDate = null) {
+//     $today = new DateTime();
+//     $date = $dueDate ? new DateTime($dueDate) : new DateTime($invoiceDate);
+//     return $date->diff($today)->days;
+// }
 
-// Prepare summary totals
-$totals = [
-    '0-30' => 0,
-    '31-60' => 0,
-    '61-90' => 0,
-    '90+' => 0,
-    'grand' => 0
-];
+// // Prepare summary totals
+// $totals = [
+//     '0-30' => 0,
+//     '31-60' => 0,
+//     '61-90' => 0,
+//     '90+' => 0,
+//     'grand' => 0
+// ];
 
-foreach ($invoices as $inv) {
-    $days = daysOverdue($inv['invoice_date'], $inv['due_date']);
-    if ($days <= 30) $totals['0-30'] += $inv['total'];
-    elseif ($days <= 60) $totals['31-60'] += $inv['total'];
-    elseif ($days <= 90) $totals['61-90'] += $inv['total'];
-    else $totals['90+'] += $inv['total'];
-    $totals['grand'] += $inv['total'];
-}
+// foreach ($invoices as $inv) {
+//     $days = daysOverdue($inv['invoice_date'], $inv['due_date']);
+//     if ($days <= 30) $totals['0-30'] += $inv['total'];
+//     elseif ($days <= 60) $totals['31-60'] += $inv['total'];
+//     elseif ($days <= 90) $totals['61-90'] += $inv['total'];
+//     else $totals['90+'] += $inv['total'];
+//     $totals['grand'] += $inv['total'];
+// }
 ?>
 
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>AdminLTE | Dashboard v2</title>
   <!--begin::Primary Meta Tags-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -114,10 +110,11 @@ foreach ($invoices as $inv) {
 
   <!--end::Third Party Plugin(Bootstrap Icons)-->
   <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="../../../../landlord/css/adminlte.css" />
+  <link rel="stylesheet" href="/jengopay/landlord/assets/main.css" />
   <!-- <link rel="stylesheet" href="text.css" /> -->
   <!--end::Required Plugin(AdminLTE)-->
   <!-- apexcharts -->
+
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
@@ -152,52 +149,60 @@ foreach ($invoices as $inv) {
   <link rel="stylesheet" href="../../../landlord/css/adminlte.css" />
 
   <style>
-    .table-hover tbody tr:hover { background-color: #f8f9fa; }
-    .summary-card { background-color: #00192D; color: #FFC107; border-radius: 10px; }
-    .summary-card h5 { margin: 0; }
+    .table-hover tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    .summary-card {
+      background-color: #00192D;
+      color: #FFC107;
+      border-radius: 10px;
+    }
+
+    .summary-card h5 {
+      margin: 0;
+    }
+
     .arrow-icon {
-  transition: transform 0.3s ease;
-}
-.arrow-icon.rotate {
-  transform: rotate(90deg);
-}
+      transition: transform 0.3s ease;
+    }
+
+    .arrow-icon.rotate {
+      transform: rotate(90deg);
+    }
   </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-<div class="app-wrapper" style="background-color:rgba(128,128,128,0.1);">
-  <?php include_once '../../includes/header.php'; ?>
-  <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-    <div class="sidebar-brand text-center p-2">
-      <span class="brand-text fw-bold text-warning">BT JENGOPAY</span>
-    </div>
-    <div><?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?></div>
-  </aside>
 
- 
-  <main class="app-main">
-    <div class="app-content-header p-3">
-      <h3 class="fw-bold text-dark">📋 Aged Receivables Report</h3>
-      <p class="text-muted">Outstanding tenant invoices by aging category.</p>
-    </div>
+  <div class="app-wrapper" style="background-color:rgba(128,128,128,0.1);">
+    <?php include_once '../../includes/header.php'; ?>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?><
 
-    <div class="app-content">
-      <div class="container-fluid bg-white rounded-2 shadow-sm p-3">
-        <div class="row text-center mb-4">
-          <?php foreach (['0-30','31-60','61-90','90+'] as $range): ?>
-          <div class="col-md-3">
-            <div class="summary-card p-3">
-              <h5><?= $range ?> Days</h5>
-              <h4>KSh <?= number_format($totals[$range], 2) ?></h4>
-            </div>
+
+      <main class="app-main">
+      <div class="app-content-header p-3">
+        <h3 class="fw-bold text-dark">📋 Aged Receivables Report</h3>
+        <p class="text-muted">Outstanding tenant invoices by aging category.</p>
+      </div>
+
+      <div class="app-content">
+        <div class="container-fluid bg-white rounded-2 shadow-sm p-3">
+          <div class="row text-center mb-4">
+            <?php foreach (['0-30', '31-60', '61-90', '90+'] as $range): ?>
+              <div class="col-md-3">
+                <div class="summary-card p-3">
+                  <h5><?= $range ?> Days</h5>
+                  <h4>KSh <?= number_format($totals[$range], 2) ?></h4>
+                </div>
+              </div>
+            <?php endforeach; ?>
           </div>
-          <?php endforeach; ?>
         </div>
-          </div>
-        
-<div>
-  
-</div>
+
+        <div>
+
+        </div>
 
         <!-- Main Table (for DataTables) -->
         <table id="agedTable" class="table table-striped table-hover align-middle">
@@ -214,7 +219,7 @@ foreach ($invoices as $inv) {
           </thead>
           <tbody>
             <?php foreach ($tenants as $tenantId => $tenant):
-              $buckets = ['0-30'=>0,'31-60'=>0,'61-90'=>0,'90+'=>0];
+              $buckets = ['0-30' => 0, '31-60' => 0, '61-90' => 0, '90+' => 0];
               foreach ($tenant['invoices'] as $inv) {
                 $days = daysOverdue($inv['invoice_date'], $inv['due_date']);
                 if ($days <= 30) $buckets['0-30'] += $inv['total'];
@@ -224,18 +229,18 @@ foreach ($invoices as $inv) {
               }
               $total = array_sum($buckets);
             ?>
-            <!-- Only main rows go in DataTable -->
-            <tr class="tenant-row" data-tenant-id="<?= $tenantId ?>">
-              <td class="text-center">
-                <i class="fas fa-chevron-right text-warning arrow-icon"></i>
-              </td>
-              <td><?= htmlspecialchars($tenant['name']) ?></td>
-              <td>KSh <?= number_format($buckets['0-30'], 2) ?></td>
-              <td>KSh <?= number_format($buckets['31-60'], 2) ?></td>
-              <td>KSh <?= number_format($buckets['61-90'], 2) ?></td>
-              <td>KSh <?= number_format($buckets['90+'], 2) ?></td>
-              <td>KSh <?= number_format($total, 2) ?></td>
-            </tr>
+              <!-- Only main rows go in DataTable -->
+              <tr class="tenant-row" data-tenant-id="<?= $tenantId ?>">
+                <td class="text-center">
+                  <i class="fas fa-chevron-right text-warning arrow-icon"></i>
+                </td>
+                <td><?= htmlspecialchars($tenant['name']) ?></td>
+                <td>KSh <?= number_format($buckets['0-30'], 2) ?></td>
+                <td>KSh <?= number_format($buckets['31-60'], 2) ?></td>
+                <td>KSh <?= number_format($buckets['61-90'], 2) ?></td>
+                <td>KSh <?= number_format($buckets['90+'], 2) ?></td>
+                <td>KSh <?= number_format($total, 2) ?></td>
+              </tr>
             <?php endforeach; ?>
           </tbody>
           <tfoot>
@@ -253,127 +258,129 @@ foreach ($invoices as $inv) {
         <!-- Detail Tables (outside DataTables) -->
         <div id="detailTables">
           <?php foreach ($tenants as $tenantId => $tenant): ?>
-          <div class="detail-table-container" id="details-<?= $tenantId ?>" style="display: none;">
-            <div class="card mt-2 mb-4">
-              <div class="card-header bg-light">
-                <h6 class="mb-0">Invoice Details for <?= htmlspecialchars($tenant['name']) ?></h6>
-              </div>
-              <div class="card-body p-0">
-                <table class="table table-sm table-bordered mb-0">
-                  <thead class="table-secondary">
-                    <tr>
-                      <th>Invoice #</th>
-                      <th>Description</th>
-                      <th>Invoice Date</th>
-                      <th>Due Date</th>
-                      <th>Amount</th>
-                      <th>Days Overdue</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php foreach ($tenant['invoices'] as $inv): 
-                      $days = daysOverdue($inv['invoice_date'], $inv['due_date']);
-                    ?>
-                    <tr>
-                      <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
-                      <td><?= htmlspecialchars($inv['description']) ?></td>
-                      <td><?= htmlspecialchars($inv['invoice_date']) ?></td>
-                      <td><?= htmlspecialchars($inv['due_date']) ?></td>
-                      <td>KSh <?= number_format($inv['total'], 2) ?></td>
-                      <td>
-                        <span class="badge <?= $days > 90 ? 'bg-danger' : ($days > 60 ? 'bg-warning' : ($days > 30 ? 'bg-info' : 'bg-secondary')) ?>">
-                          <?= $days ?> days
-                        </span>
-                      </td>
-                    </tr>
-                    <?php endforeach; ?>
-                  </tbody>
-                </table>
+            <div class="detail-table-container" id="details-<?= $tenantId ?>" style="display: none;">
+              <div class="card mt-2 mb-4">
+                <div class="card-header bg-light">
+                  <h6 class="mb-0">Invoice Details for <?= htmlspecialchars($tenant['name']) ?></h6>
+                </div>
+                <div class="card-body p-0">
+                  <table class="table table-sm table-bordered mb-0">
+                    <thead class="table-secondary">
+                      <tr>
+                        <th>Invoice #</th>
+                        <th>Description</th>
+                        <th>Invoice Date</th>
+                        <th>Due Date</th>
+                        <th>Amount</th>
+                        <th>Days Overdue</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($tenant['invoices'] as $inv):
+                        $days = daysOverdue($inv['invoice_date'], $inv['due_date']);
+                      ?>
+                        <tr>
+                          <td><?= htmlspecialchars($inv['invoice_number']) ?></td>
+                          <td><?= htmlspecialchars($inv['description']) ?></td>
+                          <td><?= htmlspecialchars($inv['invoice_date']) ?></td>
+                          <td><?= htmlspecialchars($inv['due_date']) ?></td>
+                          <td>KSh <?= number_format($inv['total'], 2) ?></td>
+                          <td>
+                            <span class="badge <?= $days > 90 ? 'bg-danger' : ($days > 60 ? 'bg-warning' : ($days > 30 ? 'bg-info' : 'bg-secondary')) ?>">
+                              <?= $days ?> days
+                            </span>
+                          </td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
-          </div>
           <?php endforeach; ?>
         </div>
       </div>
-    </div>
+  </div>
   </main>
 
   <footer class="app-footer text-center py-3">
     <strong>© 2025 JENGO PAY</strong> — All rights reserved.
   </footer>
-</div>
+  </div>
 
-<!-- Invoice Modal -->
-<div class="modal fade" id="tenantModal" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header" style="background-color:#00192D; color:#FFC107;">
-        <h5 class="modal-title">Tenant Invoice Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body" id="tenantDetails">
-        <p class="text-center text-muted">Loading...</p>
+  <!-- Invoice Modal -->
+  <div class="modal fade" id="tenantModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#00192D; color:#FFC107;">
+          <h5 class="modal-title">Tenant Invoice Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="tenantDetails">
+          <p class="text-center text-muted">Loading...</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script>
-$(document).ready(function() {
-  // Initialize DataTable with ONLY the main table rows
-  var table = $('#agedTable').DataTable({
-    "paging": true,
-    "searching": true,
-    "info": true,
-    "ordering": true,
-    "autoWidth": false,
-    "language": {
-      "searchPlaceholder": "Search tenant..."
-    },
-    "columnDefs": [
-      { 
-        "orderable": false, 
-        "targets": 0, // arrow column
-        "searchable": false
-      },
-      {
-        "targets": [2, 3, 4, 5, 6], // amount columns
-        "type": "num-fmt",
-        "render": function(data, type, row) {
-          if (type === 'sort' || type === 'type') {
-            // Extract numeric value for sorting
-            return parseFloat(data.replace('KSh', '').replace(/,/g, '')) || 0;
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable with ONLY the main table rows
+      var table = $('#agedTable').DataTable({
+        "paging": true,
+        "searching": true,
+        "info": true,
+        "ordering": true,
+        "autoWidth": false,
+        "language": {
+          "searchPlaceholder": "Search tenant..."
+        },
+        "columnDefs": [{
+            "orderable": false,
+            "targets": 0, // arrow column
+            "searchable": false
+          },
+          {
+            "targets": [2, 3, 4, 5, 6], // amount columns
+            "type": "num-fmt",
+            "render": function(data, type, row) {
+              if (type === 'sort' || type === 'type') {
+                // Extract numeric value for sorting
+                return parseFloat(data.replace('KSh', '').replace(/,/g, '')) || 0;
+              }
+              return data;
+            }
           }
-          return data;
+        ],
+        "order": [
+          [1, 'asc']
+        ] // Sort by tenant name by default
+      });
+
+      // Toggle detail tables
+      $('#agedTable').on('click', '.tenant-row', function() {
+        const tenantId = $(this).data('tenant-id');
+        const detailsContainer = $('#details-' + tenantId);
+        const icon = $(this).find('.arrow-icon');
+
+        // Toggle visibility
+        if (detailsContainer.is(':visible')) {
+          detailsContainer.hide();
+          icon.removeClass('rotate');
+        } else {
+          detailsContainer.show();
+          icon.addClass('rotate');
         }
-      }
-    ],
-    "order": [[1, 'asc']] // Sort by tenant name by default
-  });
+      });
 
-  // Toggle detail tables
-  $('#agedTable').on('click', '.tenant-row', function() {
-    const tenantId = $(this).data('tenant-id');
-    const detailsContainer = $('#details-' + tenantId);
-    const icon = $(this).find('.arrow-icon');
-    
-    // Toggle visibility
-    if (detailsContainer.is(':visible')) {
-      detailsContainer.hide();
-      icon.removeClass('rotate');
-    } else {
-      detailsContainer.show();
-      icon.addClass('rotate');
-    }
-  });
-
-  // Hide all detail containers initially
-  $('.detail-table-container').hide();
-});
-</script>
+      // Hide all detail containers initially
+      $('.detail-table-container').hide();
+    });
+  </script>
 </body>
+
 </html>

@@ -12,7 +12,7 @@ include '../db/connect.php'; // adjust path
 // actions
 
 // get messages
-// require_once "./actions/getMessages.php";
+require_once "./actions/getMessages.php";
 require_once "./actions/startNewChat.php";
 ?>
 <?php
@@ -637,58 +637,44 @@ try {
                       </tr>
                     </thead>
                     <tbody id="conversationTableBody">
-                      <?php
-                      // if (!empty($communications)): 
-                      ?>
-                      <?php
-                      // foreach ($communications as $comm):
-                      //   $datetime = new DateTime($comm['created_at'] ?? date('Y-m-d H:i:s'));
-                      //   $date = $datetime->format('d-m-Y');
-                      //   $time = $datetime->format('h:iA');
-                      //   $sender = htmlspecialchars($comm['tenant'] ?: 'Tenant');
-                      //   $email = ''; // Add email logic if needed
-                      //   $recipient = htmlspecialchars($comm['recipient'] ?? 'Sender Name'); // Adjust key as needed
-                      //   $title = htmlspecialchars($comm['title']);
-                      //   $threadId = $comm['thread_id'];
-                      ?>
-                      <tr class="table-row" data-date="">
-                        <td class="timestamp">
-                          <div class="date"></div>
-                          <div class="time"></div>
-                        </td>
-                        <td class="title"></td>
-                        <td>
-                          <div class="recipient"></div>
-                        </td>
-                        <td>
-                          <div class="sender"></div>
-                          <div class="sender-email"></div>
-                        </td>
-                        <td>
-                          <button class="btn btn-primary view">
-                            <i class="bi bi-eye"></i> View
-                          </button>
-                          <button class="btn btn-danger delete" data-thread-id="">
-                            <i class="bi bi-trash3"></i> Delete
-                          </button>
-                        </td>
-                      </tr>
-                      <?php
-                      // endforeach; 
-                      ?>
-                      <tr id="noResultsRow" style="display: none;">
-                        <td colspan="5" class="text-center text-danger">No matching results found.</td>
-                      </tr>
+                      <?php foreach ($conversations as $conversation): ?>
+                        <?php
+                        $messages = $conversation['messages'] ?? [];
+                        $lastMsg = !empty($messages) ? end($messages) : null;
 
-                      <?php
-                      // else: 
-                      ?>
-                      <tr>
-                        <td colspan="5" class="text-center">No message available</td>
-                      </tr>
-                      <?php
-                      // endif;
-                      ?>
+                        $title = $lastMsg['message'] ?? '';
+                        $senderName = $lastMsg['sender_name'] ?? '';
+                        $senderEmail = $lastMsg['sender_email'] ?? '';
+                        $createdAt = $lastMsg['created_at'] ?? '';
+                        ?>
+                        <tr class="table-row">
+                          <td class="timestamp">
+                            <div class="date"><?= htmlspecialchars(substr($createdAt, 0, 10)) ?></div>
+                            <div class="time"><?= htmlspecialchars(substr($createdAt, 11, 5)) ?></div>
+                          </td>
+
+                          <td class="title"><?= htmlspecialchars($title) ?></td>
+
+                          <td>
+                            <div class="recipient">Thread #<?= (int)$conversation['conversation_id'] ?></div>
+                          </td>
+
+                          <td>
+                            <div class="sender"><?= htmlspecialchars($senderName ?: 'Unknown') ?></div>
+                            <div class="sender-email"><?= htmlspecialchars($senderEmail ?: '') ?></div>
+                          </td>
+
+                          <td>
+                            <button class="btn btn-primary view" data-conversation-id="<?= (int)$conversation['conversation_id'] ?>">
+                              <i class="bi bi-eye"></i> View
+                            </button>
+                            <button class="btn btn-danger delete" data-thread-id="<?= (int)$conversation['conversation_id'] ?>">
+                              <i class="bi bi-trash3"></i> Delete
+                            </button>
+                          </td>
+                        </tr>
+                      <?php endforeach; ?>
+
                     </tbody>
                   </table>
                 </div>
@@ -816,13 +802,17 @@ try {
 
             <!-- Message -->
             <div class="mt-3">
+              <label class="form-label mb-1">Title</label>
+              <!-- Optional: title (if you want it in DB). Hidden for now, but supported -->
+              <input type="text" class="form-control" name="title" id="chatTitle" value="" placeholder="Rental arreas...">
+            </div>
+
+            <!-- Message -->
+            <div class="mt-3">
               <label class="form-label mb-1">Message</label>
               <!-- IMPORTANT: name="message" -->
               <textarea class="form-control" name="message" rows="4" placeholder="Type your message..."></textarea>
             </div>
-
-            <!-- Optional: title (if you want it in DB). Hidden for now, but supported -->
-            <input type="hidden" name="title" id="chatTitle" value="New Conversation">
 
             <!-- Keep these if your JS uses them, but backend uses above fields -->
             <input type="hidden" id="targetType" />

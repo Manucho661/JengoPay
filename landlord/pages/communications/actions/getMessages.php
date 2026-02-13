@@ -17,23 +17,24 @@ try {
 
     $userId = (int) $_SESSION['user']['id'];
 
-    /**
-     * 2) Fetch messages for conversations where user is a participant
-     * - We first find conversations via conversation_participants (cp_me)
-     * - Then bring messages from conversation_messages (cm)
-     * - Optionally bring sender details (users u)
-     */
+    // 2) Fetch messages for conversations where user is a participant
     $stmt = $pdo->prepare("
         SELECT
             c.id AS conversation_id,
             c.created_at AS conversation_created_at,
 
             cm.id AS message_id,
-            cm.body,
+            cm.body AS message_body,
             cm.created_at AS message_created_at,
             cm.sender_id AS message_sender_id,
 
-            u.email
+            u.email,
+            u.role,
+
+            t.first_name AS tenant_first_name,
+            l.first_name AS landlord_first_name,
+            sp.name      AS sp_first_name  -- change to sp.first_name if that's your column
+
         FROM conversation_participants cp_me
         INNER JOIN conversations c
             ON c.id = cp_me.conversation_id
@@ -41,6 +42,14 @@ try {
             ON cm.conversation_id = c.id
         LEFT JOIN users u
             ON u.id = cm.sender_id
+
+        LEFT JOIN tenants t
+            ON t.user_id = u.id AND u.role = 'tenant'
+        LEFT JOIN landlords l
+            ON l.user_id = u.id AND u.role = 'landlord'
+        LEFT JOIN service_providers sp
+            ON sp.user_id = u.id AND u.role = 'service_provider'
+
         WHERE cp_me.user_id = :user_id
         ORDER BY c.id DESC, cm.created_at ASC
     ");
@@ -48,10 +57,9 @@ try {
     $stmt->execute([':user_id' => $userId]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    /**
-     * 3) Group messages by conversation (no JSON, just PHP arrays)
-     */
+    // 3) Group messages by conversation
     $conversations = [];
+
     foreach ($rows as $r) {
         $cid = (int) $r['conversation_id'];
 
@@ -63,31 +71,26 @@ try {
             ];
         }
 
-        $senderName = trim(
-            ($r['first_name'] ?? '') . ' ' .
-                ($r['middle_name'] ?? '') . ' ' .
-                ($r['last_name'] ?? '')
-        );
+        $senderName =
+            $r['tenant_first_name']
+            ?? $r['landlord_first_name']
+            ?? $r['sp_first_name']
+            ?? null;
 
         $conversations[$cid]['messages'][] = [
             'message_id' => (int) $r['message_id'],
-            'message' => $r['message'],
+            'message' => $r['message_body'],
             'sender_id' => (int) $r['message_sender_id'],
-            'sender_name' => $senderName !== '' ? $senderName : null,
+            'sender_email' => $r['email'] ?? null,
+            'sender_role' => $r['role'] ?? null,
+            'sender_name' => $senderName, // already null or string
             'created_at' => $r['message_created_at'],
         ];
     }
-
-    // If you want a normal indexed array instead of conversation_id keys:
-    $conversations = array_values($conversations);
-
-    // Use $conversations in your view:
-    // var_dump($conversations);
 
 } catch (Throwable $e) {
     $_SESSION['error'] = 'Failed to load the messages: ' . $e->getMessage();
     error_log("Fetch conversations/messages error: " . $e->getMessage());
     http_response_code(500);
-    // no json; just stop or show a normal message
     echo $e->getMessage();
 }

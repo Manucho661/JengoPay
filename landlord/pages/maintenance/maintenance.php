@@ -85,7 +85,8 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
       color: #6c757d;
       font-size: 0.9rem;
     }
-    a{
+
+    a {
       text-decoration: none !important;
     }
   </style>
@@ -261,10 +262,11 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                           <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Statuses</option>
 
                           <!-- Use values that match your DB exactly -->
-                          <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
-                          <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
-                          <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
-                          <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                          <option value="Submitted" <?= ($status ?? '') === 'Submitted' ? 'selected' : '' ?>>Submitted</option>
+                          <option value="Assigned" <?= ($status ?? '') === 'Assigned' ? 'selected' : '' ?>>Assigned</option>
+                          <option value="Cancelled" <?= ($status ?? '') === 'Cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                          <option value="Completed" <?= ($status ?? '') === 'Completed' ? 'selected' : '' ?>>Completed</option>
+                          <option value="Closed" <?= ($status ?? '') === 'Closed' ? 'selected' : '' ?>>Closed</option>
                         </select>
                       </div>
 
@@ -661,6 +663,56 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
         });
       });
     </script>
+
+    <!--  Graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+      const labels = <?= $monthLabelsJson ?? '[]' ?>;
+      const totals = <?= $monthTotalsJson ?? '[]' ?>;
+
+      // Turn "YYYY-MM" into "Jan", "Feb", ...
+      const prettyLabels = labels.map(k => {
+        const [, mm] = k.split('-');
+        const d = new Date(2000, Number(mm) - 1, 1);
+        return d.toLocaleString(undefined, {
+          month: 'short'
+        });
+      });
+
+      const ctx = document.getElementById("requestsGraph");
+
+      new Chart(ctx, {
+        type: "line", // change to "bar" if you prefer
+        data: {
+          labels: prettyLabels,
+          datasets: [{
+            label: "Requests (this year)",
+            data: totals,
+            tension: 0.35,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0
+              }
+            }
+          }
+        }
+      });
+    </script>
+
+    <style>
+      .requestsGraph {
+        height: 320px;
+      }
+    </style>
+
 
 </body>
 <!--end::Body-->

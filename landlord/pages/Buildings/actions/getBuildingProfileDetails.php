@@ -36,9 +36,9 @@ try {
     $stmt->execute(['id' => (int)$buildingId]);
     $building = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$building) {
-        die("Building not found");
-    }
+    // if (!$building) {
+    //     die("Building not found");
+    // }
 
     /* =========================
        2) UNITS (with category, status, tenant)

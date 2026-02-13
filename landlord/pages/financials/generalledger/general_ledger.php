@@ -4,26 +4,45 @@ require_once '../../db/connect.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 ?>
 <?php
+// the landlord
+$userId = $_SESSION['user']['id'];
 
-// Capture filters
-$from_date  = $_GET['from_date'] ?? '';
-$to_date    = $_GET['to_date'] ?? '';
-$account_id = $_GET['account_id'] ?? '';
+// Fetch landlord ID linked to the logged-in user
+$stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
+$stmt->execute([$userId]);
+$landlord = $stmt->fetch();
 
-$where  = [];
-$params = [];
-
-// Date filter
-if (!empty($from_date) && !empty($to_date)) {
-  $where[] = "DATE(je.created_at) BETWEEN :from AND :to";
-  $params[':from'] = $from_date;
-  $params[':to']   = $to_date;
+// Check if landlord exists for the user
+if (!$landlord) {
+    throw new Exception("Landlord account not found for this user.");
 }
 
-// Account filter
-if (!empty($account_id)) {
-  $where[] = "jl.account_id = :account_id";
-  $params[':account_id'] = $account_id;
+$landlord_id = $landlord['id']; // Store the landlord_id from the session
+
+
+// Capture filters
+$from_date    = $_GET['from_date'] ?? '';
+$to_date      = $_GET['to_date'] ?? '';
+$account_id   = $_GET['account_id'] ?? '';
+$account_code = $_GET['account_code'] ?? '';
+
+// Always restrict to landlord
+$where[] = "jl.landlord_id = :landlord_id";
+$params[':landlord_id'] = $landlord_id;
+
+// Account filter (optional)
+if (!empty($account_id) || !empty($account_code)) {
+  $where[] = "(jl.account_id = :account_id OR a.account_code = :account_code)";
+  $params[':account_id']   = $account_id;
+  $params[':account_code'] = $account_code;
+}
+
+// Account + Landlord filter
+if (!empty($account_id) || !empty($account_code)) {
+  $where[] = "jl.landlord_id = :landlord_id AND (jl.account_id = :account_id OR a.account_code = :account_code)";
+  $params[':landlord_id']   = $landlord_id;
+  $params[':account_id']    = $account_id;
+  $params[':account_code']  = $account_code;
 }
 
 $whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
@@ -47,6 +66,7 @@ $sql = "
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $ledgerRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 // Accounts for dropdown filter
 $accounts = $pdo->query("

@@ -692,6 +692,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                             <h3 class="details-container_header text-start">
                                 <span id="displayed_building">All Expenses</span> &nbsp; |&nbsp;
                                 <span style="color:#FFC107"> <span id="enteries"><?= count($currentExpenses) ?></span> entries</span>
+                                <button class="actionBtn2">Add New Expense</button>
                             </h3>
 
                             <?php if (empty($currentExpenses)): ?>

@@ -227,38 +227,85 @@ require_once "actions/getOperatingActivities.php";
                             </div>
                         </div>
                     </div>
-                    <div class="row align-items-center p-2 rounded mb-3">
-                        <div class="col-md-9">
-                            <div class="d-flex gap-3 align-items-center w-100">
-                                <!-- Category Filter -->
-                                <div class="form-group w-100">
-                                    <label for="selectFilter" class="form-label p-2">Choose a Building</label>
-                                    <select id="selectFilter" class="form-select w-100" aria-label="Select filter">
-                                        <option selected>Select a building</option>
-                                        <option value="1">Option 1</option>
-                                        <option value="2">Option 2</option>
-                                        <option value="3">Option 3</option>
-                                        <option value="4">Option 4</option>
-                                    </select>
-                                </div>
+                    <!-- Fifth Row: filter -->
+                    <div class="row g-3 mb-4">
+                        <!-- Filter by Building -->
+                        <div class="col-md-12 col-sm-12">
+                            <div class="card border-0 mb-4">
+                                <div class="card-body ">
+                                    <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filters</h5>
+                                    <form method="GET">
+                                        <!-- always reset to page 1 when applying filters -->
+                                        <input type="hidden" name="page" value="1">
 
-                                <!-- Date Filter -->
-                                <div class="form-group w-100">
-                                    <label for="filterDate" class="form-label p-2">Select Date</label>
-                                    <input type="date" id="filterDate" class="form-control w-100 border-1 shadow-sm" />
-                                </div>
-                            </div>
-                        </div>
+                                        <div class="filters-scroll">
+                                            <div class="row g-3 mb-3 filters-row">
 
-                        <!-- Export Buttons -->
-                        <div class="col-md-3 d-flex justify-content-md-end mt-3 mt-md-0">
-                            <div class="d-flex gap-2">
-                                <button class="btn rounded-circle shadow-sm" id="downloadBtn" style="background-color: #FFC107; border: none;">
-                                    <i class="fas fa-file-pdf" style="font-size: 24px; color: #00192D;"></i>
-                                </button>
-                                <button class="btn rounded-circle shadow-sm" id="exportToExcel" style="background-color: #FFC107; border: none;">
-                                    <i class="fas fa-file-excel" style="font-size: 24px; color: #00192D;"></i>
-                                </button>
+                                                <div class="col-auto filter-col">
+                                                    <label class="form-label text-muted small">Search</label>
+                                                    <input
+                                                        type="text"
+                                                        name="search"
+                                                        class="form-control"
+                                                        placeholder="Supplier or expense no..."
+                                                        value="<?= htmlspecialchars($search ?? '') ?>">
+                                                </div>
+
+                                                <div class="col-auto filter-col">
+                                                    <label class="form-label text-muted small">Buildings</label>
+                                                    <select class="form-select shadow-sm" name="building_id">
+                                                        <option value="">All Buildings</option>
+                                                        
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-auto filter-col">
+                                                    <label class="form-label text-muted small">Status</label>
+                                                    <select name="status" class="form-select">
+                                                        <option value="" <?= ($status ?? '') === '' ? 'selected' : '' ?>>All Statuses</option>
+
+                                                        <!-- Use values that match your DB exactly -->
+                                                        <option value="paid" <?= ($status ?? '') === 'paid' ? 'selected' : '' ?>>Paid</option>
+                                                        <option value="unpaid" <?= ($status ?? '') === 'unpaid' ? 'selected' : '' ?>>Unpaid</option>
+                                                        <option value="overpaid" <?= ($status ?? '') === 'overpaid' ? 'selected' : '' ?>>Overpaid</option>
+                                                        <option value="partially paid" <?= ($status ?? '') === 'partially paid' ? 'selected' : '' ?>>Partially Paid</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-auto filter-col">
+                                                    <label class="form-label text-muted small">Date From</label>
+                                                    <input
+                                                        type="date"
+                                                        name="date_from"
+                                                        class="form-control"
+                                                        value="<?= htmlspecialchars($date_from ?? '') ?>">
+                                                </div>
+
+                                                <div class="col-auto filter-col">
+                                                    <label class="form-label text-muted small">Date To</label>
+                                                    <input
+                                                        type="date"
+                                                        name="date_to"
+                                                        class="form-control"
+                                                        value="<?= htmlspecialchars($date_to ?? '') ?>">
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex gap-2 justify-content-end">
+                                            <!-- Replace with your real page name -->
+                                            <a href="expenses.php" class="btn btn-secondary">
+                                                <i class="fas fa-redo"></i> Reset
+                                            </a>
+
+                                            <button type="submit" class="actionBtn">
+                                                <i class="fas fa-search"></i> Apply Filters
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -267,7 +314,7 @@ require_once "actions/getOperatingActivities.php";
                             <div class="card border-0 shadow-none" style="border: none !important; box-shadow: none !important;">
                                 <tableheader>
                                     <div>
-                                        <h1>Emmanuel Properties Ltd. — Cash Flow Statement</h1>
+                                        <h1>The Cash Flow Statement</h1>
                                         <p>For the month of <?= date('F Y') ?> (KES)</p>
                                     </div>
 
@@ -310,14 +357,6 @@ require_once "actions/getOperatingActivities.php";
                                                 <td class="right">&mdash;</td>
                                             </tr>
                                         <?php endforeach; ?>
-
-                                        <!-- deposits (leave as is) -->
-                                        <tr>
-                                            <td>Rent deposits from new tenants</td>
-                                            <td class="right"> 1000 </td>
-                                            <td class="right">&mdash;</td>
-                                        </tr>
-
                                         <!-- outflow -->
                                         <?php foreach ($operatingOutflows as $outflow): ?>
                                             <tr>

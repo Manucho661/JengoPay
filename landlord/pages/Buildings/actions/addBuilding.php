@@ -3,33 +3,38 @@ if (isset($_POST['submit_building'])) {
     $tm = md5(time()); // Unique prefix for uploaded files
 
     // ---------- File Upload Handling ----------
-    function uploadFile($fileKey, $tm)
+    function uploadFile(string $fileKey, string $tm): ?string
     {
-        if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
-            $name = basename($_FILES[$fileKey]['name']);
-            $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $name); // sanitize
-
-            // Set the upload directory
-            $uploadDir = __DIR__ . "/all_uploads/";
-
-            // Create the folder if it doesn't exist
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-            // Full destination path
-            $destination = $uploadDir . $tm . "_" . $safeName;
-
-            // Move the uploaded file
-            if (move_uploaded_file($_FILES[$fileKey]['tmp_name'], $destination)) {
-                return $destination; // returns full path
-            } else {
-                return null; // failed to move file
-            }
+        if (!isset($_FILES[$fileKey]) || $_FILES[$fileKey]['error'] !== UPLOAD_ERR_OK) {
+            return null;
         }
 
-        return null; // file not uploaded
+        $name = basename($_FILES[$fileKey]['name']);
+        $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $name);
+
+        // This is the folder under your project (web-accessible)
+        $relativeDir = "all_uploads/";
+        $absoluteDir = __DIR__ . "/" . $relativeDir;
+
+        if (!is_dir($absoluteDir)) {
+            mkdir($absoluteDir, 0777, true);
+        }
+
+        $fileName = $tm . "_" . $safeName;
+
+        // Absolute path for saving
+        $destinationAbs = $absoluteDir . $fileName;
+
+        // Relative path for DB + HTML <img src="">
+        $destinationRel = $relativeDir . $fileName;
+
+        if (move_uploaded_file($_FILES[$fileKey]['tmp_name'], $destinationAbs)) {
+            return $destinationRel; // ✅ store this in DB
+        }
+
+        return null;
     }
+
 
     $ownership_proof_destination = uploadFile('ownership_proof', $tm);
     $title_deed_destination      = uploadFile('title_deed', $tm);

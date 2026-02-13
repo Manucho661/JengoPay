@@ -243,6 +243,119 @@ if (isset($_POST['submit_reading'])) {
             z-index: 10;
             white-space: nowrap;
         }
+
+        /* Off-canvas */
+        .offcanvas {
+            width: 500px !important;
+        }
+
+        .offcanvas-header {
+            background: var(--main-color);
+            color: white;
+            padding: 20px;
+        }
+
+        .offcanvas-title {
+            color: white;
+        }
+
+        /* Tenant Info Card */
+        .tenant-info-card {
+            background: rgba(255, 193, 7, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .tenant-info-card .tenant-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--main-color);
+            margin-bottom: 15px;
+        }
+
+        .tenant-detail {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .tenant-detail i {
+            color: var(--accent-color);
+            width: 20px;
+        }
+
+        /* Arrears Alert */
+        .arrears-alert {
+            background: rgba(231, 76, 60, 0.1);
+            border: 2px solid var(--danger-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .arrears-alert .amount {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--danger-color);
+        }
+
+        .arrears-alert .label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Reason Tags */
+        .reason-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .reason-tag {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            color: var(--main-color);
+        }
+
+        .reason-tag:hover {
+            border-color: var(--accent-color);
+            background: rgba(255, 193, 7, 0.1);
+        }
+
+        .reason-tag.selected {
+            border-color: var(--accent-color);
+            background: var(--accent-color);
+            color: var(--main-color);
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .custom-footer {
+            background: var(--main-color);
+            color: white;
+            padding: 30px;
+            margin-top: auto;
+        }
+
+        .custom-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .custom-footer a:hover {
+            color: white;
+        }
     </style>
 </head>
 
@@ -285,7 +398,7 @@ if (isset($_POST['submit_reading'])) {
 
         <!--begin::Header-->
         <?php
-         include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php'; 
+        include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php';
         ?>
         <!--end::Header-->
 
@@ -311,7 +424,7 @@ if (isset($_POST['submit_reading'])) {
                     </div>
                 </div>
                 <div class="row mb-4">
-                    
+
                     <div class="col-md-4 col-sm-6 col-12 d-flex">
                         <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
                             <div>
@@ -324,6 +437,10 @@ if (isset($_POST['submit_reading'])) {
                             </div>
                         </div>
                     </div>
+                    <button class="action-btn vacate-btn" title="Vacate Tenant"
+                        onclick='openVacateCanvas()'>
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
                     <div class="col-md-4 col-sm-6 col-12 d-flex">
                         <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
                             <div>
@@ -852,7 +969,7 @@ if (isset($_POST['submit_reading'])) {
                                                                         <a class="dropdown-item" href="single_unit_details.php?details=<?php echo $id; ?>"><i class="bi bi-eye"></i> Details</a>
                                                                         <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $id; ?>"><i class="bi bi-pen"></i> Edit</a>
                                                                         <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $id; ?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
-                                                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $id; ?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
+                                                                        <a class="dropdown-item" data-attribute-unitid="<?= htmlspecialchars(encryptor('decrypt', $id)); ?>" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $id; ?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
                                                                     <?php
                                                                     } else if (htmlspecialchars($occupancy_status) == 'Vacant') {
                                                                     ?>
