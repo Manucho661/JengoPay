@@ -7,6 +7,9 @@
         <span><i class="fas fa-building"> </i> <a href="/Jengopay/landlord/pages/Buildings/buildings.php">Buildings </a> </span>
     </div>
     <div class="menu-item">
+        <span> <i class="fas fa-door-open"></i>  <a href="/Jengopay/landlord/pages/Units/single_units.php">Units </a> </span>
+    </div>
+    <div class="menu-item">
         <span><i class="fas fa-users"></i> <a href="/Jengopay/landlord/pages/Buildings/all_tenants.php">Tenants</a> </span>
     </div>
 
