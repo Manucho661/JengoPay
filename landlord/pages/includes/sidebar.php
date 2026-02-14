@@ -7,7 +7,7 @@
         <span><i class="fas fa-building"> </i> <a href="/Jengopay/landlord/pages/Buildings/buildings.php">Buildings </a> </span>
     </div>
     <div class="menu-item">
-        <span> <i class="fas fa-door-open"></i>  <a href="/Jengopay/landlord/pages/Units/single_units.php">Units </a> </span>
+        <span> <i class="fas fa-door-open"></i> <a href="/Jengopay/landlord/pages/Units/single_units.php">Units </a> </span>
     </div>
     <div class="menu-item">
         <span><i class="fas fa-users"></i> <a href="/Jengopay/landlord/pages/Buildings/all_tenants.php">Tenants</a> </span>
@@ -18,7 +18,7 @@
             <i class="fas fa-comments"></i> <a href="/Jengopay/landlord/pages/communications/inAppMessages.php">Communication</a>
         </span>
     </div>
-    
+
     <div class="menu-item" onclick="toggleSubmenu('financials')">
         <span><i class="fas fa-dollar-sign"></i> Financials</span>
         <i class="fas fa-chevron-down chevron" id="financials-chevron"></i>
@@ -46,7 +46,5 @@
     <div class="menu-item">
         <span><i class="fas fa-cog"></i> Settings</span>
     </div>
-    <div class="menu-item">
-        <span><i class="fas fa-sign-out-alt"></i> Log Out</span>
-    </div>
+    
 </aside>

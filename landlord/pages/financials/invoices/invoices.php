@@ -281,6 +281,16 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!--Tailwind CSS  -->
   <style>
+    :root {
+      --sidebar-width: 260px;
+      --main-color: #00192D;
+      --accent-color: #FFC107;
+      --white-color: #FFFFFF;
+      --light-bg: #f8f9fa;
+      --success-color: #27ae60;
+      --danger-color: #e74c3c;
+    }
+
     /* ================ */
     /* BASE STYLES */
     /* ================ */
@@ -836,7 +846,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       width: 400px;
       height: 100vh;
       background: #fff;
-      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+      
       transition: right 0.3s ease-in-out;
       z-index: 9999;
     }
@@ -1031,7 +1041,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
       .search-container:focus-within {
         border-color: #5E3A56;
-        box-shadow: 0 0 0 2px rgba(94, 58, 86, 0.1);
+        
       }
 
       #searchTermDisplay {
@@ -1094,6 +1104,389 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
         text-align: left;
         padding: 8px 5px;
       }
+    }
+
+    /* Column Selector Dropdown */
+    .column-selector {
+      position: relative;
+      display: inline-block;
+    }
+
+    .column-dropdown {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      
+      padding: 15px;
+      width: 250px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .column-dropdown.show {
+      display: block;
+    }
+
+    .column-dropdown-header {
+      font-weight: 600;
+      color: var(--main-color);
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .column-option {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+    }
+
+    .column-option input[type="checkbox"] {
+      margin-right: 10px;
+      accent-color: var(--accent-color);
+    }
+
+    .column-option label {
+      cursor: pointer;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    /* Footer */
+    .custom-footer {
+      background: var(--main-color);
+      color: white;
+      padding: 30px;
+      margin-top: auto;
+    }
+
+    .custom-footer a {
+      color: var(--accent-color);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .custom-footer a:hover {
+      color: white;
+    }
+
+    /* Modal */
+    .modal-header {
+      background: var(--main-color);
+      color: white;
+    }
+
+    .modal-header .btn-close {
+      filter: invert(1);
+    }
+
+    .modal-title {
+      color: white;
+    }
+
+    /* Invoice Items */
+    .invoice-items-table {
+      margin-bottom: 0;
+    }
+
+    .invoice-items-table thead th {
+      background: rgba(0, 25, 45, 0.05);
+      color: var(--main-color);
+      font-size: 12px;
+    }
+
+    .add-item-btn {
+      background: rgba(255, 193, 7, 0.1);
+      border: 1px dashed var(--accent-color);
+      color: var(--accent-color);
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+
+    .add-item-btn:hover {
+      background: var(--accent-color);
+      color: var(--main-color);
+    }
+
+    /* Bulk Actions */
+    .bulk-actions-bar {
+      background: rgba(255, 193, 7, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .bulk-actions-bar.show {
+      display: block;
+    }
+
+    .btn-primary {
+      background: var(--main-color);
+      border-color: var(--main-color);
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active {
+      background: #001a3a;
+      border-color: #001a3a;
+    }
+
+    .btn-success {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      color: var(--main-color);
+      font-weight: 600;
+    }
+
+    .btn-success:hover,
+    .btn-success:focus,
+    .btn-success:active {
+      background: #e6ad06;
+      border-color: #e6ad06;
+      color: var(--main-color);
+    }
+
+    .btn:focus,
+    .btn:active {
+      box-shadow: none;
+      outline: none;
+    }
+
+    /* Card */
+    .card {
+      border: none;
+      
+    }
+
+    .card-title {
+      color: var(--main-color);
+      font-weight: 600;
+    }
+
+    /* Form Controls */
+    .form-select,
+    .form-control {
+      background: rgba(255, 193, 7, 0.05);
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--accent-color);
+      box-shadow: none;
+      outline: none;
+      background: rgba(255, 193, 7, 0.1);
+    }
+
+    /* Table */
+    
+
+    .table tbody td {
+      padding: 15px 10px;
+      vertical-align: middle;
+      color: var(--main-color);
+      font-size: 14px;
+    }
+
+    .table-hover tbody tr:hover {
+      background: rgba(255, 193, 7, 0.05);
+    }
+
+    .status-badge {
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge-paid {
+      background: rgba(39, 174, 96, 0.15);
+      color: #27ae60;
+    }
+
+    .badge-overdue {
+      background: rgba(231, 76, 60, 0.15);
+      color: #e74c3c;
+    }
+
+    .badge-partial {
+      background: rgba(243, 156, 18, 0.15);
+      color: #f39c12;
+    }
+
+    .badge-draft {
+      background: rgba(149, 165, 166, 0.15);
+      color: #95a5a6;
+    }
+
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      margin: 0 2px;
+      font-size: 13px;
+    }
+
+    .action-btn.view-btn {
+      background: rgba(0, 25, 45, 0.1);
+      color: var(--main-color);
+    }
+
+    .action-btn.view-btn:hover {
+      background: var(--main-color);
+      color: white;
+    }
+
+    .action-btn.edit-btn {
+      background: rgba(255, 193, 7, 0.2);
+      color: #d39e00;
+    }
+
+    .action-btn.edit-btn:hover {
+      background: var(--accent-color);
+      color: var(--main-color);
+    }
+
+    .action-btn.delete-btn {
+      background: rgba(231, 76, 60, 0.1);
+      color: var(--danger-color);
+    }
+
+    .action-btn.delete-btn:hover {
+      background: var(--danger-color);
+      color: white;
+    }
+
+    /* Column Selector Dropdown */
+    .column-selector {
+      position: relative;
+      display: inline-block;
+    }
+
+    .column-dropdown {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      
+      padding: 15px;
+      width: 250px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .column-dropdown.show {
+      display: block;
+    }
+
+    .column-dropdown-header {
+      font-weight: 600;
+      color: var(--main-color);
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .column-option {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+    }
+
+    .column-option input[type="checkbox"] {
+      margin-right: 10px;
+      accent-color: var(--accent-color);
+    }
+
+    .column-option label {
+      cursor: pointer;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    /* Footer */
+    .custom-footer {
+      background: var(--main-color);
+      color: white;
+      padding: 30px;
+      margin-top: auto;
+    }
+
+    .custom-footer a {
+      color: var(--accent-color);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .custom-footer a:hover {
+      color: white;
+    }
+
+    /* Modal */
+    .modal-header {
+      background: var(--main-color);
+      color: white;
+    }
+
+    .modal-header .btn-close {
+      filter: invert(1);
+    }
+
+    .modal-title {
+      color: white;
+    }
+
+    /* Invoice Items */
+    .invoice-items-table {
+      margin-bottom: 0;
+    }
+
+    .invoice-items-table thead th {
+      background: rgba(0, 25, 45, 0.05);
+      color: var(--main-color);
+      font-size: 12px;
+    }
+
+    .add-item-btn {
+      background: rgba(255, 193, 7, 0.1);
+      border: 1px dashed var(--accent-color);
+      color: var(--accent-color);
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+
+    .add-item-btn:hover {
+      background: var(--accent-color);
+      color: var(--main-color);
+    }
+
+    /* Bulk Actions */
+    .bulk-actions-bar {
+      background: rgba(255, 193, 7, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .bulk-actions-bar.show {
+      display: block;
     }
   </style>
 </head>
@@ -1210,7 +1603,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <input type="date" class="form-control">
                 </div>
                 <div class="col-md-3 text-end">
-                  <button class="btn btn-secondary">
+                  <button class="cancelBtn">
                     <i class="fas fa-redo"></i> Reset
                   </button>
                   <button class="actionBtn">
@@ -1226,7 +1619,69 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div class="row g-3 mt-2 mb-4">
         <div class="col-md-12">
           <div class="card border-0">
-            <div class="card-header">
+            <div class="card-header" style="background-color: #00192D; color:#fff;">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <b>All invoices (<span class="text-warning">0</span>)</b>
+                </div>
+                <div class="d-flex">
+                  <!-- Column Selector -->
+                  <div class="column-selector">
+                    <button class="btn btn-secondary mx-2" onclick="toggleColumnSelector()">
+                      <i class="fas fa-columns"></i> Columns
+                    </button>
+                    <div class="column-dropdown" id="columnDropdown">
+                      <div class="column-dropdown-header">
+                        <i class="fas fa-list"></i> Show/Hide Columns
+                      </div>
+                      <div class="column-option">
+                        <input type="checkbox" id="col-invoice" checked onchange="toggleColumn('invoice')">
+                        <label for="col-invoice">Invoice Number</label>
+                      </div>
+                      <div class="column-option">
+                        <input type="checkbox" id="col-tenant" checked onchange="toggleColumn('tenant')">
+                        <label for="col-tenant">Tenant</label>
+                      </div>
+                      <div class="column-option">
+                        <input type="checkbox" id="col-date" checked onchange="toggleColumn('date')">
+                        <label for="col-date">Issue Date</label>
+                      </div>
+                      <div class="column-option">
+                        <input type="checkbox" id="col-due" onchange="toggleColumn('due')">
+                        <label for="col-due">Due Date</label>
+                      </div>
+                      <div class="column-option">
+                        <input type="checkbox" id="col-subtotal" onchange="toggleColumn('subtotal')">
+                        <label for="col-subtotal">Subtotal</label>
+                      </div>
+                      <div class="column-option">
+                        <input type="checkbox" id="col-tax" onchange="toggleColumn('tax')">
+                        <label for="col-tax">Tax</label>
+                      </div>
+                      <div class="column-option">
+                        <input type="checkbox" id="col-total" checked onchange="toggleColumn('total')">
+                        <label for="col-total">Total</label>
+                      </div>
+                      <div class="column-option">
+                        <input type="checkbox" id="col-paid" onchange="toggleColumn('paid')">
+                        <label for="col-paid">Paid</label>
+                      </div>
+                      <div class="column-option">
+                        <input type="checkbox" id="col-balance" onchange="toggleColumn('balance')">
+                        <label for="col-balance">Balance</label>
+                      </div>
+                      <div class="column-option">
+                        <input type="checkbox" id="col-status" checked onchange="toggleColumn('status')">
+                        <label for="col-status">Status</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button class="actionBtn2" data-bs-toggle="offcanvas" data-bs-target="#createInvoiceOffcanvas">
+                    <i class="fas fa-plus"></i> Create Invoice
+                  </button>
+                </div>
+              </div>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -1264,7 +1719,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td class="col-date">2026-02-01</td>
                         <td class="col-total"><strong>KES 12,000</strong></td>
                         <td class="col-status">
-                          <span class="status-badge bg-success text-white px-2 py-1 rounded">
+                          <span class="status-badge badge-draft">
                             Paid
                           </span>
                         </td>
@@ -1286,7 +1741,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td class="col-date">2026-02-03</td>
                         <td class="col-total"><strong>KES 9,500</strong></td>
                         <td class="col-status">
-                          <span class="status-badge bg-warning text-dark px-2 py-1 rounded">
+                          <span class="status-badge badge-payment-partial">
                             Partial
                           </span>
                         </td>
@@ -1308,15 +1763,23 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td class="col-date">2026-02-05</td>
                         <td class="col-total"><strong>KES 15,200</strong></td>
                         <td class="col-status">
-                          <span class="status-badge bg-danger text-white px-2 py-1 rounded">
+                          <span class="status-badge badge-paid">
                             Unpaid
                           </span>
                         </td>
+
                         <td>
-                          <button class="action-btn view-btn"><i class="fas fa-eye"></i></button>
-                          <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
-                          <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                          <button class="action-btn view-btn" title="View Invoice">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                          <button class="action-btn edit-btn" title="Edit">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="action-btn delete-btn" title="Delete">
+                            <i class="fas fa-trash"></i>
+                          </button>
                         </td>
+
                       </tr>
 
                     </tbody>
@@ -1362,6 +1825,377 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
       integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
       crossorigin="anonymous"></script>
+
+
+    <script>
+      let itemCounter = 1;
+
+      // Building to Units mapping
+      const buildingUnits = {
+        '1': [{
+            id: '101',
+            name: 'Unit 101',
+            tenant: 'Sarah Johnson'
+          },
+          {
+            id: '102',
+            name: 'Unit 102',
+            tenant: 'Michael Chen'
+          },
+          {
+            id: '103',
+            name: 'Unit 103',
+            tenant: 'Vacant'
+          }
+        ],
+        '2': [{
+            id: '201',
+            name: 'Unit 201',
+            tenant: 'Emma Wilson'
+          },
+          {
+            id: '202',
+            name: 'Unit 202',
+            tenant: 'James Anderson'
+          },
+          {
+            id: '203',
+            name: 'Unit 203',
+            tenant: 'Vacant'
+          }
+        ],
+        '3': [{
+            id: '301',
+            name: 'Unit 301',
+            tenant: 'Lisa Brown'
+          },
+          {
+            id: '302',
+            name: 'Unit 302',
+            tenant: 'Robert Taylor'
+          }
+        ]
+      };
+
+      // Item descriptions
+      const itemDescriptions = {
+        'rent': 'Monthly Rent - February 2024',
+        'water': 'Water Bill',
+        'electricity': 'Electricity Bill',
+        'security': 'Security Fee',
+        'maintenance': 'Maintenance Fee',
+        'parking': 'Parking Fee',
+        'other': ''
+      };
+
+      // Update units when building is selected
+      function updateUnitsForBuilding(buildingId) {
+        const unitSelect = document.getElementById('unitSelect');
+        const tenantSelect = document.getElementById('tenantSelect');
+
+        unitSelect.innerHTML = '<option value="">Select Unit</option>';
+        tenantSelect.innerHTML = '<option value="">Select unit first</option>';
+        tenantSelect.disabled = true;
+
+        if (buildingId && buildingUnits[buildingId]) {
+          buildingUnits[buildingId].forEach(unit => {
+            const option = document.createElement('option');
+            option.value = unit.id;
+            option.textContent = unit.name;
+            option.dataset.tenant = unit.tenant;
+            unitSelect.appendChild(option);
+          });
+          unitSelect.disabled = false;
+        } else {
+          unitSelect.disabled = true;
+        }
+      }
+
+      // Update tenant when unit is selected
+      function updateTenantForUnit(unitId) {
+        const unitSelect = document.getElementById('unitSelect');
+        const tenantSelect = document.getElementById('tenantSelect');
+        const selectedOption = unitSelect.options[unitSelect.selectedIndex];
+
+        if (unitId && selectedOption) {
+          const tenantName = selectedOption.dataset.tenant;
+          tenantSelect.innerHTML = '';
+
+          if (tenantName && tenantName !== 'Vacant') {
+            const option = document.createElement('option');
+            option.value = unitId;
+            option.textContent = tenantName;
+            option.selected = true;
+            tenantSelect.appendChild(option);
+            tenantSelect.disabled = false;
+          } else {
+            tenantSelect.innerHTML = '<option value="">Unit is vacant</option>';
+            tenantSelect.disabled = true;
+          }
+        } else {
+          tenantSelect.innerHTML = '<option value="">Select unit first</option>';
+          tenantSelect.disabled = true;
+        }
+      }
+
+      // Update item description when item is selected
+      function updateItemDescription(select) {
+        const row = select.closest('tr');
+        const descInput = row.querySelector('.item-desc');
+        const itemValue = select.value;
+
+        if (itemDescriptions[itemValue]) {
+          descInput.value = itemDescriptions[itemValue];
+        }
+      }
+
+      // Toggle column selector dropdown
+      function toggleColumnSelector() {
+        const dropdown = document.getElementById('columnDropdown');
+        dropdown.classList.toggle('show');
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('columnDropdown');
+        const selector = document.querySelector('.column-selector');
+
+        if (selector && !selector.contains(event.target)) {
+          dropdown.classList.remove('show');
+        }
+      });
+
+      // Toggle column visibility
+      function toggleColumn(columnName) {
+        const columns = document.querySelectorAll(`.col-${columnName}`);
+        const checkbox = document.getElementById(`col-${columnName}`);
+
+        columns.forEach(col => {
+          col.style.display = checkbox.checked ? '' : 'none';
+        });
+      }
+
+      // Select/deselect all invoices
+      function toggleSelectAll(checkbox) {
+        const checkboxes = document.querySelectorAll('.invoice-checkbox');
+        checkboxes.forEach(cb => {
+          cb.checked = checkbox.checked;
+        });
+        updateBulkActions();
+      }
+
+      // Update bulk actions visibility
+      function updateBulkActions() {
+        const checkboxes = document.querySelectorAll('.invoice-checkbox:checked');
+        const bulkBar = document.getElementById('bulkActionsBar');
+        const count = document.getElementById('selectedCount');
+
+        count.textContent = checkboxes.length;
+        bulkBar.classList.toggle('show', checkboxes.length > 0);
+      }
+
+      // Add invoice item row
+      function addInvoiceItem() {
+        const tbody = document.getElementById('invoiceItemsBody');
+        const row = document.createElement('tr');
+        row.className = 'item-row';
+        row.innerHTML = `
+                <td>
+                    <select class="form-select form-select-sm item-name" name="items[${itemCounter}][item]" onchange="updateItemDescription(this)" required>
+                        <option value="">Select Item</option>
+                        <option value="rent">Rent</option>
+                        <option value="water">Water</option>
+                        <option value="electricity">Electricity</option>
+                        <option value="security">Security</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="parking">Parking</option>
+                        <option value="other">Other</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm item-desc" name="items[${itemCounter}][description]" placeholder="Item description" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm item-qty" name="items[${itemCounter}][quantity]" value="1" min="1" onchange="calculateRowTotal(this)" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm item-price" name="items[${itemCounter}][price]" placeholder="0.00" step="0.01" onchange="calculateRowTotal(this)" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm item-discount" name="items[${itemCounter}][discount]" value="0" min="0" step="0.01" onchange="calculateRowTotal(this)">
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm item-tax" name="items[${itemCounter}][tax]" value="16" min="0" step="0.01" onchange="calculateRowTotal(this)">
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm item-amount" name="items[${itemCounter}][amount]" value="0.00" readonly>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem(this)" style="padding: 2px 6px;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </td>
+            `;
+        tbody.appendChild(row);
+        itemCounter++;
+      }
+
+      // Remove invoice item row
+      function removeItem(button) {
+        const row = button.closest('tr');
+        row.remove();
+        calculateInvoiceTotal();
+      }
+
+      // Calculate row total
+      function calculateRowTotal(input) {
+        calculateInvoiceTotal();
+      }
+
+      // Calculate invoice total
+      function calculateInvoiceTotal() {
+        let subtotal = 0;
+        let totalDiscount = 0;
+        let totalTax = 0;
+
+        const rows = document.querySelectorAll('.item-row');
+
+        rows.forEach(row => {
+          const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+          const price = parseFloat(row.querySelector('.item-price').value) || 0;
+          const discount = parseFloat(row.querySelector('.item-discount').value) || 0;
+          const taxRate = parseFloat(row.querySelector('.item-tax').value) || 0;
+
+          const lineSubtotal = qty * price;
+          const lineDiscount = discount;
+          const afterDiscount = lineSubtotal - lineDiscount;
+          const lineTax = afterDiscount * (taxRate / 100);
+          const lineTotal = afterDiscount + lineTax;
+
+          row.querySelector('.item-amount').value = lineTotal.toFixed(2);
+
+          subtotal += lineSubtotal;
+          totalDiscount += lineDiscount;
+          totalTax += lineTax;
+        });
+
+        const total = subtotal - totalDiscount + totalTax;
+
+        document.getElementById('invoiceSubtotal').textContent = 'KES ' + subtotal.toLocaleString('en-US', {
+          minimumFractionDigits: 2
+        });
+        document.getElementById('invoiceDiscount').textContent = 'KES ' + totalDiscount.toLocaleString('en-US', {
+          minimumFractionDigits: 2
+        });
+        document.getElementById('invoiceTax').textContent = 'KES ' + totalTax.toLocaleString('en-US', {
+          minimumFractionDigits: 2
+        });
+        document.getElementById('invoiceTotal').textContent = 'KES ' + total.toLocaleString('en-US', {
+          minimumFractionDigits: 2
+        });
+      }
+
+      // Preview invoice
+      function previewInvoice() {
+        // Get form data
+        const invoiceNumber = document.querySelector('input[name="invoice_number"]').value;
+        const issueDate = document.querySelector('input[name="issue_date"]').value;
+        const dueDate = document.querySelector('input[name="due_date"]').value;
+        const building = document.querySelector('select[name="building"]').selectedOptions[0]?.text || '';
+        const unit = document.querySelector('select[name="unit"]').selectedOptions[0]?.text || '';
+        const tenant = document.querySelector('select[name="tenant"]').selectedOptions[0]?.text || '';
+
+        // Populate preview
+        document.getElementById('preview-invoice-number').textContent = invoiceNumber;
+        document.getElementById('preview-issue-date').textContent = new Date(issueDate).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        document.getElementById('preview-due-date').textContent = new Date(dueDate).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        document.getElementById('preview-tenant').textContent = tenant;
+        document.getElementById('preview-unit').textContent = unit;
+        document.getElementById('preview-building').textContent = building;
+
+        // Populate items
+        const previewItems = document.getElementById('preview-items');
+        previewItems.innerHTML = '';
+
+        const rows = document.querySelectorAll('.item-row');
+        rows.forEach(row => {
+          const itemName = row.querySelector('.item-name').selectedOptions[0]?.text || '';
+          const desc = row.querySelector('.item-desc').value;
+          const qty = row.querySelector('.item-qty').value;
+          const price = parseFloat(row.querySelector('.item-price').value) || 0;
+          const discount = parseFloat(row.querySelector('.item-discount').value) || 0;
+          const tax = parseFloat(row.querySelector('.item-tax').value) || 0;
+          const amount = row.querySelector('.item-amount').value;
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+                    <td>${itemName}</td>
+                    <td>${desc}</td>
+                    <td class="text-end">${qty}</td>
+                    <td class="text-end">KES ${price.toFixed(2)}</td>
+                    <td class="text-end">KES ${discount.toFixed(2)}</td>
+                    <td class="text-end">${tax}%</td>
+                    <td class="text-end">KES ${amount}</td>
+                `;
+          previewItems.appendChild(tr);
+        });
+
+        // Populate totals
+        document.getElementById('preview-subtotal').textContent = document.getElementById('invoiceSubtotal').textContent;
+        document.getElementById('preview-discount').textContent = document.getElementById('invoiceDiscount').textContent;
+        document.getElementById('preview-tax').textContent = document.getElementById('invoiceTax').textContent;
+        document.getElementById('preview-total').textContent = document.getElementById('invoiceTotal').textContent;
+
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('invoicePreviewModal'));
+        modal.show();
+      }
+
+      // Continue editing
+      function continueEditing() {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('invoicePreviewModal'));
+        modal.hide();
+      }
+
+      // Save as draft
+      function saveAsDraft() {
+        alert('Invoice saved as draft!\n\nIn a real application, this would save the invoice with status "Draft".');
+      }
+
+      // Confirm and send
+      function confirmAndSend() {
+        if (confirm('Are you sure you want to send this invoice to the tenant?')) {
+          alert('Invoice sent successfully!\n\nIn a real application, this would:\n- Save the invoice\n- Send via email/SMS\n- Update status to "Sent"');
+
+          // Close modals
+          const previewModal = bootstrap.Modal.getInstance(document.getElementById('invoicePreviewModal'));
+          if (previewModal) previewModal.hide();
+
+          const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('createInvoiceOffcanvas'));
+          if (offcanvas) offcanvas.hide();
+        }
+      }
+
+      // View invoice
+      function viewInvoice(invoiceId) {
+        alert(`Opening invoice ${invoiceId}...\n\nIn a real application, this would open the invoice details page or PDF preview.`);
+      }
+
+      // Delete invoice
+      function deleteInvoice(invoiceId) {
+        if (confirm(`Are you sure you want to delete invoice ${invoiceId}?\n\nThis action cannot be undone.`)) {
+          alert(`Invoice ${invoiceId} deleted!\n\nIn a real application, this would delete the invoice from the database.`);
+        }
+      }
+    </script>
 
     <!--end::Script-->
     <!-- date display only future date -->

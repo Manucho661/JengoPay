@@ -12,7 +12,7 @@ unset($_SESSION['error'], $_SESSION['success']);
 
 <!-- Action scripts -->
 <?php
-require_once "./actions/units/getSingleUnits.php";
+require_once "./actions/getSingleUnits.php";
 ?>
 <?php
 if (isset($_POST['submit_reading'])) {

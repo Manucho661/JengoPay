@@ -98,29 +98,26 @@
             <i class="fas fa-envelope"></i>
             <span class="notification-badge">5</span>
         </div>
+
         <div class="notification-icon">
             <i class="fas fa-bell"></i>
             <span class="notification-badge">3</span>
         </div>
 
-        <span class="user-name">
+        <a href="/Jengopay/landlord/pages/buildings/landlordProfile.php" class="user-name">
             <?php
-            $fullName = isset($_SESSION['user']['name']) ? $_SESSION['user']['name'] : '';
-
-            // Get first name only
+            $fullName = $_SESSION['user']['name'] ?? '';
             $firstName = explode(" ", trim($fullName))[0];
-
-            // Ensure first letter is uppercase
             echo ucfirst(strtolower($firstName));
             ?>
-        </span>
+        </a>
 
         <form action="/Jengopay/auth/actions/logout.php" method="post" style="display:inline;">
             <button class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Log Out</span>
             </button>
         </form>
-
     </div>
 
 

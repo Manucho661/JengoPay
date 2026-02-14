@@ -209,7 +209,8 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
             color: #6c757d;
             font-size: 0.9rem;
         }
-        a{
+
+        a {
             text-decoration: none !important;
         }
     </style>
@@ -684,15 +685,71 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                         </div>
                     </div>
                 </div>
-
                 <!-- Sixth Row: Expenses Table -->
                 <div class="row mt-2 mb-5">
                     <div class="col-md-12">
                         <div class="details-container bg-white p-2 rounded Content">
-                            <h3 class="details-container_header text-start">
-                                <span id="displayed_building">All Expenses</span> &nbsp; |&nbsp;
-                                <span style="color:#FFC107"> <span id="enteries"><?= count($currentExpenses) ?></span> entries</span>
-                                <button class="actionBtn2">Add New Expense</button>
+                            <?php
+                            $buildingsCount = is_array($buildings) ? count($buildings) : (int)$buildings; // safe fallback
+                            $hasBuildings = $buildingsCount > 0;
+
+                            // set your buildings page link here
+                            $buildingsUrl = "buildings.php";
+                            ?>
+
+                            <h3 class="details-container_header text-start d-flex justify-content-between">
+                                <div>
+                                    <span id="displayed_building">All Expenses</span> &nbsp; |&nbsp;
+                                    <span style="color:#FFC107">
+                                        <span id="enteries"><?= count($currentExpenses) ?></span> entries
+                                    </span>
+                                </div>
+
+
+                                <?php if ($hasBuildings): ?>
+                                    <!-- Normal behavior: open offcanvas -->
+                                    <button class="actionBtn2"
+                                        type="button"
+                                        data-bs-toggle="offcanvas"
+                                        data-bs-target="#createExpenseOffcanvas"
+                                        aria-controls="createExpenseOffcanvas">
+                                        Create Expense
+                                    </button>
+                                <?php else: ?>
+                                    <!-- No buildings: show message dropdown -->
+                                    <div class="dropdown d-inline-block">
+                                        <button class="actionBtn2 dropdown-toggle"
+                                            type="button"
+                                            id="createExpenseBtn"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            Create Expense
+                                        </button>
+
+                                        <div class="dropdown-menu p-2 shadow border-0 rounded-2"
+                                            aria-labelledby="createExpenseBtn"
+                                            style="min-width: 340px; border-radius: 14px;">
+                                            <div class="d-flex gap-2 align-items-start">
+
+                                                <div>
+                                                    <div class="fw-semibold text-danger mb-1">
+                                                        Create a building first
+                                                    </div>
+                                                    <div class="text-muted" style="font-size: 12px;">
+                                                        Expenses can only be recorded after you’ve added at least one building.
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <a class="btn btn-warning w-100 text-white mt-2"
+                                                href="<?= htmlspecialchars($buildingsUrl) ?>">
+                                                Go to Buildings
+                                            </a>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                             </h3>
 
                             <?php if (empty($currentExpenses)): ?>
@@ -801,7 +858,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                                         <button
                                                             class="actionBtn"
                                                             onclick="openExpenseModal(<?= $exp['id'] ?>)">
-                                                            <i class="bi bi-eye-fill"></i> 
+                                                            <i class="bi bi-eye-fill"></i>
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -882,8 +939,20 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
         <!--begin::Footer-->
         <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
         <!--end::Footer-->
-        <!-- Modals -->
+        <!-- Modals and offCanvas-->
 
+        <!-- Offcanvas for new expense -->
+        <!-- Create Invoice Off-canvas -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="createExpenseOffcanvas" style="width: 800px !important;">
+            <div class="offcanvas-header" style="background: var(--main-color); color: white;">
+                <h5 class="offcanvas-title" style="color: white;">
+                    <i class="fas fa-plus-circle"></i> Create New Expense
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+
+            </div>
+
+        </div>
         <!-- View Expense Modal -->
         <div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
@@ -1361,7 +1430,6 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
     <script type="module" src="./js/main.js"></script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
     <!-- pdf download plugin -->
 
 
@@ -1765,9 +1833,6 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
             });
     </script>
 
-
-    <!-- Toast message script-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Toast message -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {

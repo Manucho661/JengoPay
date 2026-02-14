@@ -31,6 +31,7 @@
       <link rel="stylesheet" href="../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
       <!-- Icons -->
       <link rel="stylesheet" href="../plugins/bootstrap/bootstrap-icons.css">
+
       <!-- Option 1: Include in HTML -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
       <!-- summernote -->

@@ -322,8 +322,11 @@ require_once 'actions/assignProvider.php';
             style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;"
             data-request-id="<?= htmlspecialchars($request['id']) ?>"
             data-status="<?= htmlspecialchars($request['availability']) ?>">
-            Set Available
+
+            <?= $request['availability'] === 'available' ? 'Set Unavailable' : 'Set Available' ?>
+
           </button>
+
 
           <button
             type="button"

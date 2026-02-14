@@ -13,6 +13,25 @@ if (!$requestId || !is_numeric($requestId)) {
     exit;
 }
 
+// 1) Auth + landlord_id
+if (empty($_SESSION['user']['id'])) {
+    throw new Exception("Not authenticated.");
+}
+
+$userId = (int) $_SESSION['user']['id'];
+
+$stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ? LIMIT 1");
+$stmt->execute([$userId]);
+$landlord = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+if (!$landlord) {
+    throw new Exception("Landlord account not found for this user.");
+}
+
+$landlord_id = (int) $landlord['id'];
+
+
 try {
     // Step 1: Get the main request along with provider name (no building/unit joins)
     $stmt = $pdo->prepare("
@@ -124,11 +143,12 @@ try {
             ON mr.building_id = b.id
         LEFT JOIN building_units bu 
             ON mr.building_unit_id = bu.id
+            WHERE mr.landlord_id = :id
         ORDER BY mr.created_at DESC
         LIMIT 4
     ");
 
-    $stmt->execute();
+    $stmt->execute(['id' => $landlord_id]);
     $other_maintenance_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Step 5: Response
