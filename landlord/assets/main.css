@@ -204,7 +204,12 @@
         }
         span a:hover{
             text-decoration: none;
-            color:white;
+            color: var(--accent-color);
+
+        }
+        span a:active{
+        color: var(--accent-color);
+
         }
         .submenu-item a{
             text-decoration: none;
@@ -214,16 +219,23 @@
             text-decoration: none;
             color:white;
         }
+        .submenu-item a:active{
+        color: var(--accent-color);
+
+        }
         .menu-item:hover {
             background-color: rgba(255, 193, 7, 0.1);
             border-left-color: var(--accent-color);
             text-decoration:none;
-            color:white;
+            color: var(--accent-color);
+            transition: all 0.3s;
+
         }
 
         .menu-item.active {
             background-color: rgba(255, 193, 7, 0.15);
             border-left-color: var(--accent-color);
+            color: var(--accent-color);
         }
 
         .menu-item i {
@@ -571,6 +583,37 @@
             transform: translateY(-2px);
         }
 
+
+        /* pdf, excel and print btns */
+
+        .pdfBtn{
+            background-color: #00192D;
+            color: #FFC107;
+            transition: all 0.3s;
+
+        }
+        .pdfBtn2{
+            background-color: #FFC107;
+            color: #00192D;
+            transition: all 0.3s;
+
+        }
+        .pdfBtn:hover{
+
+        }
+        .pdfBtn2:hover{
+         transform: translateY(-2px);
+
+        }
+
+        .excelBtn{
+             background-color: #00192D;
+            color: #FFC107;
+        }
+        .printBtn{
+             background-color: #00192D;
+            color: #FFC107;
+        }
         /* generral action links */
         .action-links {
             background: white;
@@ -618,7 +661,7 @@
 
         .filters-scroll {
             overflow-x: auto !important;
-            -webkit-overflow-scrolling: touch !important;
+            /* -webkit-overflow-scrolling: touch !important; */
         }
 
         .filters-row {

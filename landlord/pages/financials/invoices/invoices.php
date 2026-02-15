@@ -128,8 +128,6 @@ $stmt = $pdo->query("
         i.id,
         i.invoice_no,
         i.receiver,
-        i.phone,
-        i.email,
         i.invoice_date,
         i.due_date,
         i.notes AS description,
@@ -194,92 +192,11 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <!--begin::Head-->
 
 <head>
-  <?php if (isset($successMessage)) echo "<div class='alert alert-success'>$successMessage</div>"; ?>
-  <?php if (isset($errorMessage)) echo "<div class='alert alert-danger'>$errorMessage</div>"; ?>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>AdminLTE | Dashboard v2</title>
+  <title>Invoices</title>
   <!--begin::Primary Meta Tags-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="title" content="AdminLTE | Dashboard v2" />
-  <meta name="author" content="ColorlibHQ" />
-  <meta
-    name="description"
-    content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
-  <meta
-    name="keywords"
-    content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
-  <!-- LINKS -->
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/htmlHeader.php'; ?>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
-  <!--end::Primary Meta Tags-->
-  <!--begin::Fonts-->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-    integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
-    crossorigin="anonymous" />
-  <!--end::Fonts-->
-
-  <!--begin::Third Party Plugin(OverlayScrollbars)-->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-    integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg="
-    crossorigin="anonymous" />
-  <!--end::Third Party Plugin(OverlayScrollbars)-->
-  <!--begin::Third Party Plugin(Bootstrap Icons)-->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
-    crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-
-  <!--end::Third Party Plugin(Bootstrap Icons)-->
-  <!--begin::Required Plugin(AdminLTE)-->
-  <link rel="stylesheet" href="/Jengopay/landlord/pages/financials/invoices/css/invoices.css">
-  <!-- <link rel="stylesheet" href="text.css" /> -->
-  <!--end::Required Plugin(AdminLTE)-->
-  <!-- apexcharts -->
-
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-    integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
-    crossorigin="anonymous" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-  <link rel="stylesheet" href="../../../../landlord/assets/main.css" />
-
-  <link rel="stylesheet" href="expenses.css">
-  <!-- scripts for data_table -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
-  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-  <link href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css" rel="stylesheet">
-
-  <!-- Pdf pluggin -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-  <!-- Select2 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-  <!-- jQuery (required for Select2) -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-  <!-- Select2 JS -->
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
-
-  <!-- Add these to your head or before closing body -->
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!--Tailwind CSS  -->
   <style>
     :root {
       --sidebar-width: 260px;
@@ -642,54 +559,6 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       font-size: 13px;
     }
 
-    /* Items Table */
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-
-    .items-table th {
-      text-align: left;
-      padding: 10px;
-      background-color: #f8fafc;
-      color: #718096;
-      font-weight: 500;
-      font-size: 13px;
-    }
-
-    .items-table td {
-      padding: 12px 10px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .item-row input {
-      width: 100%;
-      border: 1px solid #e2e8f0;
-      padding: 8px;
-      border-radius: 4px;
-    }
-
-    .item-row input:focus {
-      outline: none;
-      border-color: #2a5bd7;
-    }
-
-    .item-name {
-      width: 40%;
-    }
-
-    .item-qty,
-    .item-rate,
-    .item-amount {
-      width: 15%;
-    }
-
-    .item-actions {
-      width: 15%;
-      text-align: center;
-    }
-
     .remove-item {
       color: #f56565;
       cursor: pointer;
@@ -846,7 +715,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       width: 400px;
       height: 100vh;
       background: #fff;
-      
+
       transition: right 0.3s ease-in-out;
       z-index: 9999;
     }
@@ -995,11 +864,6 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
         font-size: 16px;
       }
 
-      .items-table th,
-      .items-table td {
-        padding: 6px 4px;
-        font-size: 12px;
-      }
 
       .summary-table {
         width: 100% !important;
@@ -1041,7 +905,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
       .search-container:focus-within {
         border-color: #5E3A56;
-        
+
       }
 
       #searchTermDisplay {
@@ -1119,7 +983,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       background: white;
       border: 1px solid #ddd;
       border-radius: 8px;
-      
+
       padding: 15px;
       width: 250px;
       display: none;
@@ -1187,17 +1051,6 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       color: white;
     }
 
-    /* Invoice Items */
-    .invoice-items-table {
-      margin-bottom: 0;
-    }
-
-    .invoice-items-table thead th {
-      background: rgba(0, 25, 45, 0.05);
-      color: var(--main-color);
-      font-size: 12px;
-    }
-
     .add-item-btn {
       background: rgba(255, 193, 7, 0.1);
       border: 1px dashed var(--accent-color);
@@ -1262,7 +1115,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
     /* Card */
     .card {
       border: none;
-      
+
     }
 
     .card-title {
@@ -1285,7 +1138,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /* Table */
-    
+
 
     .table tbody td {
       padding: 15px 10px;
@@ -1382,7 +1235,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       background: white;
       border: 1px solid #ddd;
       border-radius: 8px;
-      
+
       padding: 15px;
       width: 250px;
       display: none;
@@ -1448,17 +1301,6 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     .modal-title {
       color: white;
-    }
-
-    /* Invoice Items */
-    .invoice-items-table {
-      margin-bottom: 0;
-    }
-
-    .invoice-items-table thead th {
-      background: rgba(0, 25, 45, 0.05);
-      color: var(--main-color);
-      font-size: 12px;
     }
 
     .add-item-btn {
@@ -1793,27 +1635,172 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </div>
     </main>
 
+    <!-- ModaLS and offcanvas -->
+    <!-- Create Invoice Off-canvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="createInvoiceOffcanvas" style="width: 800px !important;">
+      <div class="offcanvas-header" style="background: var(--main-color); color: white;">
+        <h5 class="offcanvas-title" style="color: white;">
+          <i class="fas fa-plus-circle"></i> Create New Invoice
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body">
+        <form method="POST" id="createInvoiceForm">
+          <!-- Invoice Details -->
+          <div class="mb-4">
+            <h6 style="color: var(--main-color); font-weight: 600; margin-bottom: 15px;">
+              <i class="fas fa-info-circle"></i> Invoice Details
+            </h6>
+            <div class="mb-3">
+              <label class="form-label">Invoice Number *</label>
+              <input type="text" name="invoice_number" class="form-control" value="INV-2024-" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Building *</label>
+              <select name="building" class="form-select" onchange="updateUnitsForBuilding(this.value)" required>
+                <option value="">Select Building</option>
+                <option value="1">Hindocha Tower</option>
+                <option value="2">Vista Apartments</option>
+                <option value="3">Green Valley Homes</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Unit *</label>
+              <select name="unit" class="form-select" id="unitSelect" onchange="updateTenantForUnit(this.value)" required disabled>
+                <option value="">Select building first</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Tenant *</label>
+              <select name="tenant" class="form-select" id="tenantSelect" required disabled>
+                <option value="">Select unit first</option>
+              </select>
+            </div>
+            <div class="row g-3">
+              <div class="col-6">
+                <label class="form-label">Issue Date *</label>
+                <input type="date" name="issue_date" class="form-control" value="<?= date('Y-m-d') ?>" required>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Due Date *</label>
+                <input type="date" name="due_date" class="form-control" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Invoice Items -->
+          <div class="mb-4">
+            <h6 style="color: var(--main-color); font-weight: 600; margin-bottom: 15px;">
+              <i class="fas fa-list"></i> Invoice Items
+            </h6>
+            <div class="table-responsive">
+              <table class="table invoice-items-table table-sm" id="invoiceItemsTable">
+                <thead>
+                  <tr>
+                    <th style="width: 150px;">Item</th>
+                    <th>Description</th>
+                    <th style="width: 80px;">Quantity</th>
+                    <th style="width: 100px;">Price</th>
+                    <th style="width: 80px;">Discount</th>
+                    <th style="width: 70px;">Tax %</th>
+                    <th style="width: 100px;">Amount</th>
+                    <th style="width: 40px;"></th>
+                  </tr>
+                </thead>
+                <tbody id="invoiceItemsBody">
+                  <tr class="item-row">
+                    <td>
+                      <select class="form-select form-select-sm item-name" name="items[0][item]" onchange="updateItemDescription(this)" required>
+                        <option value="">Select Item</option>
+                        <option value="rent">Rent</option>
+                        <option value="water">Water</option>
+                        <option value="electricity">Electricity</option>
+                        <option value="security">Security</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="parking">Parking</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control form-control-sm item-desc" name="items[0][description]" placeholder="Item description" required>
+                    </td>
+                    <td>
+                      <input type="number" class="form-control form-control-sm item-qty" name="items[0][quantity]" value="1" min="1" onchange="calculateRowTotal(this)" required>
+                    </td>
+                    <td>
+                      <input type="number" class="form-control form-control-sm item-price" name="items[0][price]" placeholder="0.00" step="0.01" onchange="calculateRowTotal(this)" required>
+                    </td>
+                    <td>
+                      <input type="number" class="form-control form-control-sm item-discount" name="items[0][discount]" value="0" min="0" step="0.01" onchange="calculateRowTotal(this)">
+                    </td>
+                    <td>
+                      <input type="number" class="form-control form-control-sm item-tax" name="items[0][tax]" value="16" min="0" step="0.01" onchange="calculateRowTotal(this)">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control form-control-sm item-amount" name="items[0][amount]" value="0.00" readonly>
+                    </td>
+                    <td>
+                      <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem(this)" style="padding: 2px 6px;">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <button type="button" class="add-item-btn mt-2" onclick="addInvoiceItem()">
+              <i class="fas fa-plus"></i> Add Item
+            </button>
+          </div>
+
+          <!-- Totals -->
+          <div class="mb-4">
+            <div style="background: rgba(255, 193, 7, 0.1); padding: 20px; border-radius: 10px; border-left: 4px solid var(--accent-color);">
+              <div class="d-flex justify-content-between mb-2">
+                <span>Subtotal:</span>
+                <strong id="invoiceSubtotal">KES 0.00</strong>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Total Discount:</span>
+                <strong id="invoiceDiscount" style="color: var(--danger-color);">KES 0.00</strong>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Total Tax:</span>
+                <strong id="invoiceTax">KES 0.00</strong>
+              </div>
+              <div class="d-flex justify-content-between pt-2 border-top">
+                <strong>Total:</strong>
+                <strong id="invoiceTotal" style="color: var(--accent-color); font-size: 20px;">KES 0.00</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-grid gap-2">
+            <button type="button" class="btn btn-outline-primary btn-lg" onclick="previewInvoice()">
+              <i class="fas fa-eye"></i> Preview
+            </button>
+            <button type="button" class="btn btn-secondary btn-lg" onclick="saveAsDraft()">
+              <i class="fas fa-save"></i> Save as Draft
+            </button>
+            <button type="submit" name="create_invoice" class="btn btn-success btn-lg">
+              <i class="fas fa-paper-plane"></i> Confirm and Send
+            </button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+
     <!--begin::Footer-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
     <!--end::Footer-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- J  A V A S C R I PT -->
-
-    <!-- steeper plugin -->
-    <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script
-      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-      integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ="
-      crossorigin="anonymous">
-    </script>
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-      crossorigin="anonymous">
-    </script>
 
 
     <script src="../../../../landlord/assets/main.js"></script> <!-- links for dataTaable buttons -->

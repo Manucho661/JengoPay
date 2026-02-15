@@ -953,7 +953,7 @@ include_once './actions/withdrawApplication.php';
                   data-unit="<?php echo htmlspecialchars($application['unit_number']); ?>"
                   data-category="<?php echo htmlspecialchars($application['category']); ?>"
                   data-status="<?php echo $application['status']; ?>"
-                  data-job-budget="<?php echo ($application['budget'] === null || $application['budget'] === '') ? 'Not set' : htmlspecialchars($request['budget']); ?>"
+                  data-job-budget="<?php echo ($application['budget'] === null || $application['budget'] === '') ? 'Not set' : htmlspecialchars($application['budget']); ?>"
 
                   data-your-budget="<?php echo htmlspecialchars($application['proposed_budget']); ?>"
                   data-duration="<?php echo htmlspecialchars($application['proposed_duration']); ?>"

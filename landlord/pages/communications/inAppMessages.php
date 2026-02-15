@@ -620,66 +620,134 @@ try {
             <div class="card border-0">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center border-bottom">
-                  <h5 class="card-title mb-0"><i class="fas fa-inbox text-warning"></i> Recent Messages</h5>
+                  <h5 class="card-title mb-0">
+                    <i class="fas fa-inbox text-warning"></i> Recent Conversations
+                  </h5>
+
                   <button class="actionBtn mb-2" data-bs-toggle="modal" data-bs-target="#newChatModal">
                     <i class="fas fa-plus"></i> New Chat
                   </button>
                 </div>
-                <div class="table-responsive">
-                  <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
-                    <thead>
-                      <tr>
-                        <th>DATE</th>
-                        <th>TITLE</th>
-                        <th>SENT BY</th>
-                        <th>SENT TO</th>
-                        <th>ACTION</th>
-                      </tr>
-                    </thead>
-                    <tbody id="conversationTableBody">
-                      <?php foreach ($conversations as $conversation): ?>
-                        <?php
-                        $messages = $conversation['messages'] ?? [];
-                        $lastMsg = !empty($messages) ? end($messages) : null;
 
-                        $title = $lastMsg['message'] ?? '';
-                        $senderName = $lastMsg['sender_name'] ?? '';
-                        $senderEmail = $lastMsg['sender_email'] ?? '';
-                        $createdAt = $lastMsg['created_at'] ?? '';
-                        ?>
-                        <tr class="table-row">
-                          <td class="timestamp">
-                            <div class="date"><?= htmlspecialchars(substr($createdAt, 0, 10)) ?></div>
-                            <div class="time"><?= htmlspecialchars(substr($createdAt, 11, 5)) ?></div>
-                          </td>
+                <?php if (empty($conversations)): ?>
+                  <!-- Empty state -->
+                  <div class="text-center py-5">
+                    <div class="mb-3" style="font-size:42px; opacity:.85;">
+                      <i class="fas fa-comments"></i>
+                    </div>
+                    <h6 class="mb-2">No conversations yet</h6>
+                    <p class="text-muted mb-4" style="max-width:520px; margin:0 auto;">
+                      Start a chat to connect with tenants, landlords, or service providers. Your recent conversations will appear here.
+                    </p>
 
-                          <td class="title"><?= htmlspecialchars($title) ?></td>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newChatModal">
+                      <i class="fas fa-plus"></i> Start Chat
+                    </button>
+                  </div>
+                <?php else: ?>
 
-                          <td>
-                            <div class="recipient">Thread #<?= (int)$conversation['conversation_id'] ?></div>
-                          </td>
-
-                          <td>
-                            <div class="sender"><?= htmlspecialchars($senderName ?: 'Unknown') ?></div>
-                            <div class="sender-email"><?= htmlspecialchars($senderEmail ?: '') ?></div>
-                          </td>
-
-                          <td>
-                            <button class="btn btn-primary view" data-conversation-id="<?= (int)$conversation['conversation_id'] ?>">
-                              <i class="bi bi-eye"></i> View
-                            </button>
-                            <button class="btn btn-danger delete" data-thread-id="<?= (int)$conversation['conversation_id'] ?>">
-                              <i class="bi bi-trash3"></i> Delete
-                            </button>
-                          </td>
+                  <div class="table-responsive">
+                    <table class="table table-hover table-summary-messages" style="border-radius: 20px; flex-grow: 1;">
+                      <thead>
+                        <tr>
+                          <th>DATE</th>
+                          <th>TITLE</th>
+                          <th>CREATED BY</th>
+                          <th>SENT TO</th>
+                          <th>ACTION</th>
                         </tr>
-                      <?php endforeach; ?>
+                      </thead>
 
-                    </tbody>
-                  </table>
-                </div>
+                      <tbody id="conversationTableBody">
+  <?php if (empty($conversations)): ?>
+    <tr>
+      <td colspan="5">
+        <div class="text-center py-5">
+          <div class="mb-3" style="font-size:42px; opacity:.85;">
+            <i class="fas fa-comments"></i>
+          </div>
+          <h6 class="mb-2">No conversations yet</h6>
+          <p class="text-muted mb-4" style="max-width:520px; margin:0 auto;">
+            Start a chat to connect with tenants, landlords, or service providers. Your recent conversations will appear here.
+          </p>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newChatModal">
+            <i class="fas fa-plus"></i> Start Chat
+          </button>
+        </div>
+      </td>
+    </tr>
+  <?php else: ?>
+
+    <?php $meId = (int)($_SESSION['user']['id'] ?? 0); ?>
+
+    <?php foreach ($conversations as $conversation): ?>
+      <?php
+        $cid       = (int)($conversation['conversation_id'] ?? 0);
+        $title     = (string)($conversation['title'] ?? '');
+        $createdAt = (string)($conversation['created_at'] ?? '');
+
+        $creatorId    = (int)($conversation['created_by'] ?? 0);
+        $creatorName  = (string)($conversation['creator']['name'] ?? '');
+        $creatorEmail = (string)($conversation['creator']['email'] ?? '');
+
+        $createdByLabel = ($creatorId === $meId) ? 'Me' : ($creatorName ?: 'Unknown');
+
+        $sentTo = trim((string)($conversation['sent_to_display'] ?? ''));
+        if ($sentTo === '') {
+          // If it's a conversation with only you (or data issue), show a friendly fallback
+          $sentTo = 'No other participants';
+        }
+
+        $datePart = $createdAt ? substr($createdAt, 0, 10) : '';
+        $timePart = $createdAt ? substr($createdAt, 11, 5) : '';
+      ?>
+
+      <tr class="table-row">
+        <td class="timestamp">
+          <div class="date"><?= htmlspecialchars($datePart) ?></div>
+          <div class="time"><?= htmlspecialchars($timePart) ?></div>
+        </td>
+
+        <td class="title">
+          <?= htmlspecialchars($title !== '' ? $title : 'Untitled conversation') ?>
+          <div class="text-muted" style="font-size:12px;">
+            Thread #<?= $cid ?>
+          </div>
+        </td>
+
+        <td>
+          <div class="sender"><?= htmlspecialchars($createdByLabel) ?></div>
+          <?php if ($creatorId !== $meId && $creatorEmail !== ''): ?>
+            <div class="sender-email"><?= htmlspecialchars($creatorEmail) ?></div>
+          <?php endif; ?>
+        </td>
+
+        <td>
+          <div class="recipient"><?= htmlspecialchars($sentTo) ?></div>
+        </td>
+
+        <td>
+          <button class="btn btn-primary view" data-conversation-id="<?= $cid ?>">
+            <i class="bi bi-eye"></i> View
+          </button>
+          <button class="btn btn-danger delete" data-thread-id="<?= $cid ?>">
+            <i class="bi bi-trash3"></i> Delete
+          </button>
+        </td>
+      </tr>
+    <?php endforeach; ?>
+
+  <?php endif; ?>
+</tbody>
+
+
+                    </table>
+                  </div>
+
+                <?php endif; ?>
               </div>
             </div>
+
           </div>
         </div>
       </div>

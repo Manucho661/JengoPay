@@ -5,6 +5,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 
 // actions
 require_once './actions/getProfitAndLoss.php';
+// include buildings
+require_once 'actions/getBuildings.php';
 
 ?>
 
@@ -37,7 +39,6 @@ require_once './actions/getProfitAndLoss.php';
   <link rel="stylesheet" href="/jengopay/landlord/assets/main.css" />
   <!--end::Required Plugin(AdminLTE)-->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="profit&loss.css">
 
   <!-- scripts for data_table -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -81,6 +82,25 @@ require_once './actions/getProfitAndLoss.php';
 
     a {
       text-decoration: none !important;
+    }
+
+    /* table */
+    .table tbody td {
+      padding: 15px 10px;
+      vertical-align: middle;
+      color: var(--main-color);
+      font-size: 14px;
+    }
+
+    .expenses-section {
+      background-color: #fff8e6 !important;
+      color: #00192D;
+
+    }
+
+    .income-section {
+      background: rgba(39, 174, 96, 0.15);
+
     }
   </style>
 </head>
@@ -127,7 +147,7 @@ require_once './actions/getProfitAndLoss.php';
           <div class="col-md-12 col-sm-12">
             <div class="card border-0 mb-4">
               <div class="card-body ">
-                <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filters</h5>
+
                 <form method="GET">
                   <!-- always reset to page 1 when applying filters -->
                   <input type="hidden" name="page" value="1">
@@ -137,24 +157,40 @@ require_once './actions/getProfitAndLoss.php';
 
                       <div class="col-auto filter-col">
                         <label class="form-label text-muted small">Buildings</label>
+
                         <select class="form-select shadow-sm" name="building_id">
                           <option value="">All Buildings</option>
+                          <?php foreach ($buildings as $building): ?>
+                            <?php $bid = (string)(int)$building['id']; ?>
+                            <option value="<?= $bid ?>" <?= (($building_id ?? '') === $bid) ? 'selected' : '' ?>>
+                              <?= htmlspecialchars($building['building_name']) ?>
+                            </option>
+                          <?php endforeach; ?>
                         </select>
+
                       </div>
 
                       <div class="col-auto filter-col">
                         <label class="form-label text-muted small">Date From</label>
-                        <input type="date" name="date_from" class="form-control">
+                        <input
+                          type="date"
+                          name="date_from"
+                          class="form-control"
+                          value="<?= htmlspecialchars($date_from ?? '') ?>">
                       </div>
 
                       <div class="col-auto filter-col">
                         <label class="form-label text-muted small">Date To</label>
-                        <input type="date" name="date_to" class="form-control">
+                        <input
+                          type="date"
+                          name="date_to"
+                          class="form-control"
+                          value="<?= htmlspecialchars($date_to ?? '') ?>">
                       </div>
 
                       <div class="col-auto filter-col d-flex gap-2">
                         <button type="submit" class="actionBtn">
-                          <i class="fas fa-search"></i> Apply Filters
+                          <i class="fas fa-search"></i> Apply
                         </button>
 
                         <a href="expenses.php" class="btn btn-secondary">
@@ -175,9 +211,29 @@ require_once './actions/getProfitAndLoss.php';
         <div class="row mt-4">
           <div class="col-md-12">
             <div class="card border-0 min-vh-100">
+              <div class="card-header d-flex justify-content-between align-items-center"
+                style="background-color:#00192D; color:#fff;">
+
+                <b>
+                  The Profit and Loss
+                  (<span class="text-warning"><?= date('d-M Y') ?></span>)
+                </b>
+
+                <!-- Export buttons -->
+                <div class="export-icons">
+                  <button class="btn btn-sm me-2 pdfBtn2 text-dark bg-warning" title="Export PDF">
+                    <i class="bi bi-download"></i>
+                  </button>
+
+                  <button class="btn btn-sm me-2 pdfBtn2 text-dark bg-warning" title="Export Excel">
+                    <i class="bi bi-printer"></i>
+                  </button>
+                </div>
+
+              </div>
+
               <div class="card-body">
-                <table id="myTable" class="table table-striped" style="width: 100%;">
-                  <span class="text-success fw-bold">Feb, 2026</span>
+                <table class="table table-striped rounded" style="width: 100%;">
                   <thead style="background-color: rgba(128, 128, 128, 0.2); color: black;">
                     <tr>
                       <th style="font-size: 16px;">Description</th>
@@ -187,7 +243,9 @@ require_once './actions/getProfitAndLoss.php';
                   <tbody id="accordionFinance">
                     <!-- Income header -->
                     <tr class="main-section-header">
-                      <td colspan="2" style="color:green;"><b>Income</b></td>
+                      <td class="income-section" colspan="2" style="color:green;background:rgba(39, 174, 96, 0.15);">
+                        <div><b>Income</b></div>
+                      </td>
                     </tr>
 
                     <!-- Main Row -->
@@ -216,12 +274,12 @@ require_once './actions/getProfitAndLoss.php';
                       </div>
                     </td>
                   </tr>
-                  <tr><td></td><td></td></tr>
-                  <tr><td></td><td></td></tr>
+
                   <!-- Expenses header -->
                   <tr class="category">
-                    <td style="color:red;"><b>Expenses</b></td>
-                    <td style="text-align:right; padding-right: 20px;"></td>
+                    <td colspan="2" style="color:red;" class="expenses-section">
+                      <div><b>Expenses</b></div>
+                    </td>
                   </tr>
 
                   <?php foreach ($expenseRows as $item): ?>
@@ -249,11 +307,20 @@ require_once './actions/getProfitAndLoss.php';
                   </tr>
 
                   <tr class="category">
-                    <td><b>Net Profit</b></td>
+                    <td><b>NET PROFIT</b></td>
                     <td class="p-0">
                       <div class="d-flex justify-content-start">
                         <div class="d-flex justify-content-end amount-box">
-                          <b> <?= $netProfit ?></b>
+
+                          <?php
+                          $isNegative = $netProfit < 0;
+                          $displayValue = number_format(abs($netProfit), 2);
+                          ?>
+
+                          <b class="<?= $isNegative ? 'text-danger' : '' ?>">
+                            <?= $isNegative ? "($displayValue)" : $displayValue ?>
+                          </b>
+
                         </div>
                       </div>
                     </td>

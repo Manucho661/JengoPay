@@ -20,12 +20,12 @@ require_once "./actions/getBuildingProfileDetails.php";
 
 // Stats
 $stats = [
-    'monthly_revenue' => 2850000,
-    'active_tenants' => 38,
-    'submitted_requests' => 12,
-    'occupied_units' => 38,
-    'vacant_units' => 7,
-    'occupancy_rate' => 84.4
+    'monthly_revenue' => 0,
+    'active_tenants' => 0,
+    'submitted_requests' => 0,
+    'occupied_units' => 0,
+    'vacant_units' => 0,
+    'occupancy_rate' => 0
 ];
 
 // Units
@@ -764,8 +764,8 @@ $financialData = [
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <h6>Occupancy Rate</h6>
-                                                <div class="value"><?= $stats['occupancy_rate'] ?>%</div>
-                                                <small style="color: #666;"><?= $stats['occupied_units'] ?> / <?= $building['total_units'] ?> units</small>
+                                                <div class="value">60 %</div>
+                                                <small style="color: #666;">40 / 70 units</small>
                                             </div>
                                             <div class="icon">
                                                 <i class="fas fa-chart-pie"></i>

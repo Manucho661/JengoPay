@@ -449,7 +449,7 @@ if (isset($_POST['submit_reading'])) {
                             </div>
                             <div>
                                 <p class="mb-0" style="font-weight: bold;">Occupied Units</p>
-                                <b><?= htmlspecialchars($totalUnderMaintenance); ?></b>
+                                
                             </div>
                         </div>
                     </div>
