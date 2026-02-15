@@ -447,6 +447,9 @@ $paymentHistory = [
             box-shadow: none;
             border-color: var(--accent-color);
         }
+        a{
+            text-decoration: none !important;
+        }
     </style>
 </head>
 
@@ -464,25 +467,20 @@ $paymentHistory = [
 
         <!-- Main Content -->
         <div class="main">
-            <!-- Header -->
-            <header class="custom-header">
-                <h1 class="h3 mb-0">My Profile</h1>
-            </header>
-
             <!-- Content -->
             <main class="p-4 flex-grow-1">
                 <!-- Profile Header -->
                 <div class="profile-header">
                     <div class="row align-items-center">
                         <div class="col-md-2 text-center">
-                            <img src="<?= $landlord['profile_image'] ?>" alt="Profile" class="profile-image">
+                            <img src="<?= $fullName?>" alt="Profile" class="profile-image">
                             <button class="btn btn-sm btn-outline-primary mt-3">
                                 <i class="fas fa-camera"></i> Change Photo
                             </button>
                         </div>
                         <div class="col-md-7">
                             <div class="profile-info">
-                                <h2><?= $landlord['name'] ?></h2>
+                                <h2><?= $fullName ?></h2>
                                 <p><i class="fas fa-envelope text-warning"></i> <?= $landlord['email'] ?></p>
                                 <p><i class="fas fa-phone text-warning"></i> <?= $landlord['phone'] ?></p>
                                 <p><i class="fas fa-id-badge text-warning"></i> ID: <?= $landlord['id'] ?></p>

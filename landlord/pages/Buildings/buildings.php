@@ -642,7 +642,7 @@ $results_show_buildings = $results_show_buildings->fetchAll(PDO::FETCH_ASSOC);
                                                     $no_of_units = $row['no_of_units'];
                                                     $category = $row['category'];
                                                     $ownership_info = $row['ownership_mode'];
-                                                    $added_on = $row['added_on'];
+                                                    $added_on = $row['created_at'];
                                                 ?>
                                                     <tr>
                                                         <td><i class="fas fa-building"></i> <?php echo $building_name; ?></td>
@@ -664,7 +664,17 @@ $results_show_buildings = $results_show_buildings->fetchAll(PDO::FETCH_ASSOC);
                                                             }
                                                             ?>
                                                         </td>
-                                                        <td><i class="fa fa-calendar"></i> <?php echo $added_on; ?></td>
+                                                        <td>
+                                                            <i class="fa fa-calendar"></i>
+                                                            <?php
+                                                            if (!empty($added_on)) {
+                                                                echo (new DateTime($added_on))->format('d M Y');
+                                                            } else {
+                                                                echo '—';
+                                                            }
+                                                            ?>
+                                                        </td>
+
                                                         <td>
                                                             <div class="btn-group">
                                                                 <button type="button" class="btn btn-default btn-sm" style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
