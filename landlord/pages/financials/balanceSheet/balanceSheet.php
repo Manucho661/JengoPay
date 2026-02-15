@@ -175,6 +175,14 @@ require_once 'actions/getBuildings.php';
   a {
     text-decoration: none !important;
   }
+
+  /* table */
+  .table tbody td {
+    padding: 15px 10px;
+    vertical-align: middle;
+    color: var(--main-color);
+    font-size: 14px;
+  }
 </style>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -242,7 +250,7 @@ require_once 'actions/getBuildings.php';
                           </select>
                         </div>
 
-                       
+
 
                         <div class="col-auto filter-col">
                           <label class="form-label text-muted small">Date From</label>
@@ -287,9 +295,29 @@ require_once 'actions/getBuildings.php';
             <!-- Start col -->
             <div class="col-md-12">
               <div class="card border-0 ">
+                <div class="card-header d-flex justify-content-between align-items-center"
+                  style="background-color:#00192D; color:#fff;">
+
+                  <b>
+                    The Balance Sheet
+                    (<span class="text-warning"><?= date('d-M Y') ?></span>)
+                  </b>
+
+                  <!-- Export buttons -->
+                  <div class="export-icons">
+                    <button class="btn btn-sm me-2 pdfBtn2 text-dark bg-warning" title="Export PDF">
+                      <i class="bi bi-download"></i>
+                    </button>
+
+                    <button class="btn btn-sm me-2 pdfBtn2 text-dark bg-warning" title="Export Excel">
+                      <i class="bi bi-printer"></i>
+                    </button>
+                  </div>
+
+                </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table table-striped" id="">
+                    <table class="table" id="">
                       <thead>
                         <tr>
                           <th>Description</th>
@@ -300,7 +328,7 @@ require_once 'actions/getBuildings.php';
                       <!-- ================= ASSETS ================= -->
                       <tbody>
                         <tr>
-                          <th colspan="2">Assets</th>
+                          <th colspan="2" colspan="2" style="color:green;background:rgba(39, 174, 96, 0.15);">Assets</th>
                         </tr>
                         <tr>
                           <th colspan="2" class="section-header fs-6 fw-normal">Non-current Assets</th>
@@ -395,7 +423,7 @@ require_once 'actions/getBuildings.php';
                       <!-- ================= LIABILITIES ================= -->
                       <tbody>
                         <tr>
-                          <th colspan="2">Liabilities</th>
+                          <th colspan="2" style="background:#fff8e6 !important;">Liabilities</th>
                         </tr>
                         <tr>
                           <th colspan="2" class="section-header fs-6 fw-normal">Current Liabilities</th>
@@ -495,7 +523,7 @@ require_once 'actions/getBuildings.php';
                       <!-- ================= EQUITY ================= -->
                       <tbody>
                         <tr>
-                          <th colspan="2">Equity</th>
+                          <th colspan="2" style="background:#fff8e6 !important;">Equity</th>
                         </tr>
 
                         <tr class="main-row clickable-row">

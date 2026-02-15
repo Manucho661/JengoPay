@@ -955,41 +955,41 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                     <!-- Invoice Details -->
                     <div class="mb-4">
                         <h6 style="color: var(--main-color); font-weight: 600; margin-bottom: 15px;">
-                            <i class="fas fa-info-circle"></i> Invoice Details
+                            <i class="fas fa-info-circle"></i> Expense Details
                         </h6>
-                        <div class="mb-3">
-                            <label class="form-label">Invoice Number *</label>
-                            <input type="text" name="invoice_number" class="form-control" value="INV-2024-" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Building *</label>
-                            <select name="building" class="form-select" onchange="updateUnitsForBuilding(this.value)" required>
-                                <option value="">Select Building</option>
-                                <option value="1">Hindocha Tower</option>
-                                <option value="2">Vista Apartments</option>
-                                <option value="3">Green Valley Homes</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Unit *</label>
-                            <select name="unit" class="form-select" id="unitSelect" onchange="updateTenantForUnit(this.value)" required disabled>
-                                <option value="">Select building first</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Tenant *</label>
-                            <select name="tenant" class="form-select" id="tenantSelect" required disabled>
-                                <option value="">Select unit first</option>
-                            </select>
-                        </div>
                         <div class="row g-3">
                             <div class="col-6">
-                                <label class="form-label">Issue Date *</label>
-                                <input type="date" name="issue_date" class="form-control" value="<?= date('Y-m-d') ?>" required>
+
+                                <label class="form-label">Expense Number *</label>
+                                <input type="text" name="invoice_number" class="form-control" value="INV-2024-" required>
+
                             </div>
                             <div class="col-6">
-                                <label class="form-label">Due Date *</label>
-                                <input type="date" name="due_date" class="form-control" required>
+                                <label class="form-label">Supplier *</label>
+                                <select name="building" class="form-select" onchange="updateUnitsForBuilding(this.value)" required>
+                                    <option value="">Select Building</option>
+                                    <option value="1">Hindocha Tower</option>
+                                    <option value="2">Vista Apartments</option>
+                                    <option value="3">Green Valley Homes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-6">
+                                <label class="form-label">Building *</label>
+                                <select name="building" class="form-select" onchange="updateUnitsForBuilding(this.value)" required>
+                                    <option value="">Select Building</option>
+                                    <option value="1">Hindocha Tower</option>
+                                    <option value="2">Vista Apartments</option>
+                                    <option value="3">Green Valley Homes</option>
+                                </select>
+                            </div>
+
+                            <div class="col-6">
+                                
+                                    <label class="form-label">Issue Date *</label>
+                                    <input type="date" name="date" class="form-control" value="<?= date('Y-m-d') ?>" required>
+                        
                             </div>
                         </div>
                     </div>
