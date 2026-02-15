@@ -183,7 +183,7 @@ export async function getTenant() {
     tenantNameDiv.style.display = "none";
     tenantNameInput.value = "";
     targetId.value = "";
-    tenant_user_id.value= "";
+    tenant_user_id.value = "";
 
     if (!unitId) return;
 
@@ -202,6 +202,9 @@ export async function getTenant() {
             tenantNameDiv.style.display = "block";
         } else {
             console.error("Tenant data not found.");
+            const absentTenantMess = document.getElementById("tenantHelp");
+            absentTenantMess.textContent = "No tenant found, please select another building or unit";
+            absentTenantMess.style.display = "block";
         }
     } catch (e) {
         console.error(e);

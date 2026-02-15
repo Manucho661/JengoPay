@@ -17,6 +17,7 @@ if (isset($_SESSION['user']['id']) && $_SESSION['user']['role'] === 'provider') 
 // actions
 include_once './actions/getApplications.php';
 include_once './actions/withdrawApplication.php';
+include_once './actions/declineAssignment.php';
 
 ?>
 
@@ -1152,7 +1153,7 @@ include_once './actions/withdrawApplication.php';
         </button>
 
         <form method="POST" action="" id="declineAssignmentForm" style="display: none;">
-          <input type="hidden" name="assigned_request_id" id="assigned_request_id" value="">
+          <input type="hidden" name="proposal_id" value="<?php echo htmlspecialchars($application['proposal_id']); ?>">
           <button class="action-btn-offcanvas btn-decline-ass" type="submit" id="btnDeclineAssignment">
             <i class="fas fa-trash"></i> Decline the assignement
           </button>

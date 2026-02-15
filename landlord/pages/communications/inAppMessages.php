@@ -28,8 +28,6 @@ try {
 
 ?>
 
-
-
 <!doctype html>
 <html lang="en">
 <!--begin::Head-->
@@ -659,86 +657,86 @@ try {
                       </thead>
 
                       <tbody id="conversationTableBody">
-  <?php if (empty($conversations)): ?>
-    <tr>
-      <td colspan="5">
-        <div class="text-center py-5">
-          <div class="mb-3" style="font-size:42px; opacity:.85;">
-            <i class="fas fa-comments"></i>
-          </div>
-          <h6 class="mb-2">No conversations yet</h6>
-          <p class="text-muted mb-4" style="max-width:520px; margin:0 auto;">
-            Start a chat to connect with tenants, landlords, or service providers. Your recent conversations will appear here.
-          </p>
-          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newChatModal">
-            <i class="fas fa-plus"></i> Start Chat
-          </button>
-        </div>
-      </td>
-    </tr>
-  <?php else: ?>
+                        <?php if (empty($conversations)): ?>
+                          <tr>
+                            <td colspan="5">
+                              <div class="text-center py-5">
+                                <div class="mb-3" style="font-size:42px; opacity:.85;">
+                                  <i class="fas fa-comments"></i>
+                                </div>
+                                <h6 class="mb-2">No conversations yet</h6>
+                                <p class="text-muted mb-4" style="max-width:520px; margin:0 auto;">
+                                  Start a chat to connect with tenants, landlords, or service providers. Your recent conversations will appear here.
+                                </p>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newChatModal">
+                                  <i class="fas fa-plus"></i> Start Chat
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        <?php else: ?>
 
-    <?php $meId = (int)($_SESSION['user']['id'] ?? 0); ?>
+                          <?php $meId = (int)($_SESSION['user']['id'] ?? 0); ?>
 
-    <?php foreach ($conversations as $conversation): ?>
-      <?php
-        $cid       = (int)($conversation['conversation_id'] ?? 0);
-        $title     = (string)($conversation['title'] ?? '');
-        $createdAt = (string)($conversation['created_at'] ?? '');
+                          <?php foreach ($conversations as $conversation): ?>
+                            <?php
+                            $cid       = (int)($conversation['conversation_id'] ?? 0);
+                            $title     = (string)($conversation['title'] ?? '');
+                            $createdAt = (string)($conversation['created_at'] ?? '');
 
-        $creatorId    = (int)($conversation['created_by'] ?? 0);
-        $creatorName  = (string)($conversation['creator']['name'] ?? '');
-        $creatorEmail = (string)($conversation['creator']['email'] ?? '');
+                            $creatorId    = (int)($conversation['created_by'] ?? 0);
+                            $creatorName  = (string)($conversation['creator']['name'] ?? '');
+                            $creatorEmail = (string)($conversation['creator']['email'] ?? '');
 
-        $createdByLabel = ($creatorId === $meId) ? 'Me' : ($creatorName ?: 'Unknown');
+                            $createdByLabel = ($creatorId === $meId) ? 'Me' : ($creatorName ?: 'Unknown');
 
-        $sentTo = trim((string)($conversation['sent_to_display'] ?? ''));
-        if ($sentTo === '') {
-          // If it's a conversation with only you (or data issue), show a friendly fallback
-          $sentTo = 'No other participants';
-        }
+                            $sentTo = trim((string)($conversation['sent_to_display'] ?? ''));
+                            if ($sentTo === '') {
+                              // If it's a conversation with only you (or data issue), show a friendly fallback
+                              $sentTo = 'No other participants';
+                            }
 
-        $datePart = $createdAt ? substr($createdAt, 0, 10) : '';
-        $timePart = $createdAt ? substr($createdAt, 11, 5) : '';
-      ?>
+                            $datePart = $createdAt ? substr($createdAt, 0, 10) : '';
+                            $timePart = $createdAt ? substr($createdAt, 11, 5) : '';
+                            ?>
 
-      <tr class="table-row">
-        <td class="timestamp">
-          <div class="date"><?= htmlspecialchars($datePart) ?></div>
-          <div class="time"><?= htmlspecialchars($timePart) ?></div>
-        </td>
+                            <tr class="table-row">
+                              <td class="timestamp">
+                                <div class="date"><?= htmlspecialchars($datePart) ?></div>
+                                <div class="time"><?= htmlspecialchars($timePart) ?></div>
+                              </td>
 
-        <td class="title">
-          <?= htmlspecialchars($title !== '' ? $title : 'Untitled conversation') ?>
-          <div class="text-muted" style="font-size:12px;">
-            Thread #<?= $cid ?>
-          </div>
-        </td>
+                              <td class="title">
+                                <?= htmlspecialchars($title !== '' ? $title : 'Untitled conversation') ?>
+                                <div class="text-muted" style="font-size:12px;">
+                                  Thread #<?= $cid ?>
+                                </div>
+                              </td>
 
-        <td>
-          <div class="sender"><?= htmlspecialchars($createdByLabel) ?></div>
-          <?php if ($creatorId !== $meId && $creatorEmail !== ''): ?>
-            <div class="sender-email"><?= htmlspecialchars($creatorEmail) ?></div>
-          <?php endif; ?>
-        </td>
+                              <td>
+                                <div class="sender"><?= htmlspecialchars($createdByLabel) ?></div>
+                                <?php if ($creatorId !== $meId && $creatorEmail !== ''): ?>
+                                  <div class="sender-email"><?= htmlspecialchars($creatorEmail) ?></div>
+                                <?php endif; ?>
+                              </td>
 
-        <td>
-          <div class="recipient"><?= htmlspecialchars($sentTo) ?></div>
-        </td>
+                              <td>
+                                <div class="recipient"><?= htmlspecialchars($sentTo) ?></div>
+                              </td>
 
-        <td>
-          <button class="btn btn-primary view" data-conversation-id="<?= $cid ?>">
-            <i class="bi bi-eye"></i> View
-          </button>
-          <button class="btn btn-danger delete" data-thread-id="<?= $cid ?>">
-            <i class="bi bi-trash3"></i> Delete
-          </button>
-        </td>
-      </tr>
-    <?php endforeach; ?>
+                              <td>
+                                <button class="btn btn-primary view" data-conversation-id="<?= $cid ?>">
+                                  <i class="bi bi-eye"></i> View
+                                </button>
+                                <button class="btn btn-danger delete" data-thread-id="<?= $cid ?>">
+                                  <i class="bi bi-trash3"></i> Delete
+                                </button>
+                              </td>
+                            </tr>
+                          <?php endforeach; ?>
 
-  <?php endif; ?>
-</tbody>
+                        <?php endif; ?>
+                      </tbody>
 
 
                     </table>
@@ -820,11 +818,17 @@ try {
                 </div>
 
                 <div class="col-12" id="tenantNameDiv" style="display:none;">
+
                   <label class="form-label mb-1">Tenant</label>
                   <input class="form-control" id="tenantNameInput" type="text" readonly />
+
                   <!-- this is what PHP needs -->
                   <input type="hidden" id="tenantIdInput" name="tenant_id" />
                 </div>
+                <div class="col-12 text-danger" id="tenantHelp" style="display:none;">
+                  <i><small id="tenantHelp" class="text-danger d-block mt-1" style="color:red;"></small></i>
+                </div>
+
               </div>
             </div>
 

@@ -951,189 +951,152 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
             </div>
             <div class="offcanvas-body">
-                <div class="card mb-3 shadow-sm border-0">
-                    <div class="card-body">
-                        <form method="POST" id="expenseForm">
-                            <div class="row g-3">
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold">Building</label>
-                                    <select class="form-control shadow-sm" name="building_id" required>
-                                        <option value="">Select Building</option>
-                                        <?php foreach ($buildings as $building): ?>
-                                            <option value="<?= (int)$building['id'] ?>">
-                                                <?= htmlspecialchars($building['building_name']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold">Date</label>
-                                    <input type="date" class="form-control rounded-1 shadow-none" name="date">
-                                </div>
-
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold">Expense No</label>
-                                    <input type="text" class="form-control rounded-1 shadow-none"
-                                        name="expense_no" placeholder="KRA000100039628">
-                                </div>
-
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold">Supplier</label>
-                                    <input class="form-control rounded-1 shadow-none"
-                                        list="supplierList"
-                                        name="supplier_name"
-                                        placeholder="Search or select supplier">
-                                    <datalist id="supplierList">
-                                        <?php foreach ($suppliers as $supplier): ?>
-                                            <option
-                                                value="<?= htmlspecialchars($supplier['supplier_name']) ?>"
-                                                data-id="<?= htmlspecialchars($supplier['id']) ?>">
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </datalist>
-                                    <input type="hidden" name="supplier_id" id="supplier_id">
-                                    <small id="supplierError" class="text-danger d-none">The supplier doesn't exist. Please register them to continue.</small>
-                                </div>
-
+                <form method="POST" id="createInvoiceForm">
+                    <!-- Invoice Details -->
+                    <div class="mb-4">
+                        <h6 style="color: var(--main-color); font-weight: 600; margin-bottom: 15px;">
+                            <i class="fas fa-info-circle"></i> Invoice Details
+                        </h6>
+                        <div class="mb-3">
+                            <label class="form-label">Invoice Number *</label>
+                            <input type="text" name="invoice_number" class="form-control" value="INV-2024-" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Building *</label>
+                            <select name="building" class="form-select" onchange="updateUnitsForBuilding(this.value)" required>
+                                <option value="">Select Building</option>
+                                <option value="1">Hindocha Tower</option>
+                                <option value="2">Vista Apartments</option>
+                                <option value="3">Green Valley Homes</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Unit *</label>
+                            <select name="unit" class="form-select" id="unitSelect" onchange="updateTenantForUnit(this.value)" required disabled>
+                                <option value="">Select building first</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tenant *</label>
+                            <select name="tenant" class="form-select" id="tenantSelect" required disabled>
+                                <option value="">Select unit first</option>
+                            </select>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label">Issue Date *</label>
+                                <input type="date" name="issue_date" class="form-control" value="<?= date('Y-m-d') ?>" required>
                             </div>
-                            <!-- Hidden total -->
-                            <div class="row no-wrap mt-2">
-                                <div class="text-muted mt-4 mb-4">Add the Spend items in the fields below</div>
-                                <div class="col-md-12 rounded-2" id="itemsContainer">
-                                    <div class="row item-row g-3 mb-5 p-2" style="background-color: #f5f5f5; overflow:auto; white-space:nowrap;">
-                                        <!-- ITEM(SERVICE) -->
-                                        <div class="col-md-2">
-                                            <label class="form-label fw-bold">ITEM(SERVICE)</label>
-                                            <select class="form-select shadow-none rounded-1" name="item_account_code[]" style="width: 100%;">
-                                                <option value="" disabled selected>Select</option>
-                                                <?php foreach ($accountItems as $item): ?>
-                                                    <option value="<?= htmlspecialchars($item['account_code']) ?>">
-                                                        <?= htmlspecialchars($item['account_name']) ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-
-                                        <!-- Description -->
-                                        <div class="col-md-2">
-                                            <label class="form-label fw-bold">Description</label>
-                                            <input type="text" class="form-control description rounded-1 shadow-none" placeholder="Electricity" name="description[]" required />
-                                        </div>
-
-                                        <!-- Quantity -->
-                                        <div class="col-md-1">
-                                            <label class="form-label fw-bold">Qty</label>
-                                            <input type="number" class="form-control qty rounded-1 shadow-none" placeholder="1" name="qty[]" required />
-                                        </div>
-
-                                        <!-- Unit Price & Taxes -->
-                                        <div class="col-md-3 d-flex align-items-stretch">
-                                            <div class="unitPrice me-2 flex-grow-1">
-                                                <label class="form-label fw-bold">Unit Price</label>
-                                                <input type="number" class="form-control unit-price rounded-1 shadow-none" placeholder="123" name="unit_price[]" required />
-                                            </div>
-                                            <div class="taxes flex-grow-1">
-                                                <label class="form-label fw-bold">Taxes</label>
-                                                <select class="form-select rounded-1 shadow-none ellipsis-select" name="taxes[]" required>
-                                                    <option value="" selected disabled>Select--</option>
-                                                    <option value="inclusive">VAT 16% Inclusive</option>
-                                                    <option value="exclusive">VAT 16% Exclusive</option>
-                                                    <option value="zerorated">Zero Rated</option>
-                                                    <option value="exempted">Exempted</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <!-- Discount -->
-                                        <div class="col-md-2">
-                                            <label class="form-label fw-bold">Discount(%)</label>
-                                            <input type="number" class="form-control discount shadow-none rounded-1 mb-1" name="discount[]" placeholder="Ksh 0.00" required>
-                                        </div>
-
-                                        <!-- Total & Delete -->
-                                        <div class="col-md-2 d-flex align-items-stretch">
-                                            <div class="flex-grow-1 me-2">
-                                                <label class="form-label fw-bold">Total (KSH)</label>
-                                                <input type="text" class="form-control item-total shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" name="item_total[]" required readonly />
-                                                <input type="hidden" class="form-control item_totalForStorage shadow-none rounded-1 mb-1" placeholder="Ksh 0.00" name="item_totalForStorage[]" required readonly />
-                                            </div>
-                                            <div class="d-flex align-items-end">
-                                                <label class="form-label fw-bold invisible">X</label>
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#editPersonalInfoModal">
-                                                    <i class="fas fa-trash text-white"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-6">
+                                <label class="form-label">Due Date *</label>
+                                <input type="date" name="due_date" class="form-control" required>
                             </div>
-                            <!-- Spend items table -->
-                            <div class="row mt-4 ">
-                                <div class="col-md-12 d-flex justify-content-end">
-
-                                    <div class="d-flex justify-content-end">
-
-                                        <div class="d-flex flex-column align-items-end">
-
-                                            <div class="d-flex justify-content-end w-100 mb-2">
-                                                <label class="me-2 border-end pe-3 text-end w-50"><strong>Untaxed Amount:</strong></label>
-                                                <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="subTotal" name="" value="Ksh 10,500">
-                                                <input type="hidden" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="subTotalhidden" name="untaxedAmount" value="Ksh 10,500">
-                                            </div>
-
-                                            <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountInclusiveContainer" style="display:none !important;">
-                                                <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% (Inclusive):</strong></label>
-                                                <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountInclusive" value="Ksh 1,500">
-                                            </div>
-
-                                            <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountExclusiveContainer" style="display: none !important;">
-                                                <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% (Exlusive):</strong></label>
-                                                <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountExclusive" value="Ksh 1,500">
-
-                                            </div>
-
-                                            <div class="d-flex justify-content-end w-100 mb-2" id="vatAmountContainer" style="display: none;">
-                                                <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 16% :</strong></label>
-                                                <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountTotal" value="Ksh 0.00">
-                                                <input type="hidden" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="vatAmountTotalHidden" name="totalTax" value="Ksh 0.00">
-                                            </div>
-
-                                            <div class="d-flex justify-content-end w-100 mb-2" id="ExemptedContainer" style="display: none;">
-                                                <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">Exempted</strong></label>
-                                                <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" name="Exempted[]" id="Exempted" value="Ksh 0.00">
-                                            </div>
-
-                                            <div class="d-flex justify-content-end w-100 mb-2" id="zeroRatedContainer" style="display: none;">
-                                                <label class="me-2 border-end pe-3 text-end w-50"><strong id="taxLabel">VAT 0%:</strong></label>
-                                                <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="zeroRated" value="Ksh 0.00">
-                                            </div>
-
-                                            <div class="d-flex justify-content-end w-100 mb-2" id="grandDiscountContainer">
-                                                <label class="me-2 border-end pe-3 text-end w-50"><strong>Discount:</strong></label>
-                                                <input type="text" readonly class="form-control w-50 ps-3 rounded-1 shadow-none" id="grandDiscount" value="Ksh 0:00">
-                                            </div>
-
-                                            <div class="d-flex justify-content-end w-100 mt-3 pt-2 border-top border-warning">
-                                                <label class="me-2 border-end pe-3 text-end w-50"><strong>Total Amount Due:</strong></label>
-                                                <input type="hidden" name="total" id="grandTotalNumber" value="0.00" />
-                                                <input type="text" readonly class="form-control-plaintext w-50 ps-3 fw-bold" id="grandTotal" value="Ksh 12,000">
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mt-3">
-                                <div class="col-md-12 d-flex justify-content-between">
-                                    <button type="button" class="btn btn-outline-warning text-dark shadow-none" onclick="addRow()">➕ Add More</button>
-                                    <button type="submit" name="create_expense" id="submitBtn" class="btn btn-outline-warning text-dark shadow-none" disabled>✅ Submit</button>
-                                </div>
-                            </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
+
+                    <!-- Invoice Items -->
+                    <div class="mb-4">
+                        <h6 style="color: var(--main-color); font-weight: 600; margin-bottom: 15px;">
+                            <i class="fas fa-list"></i> Invoice Items
+                        </h6>
+                        <div class="table-responsive">
+                            <table class="table invoice-items-table table-sm" id="invoiceItemsTable">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 150px;">Item</th>
+                                        <th>Description</th>
+                                        <th style="width: 80px;">Quantity</th>
+                                        <th style="width: 100px;">Price</th>
+                                        <th style="width: 80px;">Discount</th>
+                                        <th style="width: 70px;">Tax %</th>
+                                        <th style="width: 100px;">Amount</th>
+                                        <th style="width: 40px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invoiceItemsBody">
+                                    <tr class="item-row">
+                                        <td>
+                                            <select class="form-select form-select-sm item-name" name="items[0][item]" onchange="updateItemDescription(this)" required>
+                                                <option value="">Select Item</option>
+                                                <option value="rent">Rent</option>
+                                                <option value="water">Water</option>
+                                                <option value="electricity">Electricity</option>
+                                                <option value="security">Security</option>
+                                                <option value="maintenance">Maintenance</option>
+                                                <option value="parking">Parking</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm item-desc" name="items[0][description]" placeholder="Item description" required>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm item-qty" name="items[0][quantity]" value="1" min="1" onchange="calculateRowTotal(this)" required>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm item-price" name="items[0][price]" placeholder="0.00" step="0.01" onchange="calculateRowTotal(this)" required>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm item-discount" name="items[0][discount]" value="0" min="0" step="0.01" onchange="calculateRowTotal(this)">
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm item-tax" name="items[0][tax]" value="16" min="0" step="0.01" onchange="calculateRowTotal(this)">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm item-amount" name="items[0][amount]" value="0.00" readonly>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem(this)" style="padding: 2px 6px;">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="add-item-btn mt-2" onclick="addInvoiceItem()">
+                            <i class="fas fa-plus"></i> Add Item
+                        </button>
+                    </div>
+
+                    <!-- Totals -->
+                    <div class="mb-4">
+                        <div style="background: rgba(255, 193, 7, 0.1); padding: 20px; border-radius: 10px; border-left: 4px solid var(--accent-color);">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal:</span>
+                                <strong id="invoiceSubtotal">KES 0.00</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Total Discount:</span>
+                                <strong id="invoiceDiscount" style="color: var(--danger-color);">KES 0.00</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Total Tax:</span>
+                                <strong id="invoiceTax">KES 0.00</strong>
+                            </div>
+                            <div class="d-flex justify-content-between pt-2 border-top">
+                                <strong>Total:</strong>
+                                <strong id="invoiceTotal" style="color: var(--accent-color); font-size: 20px;">KES 0.00</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-primary btn-lg" onclick="previewInvoice()">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-lg" onclick="saveAsDraft()">
+                            <i class="fas fa-save"></i> Save as Draft
+                        </button>
+                        <button type="submit" name="create_invoice" class="btn btn-success btn-lg">
+                            <i class="fas fa-paper-plane"></i> Confirm and Send
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
         <!-- View Expense Modal -->
@@ -2014,28 +1977,6 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
             ?.addEventListener('click', function() {
                 location.reload();
             });
-    </script>
-
-    <!-- Toast message -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const successEl = document.getElementById("flashToastSuccess");
-            const errorEl = document.getElementById("flashToastError");
-
-            if (successEl && window.bootstrap) {
-                new bootstrap.Toast(successEl, {
-                    delay: 8000,
-                    autohide: true
-                }).show();
-            }
-
-            if (errorEl && window.bootstrap) {
-                new bootstrap.Toast(errorEl, {
-                    delay: 10000,
-                    autohide: true
-                }).show();
-            }
-        });
     </script>
 
 </body>

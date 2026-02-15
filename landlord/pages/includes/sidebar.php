@@ -19,10 +19,10 @@ $currentPage = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
         </span>
     </div>
 
-    <div class="menu-item <?= $currentPage == 'single_units.php' ? 'active' : '' ?>">
+    <div class="menu-item <?= $currentPage == 'units.php' ? 'active' : '' ?>">
         <span>
             <i class="fas fa-door-open"></i>
-            <a href="/Jengopay/landlord/pages/Units/single_units.php">Units</a>
+            <a href="/Jengopay/landlord/pages/Units/units.php">Units</a>
         </span>
     </div>
 

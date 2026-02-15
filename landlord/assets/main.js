@@ -50,4 +50,24 @@ function toggleNotifications() {
     dropdown.classList.toggle('show');
 }
 
-// logout
+// toast message
+
+document.addEventListener("DOMContentLoaded", function () {
+    const successEl = document.getElementById("flashToastSuccess");
+    const errorEl = document.getElementById("flashToastError");
+
+    if (successEl && window.bootstrap) {
+        new bootstrap.Toast(successEl, {
+            delay: 8000,
+            autohide: true
+        }).show();
+    }
+
+    if (errorEl && window.bootstrap) {
+        new bootstrap.Toast(errorEl, {
+            delay: 10000,
+            autohide: true
+        }).show();
+    }
+});
+

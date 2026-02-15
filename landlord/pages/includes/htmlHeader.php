@@ -1,4 +1,5 @@
 <!--begin::Primary Meta Tags-->
+  <meta name="title" content="JengoPay" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="title" content="AdminLTE | Dashboard v2" />
   
