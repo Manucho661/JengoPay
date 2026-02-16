@@ -476,6 +476,29 @@ try {
     a {
       text-decoration: none;
     }
+     .message-stats {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat-item .number {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--main-color);
+        }
+
+        .stat-item .label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
   </style>
 </head>
 
@@ -548,7 +571,9 @@ try {
         </div>
 
         <!-- message stats -->
-        <div class="row">
+         <div class="message-stats">
+          <div class="row">
+          
           <div class="col-md-3 stat-item">
             <div class="number">7</div>
             <div class="label">Total Conversations</div>
@@ -566,12 +591,14 @@ try {
             <div class="label">Service Provider</div>
           </div>
         </div>
+         </div>
+        
         <!-- First Row: Search and Buttons -->
         <div class="row mb-2">
           <div class="col-md-12">
             <div class="card border-0 mb-4">
               <div class="card-body">
-                <h5 class="card-title mb-3"><i class="fas fa-filter"></i> Filter Messages</h5>
+                
                 <form method="GET">
                   <div class="row g-3 mb-3" style="flex-wrap: nowrap; overflow-x: auto;">
                     <div class="col-md-3" style="min-width: 200px;">
@@ -616,17 +643,13 @@ try {
         <div class="row mt-2">
           <div class="col-sm-12 col-md-12">
             <div class="card border-0">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center border-bottom">
-                  <h5 class="card-title mb-0">
-                    <i class="fas fa-inbox text-warning"></i> Recent Conversations
-                  </h5>
-
-                  <button class="actionBtn mb-2" data-bs-toggle="modal" data-bs-target="#newChatModal">
+              <div class="card-header d-flex justify-content-between" style="background-color: #00192D; color:#fff;">
+                <b>Recent Conversations (<span class="text-warning">0</span>)</b>
+                <button class="actionBtn2 mb-2" data-bs-toggle="modal" data-bs-target="#newChatModal">
                     <i class="fas fa-plus"></i> New Chat
                   </button>
-                </div>
-
+              </div>
+              <div class="card-body">
                 <?php if (empty($conversations)): ?>
                   <!-- Empty state -->
                   <div class="text-center py-5">
@@ -706,7 +729,7 @@ try {
                                 <div class="time"><?= htmlspecialchars($timePart) ?></div>
                               </td>
 
-                              <td class="title">
+                              <td class="title fw-semibold">
                                 <?= htmlspecialchars($title !== '' ? $title : 'Untitled conversation') ?>
                                 <div class="text-muted" style="font-size:12px;">
                                   Thread #<?= $cid ?>

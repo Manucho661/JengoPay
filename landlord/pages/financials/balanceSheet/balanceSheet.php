@@ -128,8 +128,8 @@ require_once 'actions/getBuildings.php';
   }
 
   .section-header {
-    color: green !important;
-    font-size: 14px;
+    /* color: green !important; */
+    /* font-size: 14px; */
   }
 
   .main-row td:first-child {
@@ -137,11 +137,11 @@ require_once 'actions/getBuildings.php';
     font-size: 14px;
     color: #002B5B;
     /* navy */
-    margin-left: 10px;
+    /* margin-left: 10px; */
   }
 
   .amount-box {
-    width: 50px;
+    width: 30px;
     /* pick a width that fits your biggest number */
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
@@ -182,6 +182,133 @@ require_once 'actions/getBuildings.php';
     vertical-align: middle;
     color: var(--main-color);
     font-size: 14px;
+  }
+
+  .table th {
+    padding: 15px 10px;
+
+  }
+
+  /* Child items (accounts) */
+  .child-row td:first-child {
+    padding-left: 28px;
+    /* indentation */
+    position: relative;
+    font-weight: 500;
+  }
+
+  /* small marker to show it's under a section */
+  .child-row td:first-child::before {
+    content: "•";
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: .6;
+  }
+
+  /* hover effect for clickable child rows */
+  .child-row.clickable-row:hover {
+    background: rgba(0, 25, 45, 0.06);
+  }
+
+  .section-header {
+    background: rgba(0, 0, 0, 0.03);
+    border-left: 4px solid rgba(0, 25, 45, 0.25);
+    padding-left: 12px !important;
+    color: #00192D;
+    font-size: 14px;
+    font-weight: 600;
+
+  }
+
+  /* ===== Balance Sheet table polish ===== */
+  .table-striped tbody tr td,
+  .table-striped tbody tr th {
+    vertical-align: middle;
+  }
+
+  /* Major headers: Assets / Liabilities / Equity */
+  .major-header th {
+    font-size: 15px;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+  }
+
+  /* Sub-section headers: Current Assets, etc */
+  .section-header {
+    background: rgba(0, 25, 45, 0.04);
+    border-left: 4px solid rgba(0, 25, 45, 0.25);
+    padding-left: 12px !important;
+    font-weight: 600 !important;
+  }
+
+  /* Child rows (accounts) indentation */
+  .child-row td:first-child {
+    padding-left: 34px;
+    position: relative;
+  }
+
+  /* Small marker to show it’s nested */
+  .child-row td:first-child::before {
+    content: "•";
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: .55;
+  }
+
+  /* Dotted leader line between description and amount */
+  .desc-cell {
+    position: relative;
+  }
+
+  .desc-cell .desc-text {
+    position: relative;
+    background: #fff;
+    /* helps the text sit over the dotted line */
+    padding-right: 10px;
+    z-index: 2;
+  }
+
+  .desc-cell::after {
+    content: "";
+    position: absolute;
+    left: 34px;
+    /* align with indentation */
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.25);
+    z-index: 1;
+  }
+
+  /* Hover for clickable rows */
+  .clickable-row:hover {
+    background: rgba(0, 25, 45, 0.06) !important;
+  }
+
+  /* Total rows pop */
+  .total-row td,
+  .total-row th {
+    background: rgba(0, 0, 0, 0.03) !important;
+    font-weight: 700;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  /* Grand totals (Total Assets / Total Liabilities & Equity) */
+  .total-row td.fs-6,
+  .total-row td:contains("Total Assets") {
+    font-weight: 800;
+  }
+
+  /* Make amount column look tighter and aligned */
+  .amount-box {
+    min-width: 160px;
+    justify-content: flex-end;
+    font-variant-numeric: tabular-nums;
+    /* nicer digit alignment */
   }
 </style>
 
@@ -234,11 +361,15 @@ require_once 'actions/getBuildings.php';
                     <!-- always reset to page 1 when applying filters -->
                     <input type="hidden" name="page" value="1">
 
+
+
+
                     <div class="filters-scroll">
-                      <div class="row g-3 mb-3 filters-row">
+                      <div class="row g-3 mb-3 filters-row align-items-end">
 
                         <div class="col-auto filter-col">
                           <label class="form-label text-muted small">Buildings</label>
+
                           <select class="form-select shadow-sm" name="building_id">
                             <option value="">All Buildings</option>
                             <?php foreach ($buildings as $building): ?>
@@ -248,9 +379,8 @@ require_once 'actions/getBuildings.php';
                               </option>
                             <?php endforeach; ?>
                           </select>
+
                         </div>
-
-
 
                         <div class="col-auto filter-col">
                           <label class="form-label text-muted small">Date From</label>
@@ -270,18 +400,18 @@ require_once 'actions/getBuildings.php';
                             value="<?= htmlspecialchars($date_to ?? '') ?>">
                         </div>
 
+                        <div class="col-auto filter-col d-flex gap-2">
+                          <button type="submit" class="actionBtn">
+                            <i class="fas fa-search"></i> Apply
+                          </button>
+
+                          <a href="expenses.php" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i> Reset
+                          </a>
+                        </div>
+
                       </div>
-                    </div>
 
-                    <div class="d-flex gap-2 justify-content-end">
-                      <!-- Replace with your real page name -->
-                      <a href="expenses.php" class="btn btn-secondary">
-                        <i class="fas fa-redo"></i> Reset
-                      </a>
-
-                      <button type="submit" class="actionBtn">
-                        <i class="fas fa-search"></i> Apply Filters
-                      </button>
                     </div>
                   </form>
 
@@ -327,15 +457,17 @@ require_once 'actions/getBuildings.php';
 
                       <!-- ================= ASSETS ================= -->
                       <tbody>
-                        <tr>
-                          <th colspan="2" colspan="2" style="color:green;background:rgba(39, 174, 96, 0.15);">Assets</th>
+                        <tr class="major-header">
+                          <th colspan="2" style="color:green;background:rgba(39, 174, 96, 0.15);">Assets</th>
                         </tr>
+
+
                         <tr>
-                          <th colspan="2" class="section-header fs-6 fw-normal">Non-current Assets</th>
+                          <th colspan="2" class="section-header">Non-current Assets</th>
                         </tr>
 
                         <?php foreach ($nonCurrentAssets as $asset): ?>
-                          <tr class="main-row clickable-row"
+                          <tr class="main-row child-row clickable-row"
                             data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['account_id']) ?>"
                             style="cursor:pointer;">
                             <td><?= htmlspecialchars($asset['name']) ?></td>
@@ -365,16 +497,17 @@ require_once 'actions/getBuildings.php';
                             </div>
                           </td>
                         </tr>
-                      </tbody>
 
-                      <tbody>
                         <tr>
-                          <th colspan="2" class="section-header fs-6 fw-normal">Current Assets</th>
+                          <th colspan="2" class="section-header">Current Assets</th>
                         </tr>
 
                         <?php foreach ($CurrentAssets as $asset): ?>
-                          <tr class="main-row clickable-row" data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['account_id']) ?>" style="cursor:pointer;">
-                            <td><?= htmlspecialchars($asset['name']) ?></td>
+                          <tr class="main-row child-row clickable-row" data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['account_id']) ?>" style="cursor:pointer;">
+
+                            <td class="desc-cell">
+                              <span class="desc-text"><?= htmlspecialchars($asset['name']) ?></span>
+                            </td>
                             <td class="p-0">
                               <div class="d-flex justify-content-start">
                                 <div class="d-flex justify-content-end amount-box">
@@ -418,20 +551,25 @@ require_once 'actions/getBuildings.php';
                             </div>
                           </td>
                         </tr>
-                      </tbody>
 
-                      <!-- ================= LIABILITIES ================= -->
-                      <tbody>
-                        <tr>
+
+                        <!-- ================= LIABILITIES ================= -->
+
+                        <tr class="major-header">
                           <th colspan="2" style="background:#fff8e6 !important;">Liabilities</th>
                         </tr>
+
                         <tr>
-                          <th colspan="2" class="section-header fs-6 fw-normal">Current Liabilities</th>
+                          <th colspan="2" class="section-header">Current Liabilities</th>
                         </tr>
 
                         <?php foreach ($currentLiabilities as $liability): ?>
-                          <tr class="main-row clickable-row" style="cursor:pointer;" data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($liability['account_id']) ?>">
-                            <td><?= htmlspecialchars($liability['account_name']) ?></td>
+                          <tr class="main-row child-row clickable-row" style="cursor:pointer;" data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($liability['account_id']) ?>">
+
+                            <td class="desc-cell">
+                              <span class="desc-text"><?= htmlspecialchars($liability['account_name']) ?></span>
+                            </td>
+
                             <td class="p-0">
                               <div class="d-flex justify-content-start">
                                 <div class="d-flex justify-content-end amount-box">
@@ -465,16 +603,17 @@ require_once 'actions/getBuildings.php';
                             </div>
                           </td>
                         </tr>
-                      </tbody>
 
-                      <tbody>
                         <tr>
-                          <th colspan="2" class="section-header fs-6 fw-normal">Non-Current Liabilities</th>
+                          <th colspan="2" class="section-header">Non-Current Liabilities</th>
                         </tr>
 
                         <?php foreach ($nonCurrentLiabilities as $liability): ?>
                           <tr class="main-row clickable-row" data-href="/jengopay/financials/generalledger/general_ledger.php?account_code=<?= urlencode($asset['amount']) ?>" style="cursor:pointer;">
-                            <td><?= htmlspecialchars($liability['account_name']) ?></td>
+
+                            <td class="desc-cell">
+                              <span class="desc-text"><?= htmlspecialchars($liability['account_name']) ?></span>
+                            </td>
                             <td class="p-0">
                               <div class="d-flex justify-content-start">
                                 <div class="d-flex justify-content-end amount-box">
@@ -518,16 +657,16 @@ require_once 'actions/getBuildings.php';
                             </div>
                           </td>
                         </tr>
-                      </tbody>
 
-                      <!-- ================= EQUITY ================= -->
-                      <tbody>
+
+                        <!-- ================= EQUITY ================= -->
+
                         <tr>
                           <th colspan="2" style="background:#fff8e6 !important;">Equity</th>
                         </tr>
 
-                        <tr class="main-row clickable-row">
-                          <td>Owner's Capital</td>
+                        <tr class="main-row child-row clickable-row">
+                          <td class="desc-cell">Owner's Capital</td>
                           <td class="p-0">
                             <div class="d-flex justify-content-start">
                               <div class="d-flex justify-content-end amount-box">
@@ -541,8 +680,8 @@ require_once 'actions/getBuildings.php';
                           </td>
                         </tr>
 
-                        <tr class="main-row clickable-row">
-                          <td>Retained Earnings</td>
+                        <tr class="main-row child-row clickable-row">
+                          <td class="desc-cell">Retained Earnings</td>
                           <td class="p-0">
                             <div class="d-flex justify-content-start">
                               <div class="d-flex justify-content-end amount-box">
@@ -591,13 +730,6 @@ require_once 'actions/getBuildings.php';
 
               </div>
 
-            </div>
-            <div class="container balancesheet">
-              <div>
-
-              </div>
-
-              <!-- /.col -->
             </div>
             <!--end::Row-->
           </div>

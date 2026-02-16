@@ -987,7 +987,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       padding: 15px;
       width: 250px;
       display: none;
-      z-index: 1000;
+      z-index: 2000;
     }
 
     .column-dropdown.show {
@@ -1014,6 +1014,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     .column-option label {
+      color: #00192D;
       cursor: pointer;
       margin: 0;
       font-size: 14px;
@@ -1559,7 +1560,16 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           <small class="text-muted">Unit A3</small>
                         </td>
                         <td class="col-date">2026-02-01</td>
+                        <td class="col-due" style="display: none;">2026-02-01</td>
+                        <td class="col-subtotal" style="display: none;">KES 70000</td>
+                        <td class="col-tax" style="display: none;">KES 6000</td>
                         <td class="col-total"><strong>KES 12,000</strong></td>
+                         <td class="col-paid" style="display: none;">KES 5000</td>
+                        <td class="col-balance" style="display: none;">
+                          <span class="text-danger">
+                            KES 3000
+                          </span>
+                        </td>
                         <td class="col-status">
                           <span class="status-badge badge-draft">
                             Paid
@@ -1568,7 +1578,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td>
                           <button class="action-btn view-btn"><i class="fas fa-eye"></i></button>
                           <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
-                          <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                          <button class="action-btn delete-btn mt-1"><i class="fas fa-trash"></i></button>
                         </td>
                       </tr>
 
@@ -1581,7 +1591,16 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           <small class="text-muted">Unit B1</small>
                         </td>
                         <td class="col-date">2026-02-03</td>
+                        <td class="col-due" style="display: none;">2026-02-01</td>
+                        <td class="col-subtotal" style="display: none;">KES 70000</td>
+                        <td class="col-tax" style="display: none;">KES 6000</td>
                         <td class="col-total"><strong>KES 9,500</strong></td>
+                         <td class="col-paid" style="display: none;">KES 5000</td>
+                        <td class="col-balance" style="display: none;">
+                          <span class="text-danger">
+                            KES 3000
+                          </span>
+                        </td>
                         <td class="col-status">
                           <span class="status-badge badge-payment-partial">
                             Partial
@@ -1590,7 +1609,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td>
                           <button class="action-btn view-btn"><i class="fas fa-eye"></i></button>
                           <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
-                          <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                          <button class="action-btn delete-btn mt-1"><i class="fas fa-trash"></i></button>
                         </td>
                       </tr>
 
@@ -1602,8 +1621,20 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           Alex Otieno<br>
                           <small class="text-muted">Unit C2</small>
                         </td>
+
                         <td class="col-date">2026-02-05</td>
+                        <td class="col-due" style="display: none;">2026-02-01</td>
+
+                        <td class="col-subtotal" style="display: none;">KES 70000</td>
+                        <td class="col-tax" style="display: none;">KES 6000</td>
                         <td class="col-total"><strong>KES 15,200</strong></td>
+                        <td class="col-paid" style="display: none;">KES 5000</td>
+                        <td class="col-balance" style="display: none;">
+                          <span class="text-danger">
+                            KES 3000
+                          </span>
+                        </td>
+
                         <td class="col-status">
                           <span class="status-badge badge-paid">
                             Unpaid
@@ -1617,13 +1648,73 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           <button class="action-btn edit-btn" title="Edit">
                             <i class="fas fa-edit"></i>
                           </button>
-                          <button class="action-btn delete-btn" title="Delete">
+                          <button class="action-btn delete-btn mt-1" title="Delete">
                             <i class="fas fa-trash"></i>
                           </button>
                         </td>
 
                       </tr>
+                      <tr>
+                        <td><input type="checkbox" class="invoice-checkbox"></td>
+                        <td class="col-invoice"><strong>INV-1001</strong></td>
+                        <td class="col-tenant">
+                          John Kamau<br>
+                          <small class="text-muted">Unit A3</small>
+                        </td>
+                        <td class="col-date">2026-02-01</td>
+                        <td class="col-due" style="display: none;">2026-02-01</td>
+                        <td class="col-subtotal" style="display: none;">KES 70000</td>
+                        <td class="col-tax" style="display: none;">KES 6000</td>
 
+                        <td class="col-total"><strong>KES 12,000</strong></td>
+                         <td class="col-paid" style="display: none;">KES 5000</td>
+
+                        <td class="col-balance" style="display: none;">
+                          <span class="text-danger">
+                            KES 3000
+                          </span>
+                        </td>
+                        <td class="col-status">
+                          <span class="status-badge badge-draft">
+                            Paid
+                          </span>
+                        </td>
+                        <td>
+                          <button class="action-btn view-btn"><i class="fas fa-eye"></i></button>
+                          <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                          <button class="action-btn delete-btn mt-1"><i class="fas fa-trash"></i></button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><input type="checkbox" class="invoice-checkbox"></td>
+                        <td class="col-invoice"><strong>INV-1001</strong></td>
+                        <td class="col-tenant">
+                          John Kamau<br>
+                          <small class="text-muted">Unit A3</small>
+                        </td>
+                        <td class="col-date">2026-02-01</td>
+                        <td class="col-due" style="display: none;">2026-02-01</td>
+                        <td class="col-subtotal" style="display: none;">KES 70000</td>
+                        <td class="col-tax" style="display: none;">KES 6000</td>
+
+                        <td class="col-total"><strong>KES 12,000</strong></td>
+                        <td class="col-paid" style="display: none;">KES 5000</td>
+                        <td class="col-balance" style="display: none;">
+                          <span class="text-danger">
+                            KES 3000
+                          </span>
+                        </td>
+                        <td class="col-status">
+                          <span class="status-badge badge-draft">
+                            Paid
+                          </span>
+                        </td>
+                        <td>
+                          <button class="action-btn view-btn"><i class="fas fa-eye"></i></button>
+                          <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                          <button class="action-btn delete-btn mt-1"><i class="fas fa-trash"></i></button>
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
