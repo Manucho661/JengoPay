@@ -2,17 +2,23 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/db/connect.php';
 
-// Ensure the session is started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
 
 try {
-    // 1. Fetch landlord_id from the session
-    if (!isset($_SESSION['user']['id'])) {
+    // 1) Auth
+    if (empty($_SESSION['user']['id'])) {
         throw new Exception('User not authenticated.');
     }
 
     $userId = (int) $_SESSION['user']['id'];
 
-    // Fetch landlord ID linked to the logged-in user
+    // 2) Resolve landlord_id
     $stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ? LIMIT 1");
     $stmt->execute([$userId]);
     $landlord = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -23,34 +29,67 @@ try {
 
     $landlordId = (int) $landlord['id'];
 
-    // ✅ Get current liabilities balances directly from journal_lines & chart_of_accounts
+    /* -----------------------------
+       Read filters (GET)
+    ----------------------------- */
+    $buildingId = trim((string)($_GET['building_id'] ?? ''));
+    $dateFrom   = trim((string)($_GET['date_from'] ?? '')); // YYYY-MM-DD
+    $dateTo     = trim((string)($_GET['date_to'] ?? ''));   // YYYY-MM-DD
+
+    /* -----------------------------
+       Build WHERE (apply only if set)
+    ----------------------------- */
+    $where  = ["jl.landlord_id = :landlord_id", "coa.account_type = 'Current Liabilities'"];
+    $params = [':landlord_id' => $landlordId];
+
+    if ($buildingId !== '') {
+        // If building_id is on journal_entries, change to je.building_id
+        $where[] = "jl.building_id = :building_id";
+        $params[':building_id'] = (int)$buildingId;
+    }
+
+    if ($dateFrom !== '') {
+        $where[] = "DATE(je.created_at) >= :date_from";
+        $params[':date_from'] = $dateFrom;
+    }
+
+    if ($dateTo !== '') {
+        $where[] = "DATE(je.created_at) <= :date_to";
+        $params[':date_to'] = $dateTo;
+    }
+
+    $whereSql = implode(" AND ", $where);
+
+    /* -----------------------------
+       Current Liabilities (WITH filters)
+    ----------------------------- */
     $sqlCurrent = "
         SELECT
             coa.account_code AS account_id,
             coa.account_name,
-            COALESCE(SUM(jl.credit),0) - COALESCE(SUM(jl.debit),0) AS amount
+            (COALESCE(SUM(jl.credit),0) - COALESCE(SUM(jl.debit),0)) AS amount
         FROM journal_lines jl
-        JOIN chart_of_accounts coa 
+        INNER JOIN journal_entries je
+            ON je.id = jl.journal_entry_id
+        INNER JOIN chart_of_accounts coa
             ON coa.account_code = jl.account_id
-        WHERE coa.account_type = 'Current Liabilities'  -- Only current liabilities
-            AND jl.landlord_id = :landlord_id  -- Filter by landlord_id
+        WHERE {$whereSql}
         GROUP BY coa.account_code, coa.account_name
         ORDER BY coa.account_name
     ";
 
-    // Current Liabilities
     $stmt = $pdo->prepare($sqlCurrent);
-    $stmt->execute(['landlord_id' => $landlordId]);
+    $stmt->execute($params);
     $currentLiabilities = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Total Current Liabilities
-    $totalCurrentLiabilities = 0;
+    $totalCurrentLiabilities = 0.0;
     foreach ($currentLiabilities as $row) {
-        $totalCurrentLiabilities += (float)$row['amount'];
+        $totalCurrentLiabilities += (float)($row['amount'] ?? 0);
     }
 
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
+} catch (Throwable $e) {
+    $currentLiabilities = [];
+    $totalCurrentLiabilities = 0.0;
+    $currentLiabilitiesError = $e->getMessage();
+    // echo "Error: " . $e->getMessage(); // optional display
 }

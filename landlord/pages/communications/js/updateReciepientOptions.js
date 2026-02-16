@@ -1,114 +1,5 @@
 
-// document.addEventListener("DOMContentLoaded", () => {
-//     const buildingSelect = document.getElementById("buildingSelect");
-//     const unitSelect = document.getElementById("unitSelect");
 
-
-//     const resetUnits = (msg = "Select Unit") => {
-//         unitSelect.innerHTML = `<option value="">${msg}</option>`;
-//         unitSelect.disabled = true;
-//     };
-
-//     resetUnits("Select Building first");
-
-//     buildingSelect.addEventListener("change", async () => {
-//         const buildingId = buildingSelect.value;
-//         resetUnits("Loading units...");
-
-//         if (!buildingId) {
-//             resetUnits("Select Building first");
-//             return;
-//         }
-
-//         try {
-//             const res = await fetch(`actions/getUnits.php?building_id=${encodeURIComponent(buildingId)}`);
-//             if (!res.ok) throw new Error(`HTTP ${res.status}`);
-//             const data = await res.json();
-
-
-//             unitSelect.innerHTML = `<option value="">Select Unit</option>`;
-//             data.units.forEach(u => {
-//                 const opt = document.createElement("option");
-//                 opt.value = u.id;              // unit id
-//                 opt.textContent = u.unit_number; // display
-//                 unitSelect.appendChild(opt);
-//             });
-
-//             unitSelect.disabled = false;
-//         } catch (e) {
-//             console.error(e);
-//             resetUnits("Failed to load units");
-//         }
-//     });
-// });
-
-
-// export async function getUnits() {
-//     console.log("getUnits function is being reached");
-//     const buildingSelect = document.getElementById("buildingSelect");
-//     const unitSelect = document.getElementById("unitSelect");
-
-//     // helper functions
-//     function safeHide(id) {
-//         const node = document.getElementById(id);
-//         if (node) node.style.display = "none";
-//     }
-
-//     function safeShow(id) {
-//         const node = document.getElementById(id);
-//         if (node) node.style.display = "block";
-//     }
-
-//     safeHide("unitDiv"); // Hide the unit div initially
-//     unitSelect.innerHTML = '<option value="">Choose unit...</option>'; // Reset the unit select
-
-//     const resetUnits = (msg = "Select Unit") => {
-//         unitSelect.innerHTML = `<option value="">${msg}</option>`;
-//         unitSelect.disabled = true;
-//     };
-
-//     resetUnits("Select Building first");
-
-//     buildingSelect.addEventListener("change", async () => {
-//         const buildingId = buildingSelect.value;
-//         console.log("Selected building ID:", buildingId); // Debugging output
-
-//         resetUnits("Loading units...");
-
-//         if (!buildingId) {
-//             resetUnits("Select Building first");
-//             return;
-//         }
-
-//         try {
-//             const res = await fetch(`actions/getUnits.php?building_id=${encodeURIComponent(buildingId)}`);
-//             if (!res.ok) throw new Error(`HTTP ${res.status}`);
-//             const data = await res.json();
-//             console.log("Fetched data:", data); // Debugging output
-
-//             unitSelect.innerHTML = `<option value="">Select Unit</option>`;
-//             if (data.units && data.units.length > 0) {
-//                 data.units.forEach(u => {
-//                     const opt = document.createElement("option");
-//                     opt.value = u.id;              // unit id
-//                     opt.textContent = u.unit_number; // display
-//                     unitSelect.appendChild(opt);
-//                 });
-
-//                 unitSelect.disabled = false;
-//                 safeShow("unitDiv"); // Show the unit div
-//             } else {
-//                 unitSelect.innerHTML = '<option value="">No units available</option>';
-//                 safeHide("unitDiv");
-//             }
-
-//         } catch (e) {
-//             console.error(e);
-//             resetUnits("Failed to load units");
-//             safeHide("unitDiv");
-//         }
-//     });
-// }
 
 function resetTenantFlowUI() {
     document.getElementById("unitDiv").style.display = "none";
@@ -194,6 +85,11 @@ export async function getTenant() {
 
         if (data.success && data.tenant) {
             // Populate the tenant details
+            const absentTenantMess = document.getElementById("tenantHelp");
+            absentTenantMess.textContent = "";
+            absentTenantMess.style.display = "none";
+            document.getElementById("startNewConvBtn").disabled = false;
+
             tenantNameInput.value = data.tenant.tenant_name;
             targetId.value = data.tenant.tenant_user_id;
             tenant_user_id.value = data.tenant.tenant_user_id;
@@ -205,6 +101,7 @@ export async function getTenant() {
             const absentTenantMess = document.getElementById("tenantHelp");
             absentTenantMess.textContent = "No tenant found, please select another building or unit";
             absentTenantMess.style.display = "block";
+            document.getElementById("startNewConvBtn").disabled = true;
         }
     } catch (e) {
         console.error(e);

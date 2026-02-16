@@ -1,24 +1,23 @@
 <?php
-require_once '../../../db/connect.php'; // Include your PDO connection
+require_once '../../../db/connect.php';
 
-// Set a custom error handler to throw exceptions for errors
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
 
 try {
-    // Ensure session is started
-    // session_start();
-
-    // Fetch landlord ID from session
-    if (!isset($_SESSION['user']['id'])) {
+    if (empty($_SESSION['user']['id'])) {
         throw new Exception('User not authenticated.');
     }
 
     $userId = (int)$_SESSION['user']['id'];
 
-    // Get the landlord ID linked to the logged-in user
-    $stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
+    // Resolve landlord_id
+    $stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ? LIMIT 1");
     $stmt->execute([$userId]);
     $landlord = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -26,64 +25,96 @@ try {
         throw new Exception('Landlord not found for the logged-in user.');
     }
 
-    $landlordId = $landlord['id'];
+    $landlordId = (int)$landlord['id'];
 
-    // Define account_id (example: owners capital account)
+    /* -----------------------------
+       Read filters (GET)
+    ----------------------------- */
+    $buildingId = trim((string)($_GET['building_id'] ?? ''));
+    $dateFrom   = trim((string)($_GET['date_from'] ?? '')); // YYYY-MM-DD
+    $dateTo     = trim((string)($_GET['date_to'] ?? ''));   // YYYY-MM-DD
+
+    /* -----------------------------
+       Build shared WHERE (apply only if set)
+    ----------------------------- */
+    $whereShared = ["jl.landlord_id = :landlord_id"];
+    $paramsShared = [':landlord_id' => $landlordId];
+
+    if ($buildingId !== '') {
+        // If building_id is on journal_lines, change to jl.building_id
+        $whereShared[] = "jl.building_id = :building_id";
+        $paramsShared[':building_id'] = (int)$buildingId;
+    }
+
+    if ($dateFrom !== '') {
+        $whereShared[] = "DATE(je.created_at) >= :date_from";
+        $paramsShared[':date_from'] = $dateFrom;
+    }
+
+    if ($dateTo !== '') {
+        $whereShared[] = "DATE(je.created_at) <= :date_to";
+        $paramsShared[':date_to'] = $dateTo;
+    }
+
+    $whereSqlShared = implode(" AND ", $whereShared);
+
+    /* -----------------------------
+       Owner's Capital (account_id 400)
+    ----------------------------- */
     $account_id = 400;
 
-    // Total credit for account_id 400 (credit amount in journal_lines)
-    $sql = "
-        SELECT SUM(credit) AS total_credit 
-        FROM journal_lines 
-        WHERE account_id = :account_id AND landlord_id = :landlord_id
+    $sqlCapital = "
+        SELECT COALESCE(SUM(jl.credit), 0) AS total_credit
+        FROM journal_lines jl
+        INNER JOIN journal_entries je ON je.id = jl.journal_entry_id
+        WHERE {$whereSqlShared}
+          AND jl.account_id = :account_id
     ";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':account_id', $account_id, PDO::PARAM_INT);
-    $stmt->bindParam(':landlord_id', $landlordId, PDO::PARAM_INT);
-    $stmt->execute();
-    $owners_capital = $stmt->fetchColumn();  // Fetching the total credit amount
 
-    // Query for total revenue (sum of credit - debit for revenue accounts)
+    $stmtCap = $pdo->prepare($sqlCapital);
+    $stmtCap->execute(array_merge($paramsShared, [':account_id' => $account_id]));
+    $owners_capital = (float)($stmtCap->fetchColumn() ?? 0);
+
+    /* -----------------------------
+       Total Revenue
+    ----------------------------- */
     $sqlRevenue = "
         SELECT COALESCE(SUM(jl.credit) - SUM(jl.debit), 0) AS total_revenue
         FROM journal_lines jl
-        JOIN chart_of_accounts coa ON jl.account_id = coa.account_code
-        WHERE coa.account_type LIKE '%Revenue%' AND jl.landlord_id = :landlord_id
+        INNER JOIN journal_entries je ON je.id = jl.journal_entry_id
+        INNER JOIN chart_of_accounts coa ON jl.account_id = coa.account_code
+        WHERE {$whereSqlShared}
+          AND coa.account_type LIKE '%Revenue%'
     ";
-    $stmtRev = $pdo->prepare($sqlRevenue);
-    $stmtRev->bindParam(':landlord_id', $landlordId, PDO::PARAM_INT);
-    $stmtRev->execute();
-    $totalRevenue = $stmtRev->fetchColumn();
 
-    // Query for total expenses (sum of debit - credit for expense accounts)
+    $stmtRev = $pdo->prepare($sqlRevenue);
+    $stmtRev->execute($paramsShared);
+    $totalRevenue = (float)($stmtRev->fetchColumn() ?? 0);
+
+    /* -----------------------------
+       Total Expenses
+    ----------------------------- */
     $sqlExpenses = "
         SELECT COALESCE(SUM(jl.debit) - SUM(jl.credit), 0) AS total_expenses
         FROM journal_lines jl
-        JOIN chart_of_accounts coa ON jl.account_id = coa.account_code
-        WHERE coa.account_type LIKE '%Expense%' AND jl.landlord_id = :landlord_id
+        INNER JOIN journal_entries je ON je.id = jl.journal_entry_id
+        INNER JOIN chart_of_accounts coa ON jl.account_id = coa.account_code
+        WHERE {$whereSqlShared}
+          AND coa.account_type LIKE '%Expense%'
     ";
-    $stmtExp = $pdo->prepare($sqlExpenses);
-    $stmtExp->bindParam(':landlord_id', $landlordId, PDO::PARAM_INT);
-    $stmtExp->execute();
-    $totalExpenses = $stmtExp->fetchColumn();
 
-    // Calculate retained earnings (revenue - expenses)
+    $stmtExp = $pdo->prepare($sqlExpenses);
+    $stmtExp->execute($paramsShared);
+    $totalExpenses = (float)($stmtExp->fetchColumn() ?? 0);
+
+    /* -----------------------------
+       Equity calcs
+    ----------------------------- */
     $retainedEarnings = $totalRevenue - $totalExpenses;
     $totalEquity = $retainedEarnings + $owners_capital;
 
-    // Now you can use the variables for further processing, logging, or other operations
-    // For example:
-    // - Store them in session variables
-    // - Pass them to another function
-    // - Log the results for auditing
-
-    // Make sure that everything is properly logged or returned for debugging
-    
-
 } catch (Throwable $e) {
-    // Handle any exceptions or errors
-    // You may choose to log the error or perform any error-specific action here
     $errorMessage = "An error occurred while processing the request: " . $e->getMessage();
-    echo $errorMessage; // You can log this error if needed
+    echo $errorMessage;
 }
 ?>

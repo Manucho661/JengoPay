@@ -118,7 +118,10 @@ try {
 }
 
 ?>
-
+<!-- actions -->
+<?php
+require_once './actions/createInvoice.php';
+?>
 <?php
 // ----------------------------------------------------
 // 1) Fetch invoices with tenant details and payment summary - UPDATED WITH PROPER JOIN
@@ -1868,13 +1871,13 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
           <!-- Action Buttons -->
           <div class="d-grid gap-2">
-            <button type="button" class="btn btn-outline-primary btn-lg" onclick="previewInvoice()">
+            <button type="button" class="btn btn-outline-warning btn-lg" onclick="previewInvoice()">
               <i class="fas fa-eye"></i> Preview
             </button>
             <button type="button" class="btn btn-secondary btn-lg" onclick="saveAsDraft()">
               <i class="fas fa-save"></i> Save as Draft
             </button>
-            <button type="submit" name="create_invoice" class="btn btn-success btn-lg">
+            <button type="submit" name="create_invoice" class="actionBtn">
               <i class="fas fa-paper-plane"></i> Confirm and Send
             </button>
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">

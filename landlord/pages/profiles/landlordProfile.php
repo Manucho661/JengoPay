@@ -1,4 +1,18 @@
 <?php
+session_start();
+require_once "../db/connect.php";
+// 
+include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
+
+$error   = $_SESSION['error'] ?? '';
+$success = $_SESSION['success'] ?? '';
+
+unset($_SESSION['error'], $_SESSION['success']);
+?>
+<?php
+require_once "./actions/getLandlordDetails.php";
+?>
+<?php
 // Landlord data
 $landlord = [
     'id' => 'LL-2024-001',
@@ -86,16 +100,18 @@ $paymentHistory = [
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - <?= $landlord['name'] ?></title>
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="stylesheet" href="../../../landlord/assets/main.css" />
+
     <style>
         :root {
             --sidebar-width: 260px;
@@ -149,7 +165,8 @@ $paymentHistory = [
             transition: all 0.3s;
         }
 
-        .menu-item:hover, .menu-item.active {
+        .menu-item:hover,
+        .menu-item.active {
             background: rgba(255, 193, 7, 0.1);
             border-left: 4px solid var(--accent-color);
             color: var(--accent-color);
@@ -172,7 +189,7 @@ $paymentHistory = [
         .custom-header {
             background: var(--main-color);
             padding: 20px 30px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .custom-header h1 {
@@ -184,7 +201,7 @@ $paymentHistory = [
             background: white;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 25, 45, 0.08);
+            /* box-shadow: 0 2px 8px rgba(0, 25, 45, 0.08); */
             margin-bottom: 25px;
         }
 
@@ -281,7 +298,7 @@ $paymentHistory = [
         }
 
         /* Form Controls */
-        .form-select, 
+        .form-select,
         .form-control {
             background: rgba(255, 193, 7, 0.05);
         }
@@ -432,360 +449,327 @@ $paymentHistory = [
             box-shadow: none;
             border-color: var(--accent-color);
         }
+        a{
+            text-decoration: none !important;
+        }
     </style>
 </head>
+
 <body>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <h2>PropertyHub</h2>
-            <p>Management System</p>
-        </div>
-        <nav class="mt-3">
-            <a href="#" class="menu-item">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-building"></i>
-                <span>Properties</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-door-open"></i>
-                <span>Units</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-users"></i>
-                <span>Tenants</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-file-invoice-dollar"></i>
-                <span>Expenses</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-comments"></i>
-                <span>Messages</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-chart-line"></i>
-                <span>Reports</span>
-            </a>
-            <a href="#" class="menu-item active">
-                <i class="fas fa-user-circle"></i>
-                <span>Profile</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
-        </nav>
-    </aside>
+    <div class="app-wrapper">
+        <!--begin::Header-->
+        <?php
+        include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/header.php';
+        ?>
+        <!--end::Header-->
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Header -->
-        <header class="custom-header">
-            <h1 class="h3 mb-0">My Profile</h1>
-        </header>
+        <!--begin::Sidebar-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
+        <!--end::Sidebar-->
 
-        <!-- Content -->
-        <main class="p-4 flex-grow-1">
-            <!-- Profile Header -->
-            <div class="profile-header">
-                <div class="row align-items-center">
-                    <div class="col-md-2 text-center">
-                        <img src="<?= $landlord['profile_image'] ?>" alt="Profile" class="profile-image">
-                        <button class="btn btn-sm btn-outline-primary mt-3">
-                            <i class="fas fa-camera"></i> Change Photo
-                        </button>
-                    </div>
-                    <div class="col-md-7">
-                        <div class="profile-info">
-                            <h2><?= $landlord['name'] ?></h2>
-                            <p><i class="fas fa-envelope text-warning"></i> <?= $landlord['email'] ?></p>
-                            <p><i class="fas fa-phone text-warning"></i> <?= $landlord['phone'] ?></p>
-                            <p><i class="fas fa-id-badge text-warning"></i> ID: <?= $landlord['id'] ?></p>
-                            <div class="mt-2">
-                                <span class="profile-badge"><?= $landlord['role'] ?></span>
+        <!-- Main Content -->
+        <div class="main">
+            <!-- Content -->
+            <main class="p-4 flex-grow-1">
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center">
+                            <img src="<?= $fullName?>" alt="Profile" class="profile-image">
+                            <button class="btn btn-sm btn-outline-primary mt-3">
+                                <i class="fas fa-camera"></i> Change Photo
+                            </button>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="profile-info">
+                                <h2><?= $fullName ?></h2>
+                                <p><i class="fas fa-envelope text-warning"></i> <?= $profile['user_email'] ?></p>
+                                <p><i class="fas fa-phone text-warning"></i> 075683843</p>
+                                <p><i class="fas fa-id-badge text-warning"></i> ID: 38011790</p>
+                                <div class="mt-2">
+                                    <span class="profile-badge">Property Manager</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <div class="stat-box">
-                                    <div class="number"><?= $landlord['properties_count'] ?></div>
-                                    <div class="label">Properties</div>
+                        <div class="col-md-3">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="stat-box">
+                                        <div class="number"><?= $profile['total_properties']?></div>
+                                        <div class="label">Properties</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="stat-box">
-                                    <div class="number"><?= $landlord['units_count'] ?></div>
-                                    <div class="label">Units</div>
+                                <div class="col-6">
+                                    <div class="stat-box">
+                                        <div class="number"><?= $profile['total_units'] ?></div>
+                                        <div class="label">Units</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="stat-box">
-                                    <div class="number"><?= $landlord['tenants_count'] ?></div>
-                                    <div class="label">Active Tenants</div>
+                                <div class="col-12">
+                                    <div class="stat-box">
+                                        <div class="number"><?= $profile['active_tenants'] ?></div>
+                                        <div class="label">Active Tenants</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <!-- Left Column -->
-                <div class="col-lg-8">
-                    <!-- Subscription Management -->
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title mb-4"><i class="fas fa-crown"></i> Subscription Management</h5>
-                            
-                            <!-- Current Subscription -->
-                            <div class="subscription-card mb-4">
-                                <div class="row align-items-center">
-                                    <div class="col-md-8">
-                                        <div class="plan-name"><?= $subscription['plan'] ?> Plan</div>
-                                        <p class="mb-2">
-                                            <span class="status-badge badge-active">
-                                                <i class="fas fa-check-circle"></i> <?= $subscription['status'] ?>
-                                            </span>
-                                        </p>
-                                        <p class="mb-1"><i class="fas fa-calendar-alt"></i> Next billing: <?= date('M d, Y', strtotime($subscription['next_billing'])) ?></p>
-                                        <p class="mb-1"><i class="fas fa-credit-card"></i> Payment: <?= $subscription['payment_method'] ?></p>
-                                        <p class="mb-0"><i class="fas fa-sync"></i> Auto-renewal: <?= $subscription['auto_renewal'] ? 'Enabled' : 'Disabled' ?></p>
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-lg-8">
+                        <!-- Subscription Management -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4"><i class="fas fa-crown"></i> Subscription Management</h5>
+
+                                <!-- Current Subscription -->
+                                <div class="subscription-card mb-4">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-8">
+                                            <div class="plan-name"><?= $subscription['plan'] ?> Plan</div>
+                                            <p class="mb-2">
+                                                <span class="status-badge badge-active">
+                                                    <i class="fas fa-check-circle"></i> <?= $subscription['status'] ?>
+                                                </span>
+                                            </p>
+                                            <p class="mb-1"><i class="fas fa-calendar-alt"></i> Next billing: <?= date('M d, Y', strtotime($subscription['next_billing'])) ?></p>
+                                            <p class="mb-1"><i class="fas fa-credit-card"></i> Payment: <?= $subscription['payment_method'] ?></p>
+                                            <p class="mb-0"><i class="fas fa-sync"></i> Auto-renewal: <?= $subscription['auto_renewal'] ? 'Enabled' : 'Disabled' ?></p>
+                                        </div>
+                                        <div class="col-md-4 text-end">
+                                            <div class="plan-price"><?= $subscription['currency'] ?> <?= number_format($subscription['amount']) ?></div>
+                                            <p class="mb-0" style="opacity: 0.8;">/<?= strtolower($subscription['billing_cycle']) ?></p>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 text-end">
-                                        <div class="plan-price"><?= $subscription['currency'] ?> <?= number_format($subscription['amount']) ?></div>
-                                        <p class="mb-0" style="opacity: 0.8;">/<?= strtolower($subscription['billing_cycle']) ?></p>
+                                </div>
+
+                                <!-- Features -->
+                                <h6 class="mb-3" style="color: var(--main-color); font-weight: 600;">Your Plan Features</h6>
+                                <div class="row g-2 mb-4">
+                                    <?php foreach ($subscription['features'] as $feature): ?>
+                                        <div class="col-md-6">
+                                            <div style="background: rgba(255, 193, 7, 0.1); padding: 10px; border-radius: 5px;">
+                                                <i class="fas fa-check-circle" style="color: var(--accent-color);"></i>
+                                                <span style="margin-left: 8px;"><?= $feature ?></span>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#upgradePlanModal">
+                                        <i class="fas fa-arrow-up"></i> Upgrade Plan
+                                    </button>
+                                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#paymentMethodModal">
+                                        <i class="fas fa-credit-card"></i> Change Payment Method
+                                    </button>
+                                    <button class="btn btn-outline-danger" onclick="cancelSubscription()">
+                                        <i class="fas fa-times"></i> Cancel Subscription
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment History -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3"><i class="fas fa-history"></i> Payment History</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Amount</th>
+                                                <th>Method</th>
+                                                <th>Status</th>
+                                                <th>Invoice</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($paymentHistory as $payment): ?>
+                                                <tr>
+                                                    <td><?= date('M d, Y', strtotime($payment['date'])) ?></td>
+                                                    <td>KES <?= number_format($payment['amount']) ?></td>
+                                                    <td><?= $payment['method'] ?></td>
+                                                    <td>
+                                                        <span class="status-badge badge-paid">
+                                                            <?= $payment['status'] ?>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary">
+                                                            <i class="fas fa-download"></i> <?= $payment['invoice'] ?>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Settings -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4"><i class="fas fa-shield-alt"></i> Security Settings</h5>
+
+                                <!-- Change Password -->
+                                <div class="mb-4">
+                                    <h6 style="color: var(--main-color); font-weight: 600;">Change Password</h6>
+                                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                                        <i class="fas fa-key"></i> Update Password
+                                    </button>
+                                </div>
+
+                                <!-- Change Email -->
+                                <div class="mb-4">
+                                    <h6 style="color: var(--main-color); font-weight: 600;">Change Email</h6>
+                                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changeEmailModal">
+                                        <i class="fas fa-envelope"></i> Update Email
+                                    </button>
+                                </div>
+
+                                <!-- Two-Factor Authentication -->
+                                <div class="mb-4">
+                                    <h6 style="color: var(--main-color); font-weight: 600;">Two-Factor Authentication</h6>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="twoFactorSwitch"
+                                            <?= $landlord['two_factor_enabled'] ? 'checked' : '' ?>
+                                            onchange="toggleTwoFactor(this)">
+                                        <label class="form-check-label" for="twoFactorSwitch">
+                                            <?= $landlord['two_factor_enabled'] ? 'Enabled' : 'Disabled' ?>
+                                        </label>
+                                    </div>
+                                    <small class="text-muted">Add an extra layer of security to your account</small>
+                                </div>
+
+                                <!-- Session Management -->
+                                <div>
+                                    <h6 style="color: var(--main-color); font-weight: 600;">Active Sessions</h6>
+                                    <p class="text-muted mb-2">Last login: <?= date('M d, Y h:i A', strtotime($landlord['last_login'])) ?></p>
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-sign-out-alt"></i> Logout All Devices
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Danger Zone -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4 text-danger">
+                                    <i class="fas fa-exclamation-triangle"></i> Danger Zone
+                                </h5>
+                                <div class="danger-zone">
+                                    <h6 style="color: var(--danger-color); font-weight: 600;">Delete Account</h6>
+                                    <p class="mb-3">Once you delete your account, there is no going back. This will permanently delete:</p>
+                                    <ul class="mb-3">
+                                        <li>All your properties and units</li>
+                                        <li>All tenant information</li>
+                                        <li>All financial records</li>
+                                        <li>All messages and documents</li>
+                                    </ul>
+                                    <button class="btn btn-danger" onclick="deleteAccount()">
+                                        <i class="fas fa-trash-alt"></i> Delete My Account
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-lg-4">
+                        <!-- Account Info -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3"><i class="fas fa-info-circle"></i> Account Information</h5>
+                                <div class="mb-3">
+                                    <small class="text-muted">Member Since</small>
+                                    <div class="fw-bold"><?= date('M d, Y', strtotime($landlord['joined_date'])) ?></div>
+                                </div>
+                                <div class="mb-3">
+                                    <small class="text-muted">Last Login</small>
+                                    <div class="fw-bold"><?= date('M d, Y h:i A', strtotime($landlord['last_login'])) ?></div>
+                                </div>
+                                <div class="mb-3">
+                                    <small class="text-muted">Account Status</small>
+                                    <div><span class="status-badge badge-active">Active</span></div>
+                                </div>
+                                <div>
+                                    <small class="text-muted">2FA Status</small>
+                                    <div class="fw-bold text-success">
+                                        <i class="fas fa-check-circle"></i>
+                                        <?= $landlord['two_factor_enabled'] ? 'Enabled' : 'Disabled' ?>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Features -->
-                            <h6 class="mb-3" style="color: var(--main-color); font-weight: 600;">Your Plan Features</h6>
-                            <div class="row g-2 mb-4">
-                                <?php foreach ($subscription['features'] as $feature): ?>
-                                <div class="col-md-6">
-                                    <div style="background: rgba(255, 193, 7, 0.1); padding: 10px; border-radius: 5px;">
-                                        <i class="fas fa-check-circle" style="color: var(--accent-color);"></i>
-                                        <span style="margin-left: 8px;"><?= $feature ?></span>
+                        <!-- Activity Log -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3"><i class="fas fa-clock"></i> Recent Activity</h5>
+                                <?php foreach ($activityLog as $activity): ?>
+                                    <div class="mb-3 pb-3 border-bottom">
+                                        <div class="fw-bold" style="color: var(--main-color); font-size: 14px;">
+                                            <?= $activity['action'] ?>
+                                        </div>
+                                        <small class="text-muted">
+                                            <?= date('M d, Y h:i A', strtotime($activity['timestamp'])) ?>
+                                        </small>
+                                        <br>
+                                        <small class="text-muted">IP: <?= $activity['ip'] ?></small>
                                     </div>
-                                </div>
                                 <?php endforeach; ?>
                             </div>
-
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#upgradePlanModal">
-                                    <i class="fas fa-arrow-up"></i> Upgrade Plan
-                                </button>
-                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#paymentMethodModal">
-                                    <i class="fas fa-credit-card"></i> Change Payment Method
-                                </button>
-                                <button class="btn btn-outline-danger" onclick="cancelSubscription()">
-                                    <i class="fas fa-times"></i> Cancel Subscription
-                                </button>
-                            </div>
                         </div>
-                    </div>
 
-                    <!-- Payment History -->
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3"><i class="fas fa-history"></i> Payment History</h5>
-                            <div class="table-responsive">
-                                <table class="table table-hover mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Amount</th>
-                                            <th>Method</th>
-                                            <th>Status</th>
-                                            <th>Invoice</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($paymentHistory as $payment): ?>
-                                        <tr>
-                                            <td><?= date('M d, Y', strtotime($payment['date'])) ?></td>
-                                            <td>KES <?= number_format($payment['amount']) ?></td>
-                                            <td><?= $payment['method'] ?></td>
-                                            <td>
-                                                <span class="status-badge badge-paid">
-                                                    <?= $payment['status'] ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-download"></i> <?= $payment['invoice'] ?>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Security Settings -->
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title mb-4"><i class="fas fa-shield-alt"></i> Security Settings</h5>
-                            
-                            <!-- Change Password -->
-                            <div class="mb-4">
-                                <h6 style="color: var(--main-color); font-weight: 600;">Change Password</h6>
-                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                                    <i class="fas fa-key"></i> Update Password
-                                </button>
-                            </div>
-
-                            <!-- Change Email -->
-                            <div class="mb-4">
-                                <h6 style="color: var(--main-color); font-weight: 600;">Change Email</h6>
-                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changeEmailModal">
-                                    <i class="fas fa-envelope"></i> Update Email
-                                </button>
-                            </div>
-
-                            <!-- Two-Factor Authentication -->
-                            <div class="mb-4">
-                                <h6 style="color: var(--main-color); font-weight: 600;">Two-Factor Authentication</h6>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="twoFactorSwitch" 
-                                           <?= $landlord['two_factor_enabled'] ? 'checked' : '' ?> 
-                                           onchange="toggleTwoFactor(this)">
-                                    <label class="form-check-label" for="twoFactorSwitch">
-                                        <?= $landlord['two_factor_enabled'] ? 'Enabled' : 'Disabled' ?>
-                                    </label>
-                                </div>
-                                <small class="text-muted">Add an extra layer of security to your account</small>
-                            </div>
-
-                            <!-- Session Management -->
-                            <div>
-                                <h6 style="color: var(--main-color); font-weight: 600;">Active Sessions</h6>
-                                <p class="text-muted mb-2">Last login: <?= date('M d, Y h:i A', strtotime($landlord['last_login'])) ?></p>
-                                <button class="btn btn-sm btn-outline-danger">
-                                    <i class="fas fa-sign-out-alt"></i> Logout All Devices
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Danger Zone -->
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title mb-4 text-danger">
-                                <i class="fas fa-exclamation-triangle"></i> Danger Zone
-                            </h5>
-                            <div class="danger-zone">
-                                <h6 style="color: var(--danger-color); font-weight: 600;">Delete Account</h6>
-                                <p class="mb-3">Once you delete your account, there is no going back. This will permanently delete:</p>
-                                <ul class="mb-3">
-                                    <li>All your properties and units</li>
-                                    <li>All tenant information</li>
-                                    <li>All financial records</li>
-                                    <li>All messages and documents</li>
-                                </ul>
-                                <button class="btn btn-danger" onclick="deleteAccount()">
-                                    <i class="fas fa-trash-alt"></i> Delete My Account
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Column -->
-                <div class="col-lg-4">
-                    <!-- Account Info -->
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3"><i class="fas fa-info-circle"></i> Account Information</h5>
-                            <div class="mb-3">
-                                <small class="text-muted">Member Since</small>
-                                <div class="fw-bold"><?= date('M d, Y', strtotime($landlord['joined_date'])) ?></div>
-                            </div>
-                            <div class="mb-3">
-                                <small class="text-muted">Last Login</small>
-                                <div class="fw-bold"><?= date('M d, Y h:i A', strtotime($landlord['last_login'])) ?></div>
-                            </div>
-                            <div class="mb-3">
-                                <small class="text-muted">Account Status</small>
-                                <div><span class="status-badge badge-active">Active</span></div>
-                            </div>
-                            <div>
-                                <small class="text-muted">2FA Status</small>
-                                <div class="fw-bold text-success">
-                                    <i class="fas fa-check-circle"></i> 
-                                    <?= $landlord['two_factor_enabled'] ? 'Enabled' : 'Disabled' ?>
+                        <!-- Quick Actions -->
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3"><i class="fas fa-bolt"></i> Quick Actions</h5>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-outline-primary">
+                                        <i class="fas fa-download"></i> Download My Data
+                                    </button>
+                                    <button class="btn btn-outline-primary">
+                                        <i class="fas fa-file-export"></i> Export Reports
+                                    </button>
+                                    <button class="btn btn-outline-primary">
+                                        <i class="fas fa-bell"></i> Notification Settings
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </main>
 
-                    <!-- Activity Log -->
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3"><i class="fas fa-clock"></i> Recent Activity</h5>
-                            <?php foreach ($activityLog as $activity): ?>
-                            <div class="mb-3 pb-3 border-bottom">
-                                <div class="fw-bold" style="color: var(--main-color); font-size: 14px;">
-                                    <?= $activity['action'] ?>
-                                </div>
-                                <small class="text-muted">
-                                    <?= date('M d, Y h:i A', strtotime($activity['timestamp'])) ?>
-                                </small>
-                                <br>
-                                <small class="text-muted">IP: <?= $activity['ip'] ?></small>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-
-                    <!-- Quick Actions -->
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3"><i class="fas fa-bolt"></i> Quick Actions</h5>
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-outline-primary">
-                                    <i class="fas fa-download"></i> Download My Data
-                                </button>
-                                <button class="btn btn-outline-primary">
-                                    <i class="fas fa-file-export"></i> Export Reports
-                                </button>
-                                <button class="btn btn-outline-primary">
-                                    <i class="fas fa-bell"></i> Notification Settings
-                                </button>
-                            </div>
+            <!-- Footer -->
+            <footer class="custom-footer">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p class="mb-0">&copy; 2024 PropertyHub. All rights reserved.</p>
+                        <div class="d-flex gap-3">
+                            <a href="#">Privacy Policy</a>
+                            <a href="#">Terms of Service</a>
+                            <a href="#">Support</a>
+                            <a href="#">Contact</a>
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
+            </footer>
+        </div>
 
-        <!-- Footer -->
-        <footer class="custom-footer">
-            <div class="container-fluid">
-                <div class="d-flex justify-content-between align-items-center">
-                    <p class="mb-0">&copy; 2024 PropertyHub. All rights reserved.</p>
-                    <div class="d-flex gap-3">
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Service</a>
-                        <a href="#">Support</a>
-                        <a href="#">Contact</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        <!--begin::Footer-->
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
+        <!-- end footer -->
     </div>
+
+
 
     <!-- Upgrade Plan Modal -->
     <div class="modal fade" id="upgradePlanModal" tabindex="-1">
@@ -800,31 +784,31 @@ $paymentHistory = [
                 <div class="modal-body">
                     <div class="row g-3">
                         <?php foreach ($availablePlans as $plan): ?>
-                        <div class="col-md-4">
-                            <div class="plan-card <?= isset($plan['current']) ? 'current' : '' ?>">
-                                <?php if (isset($plan['current'])): ?>
-                                <span class="current-badge">Current Plan</span>
-                                <?php endif; ?>
-                                <h4 style="color: var(--main-color);"><?= $plan['name'] ?></h4>
-                                <div style="font-size: 32px; font-weight: bold; color: var(--accent-color); margin: 15px 0;">
-                                    KES <?= number_format($plan['price']) ?>
+                            <div class="col-md-4">
+                                <div class="plan-card <?= isset($plan['current']) ? 'current' : '' ?>">
+                                    <?php if (isset($plan['current'])): ?>
+                                        <span class="current-badge">Current Plan</span>
+                                    <?php endif; ?>
+                                    <h4 style="color: var(--main-color);"><?= $plan['name'] ?></h4>
+                                    <div style="font-size: 32px; font-weight: bold; color: var(--accent-color); margin: 15px 0;">
+                                        KES <?= number_format($plan['price']) ?>
+                                    </div>
+                                    <p class="text-muted">/<?= strtolower($plan['billing']) ?></p>
+                                    <hr>
+                                    <div class="text-start mb-3">
+                                        <p class="mb-2"><i class="fas fa-check text-success"></i> <?= $plan['properties'] ?></p>
+                                        <p class="mb-2"><i class="fas fa-check text-success"></i> <?= $plan['units'] ?></p>
+                                        <?php foreach ($plan['features'] as $feature): ?>
+                                            <p class="mb-2"><i class="fas fa-check text-success"></i> <?= $feature ?></p>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <?php if (!isset($plan['current'])): ?>
+                                        <button class="btn btn-success w-100">
+                                            <?= $plan['price'] > $subscription['amount'] ? 'Upgrade' : 'Downgrade' ?>
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
-                                <p class="text-muted">/<?= strtolower($plan['billing']) ?></p>
-                                <hr>
-                                <div class="text-start mb-3">
-                                    <p class="mb-2"><i class="fas fa-check text-success"></i> <?= $plan['properties'] ?></p>
-                                    <p class="mb-2"><i class="fas fa-check text-success"></i> <?= $plan['units'] ?></p>
-                                    <?php foreach ($plan['features'] as $feature): ?>
-                                    <p class="mb-2"><i class="fas fa-check text-success"></i> <?= $feature ?></p>
-                                    <?php endforeach; ?>
-                                </div>
-                                <?php if (!isset($plan['current'])): ?>
-                                <button class="btn btn-success w-100">
-                                    <?= $plan['price'] > $subscription['amount'] ? 'Upgrade' : 'Downgrade' ?>
-                                </button>
-                                <?php endif; ?>
                             </div>
-                        </div>
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -936,7 +920,7 @@ $paymentHistory = [
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         // Toggle Two-Factor Authentication
         function toggleTwoFactor(checkbox) {
@@ -958,7 +942,7 @@ $paymentHistory = [
         // Delete Account
         function deleteAccount() {
             const confirmed = confirm('⚠️ WARNING: This action cannot be undone!\n\nAre you absolutely sure you want to delete your account?\n\nThis will permanently delete:\n✗ All your properties\n✗ All units and tenants\n✗ All financial records\n✗ All messages and documents\n\nType "DELETE" in the next prompt to confirm.');
-            
+
             if (confirmed) {
                 const verification = prompt('Please type DELETE (in capital letters) to confirm:');
                 if (verification === 'DELETE') {
@@ -970,4 +954,5 @@ $paymentHistory = [
         }
     </script>
 </body>
+
 </html>

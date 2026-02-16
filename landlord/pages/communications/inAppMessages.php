@@ -476,29 +476,30 @@ try {
     a {
       text-decoration: none;
     }
-     .message-stats {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
 
-        .stat-item {
-            text-align: center;
-            padding: 10px;
-        }
+    .message-stats {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
 
-        .stat-item .number {
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--main-color);
-        }
+    .stat-item {
+      text-align: center;
+      padding: 10px;
+    }
 
-        .stat-item .label {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-        }
+    .stat-item .number {
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--main-color);
+    }
+
+    .stat-item .label {
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+    }
   </style>
 </head>
 
@@ -571,34 +572,34 @@ try {
         </div>
 
         <!-- message stats -->
-         <div class="message-stats">
+        <div class="message-stats">
           <div class="row">
-          
-          <div class="col-md-3 stat-item">
-            <div class="number">7</div>
-            <div class="label">Total Conversations</div>
-          </div>
-          <div class="col-md-3 stat-item">
-            <div class="number">8</div>
-            <div class="label">Unread Messages</div>
-          </div>
-          <div class="col-md-3 stat-item">
-            <div class="number">9</div>
-            <div class="label">Tenant Messages</div>
-          </div>
-          <div class="col-md-3 stat-item">
-            <div class="number">10</div>
-            <div class="label">Service Provider</div>
+
+            <div class="col-md-3 stat-item">
+              <div class="number">7</div>
+              <div class="label">Total Conversations</div>
+            </div>
+            <div class="col-md-3 stat-item">
+              <div class="number">8</div>
+              <div class="label">Unread Messages</div>
+            </div>
+            <div class="col-md-3 stat-item">
+              <div class="number">9</div>
+              <div class="label">Tenant Messages</div>
+            </div>
+            <div class="col-md-3 stat-item">
+              <div class="number">10</div>
+              <div class="label">Service Provider</div>
+            </div>
           </div>
         </div>
-         </div>
-        
+
         <!-- First Row: Search and Buttons -->
         <div class="row mb-2">
           <div class="col-md-12">
             <div class="card border-0 mb-4">
               <div class="card-body">
-                
+
                 <form method="GET">
                   <div class="row g-3 mb-3" style="flex-wrap: nowrap; overflow-x: auto;">
                     <div class="col-md-3" style="min-width: 200px;">
@@ -646,8 +647,8 @@ try {
               <div class="card-header d-flex justify-content-between" style="background-color: #00192D; color:#fff;">
                 <b>Recent Conversations (<span class="text-warning">0</span>)</b>
                 <button class="actionBtn2 mb-2" data-bs-toggle="modal" data-bs-target="#newChatModal">
-                    <i class="fas fa-plus"></i> New Chat
-                  </button>
+                  <i class="fas fa-plus"></i> New Chat
+                </button>
               </div>
               <div class="card-body">
                 <?php if (empty($conversations)): ?>
@@ -681,7 +682,7 @@ try {
 
                       <tbody id="conversationTableBody">
                         <?php if (empty($conversations)): ?>
-                          <tr>
+                          <tr >
                             <td colspan="5">
                               <div class="text-center py-5">
                                 <div class="mb-3" style="font-size:42px; opacity:.85;">
@@ -723,7 +724,7 @@ try {
                             $timePart = $createdAt ? substr($createdAt, 11, 5) : '';
                             ?>
 
-                            <tr class="table-row">
+                            <tr class="table-row" onclick="openChat()">
                               <td class="timestamp">
                                 <div class="date"><?= htmlspecialchars($datePart) ?></div>
                                 <div class="time"><?= htmlspecialchars($timePart) ?></div>
@@ -748,7 +749,7 @@ try {
                               </td>
 
                               <td>
-                                <button class="btn btn-primary view" data-conversation-id="<?= $cid ?>">
+                                <button class="btn btn-primary view" onclick="openChat()">
                                   <i class="bi bi-eye"></i> View
                                 </button>
                                 <button class="btn btn-danger delete" data-thread-id="<?= $cid ?>">
@@ -778,6 +779,7 @@ try {
     <!--begin::Footer-->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/footer.php'; ?>
     <!--end::Footer-->
+
   </div>
 
 
@@ -848,6 +850,7 @@ try {
                   <!-- this is what PHP needs -->
                   <input type="hidden" id="tenantIdInput" name="tenant_id" />
                 </div>
+                
                 <div class="col-12 text-danger" id="tenantHelp" style="display:none;">
                   <i><small id="tenantHelp" class="text-danger d-block mt-1" style="color:red;"></small></i>
                 </div>
@@ -919,8 +922,57 @@ try {
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 
           <!-- IMPORTANT: type="submit" and form="newChatForm" -->
-          <button type="submit" form="newChatForm" class="actionBtn">
+          <button type="submit" form="newChatForm" class="actionBtn" id="startNewConvBtn">
             <i class="fas fa-paper-plane"></i> Send Message
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Off-canvas -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="chatOffcanvas">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="chatTitle">Chat</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <!-- Contact Info -->
+      <div class="p-3">
+        <div class="chat-contact-info" id="contactInfo">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Chat Messages -->
+      <div class="chat-messages" id="chatMessages">
+        <!-- Messages will be loaded here -->
+      </div>
+
+      <!-- Chat Input -->
+      <div class="chat-input-area">
+        <!-- File Preview Area -->
+        <div id="filePreview" class="file-preview-area" style="display: none;">
+          <div class="file-preview-item">
+            <div id="filePreviewContent" class="file-preview-content"></div>
+            <div class="file-preview-info">
+              <div class="file-name" id="fileName"></div>
+              <div class="file-size" id="fileSize"></div>
+            </div>
+            <button class="remove-file-btn" onclick="removeFile()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="chat-input">
+          <input type="file" id="fileInput" style="display: none;" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif" onchange="handleFileSelect(event)">
+          <button class="attach-btn" onclick="document.getElementById('fileInput').click()" title="Attach file">
+            <i class="fas fa-paperclip"></i>
+          </button>
+          <textarea rows="1" placeholder="Type your message..." id="messageInput"></textarea>
+          <button class="send-btn" onclick="sendMessage()">
+            <i class="fas fa-paper-plane"></i>
           </button>
         </div>
       </div>
@@ -1057,27 +1109,62 @@ try {
   </script>
 
 
-
-  <!-- Toast message -->
+  <!-- // Open chat offcanvas -->
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const successEl = document.getElementById("flashToastSuccess");
-      const errorEl = document.getElementById("flashToastError");
+    function openChat(messageId) {
+      // const message = messagesData.find(m => m.id === messageId);
+      // if (!message) return;
 
-      if (successEl && window.bootstrap) {
-        new bootstrap.Toast(successEl, {
-          delay: 8000,
-          autohide: true
-        }).show();
-      }
+      // Close notification dropdown
+      // const dropdown = document.getElementById('notificationDropdown');
+      // dropdown.classList.remove('show');
 
-      if (errorEl && window.bootstrap) {
-        new bootstrap.Toast(errorEl, {
-          delay: 10000,
-          autohide: true
-        }).show();
-      }
-    });
+      // Set chat title
+      // const otherPerson = message.sent_by.includes('Landlord') ? message.sent_to : message.sent_by;
+      // document.getElementById('chatTitle').textContent = otherPerson;
+
+      // Populate contact info
+      // let contactInfoHTML = `<div class="name">${otherPerson}</div>`;
+
+      // if (message.recipient_type === 'tenant') {
+      //   contactInfoHTML += `
+      //               <div class="detail"><i class="fas fa-building"></i> ${message.property}</div>
+      //               <div class="detail"><i class="fas fa-door-open"></i> ${message.unit}</div>
+      //           `;
+      // } else if (message.recipient_type === 'service_provider') {
+      //   contactInfoHTML += `
+      //               <div class="detail"><i class="fas fa-briefcase"></i> Service Provider</div>
+      //           `;
+      // } else if (message.recipient_type === 'admin') {
+      //   contactInfoHTML += `
+      //               <div class="detail"><i class="fas fa-user-shield"></i> System Administrator</div>
+      //           `;
+      // }
+
+      // document.getElementById('contactInfo').innerHTML = contactInfoHTML;
+
+      // // Populate chat messages
+      // let messagesHTML = '';
+      // message.chat_history.forEach(chat => {
+      //   const messageClass = chat.type === 'sent' ? 'sent' : 'received';
+      //   messagesHTML += `
+      //               <div class="chat-message ${messageClass}">
+      //                   <div class="message-bubble">${chat.message}</div>
+      //                   <div class="message-time">${new Date(chat.time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</div>
+      //               </div>
+      //           `;
+      // });
+
+      // document.getElementById('chatMessages').innerHTML = messagesHTML;
+
+      // // Scroll to bottom
+      // const chatMessages = document.getElementById('chatMessages');
+      // chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Open offcanvas
+      const offcanvas = new bootstrap.Offcanvas(document.getElementById('chatOffcanvas'));
+      offcanvas.show();
+    }
   </script>
 </body>
 <!--end::Body-->

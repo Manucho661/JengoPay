@@ -405,7 +405,7 @@ require_once 'actions/getBuildings.php';
                             <i class="fas fa-search"></i> Apply
                           </button>
 
-                          <a href="expenses.php" class="btn btn-secondary">
+                          <a href="balanceSheet.php" class="btn btn-secondary">
                             <i class="fas fa-redo"></i> Reset
                           </a>
                         </div>

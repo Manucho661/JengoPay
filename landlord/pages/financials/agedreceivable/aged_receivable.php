@@ -8,7 +8,6 @@ $sql = "
     i.id, 
     i.invoice_no, 
     i.tenant_id, 
-    i.description, 
     i.invoice_date, 
     i.due_date, 
     i.total
@@ -19,51 +18,6 @@ $sql = "
 ";
 $stmt = $pdo->query($sql);
 $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Group invoices by tenant
-// $tenants = [];
-// foreach ($invoices as $inv) {
-//     $tenantId = $inv['tenant'];
-//     $tenantName = trim($inv['first_name'] . ' ' . $inv['middle_name'] . ' ' . $inv['last_name']);
-
-//     if (empty(trim($tenantName))) $tenantName = "Tenant #" . $tenantId;
-//     if (!empty($inv['building'])) $tenantName .= " (Building: " . $inv['building'] . ")";
-
-//     if (!isset($tenants[$tenantId])) {
-//         $tenants[$tenantId] = [
-//             'name' => $tenantName,
-//             'phone' => $inv['phone_number'],
-//             'building' => $inv['building'],
-//             'invoices' => []
-//         ];
-//     }
-//     $tenants[$tenantId]['invoices'][] = $inv;
-// }
-
-// // Calculate days overdue
-// function daysOverdue($invoiceDate, $dueDate = null) {
-//     $today = new DateTime();
-//     $date = $dueDate ? new DateTime($dueDate) : new DateTime($invoiceDate);
-//     return $date->diff($today)->days;
-// }
-
-// // Prepare summary totals
-// $totals = [
-//     '0-30' => 0,
-//     '31-60' => 0,
-//     '61-90' => 0,
-//     '90+' => 0,
-//     'grand' => 0
-// ];
-
-// foreach ($invoices as $inv) {
-//     $days = daysOverdue($inv['invoice_date'], $inv['due_date']);
-//     if ($days <= 30) $totals['0-30'] += $inv['total'];
-//     elseif ($days <= 60) $totals['31-60'] += $inv['total'];
-//     elseif ($days <= 90) $totals['61-90'] += $inv['total'];
-//     else $totals['90+'] += $inv['total'];
-//     $totals['grand'] += $inv['total'];
-// }
 ?>
 
 <!doctype html>
@@ -177,7 +131,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <div class="app-wrapper" style="background-color:rgba(128,128,128,0.1);">
     <?php include_once '../../includes/header.php'; ?>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?><
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/sidebar.php'; ?>
 
 
       <main class="app-main">

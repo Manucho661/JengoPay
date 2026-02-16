@@ -24,7 +24,9 @@ require_once 'actions/getExpenses.php';
 // Include expense accounts
 require_once 'actions/getExpenseAccounts.php';
 // include buildings
-require_once 'actions/getBuildings.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/actions/generalActions/getBuildings.php';
+
+
 
 // filters
 $status     = $_GET['status'] ?? null;
@@ -218,37 +220,8 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
 
 <body class="" style="">
 
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
-
-        <?php if (!empty($error)): ?>
-            <div id="flashToastError"
-                class="toast align-items-center text-bg-danger border-0"
-                role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body small">
-                        <?= htmlspecialchars($error) ?>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                        data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        <?php endif; ?>
-
-        <?php if (!empty($success)): ?>
-            <div id="flashToastSuccess"
-                class="toast align-items-center text-bg-success border-0"
-                role="alert" aria-live="polite" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body small">
-                        <?= htmlspecialchars($success) ?>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                        data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        <?php endif; ?>
-
-    </div>
+    <!-- toast message incase of an error or success -->
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/successORErrorToast.php'; ?>
 
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
@@ -986,10 +959,10 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                             </div>
 
                             <div class="col-6">
-                                
-                                    <label class="form-label">Issue Date *</label>
-                                    <input type="date" name="date" class="form-control" value="<?= date('Y-m-d') ?>" required>
-                        
+
+                                <label class="form-label">Issue Date *</label>
+                                <input type="date" name="date" class="form-control" value="<?= date('Y-m-d') ?>" required>
+
                             </div>
                         </div>
                     </div>

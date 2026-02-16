@@ -104,7 +104,7 @@
             <span class="notification-badge">3</span>
         </div>
 
-        <a href="/Jengopay/landlord/pages/buildings/landlordProfile.php" class="user-name">
+        <a href="/Jengopay/landlord/pages/profiles/landlordProfile.php" class="user-name">
             <?php
             $fullName = $_SESSION['user']['name'] ?? '';
             $firstName = explode(" ", trim($fullName))[0];
