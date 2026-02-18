@@ -2,10 +2,16 @@
 // Start session
 session_start();
 
+$error   = $_SESSION['error'] ?? '';
+$success = $_SESSION['success'] ?? '';
+
+unset($_SESSION['error'], $_SESSION['success']);
+
 // 🔌 Include your PDO database connection
 include '../db/connect.php';
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/service_provider_auth_check.php';
+
 
 
 // 📥 Check if the user is logged in and their role is 'provider'
@@ -23,6 +29,20 @@ include_once './actions/submitApplication.php';
 include_once './actions/reApply.php';
 // dedicated file for fetching requests
 include './actions/getRequests1.php';
+
+// latest request first
+usort($requests, function ($a, $b) {
+  // newest first
+  $ta = strtotime($a['created_at'] ?? '1970-01-01 00:00:00');
+  $tb = strtotime($b['created_at'] ?? '1970-01-01 00:00:00');
+
+  // If same time, break tie by id (newer id first)
+  if ($ta === $tb) {
+    return ((int)($b['id'] ?? 0) <=> (int)($a['id'] ?? 0));
+  }
+  return $tb <=> $ta;
+});
+
 
 // Pagination logic
 $itemsPerPage = 5;
@@ -597,31 +617,9 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
 
 <body>
 
-  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
-
-    <?php if (!empty($error)): ?>
-      <div id="flashToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3500">
-        <div class="d-flex">
-          <div class="toast-body small">
-            <?= htmlspecialchars($error) ?>
-          </div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-      </div>
-    <?php endif; ?>
-
-    <?php if (!empty($success)): ?>
-      <div id="flashToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="polite" aria-atomic="true" data-bs-delay="3000">
-        <div class="d-flex">
-          <div class="toast-body small">
-            <?= htmlspecialchars($success) ?>
-          </div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-      </div>
-    <?php endif; ?>
-
-  </div>
+ <?php
+    include "./includes/successORErrorToast.php"
+    ?>
 
 
   <div class="app-wrapper">
@@ -654,26 +652,51 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
               <!-- Filter Section -->
               <div class="filter-section">
                 <h3 class="filter-title"><i class="fas fa-filter"></i> Filter & Search</h3>
-                <div class="row">
-                  <div class="col-md-6 mb-3">
-                    <input type="text" class="form-control" placeholder="Search requests...">
+
+                <form method="GET" class="row g-2 align-items-end">
+                  <!-- always reset to page 1 when applying filters -->
+                  <input type="hidden" name="page" value="1">
+
+                  <div class="col-md-6">
+                    <label class="form-label mb-1">Search</label>
+                    <input
+                      type="text"
+                      name="search"
+                      class="form-control"
+                      placeholder="Search requests..."
+                      value="<?= htmlspecialchars($search ?? '') ?>"
+                      autocomplete="off" />
                   </div>
-                  <div class="col-md-3 mb-3">
-                    <select class="form-select">
-                      <option>All Categories</option>
-                      <option>Electrical</option>
-                      <option>Plumbing</option>
-                      <option>Carpentry</option>
-                      <option>Painting</option>
+
+                  <div class="col-md-3">
+                    <label class="form-label mb-1">Category</label>
+                    <select name="category" class="form-select">
+                      <option value="" <?= (($category ?? '') === '') ? 'selected' : '' ?>>All Categories</option>
+                      <option value="Electrical" <?= (($category ?? '') === 'Electrical') ? 'selected' : '' ?>>Electrical</option>
+                      <option value="Plumbing" <?= (($category ?? '') === 'Plumbing') ? 'selected' : '' ?>>Plumbing</option>
+                      <option value="Carpentry" <?= (($category ?? '') === 'Carpentry') ? 'selected' : '' ?>>Carpentry</option>
+                      <option value="Painting" <?= (($category ?? '') === 'Painting') ? 'selected' : '' ?>>Painting</option>
                     </select>
                   </div>
-                  <div class="col-md-3 mb-3">
-                    <button class="btn btn-primary w-100" style="background: var(--primary-color); border: none;">
-                      <i class="fas fa-search"></i> Search
+
+                  <div class="col-md-3 d-flex gap-2">
+                    <button
+                      type="submit"
+                      class="btn btn-primary flex-grow-1"
+                      style="background: var(--primary-color); border: none;">
+                      <i class="fas fa-search"></i> Apply
                     </button>
+
+                    <!-- Reset: reload same page without querystring -->
+                    <a href="<?= htmlspecialchars(strtok($_SERVER['REQUEST_URI'], '?')) ?>"
+                      class="btn btn-outline-secondary"
+                      title="Reset filters">
+                      <i class="fas fa-undo"></i>
+                    </a>
                   </div>
-                </div>
+                </form>
               </div>
+
 
               <!-- Request Cards -->
               <?php
@@ -1299,6 +1322,76 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
   <!-- make the submit show appropriate text depending if the provider applied or not -->
   <script>
 
+  </script>
+  <script>
+    const API_URL = "./actions/requests/getAvailableRequests.php"; // <-- change to your real path
+
+    function buildQuery(paramsObj) {
+      const params = new URLSearchParams();
+      Object.entries(paramsObj).forEach(([k, v]) => {
+        if (v !== null && v !== undefined && String(v).trim() !== "") {
+          params.set(k, String(v).trim());
+        }
+      });
+      return params.toString();
+    }
+
+    // Call your existing loader/render function here
+    async function loadRequests({
+      page = 1,
+      search = "",
+      category = ""
+    } = {}) {
+      const qs = buildQuery({
+        page,
+        search,
+        category
+      });
+      const url = `${API_URL}?${qs}`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (!data.success) {
+        console.error(data.error || "Failed to load requests");
+        return;
+      }
+
+      // TODO: replace with your current UI function
+      renderRequests(data.data, data.meta);
+    }
+
+    document.getElementById("applyFiltersBtn").addEventListener("click", () => {
+      const search = document.getElementById("filterSearch").value;
+      const category = document.getElementById("filterCategory").value;
+
+      // Apply should start from page 1
+      loadRequests({
+        page: 1,
+        search,
+        category
+      });
+    });
+
+    document.getElementById("resetFiltersBtn").addEventListener("click", () => {
+      document.getElementById("filterSearch").value = "";
+      document.getElementById("filterCategory").value = "";
+
+      // Reset to default listing (page 1, no filters)
+      loadRequests({
+        page: 1
+      });
+    });
+
+    // Optional: initial load on page open
+    loadRequests({
+      page: 1
+    });
+
+    /* Example placeholder - replace with your actual rendering code */
+    function renderRequests(rows, meta) {
+      console.log("Render", rows, meta);
+    }
   </script>
 </body>
 

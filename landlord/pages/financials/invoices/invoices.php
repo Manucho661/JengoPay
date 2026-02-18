@@ -3,7 +3,13 @@ session_start();
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
 include '../../db/connect.php';
 
+$error   = $_SESSION['error'] ?? '';
+$success = $_SESSION['success'] ?? '';
 
+unset($_SESSION['error'], $_SESSION['success']);
+
+// actions
+require_once 'actions/createInvoice.php';
 /* -----------------------------
    FETCH REVENUE ACCOUNTS
 ----------------------------- */
@@ -30,7 +36,7 @@ $prefix  = $isDraft ? 'DFT' : 'INV';
 try {
   $stmt = $pdo->prepare("
         SELECT invoice_no
-        FROM invoice
+        FROM invoices
         WHERE invoice_no LIKE ? 
         ORDER BY id DESC 
         LIMIT 1
@@ -51,71 +57,18 @@ try {
   $invoiceNumber = $prefix . "001";
 }
 
+
 /* -----------------------------
    FETCH BUILDINGS LIST
 ----------------------------- */
-try {
-  $stmt = $pdo->prepare("
-        SELECT id, building_name 
-        FROM buildings 
-        ORDER BY building_name ASC
-    ");
-  $stmt->execute();
-  $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-  error_log("Error fetching buildings: " . $e->getMessage());
-  $buildings = [];
-}
+// acctions
+// get buidings
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/actions/generalActions/getBuildings.php';
 
 /* -----------------------------
    FETCH ACTIVE TENANTS FROM ALL UNIT TABLES
 ----------------------------- */
-try {
-  $sql = "
-        SELECT 
-            id,
-            tfirst_name AS first_name,
-            tmiddle_name AS middle_name,
-            tlast_name AS last_name,
-            building_link AS building,
-            unit_number,
-            'Bedsitter' AS unit_type
-        FROM bedsitter_units
-        WHERE tenant_status = 'Active'
 
-        UNION ALL
-
-        SELECT 
-            id,
-            tfirst_name AS first_name,
-            tmiddle_name AS middle_name,
-            tlast_name AS last_name,
-            building_link AS building,
-            unit_number,
-            'Single' AS unit_type
-        FROM single_units
-        WHERE tenant_status = 'Active'
-
-        UNION ALL
-
-        SELECT 
-            id,
-            tfirst_name AS first_name,
-            tmiddle_name AS middle_name,
-            tlast_name AS last_name,
-            building_link AS building,
-            unit_number,
-            'Multi-Room' AS unit_type
-        FROM multi_rooms_units
-        WHERE tenant_status = 'Active'
-    ";
-
-  $stmt = $pdo->query($sql);
-  $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-  error_log("Error fetching tenants: " . $e->getMessage());
-  $tenants = [];
-}
 
 ?>
 <!-- actions -->
@@ -130,7 +83,6 @@ $stmt = $pdo->query("
     SELECT
         i.id,
         i.invoice_no,
-        i.receiver,
         i.invoice_date,
         i.due_date,
         i.notes AS description,
@@ -147,7 +99,7 @@ $stmt = $pdo->query("
         
         -- Payment calculations
         (SELECT COALESCE(SUM(p.amount), 0)
-         FROM payments p
+         FROM invoice_payments p
          WHERE p.invoice_id = i.id) AS paid_amount,
         
         -- Invoice items totals
@@ -182,7 +134,7 @@ $stmt = $pdo->query("
             ELSE i.total
         END AS display_total
         
-    FROM invoice i
+    FROM invoiceS i
     LEFT JOIN tenants t ON i.tenant_id = t.id
     ORDER BY i.created_at DESC
 ");
@@ -219,6 +171,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       color: inherit;
     }
 
+
     ul {
       list-style: none;
     }
@@ -228,140 +181,6 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 15px;
-    }
-
-    /* ================ */
-    /* BUTTON STYLES */
-    /* ================ */
-    .btn {
-      display: inline-block;
-      padding: 8px 16px;
-      border-radius: 4px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 14px;
-    }
-
-    .btn-primary {
-      background-color: #2a5bd7;
-      color: white;
-      border: 1px solid #2a5bd7;
-    }
-
-    .btn-primary:hover {
-      background-color: #1e4bc4;
-      border-color: #1e4bc4;
-    }
-
-    .btn-outline {
-      background-color: transparent;
-      color: #2a5bd7;
-      border: 1px solid #2a5bd7;
-    }
-
-    .btn-outline:hover {
-      background-color: #f0f5ff;
-    }
-
-    .btn-icon {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .pay-btn {
-      margin-top: 6px;
-      padding: 4px 10px;
-      font-size: 12px;
-      font-weight: 600;
-      background-color: #00192D;
-      color: #FFC107;
-      border: none;
-      border-radius: 20px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .pay-btn:hover {
-      background-color: #e6ae00;
-      color: white;
-    }
-
-    /* ================ */
-    /* LAYOUT STYLES */
-    /* ================ */
-    /* header {
-      background-color: white;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    } */
-
-    .header-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 0;
-    }
-
-    /* .logo {
-      font-size: 24px;
-      font-weight: 700;
-      color: #2a5bd7;
-    }
-
-    .logo span {
-      color: #ff6b00;
-    } */
-
-    .header-actions {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background-color: #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      color: #4a5568;
-    }
-
-    .app-container {
-      display: flex;
-      min-height: calc(100vh - 66px);
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 20px;
-      background-color: #f5f7fa;
-    }
-
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .page-title {
-      font-size: 24px;
-      color: #1a365d;
-    }
-
-    .page-actions {
-      display: flex;
-      gap: 10px;
     }
 
     /* ================ */
@@ -751,7 +570,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .table-responsive {
       display: block;
       width: 100%;
-      overflow-x: auto;
+      /* overflow-x: auto; */
       -webkit-overflow-scrolling: touch;
     }
 
@@ -896,10 +715,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
         padding: 8px;
       }
 
-      /* Mobile table styles */
-      .invoice-item {
-        flex-wrap: wrap;
-      }
+
 
       .search-container {
         transition: all 0.2s ease;
@@ -954,6 +770,12 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
         color: white;
         background-color: #00192D;
         border: 1px solid #FFC107;
+        white-space: nowrap !important;
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+        /* allow horizontal scroll */
       }
 
       /* Adjust column widths for mobile */
@@ -1149,6 +971,9 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       vertical-align: middle;
       color: var(--main-color);
       font-size: 14px;
+      white-space: nowrap !important;
+
+
     }
 
     .table-hover tbody tr:hover {
@@ -1338,6 +1163,9 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+  <!-- toast message incase of an error or success -->
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/successORErrorToast.php'; ?>
   <!--begin::App Wrapper-->
   <div class="app-wrapper">
     <!--begin::Header-->
@@ -1558,7 +1386,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                       <tr>
                         <td><input type="checkbox" class="invoice-checkbox"></td>
                         <td class="col-invoice"><strong>INV-1001</strong></td>
-                        <td class="col-tenant">
+                        <td class="col-tenant" style="white-space: nowrap;">
                           John Kamau<br>
                           <small class="text-muted">Unit A3</small>
                         </td>
@@ -1567,7 +1395,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td class="col-subtotal" style="display: none;">KES 70000</td>
                         <td class="col-tax" style="display: none;">KES 6000</td>
                         <td class="col-total"><strong>KES 12,000</strong></td>
-                         <td class="col-paid" style="display: none;">KES 5000</td>
+                        <td class="col-paid" style="display: none;">KES 5000</td>
                         <td class="col-balance" style="display: none;">
                           <span class="text-danger">
                             KES 3000
@@ -1598,7 +1426,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td class="col-subtotal" style="display: none;">KES 70000</td>
                         <td class="col-tax" style="display: none;">KES 6000</td>
                         <td class="col-total"><strong>KES 9,500</strong></td>
-                         <td class="col-paid" style="display: none;">KES 5000</td>
+                        <td class="col-paid" style="display: none;">KES 5000</td>
                         <td class="col-balance" style="display: none;">
                           <span class="text-danger">
                             KES 3000
@@ -1670,7 +1498,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td class="col-tax" style="display: none;">KES 6000</td>
 
                         <td class="col-total"><strong>KES 12,000</strong></td>
-                         <td class="col-paid" style="display: none;">KES 5000</td>
+                        <td class="col-paid" style="display: none;">KES 5000</td>
 
                         <td class="col-balance" style="display: none;">
                           <span class="text-danger">
@@ -1747,28 +1575,29 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </h6>
             <div class="mb-3">
               <label class="form-label">Invoice Number *</label>
-              <input type="text" name="invoice_number" class="form-control" value="INV-2024-" required>
+              <input type="text" name="invoice_no" class="form-control" value="INV-2024-" required>
             </div>
             <div class="mb-3">
               <label class="form-label">Building *</label>
-              <select name="building" class="form-select" onchange="updateUnitsForBuilding(this.value)" required>
+              <select class="form-control shadow-sm" name="building_id" id="buildingSelect" required>
                 <option value="">Select Building</option>
-                <option value="1">Hindocha Tower</option>
-                <option value="2">Vista Apartments</option>
-                <option value="3">Green Valley Homes</option>
+                <?php foreach ($buildings as $building): ?>
+                  <option value="<?= (int)$building['id'] ?>">
+                    <?= htmlspecialchars($building['building_name']) ?>
+                  </option>
+                <?php endforeach; ?>
               </select>
             </div>
             <div class="mb-3">
               <label class="form-label">Unit *</label>
-              <select name="unit" class="form-select" id="unitSelect" onchange="updateTenantForUnit(this.value)" required disabled>
+              <select name="unit_id" class="form-select" id="unitSelect" onchange="updateTenantForUnit(this.value)" required disabled>
                 <option value="">Select building first</option>
               </select>
             </div>
             <div class="mb-3">
               <label class="form-label">Tenant *</label>
-              <select name="tenant" class="form-select" id="tenantSelect" required disabled>
-                <option value="">Select unit first</option>
-              </select>
+              <input class="form-control" id="tenantNameInput" type="text" readonly />
+              <input type="hidden" id="tenantIdInput" name="tenant_id" />
             </div>
             <div class="row g-3">
               <div class="col-6">
@@ -1898,6 +1727,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
     <script src="../../../../landlord/assets/main.js"></script> <!-- links for dataTaable buttons -->
+    <script type="module" src="js/main.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- OPTIONAL SCRIPTS -->
@@ -1970,54 +1800,54 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       };
 
       // Update units when building is selected
-      function updateUnitsForBuilding(buildingId) {
-        const unitSelect = document.getElementById('unitSelect');
-        const tenantSelect = document.getElementById('tenantSelect');
+      // function updateUnitsForBuilding(buildingId) {
+      //   const unitSelect = document.getElementById('unitSelect');
+      //   const tenantSelect = document.getElementById('tenantSelect');
 
-        unitSelect.innerHTML = '<option value="">Select Unit</option>';
-        tenantSelect.innerHTML = '<option value="">Select unit first</option>';
-        tenantSelect.disabled = true;
+      //   unitSelect.innerHTML = '<option value="">Select Unit</option>';
+      //   tenantSelect.innerHTML = '<option value="">Select unit first</option>';
+      //   tenantSelect.disabled = true;
 
-        if (buildingId && buildingUnits[buildingId]) {
-          buildingUnits[buildingId].forEach(unit => {
-            const option = document.createElement('option');
-            option.value = unit.id;
-            option.textContent = unit.name;
-            option.dataset.tenant = unit.tenant;
-            unitSelect.appendChild(option);
-          });
-          unitSelect.disabled = false;
-        } else {
-          unitSelect.disabled = true;
-        }
-      }
+      //   if (buildingId && buildingUnits[buildingId]) {
+      //     buildingUnits[buildingId].forEach(unit => {
+      //       const option = document.createElement('option');
+      //       option.value = unit.id;
+      //       option.textContent = unit.name;
+      //       option.dataset.tenant = unit.tenant;
+      //       unitSelect.appendChild(option);
+      //     });
+      //     unitSelect.disabled = false;
+      //   } else {
+      //     unitSelect.disabled = true;
+      //   }
+      // }
 
       // Update tenant when unit is selected
-      function updateTenantForUnit(unitId) {
-        const unitSelect = document.getElementById('unitSelect');
-        const tenantSelect = document.getElementById('tenantSelect');
-        const selectedOption = unitSelect.options[unitSelect.selectedIndex];
+      // function updateTenantForUnit(unitId) {
+      //   const unitSelect = document.getElementById('unitSelect');
+      //   const tenantSelect = document.getElementById('tenantSelect');
+      //   const selectedOption = unitSelect.options[unitSelect.selectedIndex];
 
-        if (unitId && selectedOption) {
-          const tenantName = selectedOption.dataset.tenant;
-          tenantSelect.innerHTML = '';
+      //   if (unitId && selectedOption) {
+      //     const tenantName = selectedOption.dataset.tenant;
+      //     tenantSelect.innerHTML = '';
 
-          if (tenantName && tenantName !== 'Vacant') {
-            const option = document.createElement('option');
-            option.value = unitId;
-            option.textContent = tenantName;
-            option.selected = true;
-            tenantSelect.appendChild(option);
-            tenantSelect.disabled = false;
-          } else {
-            tenantSelect.innerHTML = '<option value="">Unit is vacant</option>';
-            tenantSelect.disabled = true;
-          }
-        } else {
-          tenantSelect.innerHTML = '<option value="">Select unit first</option>';
-          tenantSelect.disabled = true;
-        }
-      }
+      //     if (tenantName && tenantName !== 'Vacant') {
+      //       const option = document.createElement('option');
+      //       option.value = unitId;
+      //       option.textContent = tenantName;
+      //       option.selected = true;
+      //       tenantSelect.appendChild(option);
+      //       tenantSelect.disabled = false;
+      //     } else {
+      //       tenantSelect.innerHTML = '<option value="">Unit is vacant</option>';
+      //       tenantSelect.disabled = true;
+      //     }
+      //   } else {
+      //     tenantSelect.innerHTML = '<option value="">Select unit first</option>';
+      //     tenantSelect.disabled = true;
+      //   }
+      // }
 
       // Update item description when item is selected
       function updateItemDescription(select) {

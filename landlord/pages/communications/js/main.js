@@ -1,5 +1,4 @@
-// import { getUnits } from "./updateReciepientOptions.js";
-// import { getTenant } from "./getTenant.js";
+
 import { updateRecipientOptions, getUnits, getTenant } from "./updateReciepientOptions.js";
 document.addEventListener("DOMContentLoaded", () => {
 

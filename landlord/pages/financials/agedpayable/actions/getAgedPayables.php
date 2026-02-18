@@ -12,15 +12,19 @@ try {
     SELECT *
     FROM (
         SELECT
-            COALESCE(sp.supplier_name, 'Unknown Supplier') AS supplier,
+            sp.id AS supplier_id,
+            COALESCE(sp.supplier_name, 'TOTAL') AS supplier,
+
             SUM(CASE WHEN DATEDIFF(CURDATE(), e.created_at) BETWEEN 0 AND 30 THEN e.total ELSE 0 END)  AS `0-30 Days`,
             SUM(CASE WHEN DATEDIFF(CURDATE(), e.created_at) BETWEEN 31 AND 60 THEN e.total ELSE 0 END) AS `31-60 Days`,
             SUM(CASE WHEN DATEDIFF(CURDATE(), e.created_at) BETWEEN 61 AND 90 THEN e.total ELSE 0 END) AS `61-90 Days`,
-            SUM(CASE WHEN DATEDIFF(CURDATE(), e.created_at) > 90 THEN e.total ELSE 0 END)            AS `90+ Days`,
+            SUM(CASE WHEN DATEDIFF(CURDATE(), e.created_at) > 90 THEN e.total ELSE 0 END)              AS `90+ Days`,
             SUM(e.total) AS `Total Payable`
+
         FROM expenses e
         LEFT JOIN suppliers sp
             ON sp.id = e.supplier_id
+
         WHERE e.status IN ('unpaid','partially_paid')
         GROUP BY sp.id WITH ROLLUP
     ) AS t
@@ -34,6 +38,7 @@ try {
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode(['data' => $result]);
+
 } catch (Throwable $e) {
     echo json_encode(['error' => $e->getMessage()]);
 }

@@ -92,15 +92,87 @@ require_once 'actions/getBuildings.php';
       font-size: 14px;
     }
 
-    .expenses-section {
-      background-color: #fff8e6 !important;
-      color: #00192D;
-
+    .major-header th {
+      font-size: 15px;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      
     }
 
-    .income-section {
-      background: rgba(39, 174, 96, 0.15);
+    /* Sub-section headers: Current Assets, etc */
+    .section-header {
+      background: rgba(0, 25, 45, 0.04);
+      border-left: 4px solid rgba(0, 25, 45, 0.25);
+      padding-left: 12px !important;
+      font-weight: 600 !important;
+    }
 
+    /* Child rows (accounts) indentation */
+    .child-row td:first-child {
+      padding-left: 34px;
+      position: relative;
+    }
+
+    /* Small marker to show it’s nested */
+    .child-row td:first-child::before {
+      content: "•";
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: .55;
+    }
+
+    /* Dotted leader line between description and amount */
+    .desc-cell {
+      position: relative;
+    }
+
+    .desc-cell .desc-text {
+      position: relative;
+      /* background: #fff; */
+      /* helps the text sit over the dotted line */
+      padding-right: 10px;
+      z-index: 2;
+    }
+
+    .desc-cell::after {
+      content: "";
+      position: absolute;
+      left: 34px;
+      /* align with indentation */
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-bottom: 1px dotted rgba(0, 0, 0, 0.25);
+      z-index: 1;
+    }
+
+    /* Hover for clickable rows */
+    .clickable-row:hover {
+      background: rgba(0, 25, 45, 0.06) !important;
+    }
+
+    /* Total rows pop */
+    .total-row td,
+    .total-row th {
+      background: rgba(0, 0, 0, 0.03) !important;
+      font-weight: 700;
+      border-top: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    /* Grand totals (Total Assets / Total Liabilities & Equity) */
+    .total-row td.fs-6,
+    .total-row td:contains("Total Assets") {
+      font-weight: 800;
+    }
+
+    /* Make amount column look tighter and aligned */
+    .amount-box {
+      min-width: 160px;
+      justify-content: flex-end;
+      font-variant-numeric: tabular-nums;
+      /* nicer digit alignment */
     }
   </style>
 </head>
@@ -162,7 +234,7 @@ require_once 'actions/getBuildings.php';
                           <option value="">All Buildings</option>
                           <?php foreach ($buildings as $building): ?>
                             <?php $bid = (string)(int)$building['id']; ?>
-                            <option value="<?= $bid ?>" <?= (($building_id ?? '') === $bid) ? 'selected' : '' ?>>
+                            <option value="<?= $bid ?>" <?= (($buildingId ?? '') === $bid) ? 'selected' : '' ?>>
                               <?= htmlspecialchars($building['building_name']) ?>
                             </option>
                           <?php endforeach; ?>
@@ -176,7 +248,7 @@ require_once 'actions/getBuildings.php';
                           type="date"
                           name="date_from"
                           class="form-control"
-                          value="<?= htmlspecialchars($date_from ?? '') ?>">
+                          value="<?= htmlspecialchars($dateFrom ?? '') ?>">
                       </div>
 
                       <div class="col-auto filter-col">
@@ -185,7 +257,7 @@ require_once 'actions/getBuildings.php';
                           type="date"
                           name="date_to"
                           class="form-control"
-                          value="<?= htmlspecialchars($date_to ?? '') ?>">
+                          value="<?= htmlspecialchars($dateTo ?? '') ?>">
                       </div>
 
                       <div class="col-auto filter-col d-flex gap-2">
@@ -242,12 +314,9 @@ require_once 'actions/getBuildings.php';
                   </thead>
                   <tbody id="accordionFinance">
                     <!-- Income header -->
-                    <tr class="main-section-header">
-                      <td class="income-section" colspan="2" style="color:green;background:rgba(39, 174, 96, 0.15);">
-                        <div><b>Income</b></div>
-                      </td>
+                    <tr>
+                      <th colspan="2" class="section-header" style="color:green;background:rgba(39, 174, 96, 0.15);       padding: 15px 10px;">Income</th>
                     </tr>
-
                     <!-- Main Row -->
                     <tr>
                       <?php foreach ($incomeRows  as $item): ?>
@@ -276,15 +345,14 @@ require_once 'actions/getBuildings.php';
                   </tr>
 
                   <!-- Expenses header -->
-                  <tr class="category">
-                    <td colspan="2" style="color:red;" class="expenses-section">
-                      <div><b>Expenses</b></div>
-                    </td>
+                  <tr>
+                    <th colspan="2" class="section-header" style="color:red;background-color: #fff8e6; padding: 15px 10px;">Expenses</th>
                   </tr>
+                  
 
                   <?php foreach ($expenseRows as $item): ?>
-                    <tr class="main-row" data-bs-target="#maintenanceDetails" aria-expanded="false" aria-controls="maintenanceDetails" style="cursor:pointer;">
-                      <td><?= $item['account_name'] ?></td>
+                    <tr class="main-row child-row clickable-row">
+                      <td class="desc-cell"> <span class="desc-text"><?= $item['account_name'] ?></span>  </td>
                       <td class="p-0">
                         <div class="d-flex justify-content-start">
                           <div class="d-flex justify-content-end amount-box">

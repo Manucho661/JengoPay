@@ -189,7 +189,7 @@ $paymentHistory = [
         .custom-header {
             background: var(--main-color);
             padding: 20px 30px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
         }
 
         .custom-header h1 {
@@ -289,7 +289,7 @@ $paymentHistory = [
         /* Card */
         .card {
             border: none;
-            box-shadow: 0 2px 8px rgba(0, 25, 45, 0.08);
+            /* box-shadow: 0 2px 8px rgba(0, 25, 45, 0.08); */
         }
 
         .card-title {
@@ -449,7 +449,8 @@ $paymentHistory = [
             box-shadow: none;
             border-color: var(--accent-color);
         }
-        a{
+
+        a {
             text-decoration: none !important;
         }
     </style>
@@ -469,13 +470,18 @@ $paymentHistory = [
 
         <!-- Main Content -->
         <div class="main">
-            <!-- Content -->
-            <main class="p-4 flex-grow-1">
-                <!-- Profile Header -->
+            <div class="container">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" style="">
+                        <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Your Profile</li>
+                    </ol>
+                </nav>
+
                 <div class="profile-header">
                     <div class="row align-items-center">
                         <div class="col-md-2 text-center">
-                            <img src="<?= $fullName?>" alt="Profile" class="profile-image">
+                            <img src="<?= $fullName ?>" alt="Profile" class="profile-image">
                             <button class="btn btn-sm btn-outline-primary mt-3">
                                 <i class="fas fa-camera"></i> Change Photo
                             </button>
@@ -495,7 +501,7 @@ $paymentHistory = [
                             <div class="row g-2">
                                 <div class="col-6">
                                     <div class="stat-box">
-                                        <div class="number"><?= $profile['total_properties']?></div>
+                                        <div class="number"><?= $profile['total_properties'] ?></div>
                                         <div class="label">Properties</div>
                                     </div>
                                 </div>
@@ -515,6 +521,14 @@ $paymentHistory = [
                         </div>
                     </div>
                 </div>
+
+
+            </div>
+
+            <!-- Content -->
+            <main class="p-4 flex-grow-1">
+                <!-- Profile Header -->
+                
 
                 <div class="row">
                     <!-- Left Column -->
@@ -573,7 +587,7 @@ $paymentHistory = [
                         </div>
 
                         <!-- Payment History -->
-                        <div class="card shadow-sm mb-4">
+                        <div class="card border-0 mb-4">
                             <div class="card-body">
                                 <h5 class="card-title mb-3"><i class="fas fa-history"></i> Payment History</h5>
                                 <div class="table-responsive">
@@ -612,14 +626,14 @@ $paymentHistory = [
                         </div>
 
                         <!-- Security Settings -->
-                        <div class="card shadow-sm mb-4">
+                        <div class="card border-0 mb-4">
                             <div class="card-body">
                                 <h5 class="card-title mb-4"><i class="fas fa-shield-alt"></i> Security Settings</h5>
 
                                 <!-- Change Password -->
                                 <div class="mb-4">
                                     <h6 style="color: var(--main-color); font-weight: 600;">Change Password</h6>
-                                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                                    <button class="actionBtn" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
                                         <i class="fas fa-key"></i> Update Password
                                     </button>
                                 </div>
@@ -627,7 +641,7 @@ $paymentHistory = [
                                 <!-- Change Email -->
                                 <div class="mb-4">
                                     <h6 style="color: var(--main-color); font-weight: 600;">Change Email</h6>
-                                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changeEmailModal">
+                                    <button class="actionBtn" data-bs-toggle="modal" data-bs-target="#changeEmailModal">
                                         <i class="fas fa-envelope"></i> Update Email
                                     </button>
                                 </div>
@@ -637,10 +651,10 @@ $paymentHistory = [
                                     <h6 style="color: var(--main-color); font-weight: 600;">Two-Factor Authentication</h6>
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" id="twoFactorSwitch"
-                                            <?= $landlord['two_factor_enabled'] ? 'checked' : '' ?>
+                                           
                                             onchange="toggleTwoFactor(this)">
                                         <label class="form-check-label" for="twoFactorSwitch">
-                                            <?= $landlord['two_factor_enabled'] ? 'Enabled' : 'Disabled' ?>
+                                        
                                         </label>
                                     </div>
                                     <small class="text-muted">Add an extra layer of security to your account</small>
@@ -649,7 +663,7 @@ $paymentHistory = [
                                 <!-- Session Management -->
                                 <div>
                                     <h6 style="color: var(--main-color); font-weight: 600;">Active Sessions</h6>
-                                    <p class="text-muted mb-2">Last login: <?= date('M d, Y h:i A', strtotime($landlord['last_login'])) ?></p>
+                                    <p class="text-muted mb-2">Last login: <?= date('M d, Y h:i A', strtotime($profile['created_at'])) ?></p>
                                     <button class="btn btn-sm btn-outline-danger">
                                         <i class="fas fa-sign-out-alt"></i> Logout All Devices
                                     </button>
@@ -688,11 +702,11 @@ $paymentHistory = [
                                 <h5 class="card-title mb-3"><i class="fas fa-info-circle"></i> Account Information</h5>
                                 <div class="mb-3">
                                     <small class="text-muted">Member Since</small>
-                                    <div class="fw-bold"><?= date('M d, Y', strtotime($landlord['joined_date'])) ?></div>
+                                    <div class="fw-bold"><?= date('M d, Y', strtotime($profile['created_at'])) ?></div>
                                 </div>
                                 <div class="mb-3">
                                     <small class="text-muted">Last Login</small>
-                                    <div class="fw-bold"><?= date('M d, Y h:i A', strtotime($landlord['last_login'])) ?></div>
+                                    <div class="fw-bold"><?= date('M d, Y h:i A', strtotime($profile['created_at'])) ?></div>
                                 </div>
                                 <div class="mb-3">
                                     <small class="text-muted">Account Status</small>

@@ -312,6 +312,23 @@ $results_show_buildings = $results_show_buildings->fetchAll(PDO::FETCH_ASSOC);
         .allUnits-link:hover {
             background: rgba(255, 193, 7, 0.1);
         }
+
+        /* Keep horizontal scrolling on small screens */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        /* But allow dropdowns to escape on desktop/tablet */
+        @media (min-width: 768px) {
+            .table-responsive {
+                overflow: visible !important;
+            }
+        }
+
+        /* Ensure dropdown shows above other elements */
+        .dropdown-menu {
+            z-index: 2000;
+        }
     </style>
 </head>
 
@@ -468,24 +485,54 @@ $results_show_buildings = $results_show_buildings->fetchAll(PDO::FETCH_ASSOC);
                 <div class="row mb-3 mt-3">
                     <div class="col-md-12">
                         <div class="card border-0 mb-4">
-                            <div class="card-body ">
 
-                                <h6 class="mb-3" style="color: var(--main-color); font-weight: 600;">
-                                    Units
-                                </h6>
-                                <a class="action-link allUnits-link" style="text-decoration: none;">
-                                    <i class="fas fa-th"></i> All Units (<?= $totalUnits ?>)
+                            <?php
+                            function unitsLink(array $overrides = []): string
+                            {
+                                $query = array_merge($_GET, $overrides);
+
+                                // Remove category completely for "All Units"
+                                if (isset($overrides['category']) && $overrides['category'] === '') {
+                                    unset($query['category']);
+                                }
+
+                                // Reset pagination when filter changes
+                                unset($query['page']);
+
+                                return 'buildings.php' . (empty($query) ? '' : '?' . http_build_query($query));
+                            }
+                            ?>
+
+
+                            <div class="card-body">
+
+                                <a href="<?= unitsLink(['category' => '']) ?>"
+                                    class="action-link allUnits-link">
+                                    <i class="fas fa-th"></i> All buildings
                                 </a>
-                                <a href="single_units.php" class="action-link" style="text-decoration: none;">
-                                    <i class="fas fa-door-open"></i> Single Units (<?= $singleUnits ?>)
+
+                                <a href="<?= unitsLink(['category' => 'Residential']) ?>"
+                                    class="action-link">
+                                    <i class="fas fa-door-open"></i> Residential
                                 </a>
-                                <a href="bed_sitter_units.php" class="action-link" style="text-decoration: none;">
-                                    <i class="fas fa-bed"></i> Bedsitter Units (<?= $bedSitterUnits  ?>)
+
+                                <a href="<?= unitsLink(['category' => 'commercial']) ?>"
+                                    class="action-link">
+                                    <i class="fas fa-bed"></i> commercial
                                 </a>
-                                <a href="multi_room_units.php" class="action-link" style="text-decoration: none;">
-                                    <i class="fas fa-door-closed"></i> Multi-Room Units (<?= $multiRoomUnits ?>)
+
+                                <a href="<?= unitsLink(['category' => 'industrial']) ?>"
+                                    class="action-link">
+                                    <i class="fas fa-door-closed"></i> industrial
+                                </a>
+
+                                <a href="<?= unitsLink(['category' => 'mixed-units']) ?>"
+                                    class="action-link">
+                                    <i class="fas fa-door-closed"></i> mixed-units
                                 </a>
                             </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -682,9 +729,9 @@ $results_show_buildings = $results_show_buildings->fetchAll(PDO::FETCH_ASSOC);
                                                                     <span class="sr-only">Toggle Dropdown</span>
                                                                 </button>
                                                                 <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
-                                                                    <a href="buildingProfile.php?id=<?php echo urlencode($id); ?>" class="dropdown-item">
+                                                                     <a href="buildingProfile.php?id=<?php echo urlencode($id); ?>" class="dropdown-item">
                                                                         <i class="bi bi-eye"></i> View
-                                                                    </a>
+                                                                    </a> 
                                                                     <a href="add_single_unit.php?add_single_unit=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddUnit(event, '<?php echo $building_name; ?>')"><i class="bi bi-house"></i> Add Single Unit</a>
                                                                     <a href="add_bed_sitter.php?add_bed_sitter=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddBedsitter(event, '<?php echo $building_name; ?>')"> <i class="bi bi-house"></i> Add Bedsitter</a>
                                                                     <a href="add_multi_rooms.php?add_multi_rooms=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddMultiRooms(event, '<?php echo $building_name; ?>')"> <i class="bi bi-houses"></i> Add Multi Rooms

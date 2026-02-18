@@ -332,22 +332,21 @@ require_once 'actions/getBuildings.php';
         <!--begin::Container-->
         <div class="container-fluid">
           <!--begin::Row-->
-          <div class="row">
-            <div class="col-sm-8">
-              <div class="col-sm-8 d-flex">
-                <span class="info-box-icon p-2 rounded" style="background-color:#FFC107; color:#fff;">
-                  <i class="bi bi-currency-exchange" style="color:#00192D;"></i> </span>
-                <h3 class="mb-0 mx-2">The Balance Sheet</h3>
-              </div>
-            </div>
-            <div class="col-sm-4">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb" style="">
+              <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Dashboard</a></li>
+              <li class="breadcrumb-item active">Balance Sheet</li>
+            </ol>
+          </nav>
+
+          <!--First Row-->
+          <div class="row align-items-center mb-3">
+            <div class="col-12 d-flex align-items-center">
+              <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+              <h3 class="mb-0 ms-3">Balance Sheet</h3>
             </div>
           </div>
-          <!--begin::Row-->
-          <div class="row first mb-2 mt-2 rounded-circle">
-            <p class="text-muted">Manage your Balance Sheet </p>
-            <!-- /.col -->
-          </div>
+          
           <!--end::Row-->
           <!--begin::Row-->
           <!-- Fifth Row: filter -->

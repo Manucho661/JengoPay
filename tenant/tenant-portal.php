@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Varela+Round">
   <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <link rel="stylesheet" href="../font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="../plugins/font-awesome-4.7.0/css/font-awesome.min.css">
   <script src="../plugins/jquery/jquery.min.js"></script>
@@ -249,7 +251,7 @@
             </div>
             <div class="nav-item dropdown">
               <a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action"><img
-                src="../images/slide-3.jpg" class="avatar" alt="Avatar"> Pashan <b class="caret"></b></a>
+                src="images/slide-3.jpg" class="avatar" alt="Avatar"> Pashan <b class="caret"></b></a>
                 <div class="dropdown-menu">
                   <a href="tenant_dashboard.php" class="dropdown-item"><i class="fa fa-clipboard"></i> Dashboard</a>
                   <a href="#" class="dropdown-item"><i class="fa fa-power-off"></i> Logout</a>
@@ -258,7 +260,7 @@
             </div>
           </div>
         </nav>
-        <div class="container-fluid" style="background-image: url('../images/slide-3.jpg'); background-size: cover;
+        <div class="container-fluid" style="background-image: url('images/slide-3.jpg'); background-size: cover;
         background-position: center; height:500px;">
         <div class="row">
           <div class="col-md-4"></div>
@@ -278,7 +280,7 @@
       <div class="container mt-3 mb-5">
         <div class="row mb-4">
           <div class="col-md-12 text-center">
-            <h5 class="p-4 shadow"
+            <h5 class="p-4"
             style="background-color:rgb(255,193,7, 0.3); border-radius:10px; color:#00192D; font-weight:bold;">
             <i class="fa fa-home"></i> Hello Pashan, this portal acts as a quick way to enhance communication
             with the
@@ -290,14 +292,14 @@
       </div>
       <div class="row">
         <div class="col-md-4 mt-3">
-          <div class="card bt-light shadow text-light p-5 text-center request-card">
+          <div class="card bt-light text-light p-5 text-center request-card">
             <a href="#" class="serv-req" data-toggle="modal" data-target="#submitRequest">
               <h4 style="font-weight:bold;"><i class="fa fa-cogs"></i> <br><br>Submit a Repair Request</h4>
             </a>
           </div>
         </div>
         <div class="col-md-4 mt-3">
-          <div class="card bt-light shadow text-light p-5 text-center request-card">
+          <div class="card bt-light text-light p-5 text-center request-card">
             <a href="#" class="serv-req" data-toggle="modal" data-target="#communicateWithOwner">
               <h4 style="font-weight:bold"><i class="fa fa-comment"></i> <br><br>Communicate with the Owner
               </h4>
@@ -305,7 +307,7 @@
           </div>
         </div>
         <div class="col-md-4 mt-3">
-          <div class="card bt-light shadow text-light p-5 text-center request-card">
+          <div class="card bt-light text-light p-5 text-center request-card">
             <a href="#" class="serv-req">
               <h4 style="font-weight:bold;"><i class="fa fa-money"></i> <br><br>Submit your Payment Now</h4>
             </a>

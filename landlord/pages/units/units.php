@@ -354,42 +354,34 @@ if (isset($_POST['submit_reading'])) {
         .custom-footer a:hover {
             color: white;
         }
+
+        /* Keep horizontal scrolling on small screens */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        /* But allow dropdowns to escape on desktop/tablet */
+        @media (min-width: 768px) {
+            .table-responsive {
+                overflow: visible !important;
+            }
+        }
+
+        /* Ensure dropdown shows above other elements */
+        .dropdown-menu {
+            z-index: 2000;
+        }
     </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-dark" style="">
 
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+    <!-- toast message for error or success on executing functions -->
 
-        <?php if (!empty($error)): ?>
-            <div id="flashToastError"
-                class="toast align-items-center text-bg-danger border-0"
-                role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body small">
-                        <?= htmlspecialchars($error) ?>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                        data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        <?php endif; ?>
-
-        <?php if (!empty($success)): ?>
-            <div id="flashToastSuccess"
-                class="toast align-items-center text-bg-success border-0"
-                role="alert" aria-live="polite" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body small">
-                        <?= htmlspecialchars($success) ?>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                        data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        <?php endif; ?>
-
-    </div>
+    <?php
+    include $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/includes/successORErrorToast.php';
+    ?>
+    <!--end::Toast-->
 
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
@@ -410,7 +402,7 @@ if (isset($_POST['submit_reading'])) {
                 <ol class="breadcrumb" style="">
                     <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Dashboard</a></li>
                     <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Buildings/buildings.php" style="text-decoration: none;">Buildings</a></li>
-                    <li class="breadcrumb-item active">Single units</li>
+                    <li class="breadcrumb-item active">Units</li>
                 </ol>
             </nav>
             <div class="container-fluid">
@@ -418,7 +410,7 @@ if (isset($_POST['submit_reading'])) {
                 <div class="row align-items-center mb-4">
                     <div class="col-12 d-flex align-items-center">
                         <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
-                        <h3 class="mb-0 ms-3">Single units</h3>
+                        <h3 class="mb-0 ms-3">Units</h3>
                     </div>
                 </div>
                 <div class="row mb-4">
@@ -435,7 +427,7 @@ if (isset($_POST['submit_reading'])) {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-3 col-sm-6 col-12 d-flex">
                         <div class="stat-card d-flex align-items-center rounded-2 p-3 w-100">
                             <div>
@@ -476,10 +468,10 @@ if (isset($_POST['submit_reading'])) {
                 </div>
 
                 <div>
-                    <button class="action-btn vacate-btn" title="Vacate Tenant"
-                        onclick='openVacateCanvas()'>
+                    <button id="vacateBtn" class="action-btn vacate-btn" title="Vacate Tenant">
                         <i class="fas fa-sign-out-alt"></i>
                     </button>
+
                 </div>
 
                 <div class="row mb-3 mt-3">
@@ -931,6 +923,9 @@ if (isset($_POST['submit_reading'])) {
                                         </thead>
                                         <tbody>
                                             <?php foreach ($units as $unit) : ?>
+                                                <?php $category = strtolower(trim($unit['category_name'] ?? 'single_unit'));
+                                                $pagePrefix = $category;
+                                                ?>
                                                 <tr>
                                                     <td><i class="bi bi-house-door"></i><?= htmlspecialchars($unit['unit_number']) ?></td>
                                                     <td><i class="bi bi-building"></i>
@@ -965,38 +960,121 @@ if (isset($_POST['submit_reading'])) {
                                                     </td>
                                                     <td>
                                                         <div class="btn-group">
-                                                            <button type="button" class="btn btn-default btn-sm shadow" style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
-                                                            <button type="button" class="btn btn-default dropdown-toggle dropdown-icon btn-sm" data-toggle="dropdown" style="border:1px solid rgb(0, 25, 45 ,.3);"> <span class="sr-only">Toggle Dropdown</span></button>
-                                                            <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
+                                                            <button type="button" class="btn btn-default btn-sm shadow"
+                                                                style="border:1px solid rgb(0, 25, 45 ,.3);">Action</button>
+
+                                                            <button type="button"
+                                                                class="btn btn-default dropdown-toggle dropdown-icon btn-sm"
+                                                                data-toggle="dropdown"
+                                                                style="border:1px solid rgb(0, 25, 45 ,.3);">
+                                                                <span class="sr-only">Toggle Dropdown</span>
+                                                            </button>
+
+                                                            <div class="dropdown-menu shadow" role="menu"
+                                                                style="border:1px solid rgb(0, 25, 45 ,.3);">
+
                                                                 <?php
-                                                                if (htmlspecialchars($unit['occupancy_status']) == 'Occupied') {
+                                                                $pagePrefix = strtolower(trim($unit['category_name'] ?? 'single_unit'));
+
+                                                                if ($unit['occupancy_status'] === 'Occupied') {
                                                                 ?>
-                                                                    <a class="dropdown-item" href="single_unit_details.php?details=<?php echo $unit['id']; ?>"><i class="bi bi-eye"></i> Details</a>
-                                                                    <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $unit['id']; ?>"><i class="bi bi-pen"></i> Edit</a>
-                                                                    <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $unit['id']; ?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
-                                                                    <a class="dropdown-item" data-attribute-unitid="<?= htmlspecialchars(encryptor('decrypt', $unit['id'])); ?>" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $unit['id']; ?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
+                                                                    <a class="dropdown-item"
+                                                                        href="<?= $pagePrefix ?>_details.php?details=<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-eye"></i> Details
+                                                                    </a>
+
+                                                                    <a class="dropdown-item"
+                                                                        href="edit_<?= $pagePrefix ?>_details.php?edit=<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-pen"></i> Edit
+                                                                    </a>
+
+                                                                    <a class="dropdown-item btn"
+                                                                        data-toggle="modal"
+                                                                        data-target="#meterReadingModal<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-speedometer"></i> Meter Reading
+                                                                    </a>
+
+                                                                    <a class="dropdown-item"
+                                                                        data-attribute-unitid="<?= htmlspecialchars(encryptor('decrypt', $unit['id'])); ?>"
+                                                                        href="#"
+                                                                        data-toggle="modal"
+                                                                        data-target="#markAsVacant<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-house-exclamation"></i> Mark As Vacant
+                                                                    </a>
+
                                                                 <?php
-                                                                } else if (htmlspecialchars($unit['occupancy_status']) == 'Vacant') {
+                                                                } elseif ($unit['occupancy_status'] === 'Vacant') {
                                                                 ?>
-                                                                    <a class="dropdown-item" href="single_unit_details.php?details=<?php echo $unit['id']; ?>"><i class="bi bi-eye"></i> Details</a>
-                                                                    <a class="dropdown-item" href="inspect_single_unit.php?inspect=<?php echo $unit['id']; ?>"><i class="bi bi-sliders"></i> Inspect</a>
-                                                                    <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $unit['id']; ?>"><i class="bi bi-pen"></i> Edit</a>
-                                                                    <a class="dropdown-item" href="rent_single_unit.php?rent=<?php echo $unit['id']; ?>"><i class="bi bi-person-fill-check"></i> Rent It</a>
-                                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#underMaintenance<?php echo $unit['id']; ?>"><i class="bi bi-house-gear"></i> Under Maintenance</a>
+
+                                                                    <a class="dropdown-item"
+                                                                        href="<?= $pagePrefix ?>_details.php?details=<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-eye"></i> Details
+                                                                    </a>
+
+                                                                    <a class="dropdown-item"
+                                                                        href="inspect_<?= $pagePrefix ?>.php?inspect=<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-sliders"></i> Inspect
+                                                                    </a>
+
+                                                                    <a class="dropdown-item"
+                                                                        href="edit_<?= $pagePrefix ?>_details.php?edit=<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-pen"></i> Edit
+                                                                    </a>
+
+                                                                    <a class="dropdown-item"
+                                                                        href="forms/rent_<?= $pagePrefix ?>.php?rent=<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-person-fill-check"></i> Rent It
+                                                                    </a>
+
+                                                                    <a class="dropdown-item"
+                                                                        href="#"
+                                                                        data-toggle="modal"
+                                                                        data-target="#underMaintenance<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-house-gear"></i> Under Maintenance
+                                                                    </a>
+
                                                                 <?php
-                                                                } else if (htmlspecialchars($unit['occupancy_status']) == 'Under Maintenance') {
+                                                                } elseif ($unit['occupancy_status'] === 'Under Maintenance') {
                                                                 ?>
-                                                                    <a class="dropdown-item" href="edit_single_unit_details.php?edit=<?php echo $unit['id']; ?>"><i class="bi bi-pen"></i> Edit</a>
-                                                                    <a class="dropdown-item" href="inspect_single_unit.php?inspect=<?php echo $unit['id']; ?>"><i class="bi bi-sliders"></i> Inspect</a>
-                                                                    <a class="dropdown-item" href="single_unit_details.php?details=<?php echo $unit['id']; ?>"><i class="bi bi-eye"></i> Details</a>
-                                                                    <a class="dropdown-item btn" data-toggle="modal" data-target="#meterReadingModal<?= $unit['id']; ?>"><i class="bi bi-speedometer"></i> Meter Reading</a>
-                                                                    <a class="dropdown-item" href="rent_single_unit.php?rent=<?php echo $unit['id']; ?>"><i class="bi bi-person-fill-check"></i> Rent It</a>
-                                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#markAsVacant<?php echo $unit['id']; ?>"><i class="bi bi-house-exclamation"></i> Mark As Vacant</a>
-                                                                <?php
-                                                                }
-                                                                ?>
+
+                                                                    <a class="dropdown-item"
+                                                                        href="edit_<?= $pagePrefix ?>_details.php?edit=<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-pen"></i> Edit
+                                                                    </a>
+
+                                                                    <a class="dropdown-item"
+                                                                        href="inspect_<?= $pagePrefix ?>.php?inspect=<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-sliders"></i> Inspect
+                                                                    </a>
+
+                                                                    <a class="dropdown-item"
+                                                                        href="<?= $pagePrefix ?>_details.php?details=<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-eye"></i> Details
+                                                                    </a>
+
+                                                                    <a class="dropdown-item btn"
+                                                                        data-toggle="modal"
+                                                                        data-target="#meterReadingModal<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-speedometer"></i> Meter Reading
+                                                                    </a>
+
+                                                                    <a class="dropdown-item"
+                                                                        href="rent_<?= $pagePrefix ?>.php?rent=<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-person-fill-check"></i> Rent It
+                                                                    </a>
+
+                                                                    <a class="dropdown-item"
+                                                                        href="#"
+                                                                        data-toggle="modal"
+                                                                        data-target="#markAsVacant<?= $unit['id']; ?>">
+                                                                        <i class="bi bi-house-exclamation"></i> Mark As Vacant
+                                                                    </a>
+
+                                                                <?php } ?>
+
                                                             </div>
                                                         </div>
+
                                                     </td>
                                                 </tr>
 
@@ -1326,7 +1404,7 @@ if (isset($_POST['submit_reading'])) {
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="js/main.js"></script>
+    <script type="mmodule" src="js/main.js"></script>
     <script src="../../../landlord/assets/main.js"></script>
 
 
@@ -1336,11 +1414,6 @@ if (isset($_POST['submit_reading'])) {
 
     <!-- open the vacate canvas -->
     <script>
-        function openVacateCanvas() {
-            console.log('yoyo');
-            const offcanvas = new bootstrap.Offcanvas(document.getElementById('vacateOffcanvas'));
-            offcanvas.show();
-        }
     </script>
 
     <script>
@@ -1383,12 +1456,6 @@ if (isset($_POST['submit_reading'])) {
 
         });
     </script>
-
-
-    <!-- plugin for pdf -->
-    <!-- Main Js File -->
-    <!-- Meter Readings JavaScript -->
-
 
 
 

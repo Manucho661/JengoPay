@@ -18,9 +18,9 @@ if (isset($_GET['add_multi_rooms']) && !empty($_GET['add_multi_rooms'])) {
                 $structure_type = $row['structure_type'];
                 $floors_no = $row['floors_no'];
                 $no_of_units = $row['no_of_units'];
-                $building_type = $row['building_type'];
+                $building_type = $row['category'];
                 $tax_rate = $row['tax_rate'];
-                $ownership_info = $row['ownership_info'];
+                $ownership_info = $row['ownership_mode'];
                 $first_name = $row['first_name'];
                 $last_name = $row['last_name'];
                 $id_number = $row['id_number'];

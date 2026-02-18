@@ -210,6 +210,12 @@ require_once 'actions/assignProvider.php';
     transform: translateY(-2px);
   }
 
+  .allRequests-btn:hover {
+    background: var(--accent-color) !important;
+    color: var(--primary-color) !important;
+    transform: translateY(-2px);
+  }
+
   /* Offcanvas Styles */
   .offcanvas {
     width: 500px !important;
@@ -253,6 +259,11 @@ require_once 'actions/assignProvider.php';
     color: #00192D;
     margin-bottom: 0.5rem;
   }
+  button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 </style>
 
 <body class="layout-fixed sidebar-expand-lg" style="background-color:#f4f6f9;">
@@ -315,18 +326,18 @@ require_once 'actions/assignProvider.php';
         </div>
 
         <div class="d-flex gap-2 flex-wrap justify-content-end">
+
           <button
             type="button"
             id="availabilityBtn"
             class="btn seTAvailable text-white fw-bold rounded-4"
             style="background: linear-gradient(135deg, #00192D, #002B5B); white-space: nowrap;"
             data-request-id="<?= htmlspecialchars($request['id']) ?>"
-            data-status="<?= htmlspecialchars($request['availability']) ?>">
+            data-status="<?= htmlspecialchars($request['availability']) ?>"
+            <?= strtolower($request['status']) === 'assigned' ? 'disabled' : '' ?>>
 
             <?= $request['availability'] === 'available' ? 'Set Unavailable' : 'Set Available' ?>
-
           </button>
-
 
           <button
             type="button"
@@ -343,6 +354,7 @@ require_once 'actions/assignProvider.php';
           </button>
 
         </div>
+
       </div>
 
 

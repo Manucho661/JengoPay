@@ -43,7 +43,7 @@ function populateAccountsTable(accounts) {
             <!-- Collapsible row -->
             <tr>
                 <td colspan="6" class="p-0">
-                    <div id="${collapseId}" class="collapse" data-supplier="${account.supplier}">
+                    <div id="${collapseId}" class="collapse" data-supplier_id="${account.supplier_id}" data-supplier="${account.supplier}">
                         <div class="details-loading text-muted p-2">Loading...</div>
                     </div>
                 </td>
@@ -78,12 +78,12 @@ function populateAccountsTable(accounts) {
             const collapseDiv = e.target;
             if (!collapseDiv.classList || !collapseDiv.classList.contains('collapse')) return;
 
-            const supplier = collapseDiv.getAttribute('data-supplier');
-            if (!supplier) return;
+            const supplier_id = collapseDiv.getAttribute('data-supplier_Id');
+            if (!supplier_id) return;
             if (collapseDiv.dataset.loaded) return;
 
             try {
-                const res = await fetch(`actions/getAccountDetails.php?supplier=${encodeURIComponent(supplier)}`);
+                const res = await fetch(`actions/getAccountDetails.php?supplier_id=${encodeURIComponent(supplier_id)}`);
                 const json = await res.json();
 
                 const detailsTable = `

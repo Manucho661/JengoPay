@@ -2,50 +2,51 @@
 session_start();
 require_once '../../db/connect.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/auth_check.php';
-?>
-<?php
-// the landlord
-$userId = $_SESSION['user']['id'];
+
+// landlord
+$userId = (int)($_SESSION['user']['id'] ?? 0);
+if ($userId <= 0) {
+  throw new Exception("Not authenticated.");
+}
 
 // Fetch landlord ID linked to the logged-in user
-$stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ?");
+$stmt = $pdo->prepare("SELECT id FROM landlords WHERE user_id = ? LIMIT 1");
 $stmt->execute([$userId]);
-$landlord = $stmt->fetch();
+$landlord = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Check if landlord exists for the user
 if (!$landlord) {
-    throw new Exception("Landlord account not found for this user.");
+  throw new Exception("Landlord account not found for this user.");
 }
 
-$landlord_id = $landlord['id']; // Store the landlord_id from the session
-
+$landlord_id = (int)$landlord['id'];
 
 // Capture filters
-$from_date    = $_GET['from_date'] ?? '';
-$to_date      = $_GET['to_date'] ?? '';
-$account_id   = $_GET['account_id'] ?? '';
-$account_code = $_GET['account_code'] ?? '';
+$from_date    = trim((string)($_GET['from_date'] ?? ''));   // YYYY-MM-DD
+$to_date      = trim((string)($_GET['to_date'] ?? ''));     // YYYY-MM-DD
+$account_code = trim((string)($_GET['account_code'] ?? '')); // from dropdown usually
 
-// Always restrict to landlord
-$where[] = "jl.landlord_id = :landlord_id";
-$params[':landlord_id'] = $landlord_id;
+// Build WHERE + params safely
+$where  = ["jl.landlord_id = :landlord_id"];
+$params = [":landlord_id" => $landlord_id];
 
-// Account filter (optional)
-if (!empty($account_id) || !empty($account_code)) {
-  $where[] = "(jl.account_id = :account_id OR a.account_code = :account_code)";
-  $params[':account_id']   = $account_id;
-  $params[':account_code'] = $account_code;
+// Date filters (optional)
+if ($from_date !== '') {
+  $where[] = "DATE(je.created_at) >= :from_date";
+  $params[":from_date"] = $from_date;
 }
 
-// Account + Landlord filter
-if (!empty($account_id) || !empty($account_code)) {
-  $where[] = "jl.landlord_id = :landlord_id AND (jl.account_id = :account_id OR a.account_code = :account_code)";
-  $params[':landlord_id']   = $landlord_id;
-  $params[':account_id']    = $account_id;
-  $params[':account_code']  = $account_code;
+if ($to_date !== '') {
+  $where[] = "DATE(je.created_at) <= :to_date";
+  $params[":to_date"] = $to_date;
 }
 
-$whereSql = $where ? "WHERE " . implode(" AND ", $where) : "";
+// Account filter (optional) - use ONE field (account_code)
+if ($account_code !== '') {
+  $where[] = "a.account_code = :account_code";
+  $params[":account_code"] = $account_code;
+}
+
+$whereSql = "WHERE " . implode(" AND ", $where);
 
 // General Ledger query
 $sql = "
@@ -61,12 +62,12 @@ $sql = "
     INNER JOIN journal_lines jl ON je.id = jl.journal_entry_id
     INNER JOIN chart_of_accounts a ON jl.account_id = a.account_code
     $whereSql
-    ORDER BY je.created_at, je.id
+    ORDER BY je.created_at DESC, je.id DESC
 ";
+
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $ledgerRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 
 // Accounts for dropdown filter
 $accounts = $pdo->query("
@@ -75,8 +76,9 @@ $accounts = $pdo->query("
     ORDER BY account_name ASC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
-$runningBalance = 0;
+$runningBalance = 0.0;
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -161,185 +163,9 @@ $runningBalance = 0;
     .app-wrapper {
       background-color: var(--light-bg);
     }
+    
 
-    .app-content-header {
-      background: linear-gradient(135deg, var(--primary-color) 0%, #003053 100%);
-      color: white;
-      padding: 1.5rem 0;
-      margin-bottom: 1.5rem;
-      border-radius: 0 0 10px 10px;
-    }
-
-    .card {
-      border: none;
-      border-radius: 10px;
-      box-shadow: var(--card-shadow);
-      margin-bottom: 1.5rem;
-    }
-
-    .card-header {
-      background-color: white;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      padding: 1rem 1.5rem;
-      border-radius: 10px 10px 0 0 !important;
-      font-weight: 600;
-    }
-
-    .btn-primary {
-      background-color: var(--primary-color);
-      border-color: var(--primary-color);
-    }
-
-    .btn-primary:hover {
-      background-color: #00243d;
-      border-color: #00243d;
-    }
-
-    .btn-outline-primary {
-      color: var(--primary-color);
-      border-color: var(--primary-color);
-    }
-
-    .btn-outline-primary:hover {
-      background-color: var(--primary-color);
-      border-color: var(--primary-color);
-    }
-
-    .table thead th {
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 1rem;
-    }
-
-    .table tbody td {
-      padding: 0.75rem 1rem;
-      vertical-align: middle;
-    }
-
-    .table-striped tbody tr:nth-of-type(odd) {
-      background-color: rgba(0, 25, 45, 0.03);
-    }
-
-    .table-hover tbody tr:hover {
-      background-color: rgba(0, 25, 45, 0.08);
-    }
-
-    .filter-card {
-      background-color: white;
-      border-radius: 10px;
-      padding: 1.5rem;
-      box-shadow: var(--card-shadow);
-      margin-bottom: 1.5rem;
-    }
-
-    .stats-card {
-      text-align: center;
-      padding: 1.5rem;
-      border-radius: 10px;
-      color: white;
-      margin-bottom: 1.5rem;
-    }
-
-    .stats-card.primary {
-      background: linear-gradient(135deg, var(--primary-color) 0%, #003053 100%);
-    }
-
-    .stats-card.success {
-      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    }
-
-    .stats-card.warning {
-      background: linear-gradient(135deg, var(--accent-color) 0%, #ffcd39 100%);
-    }
-
-    .stats-card.info {
-      background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
-    }
-
-    .stats-card .stats-value {
-      font-size: 2rem;
-      font-weight: 700;
-      margin: 0.5rem 0;
-    }
-
-    .stats-card .stats-label {
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
-
-    .form-control,
-    .form-select {
-      border-radius: 6px;
-      padding: 0.6rem 0.75rem;
-      border: 1px solid #dee2e6;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.2rem rgba(0, 25, 45, 0.25);
-    }
-
-    .export-buttons {
-      display: flex;
-      gap: 0.5rem;
-      justify-content: flex-end;
-      margin-bottom: 1rem;
-    }
-
-    .running-balance-positive {
-      color: #28a745;
-      font-weight: 600;
-    }
-
-    .running-balance-negative {
-      color: #dc3545;
-      font-weight: 600;
-    }
-
-    .badge-account {
-      background-color: rgba(0, 25, 45, 0.1);
-      color: var(--primary-color);
-      font-weight: 500;
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-    }
-
-    .page-title {
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .page-subtitle {
-      opacity: 0.8;
-      margin-bottom: 0;
-    }
-
-    .filter-actions {
-      display: flex;
-      gap: 0.5rem;
-      justify-content: flex-end;
-    }
-
-    @media (max-width: 768px) {
-      .export-buttons {
-        justify-content: flex-start;
-      }
-
-      .stats-card .stats-value {
-        font-size: 1.5rem;
-      }
-
-      .filter-actions {
-        flex-direction: column;
-      }
-
-      .filter-actions .btn {
-        width: 100%;
-      }
-    }
-    a{
+    a {
       text-decoration: none !important;
     }
   </style>
@@ -435,17 +261,28 @@ $runningBalance = 0;
           <div class="col-md-12">
             <!-- Ledger Table -->
             <div class="card border-0 ">
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">General Ledger Entries</h5>
-                <div class="export-buttons">
-                  <button class="btn btn-light" onclick="exportToExcel()">
-                    <i class="fas fa-file-excel me-2"></i> Export Excel
-                  </button>
-                  <button class="btn btn-light" onclick="exportToPDF()">
-                    <i class="fas fa-file-pdf me-2"></i> Export PDF
-                  </button>
+             
+                <div class="card-header d-flex justify-content-between align-items-center"
+                  style="background-color:#00192D; color:#fff;">
+
+                  <b>
+                    The General Ledger
+                    (<span class="text-warning"><?= date('d-M Y') ?></span>)
+                  </b>
+
+                  <!-- Export buttons -->
+                  <div class="export-icons">
+                    <button class="btn btn-sm me-2 pdfBtn2 text-dark bg-warning" title="Export PDF">
+                      <i class="bi bi-download"></i>
+                    </button>
+
+                    <button class="btn btn-sm me-2 pdfBtn2 text-dark bg-warning" title="Export Excel">
+                      <i class="bi bi-printer"></i>
+                    </button>
+                  </div>
+
                 </div>
-              </div>
+              
               <div class="card-body">
                 <div class="table-responsive">
                   <table class="table table-striped table-hover mb-0">
@@ -474,8 +311,8 @@ $runningBalance = 0;
                           </td>
                           <td><?= htmlspecialchars($row['description']) ?></td>
                           <td>
-                            <div><?= htmlspecialchars($row['account_name']) ?></div>
-                            <small class="text-muted"><?= htmlspecialchars($row['account_code']) ?></small>
+                            <div ><?= htmlspecialchars($row['account_name']) ?>(<span class="text-sucess"> <?= htmlspecialchars($row['account_code']) ?></span>)</div>
+                           
                           </td>
                           <td class="text-end"><?= number_format($row['debit'], 2) ?></td>
                           <td class="text-end"><?= number_format($row['credit'], 2) ?></td>
@@ -499,9 +336,7 @@ $runningBalance = 0;
           </div>
 
         </div>
-
-      </div>
-      <!--end::App Content-->
+        <!--end::App Content-->
     </main>
     <!--end::App Main-->
 

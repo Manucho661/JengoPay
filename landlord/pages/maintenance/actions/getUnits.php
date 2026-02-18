@@ -7,6 +7,10 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once '../../db/connect.php';
 
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
+
 try {
     $building_id = (int)($_GET['building_id'] ?? 0);
 

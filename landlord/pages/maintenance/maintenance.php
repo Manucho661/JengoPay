@@ -15,6 +15,8 @@ require_once "actions/submitRequest.php";
 require_once 'actions/getRequests.php';
 // include buildings
 require_once 'actions/getBuildings.php';
+// delete record
+require_once 'actions/deleteRecord.php';
 
 // Pagination logic
 $itemsPerPage = 5;
@@ -249,7 +251,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                           <option value="">All Buildings</option>
                           <?php foreach ($buildings as $building): ?>
                             <?php $bid = (string)(int)$building['id']; ?>
-                            <option value="<?= $bid ?>" <?= (($building_id ?? '') === $bid) ? 'selected' : '' ?>>
+                            <option value="<?= $bid ?>" <?= (($buildingId ?? '') === $bid) ? 'selected' : '' ?>>
                               <?= htmlspecialchars($building['building_name']) ?>
                             </option>
                           <?php endforeach; ?>
@@ -276,7 +278,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                           type="date"
                           name="date_from"
                           class="form-control"
-                          value="<?= htmlspecialchars($date_from ?? '') ?>">
+                          value="<?= htmlspecialchars($dateFrom ?? '') ?>">
                       </div>
 
                       <div class="col-auto filter-col">
@@ -285,7 +287,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                           type="date"
                           name="date_to"
                           class="form-control"
-                          value="<?= htmlspecialchars($date_to ?? '') ?>">
+                          value="<?= htmlspecialchars($dateTo ?? '') ?>">
                       </div>
 
                     </div>
@@ -293,7 +295,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
 
                   <div class="d-flex gap-2 justify-content-end">
                     <!-- Replace with your real page name -->
-                    <a href="expenses.php" class="btn btn-secondary">
+                    <a href="maintenance.php" class="btn btn-secondary">
                       <i class="fas fa-redo"></i> Reset
                     </a>
 
@@ -343,6 +345,7 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                 <span id="displayed_building">All Requests</span> &nbsp; |&nbsp;
                 <span style="color:#FFC107"> <span id="enteries"><?= count($currentRequests) ?></span> entries</span>
               </h3>
+      
               <?php if (empty($currentRequests)): ?>
                 <!-- Empty State Message -->
                 <div class="text-center py-5" style="margin: 3rem 0;">
@@ -427,13 +430,20 @@ $currentRequests = array_slice($requests, $offset, $itemsPerPage);
                                 <i class="bi bi-eye-fill"></i>
                               </button>
 
-                              <button
-                                type="button"
-                                onclick="event.stopPropagation(); /* delete handler here */"
-                                class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
-                                style="background-color:#ec5b53; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
-                                <i class="bi bi-trash-fill"></i>
-                              </button>
+                              <!-- Delete form -->
+                              <form method="POST" action="" style="display:inline;">
+                                <input type="hidden" name="request_id" value="<?= (int)$req['id'] ?>">
+                                <button
+                                  type="submit"
+                                  name="delete_request"
+                                  value="1"
+                                  onclick="event.stopPropagation(); return confirm('Are you sure you want to delete this request?');"
+                                  class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                  style="background-color:#ec5b53; color:white; border:none; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-weight:500;">
+                                  <i class="bi bi-trash-fill"></i>
+                                </button>
+                              </form>
+
                             </div>
                           </td>
                         </tr>

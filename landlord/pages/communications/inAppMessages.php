@@ -71,6 +71,22 @@ try {
 
     }
 
+    :root {
+      --sidebar-width: 260px;
+      --main-color: #00192D;
+      --accent-color: #FFC107;
+      --white-color: #FFFFFF;
+      --light-bg: #f8f9fa;
+      --success-color: #27ae60;
+      --danger-color: #e74c3c;
+    }
+
+    .offcanvas-header {
+      background: var(--main-color);
+      color: white;
+      padding: 20px;
+    }
+
     .app-main {
       position: relative;
       display: flex;
@@ -557,22 +573,23 @@ try {
       <!--begin::Container-->
       <div class="container-fluid">
         <!--begin::Row-->
-        <div class="row">
-          <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb" style="">
+            <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/dashboard.php" style="text-decoration: none;">Dashboard</a></li>
+            <li class="breadcrumb-item active">In App Messages</li>
+          </ol>
+        </nav>
 
-            <h3 class="mb-0 contact_section_header"> <i class="fas fa-comments title-icon"></i></i> In App Messages</h3>
-          </div>
-        </div>
-
-        <!-- Second Row -->
-        <div class="row">
-          <div class="col-md-6">
-            <p class="text-muted">Send messages, receive messages and create announcements</p>
+        <!--First Row-->
+        <div class="row align-items-center mb-3">
+          <div class="col-12 d-flex align-items-center">
+            <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+            <h3 class="mb-0 ms-3">In App Messages</h3>
           </div>
         </div>
 
         <!-- message stats -->
-        <div class="message-stats">
+        <div class="message-stats" style="border-left: solid 4px #FFC107 !important;">
           <div class="row">
 
             <div class="col-md-3 stat-item">
@@ -682,7 +699,7 @@ try {
 
                       <tbody id="conversationTableBody">
                         <?php if (empty($conversations)): ?>
-                          <tr >
+                          <tr>
                             <td colspan="5">
                               <div class="text-center py-5">
                                 <div class="mb-3" style="font-size:42px; opacity:.85;">
@@ -791,9 +808,20 @@ try {
   <div class="modal fade" id="newChatModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Start New Conversation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+        <div class="modal-header d-flex align-items-center"
+          style="background: linear-gradient(135deg, #00192D 0%, #003d5c 100%)">
+
+          <h5 class="modal-title text-white mb-0" id="availabilityModalLabel">
+            <i class="fas fa-plus-circle"></i> Start New Conversation
+          </h5>
+
+          <button type="button"
+            class="btn-close bg-white"
+            data-bs-dismiss="modal"
+            aria-label="Close">
+          </button>
+
         </div>
 
         <div class="modal-body">
@@ -850,7 +878,7 @@ try {
                   <!-- this is what PHP needs -->
                   <input type="hidden" id="tenantIdInput" name="tenant_id" />
                 </div>
-                
+
                 <div class="col-12 text-danger" id="tenantHelp" style="display:none;">
                   <i><small id="tenantHelp" class="text-danger d-block mt-1" style="color:red;"></small></i>
                 </div>

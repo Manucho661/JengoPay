@@ -19,6 +19,8 @@ $monthlyTotals = array_fill(1, 12, 0);
 require_once 'actions/getSuppliers.php';
 // create expenses script
 require_once 'actions/createExpense.php';
+// create expenses script
+require_once 'actions/createExpense1.php';
 //Include expense Batches
 require_once 'actions/getExpenses.php';
 // Include expense accounts
@@ -627,7 +629,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                                     type="date"
                                                     name="date_from"
                                                     class="form-control"
-                                                    value="<?= htmlspecialchars($date_from ?? '') ?>">
+                                                    value="<?= htmlspecialchars($dateFrom ?? '') ?>">
                                             </div>
 
                                             <div class="col-auto filter-col">
@@ -636,7 +638,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                                     type="date"
                                                     name="date_to"
                                                     class="form-control"
-                                                    value="<?= htmlspecialchars($date_to ?? '') ?>">
+                                                    value="<?= htmlspecialchars($dateTo ?? '') ?>">
                                             </div>
 
                                         </div>
@@ -1062,7 +1064,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                         <button type="button" class="btn btn-secondary btn-lg" onclick="saveAsDraft()">
                             <i class="fas fa-save"></i> Save as Draft
                         </button>
-                        <button type="submit" name="create_invoice" class="btn btn-success btn-lg">
+                        <button type="submit" name="create_expenseOne" class="btn btn-success btn-lg">
                             <i class="fas fa-paper-plane"></i> Confirm and Send
                         </button>
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
@@ -1951,7 +1953,375 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                 location.reload();
             });
     </script>
+    <script>
+        let itemCounter = 1;
 
+        // Building to Units mapping
+        const buildingUnits = {
+            '1': [{
+                    id: '101',
+                    name: 'Unit 101',
+                    tenant: 'Sarah Johnson'
+                },
+                {
+                    id: '102',
+                    name: 'Unit 102',
+                    tenant: 'Michael Chen'
+                },
+                {
+                    id: '103',
+                    name: 'Unit 103',
+                    tenant: 'Vacant'
+                }
+            ],
+            '2': [{
+                    id: '201',
+                    name: 'Unit 201',
+                    tenant: 'Emma Wilson'
+                },
+                {
+                    id: '202',
+                    name: 'Unit 202',
+                    tenant: 'James Anderson'
+                },
+                {
+                    id: '203',
+                    name: 'Unit 203',
+                    tenant: 'Vacant'
+                }
+            ],
+            '3': [{
+                    id: '301',
+                    name: 'Unit 301',
+                    tenant: 'Lisa Brown'
+                },
+                {
+                    id: '302',
+                    name: 'Unit 302',
+                    tenant: 'Robert Taylor'
+                }
+            ]
+        };
+
+        // Item descriptions
+        const itemDescriptions = {
+            'rent': 'Monthly Rent - February 2024',
+            'water': 'Water Bill',
+            'electricity': 'Electricity Bill',
+            'security': 'Security Fee',
+            'maintenance': 'Maintenance Fee',
+            'parking': 'Parking Fee',
+            'other': ''
+        };
+
+        // Update units when building is selected
+        function updateUnitsForBuilding(buildingId) {
+            const unitSelect = document.getElementById('unitSelect');
+            const tenantSelect = document.getElementById('tenantSelect');
+
+            unitSelect.innerHTML = '<option value="">Select Unit</option>';
+            tenantSelect.innerHTML = '<option value="">Select unit first</option>';
+            tenantSelect.disabled = true;
+
+            if (buildingId && buildingUnits[buildingId]) {
+                buildingUnits[buildingId].forEach(unit => {
+                    const option = document.createElement('option');
+                    option.value = unit.id;
+                    option.textContent = unit.name;
+                    option.dataset.tenant = unit.tenant;
+                    unitSelect.appendChild(option);
+                });
+                unitSelect.disabled = false;
+            } else {
+                unitSelect.disabled = true;
+            }
+        }
+
+        // Update tenant when unit is selected
+        function updateTenantForUnit(unitId) {
+            const unitSelect = document.getElementById('unitSelect');
+            const tenantSelect = document.getElementById('tenantSelect');
+            const selectedOption = unitSelect.options[unitSelect.selectedIndex];
+
+            if (unitId && selectedOption) {
+                const tenantName = selectedOption.dataset.tenant;
+                tenantSelect.innerHTML = '';
+
+                if (tenantName && tenantName !== 'Vacant') {
+                    const option = document.createElement('option');
+                    option.value = unitId;
+                    option.textContent = tenantName;
+                    option.selected = true;
+                    tenantSelect.appendChild(option);
+                    tenantSelect.disabled = false;
+                } else {
+                    tenantSelect.innerHTML = '<option value="">Unit is vacant</option>';
+                    tenantSelect.disabled = true;
+                }
+            } else {
+                tenantSelect.innerHTML = '<option value="">Select unit first</option>';
+                tenantSelect.disabled = true;
+            }
+        }
+
+        // Update item description when item is selected
+        function updateItemDescription(select) {
+            const row = select.closest('tr');
+            const descInput = row.querySelector('.item-desc');
+            const itemValue = select.value;
+
+            if (itemDescriptions[itemValue]) {
+                descInput.value = itemDescriptions[itemValue];
+            }
+        }
+
+        // Toggle column selector dropdown
+        function toggleColumnSelector() {
+            const dropdown = document.getElementById('columnDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('columnDropdown');
+            const selector = document.querySelector('.column-selector');
+
+            if (selector && !selector.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Toggle column visibility
+        function toggleColumn(columnName) {
+            const columns = document.querySelectorAll(`.col-${columnName}`);
+            const checkbox = document.getElementById(`col-${columnName}`);
+
+            columns.forEach(col => {
+                col.style.display = checkbox.checked ? '' : 'none';
+            });
+        }
+
+        // Select/deselect all invoices
+        function toggleSelectAll(checkbox) {
+            const checkboxes = document.querySelectorAll('.invoice-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = checkbox.checked;
+            });
+            updateBulkActions();
+        }
+
+        // Update bulk actions visibility
+        function updateBulkActions() {
+            const checkboxes = document.querySelectorAll('.invoice-checkbox:checked');
+            const bulkBar = document.getElementById('bulkActionsBar');
+            const count = document.getElementById('selectedCount');
+
+            count.textContent = checkboxes.length;
+            bulkBar.classList.toggle('show', checkboxes.length > 0);
+        }
+
+        // Add invoice item row
+        function addInvoiceItem() {
+            const tbody = document.getElementById('invoiceItemsBody');
+            const row = document.createElement('tr');
+            row.className = 'item-row';
+            row.innerHTML = `
+                <td>
+                    <select class="form-select form-select-sm item-name" name="items[${itemCounter}][item]" onchange="updateItemDescription(this)" required>
+                        <option value="">Select Item</option>
+                        <option value="rent">Rent</option>
+                        <option value="water">Water</option>
+                        <option value="electricity">Electricity</option>
+                        <option value="security">Security</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="parking">Parking</option>
+                        <option value="other">Other</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm item-desc" name="items[${itemCounter}][description]" placeholder="Item description" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm item-qty" name="items[${itemCounter}][quantity]" value="1" min="1" onchange="calculateRowTotal(this)" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm item-price" name="items[${itemCounter}][price]" placeholder="0.00" step="0.01" onchange="calculateRowTotal(this)" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm item-discount" name="items[${itemCounter}][discount]" value="0" min="0" step="0.01" onchange="calculateRowTotal(this)">
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm item-tax" name="items[${itemCounter}][tax]" value="16" min="0" step="0.01" onchange="calculateRowTotal(this)">
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm item-amount" name="items[${itemCounter}][amount]" value="0.00" readonly>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem(this)" style="padding: 2px 6px;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+            itemCounter++;
+        }
+
+        // Remove invoice item row
+        function removeItem(button) {
+            const row = button.closest('tr');
+            row.remove();
+            calculateInvoiceTotal();
+        }
+
+        // Calculate row total
+        function calculateRowTotal(input) {
+            calculateInvoiceTotal();
+        }
+
+        // Calculate invoice total
+        function calculateInvoiceTotal() {
+            let subtotal = 0;
+            let totalDiscount = 0;
+            let totalTax = 0;
+
+            const rows = document.querySelectorAll('.item-row');
+
+            rows.forEach(row => {
+                const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+                const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                const discount = parseFloat(row.querySelector('.item-discount').value) || 0;
+                const taxRate = parseFloat(row.querySelector('.item-tax').value) || 0;
+
+                const lineSubtotal = qty * price;
+                const lineDiscount = discount;
+                const afterDiscount = lineSubtotal - lineDiscount;
+                const lineTax = afterDiscount * (taxRate / 100);
+                const lineTotal = afterDiscount + lineTax;
+
+                row.querySelector('.item-amount').value = lineTotal.toFixed(2);
+
+                subtotal += lineSubtotal;
+                totalDiscount += lineDiscount;
+                totalTax += lineTax;
+            });
+
+            const total = subtotal - totalDiscount + totalTax;
+
+            document.getElementById('invoiceSubtotal').textContent = 'KES ' + subtotal.toLocaleString('en-US', {
+                minimumFractionDigits: 2
+            });
+            document.getElementById('invoiceDiscount').textContent = 'KES ' + totalDiscount.toLocaleString('en-US', {
+                minimumFractionDigits: 2
+            });
+            document.getElementById('invoiceTax').textContent = 'KES ' + totalTax.toLocaleString('en-US', {
+                minimumFractionDigits: 2
+            });
+            document.getElementById('invoiceTotal').textContent = 'KES ' + total.toLocaleString('en-US', {
+                minimumFractionDigits: 2
+            });
+        }
+
+        // Preview invoice
+        function previewInvoice() {
+            // Get form data
+            const invoiceNumber = document.querySelector('input[name="invoice_number"]').value;
+            const issueDate = document.querySelector('input[name="issue_date"]').value;
+            const dueDate = document.querySelector('input[name="due_date"]').value;
+            const building = document.querySelector('select[name="building"]').selectedOptions[0]?.text || '';
+            const unit = document.querySelector('select[name="unit"]').selectedOptions[0]?.text || '';
+            const tenant = document.querySelector('select[name="tenant"]').selectedOptions[0]?.text || '';
+
+            // Populate preview
+            document.getElementById('preview-invoice-number').textContent = invoiceNumber;
+            document.getElementById('preview-issue-date').textContent = new Date(issueDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('preview-due-date').textContent = new Date(dueDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('preview-tenant').textContent = tenant;
+            document.getElementById('preview-unit').textContent = unit;
+            document.getElementById('preview-building').textContent = building;
+
+            // Populate items
+            const previewItems = document.getElementById('preview-items');
+            previewItems.innerHTML = '';
+
+            const rows = document.querySelectorAll('.item-row');
+            rows.forEach(row => {
+                const itemName = row.querySelector('.item-name').selectedOptions[0]?.text || '';
+                const desc = row.querySelector('.item-desc').value;
+                const qty = row.querySelector('.item-qty').value;
+                const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                const discount = parseFloat(row.querySelector('.item-discount').value) || 0;
+                const tax = parseFloat(row.querySelector('.item-tax').value) || 0;
+                const amount = row.querySelector('.item-amount').value;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${itemName}</td>
+                    <td>${desc}</td>
+                    <td class="text-end">${qty}</td>
+                    <td class="text-end">KES ${price.toFixed(2)}</td>
+                    <td class="text-end">KES ${discount.toFixed(2)}</td>
+                    <td class="text-end">${tax}%</td>
+                    <td class="text-end">KES ${amount}</td>
+                `;
+                previewItems.appendChild(tr);
+            });
+
+            // Populate totals
+            document.getElementById('preview-subtotal').textContent = document.getElementById('invoiceSubtotal').textContent;
+            document.getElementById('preview-discount').textContent = document.getElementById('invoiceDiscount').textContent;
+            document.getElementById('preview-tax').textContent = document.getElementById('invoiceTax').textContent;
+            document.getElementById('preview-total').textContent = document.getElementById('invoiceTotal').textContent;
+
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('invoicePreviewModal'));
+            modal.show();
+        }
+
+        // Continue editing
+        function continueEditing() {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('invoicePreviewModal'));
+            modal.hide();
+        }
+
+        // Save as draft
+        function saveAsDraft() {
+            alert('Invoice saved as draft!\n\nIn a real application, this would save the invoice with status "Draft".');
+        }
+
+        // Confirm and send
+        function confirmAndSend() {
+            if (confirm('Are you sure you want to send this invoice to the tenant?')) {
+                alert('Invoice sent successfully!\n\nIn a real application, this would:\n- Save the invoice\n- Send via email/SMS\n- Update status to "Sent"');
+
+                // Close modals
+                const previewModal = bootstrap.Modal.getInstance(document.getElementById('invoicePreviewModal'));
+                if (previewModal) previewModal.hide();
+
+                const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('createInvoiceOffcanvas'));
+                if (offcanvas) offcanvas.hide();
+            }
+        }
+
+        // View invoice
+        function viewInvoice(invoiceId) {
+            alert(`Opening invoice ${invoiceId}...\n\nIn a real application, this would open the invoice details page or PDF preview.`);
+        }
+
+        // Delete invoice
+        function deleteInvoice(invoiceId) {
+            if (confirm(`Are you sure you want to delete invoice ${invoiceId}?\n\nThis action cannot be undone.`)) {
+                alert(`Invoice ${invoiceId} deleted!\n\nIn a real application, this would delete the invoice from the database.`);
+            }
+        }
+    </script>
 </body>
 <!--end::Body-->
 

@@ -1,13 +1,12 @@
-<?php
-require_once '../../db/connect.php'; // include your PDO connection
+<?php 
+require_once '../../db/connect.php';
 
 set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
 
-// Only allow POST request
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['assignProvider'])) {
-    return; // do nothing on GET
+    return;
 }
 
 try {
@@ -22,9 +21,10 @@ try {
 
     $pdo->beginTransaction();
 
-    // 1) Insert assignment
+    // 1️⃣ Insert assignment
     $stmt = $pdo->prepare("
-        INSERT INTO maintenance_request_assignments (maintenance_request_id, service_provider_id)
+        INSERT INTO maintenance_request_assignments 
+        (maintenance_request_id, service_provider_id)
         VALUES (:maintenance_request_id, :service_provider_id)
     ");
     $stmt->execute([
@@ -32,11 +32,12 @@ try {
         ':service_provider_id'    => (int)$providerId,
     ]);
 
-    // 2) Update main request: assigned provider, status, and assigned_at
+    // 2️⃣ Update maintenance request (ADDED availability)
     $stmt2 = $pdo->prepare("
         UPDATE maintenance_requests
         SET assigned_to_provider_id = :provider_id,
             status = 'Assigned',
+            availability = 'Unavailable',
             assigned_at = NOW()
         WHERE id = :request_id
     ");
@@ -45,7 +46,7 @@ try {
         ':request_id'  => (int)$requestId,
     ]);
 
-    // 3) Update proposal status to 'Accepted'
+    // 3️⃣ Accept proposal
     $stmt3 = $pdo->prepare("
         UPDATE maintenance_request_proposals
         SET status = 'Accepted'
@@ -64,7 +65,7 @@ try {
 } catch (Throwable $e) {
     $pdo->rollBack();
 
-    $_SESSION['error'] = 'Failed to assign the provider and update the proposal status: ' . $e->getMessage();
+    $_SESSION['error'] = 'Failed to assign the provider: ' . $e->getMessage();
     header('Location: ' . $_SERVER['REQUEST_URI']);
     exit;
 }

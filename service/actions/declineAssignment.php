@@ -37,9 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['decline_assignment'])
             }
 
             $providerId = (int) $provider['id'];
-            var_dump($proposalId);
-            exit;
-
+           
             // 2) Get maintenance_request_id from proposal row (and verify it belongs to this provider, if you store that)
             // NOTE: Change `service_provider_id` below if your proposals table uses a different column name (e.g. provider_id)
             $stmtGet = $pdo->prepare("
@@ -54,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['decline_assignment'])
                 ':provider_id' => $providerId
             ]);
             $proposal = $stmtGet->fetch(PDO::FETCH_ASSOC);
+
 
             if (!$proposal) {
                 throw new Exception('Proposal not found (or not owned by you).');
@@ -86,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['decline_assignment'])
 
             // 5) Update assignment status to declined where status is assigned (for that request)
             $stmt3 = $pdo->prepare("
-                UPDATE maintenance_request_assignment
+                UPDATE maintenance_request_assignments
                 SET status = 'declined'
                 WHERE maintenance_request_id = :request_id
                   AND status = 'assigned'
@@ -98,7 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['decline_assignment'])
             $_SESSION['success'] = 'Assignment declined successfully.';
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
-
         } catch (Throwable $e) {
             if ($pdo->inTransaction()) $pdo->rollBack();
             $error = 'Something went wrong while declining the assignment.';
