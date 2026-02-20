@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_unit'])) {
         $_SESSION['error'] =
             'Failed to create the unit: ' . $e->getMessage();
 
-        header('Location: single_units.php');
+        header('Location: /jengopay/landlord/pages/units/units.php');
         exit;
     }
 }

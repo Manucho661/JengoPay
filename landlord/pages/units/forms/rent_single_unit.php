@@ -20,7 +20,7 @@ $purpose = '';
 $unit_category = '';
 $occupancy_status = '';
 
-$id="";
+$id = "";
 include_once 'processes/encrypt_decrypt_function.php';
 
 if (isset($_GET['rent']) && !empty($_GET['rent'])) {
@@ -59,7 +59,7 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
     }
 }
 
-var_dump($id);
+
 // actions
 require_once "../actions/rent_single_unit.php";
 
@@ -242,82 +242,78 @@ require_once "../actions/rent_single_unit.php";
 
         <!--begin::App Main-->
         <main class="main">
-            <div class="content-wrapper">
-                <!-- Main content -->
-                <section class="content">
-                    <div class="container-fluid">
-                        <!-- Get Some Details About the Unit and make Cards for it -->
-                        <div class="card shadow-sm">
-                            <div class="card-header">
-                                <b>Overview</b>
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                                            class="fas fa-minus"></i></button>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3 col-sm-6 col-12">
-                                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                            <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                                                    class="fas fa-home"></i></span>
-                                            <div class="info-box-content">
-                                                <span class="info-box-text">Unit No</span>
-                                                <span class="info-box-number"><?= htmlspecialchars($unit_number); ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-sm-6 col-12">
-                                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                            <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                                                    class="fa fa-table"></i></span>
-                                            <div class="info-box-content">
-                                                <span class="info-box-text">Unit Floor</span>
-                                                <span class="info-box-number"><?= htmlspecialchars($location); ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-sm-6 col-12">
-                                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                            <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                                                    class="fas fa-building"></i></span>
-                                            <div class="info-box-content">
-                                                <span class="info-box-text">Building</span>
-                                                <span class="info-box-number"><?= htmlspecialchars($building_name); ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-sm-6 col-12">
-                                        <div class="info-box shadow" style="border:1px solid rgb(0,25,45,.3);">
-                                            <span class="info-box-icon" style="background-color:#00192D; color:#fff;"><i
-                                                    class="fas fa-hotel"></i></span>
-                                            <div class="info-box-content">
-                                                <span class="info-box-text">Rental Purpose</span>
-                                                <span class="info-box-number"><?= htmlspecialchars($purpose); ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- A Simple Callout telling you to type important information -->
-                        <div class="callout callout-danger shadow" id="callOutSection">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true"
-                                id="closeCallOut">&times;</button>
-                            <p style="font-weight:bold;"><span
-                                    style="background-color:#cc0001; color:#fff; padding:3px; border-radius:4px;">Add Tenant!</span> Enter
-                                All the Required Relevant Tenant Details in Order to Rent out this
-                                Unit.</p>
-                        </div>
-                        <!-- Form Start -->
-                        <?php include_once '../../includes/tenant_form.php'; ?>
+
+
+            <div class="container-fluid">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" style="">
+                        <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/Dashboard/index2.php" style="text-decoration: none;">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="/Jengopay/landlord/pages/units/unit.php" style="text-decoration: none;">Units</a></li>
+                        <li class="breadcrumb-item active">Rent single unit</li>
+                    </ol>
+                </nav>
+
+                <!--First Row-->
+                <div class="row align-items-center mb-4">
+                    <div class="col-12 d-flex align-items-center">
+                        <span style="width:5px;height:28px;background:#F5C518;" class="rounded"></span>
+                        <h3 class="mb-0 ms-3">Rent single unit</h3>
                     </div>
-                </section>
+                </div>
 
+                <div class="row">
+                    <div class="row mb-4">
+                        <div class="col-md-3 col-sm-6 col-12">
+                            <div class="stat-card d-flex align-items-center rounded-2">
+                                <div>
+                                    <i class="fas fa-building me-3 text-warning"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0" style="font-weight: bold;">Unit No</p>
+                                    <h3><?= htmlspecialchars($unit_number); ?></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-12">
+                            <div class="stat-card d-flex align-items-center rounded-2">
+                                <div>
+                                    <i class="fas fa-city me-3 text-warning"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0" style="font-weight: bold;">Unit Floor</p>
+                                    <h3><?= htmlspecialchars($location); ?></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-12">
+                            <div class="stat-card d-flex align-items-center rounded-2">
+                                <div>
+                                    <i class="fas fa-house-damage me-3 text-warning"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0" style="font-weight: bold;">Building</p>
+                                    <h3><?= htmlspecialchars($building_name); ?></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-12">
+                            <div class="stat-card d-flex align-items-center rounded-2">
+                                <div>
+                                    <i class="fas fa-city me-3 text-warning"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0" style="font-weight: bold;">Number of Units</p>
+                                    <h3><?= htmlspecialchars($purpose); ?></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-
-
+                <!-- Form Start -->
+                <?php include_once '../includes/tenant_form.php'; ?>
             </div>
+
         </main>
         <!--end::App Main-->
 

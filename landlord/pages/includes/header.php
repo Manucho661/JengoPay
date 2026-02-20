@@ -41,7 +41,12 @@
         // echo $e->getMessage();
     }
     ?>
-    <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/balancesheet/actions/getEquity.php'; ?>
+    <!-- actions -->
+    <?php
+    require_once 'actions/getUnreadMessages.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/Jengopay/landlord/pages/financials/balancesheet/actions/getEquity.php';
+    ?>
+
     <div style="display: flex; align-items: center; gap: 1rem;">
         <div class="hamburger" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
@@ -96,7 +101,7 @@
     <div class="header-right">
         <div class="notification-icon" onclick="toggleNotifications()">
             <i class="fas fa-envelope"></i>
-            <span class="notification-badge">5</span>
+            <span class="notification-badge"><?= $totalUnreadMessages ?></span>
         </div>
 
         <div class="notification-icon">

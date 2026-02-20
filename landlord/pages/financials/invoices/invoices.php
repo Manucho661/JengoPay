@@ -10,23 +10,9 @@ unset($_SESSION['error'], $_SESSION['success']);
 
 // actions
 require_once 'actions/createInvoice.php';
-/* -----------------------------
-   FETCH REVENUE ACCOUNTS
------------------------------ */
-try {
-  $stmt = $pdo->prepare("
-        SELECT account_code, account_name
-        FROM chart_of_accounts
-        WHERE account_type = 'Revenue'
-        ORDER BY account_name ASC
-    ");
-  $stmt->execute();
-  $accountItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-  error_log("Error fetching revenue accounts: " . $e->getMessage());
-  $accountItems = [];
-}
 
+// Include expense accounts
+require_once 'actions/getinvoiceAccounts.php';
 /* -----------------------------
    INVOICE NUMBER GENERATION
 ----------------------------- */
@@ -103,34 +89,34 @@ $stmt = $pdo->query("
          WHERE p.invoice_id = i.id) AS paid_amount,
         
         -- Invoice items totals
-        (SELECT COALESCE(SUM(unit_price * quantity), 0) 
+        (SELECT COALESCE(SUM(unit_price * qty), 0) 
          FROM invoice_items 
          WHERE invoice_id = i.id) AS items_subtotal,
         
-        (SELECT COALESCE(SUM(tax_amount), 0) 
+        (SELECT COALESCE(SUM(taxes), 0) 
          FROM invoice_items 
          WHERE invoice_id = i.id) AS items_taxes,
         
-        (SELECT COALESCE(SUM(total_price), 0) 
+        (SELECT COALESCE(SUM(item_total), 0) 
          FROM invoice_items 
          WHERE invoice_id = i.id) AS items_total,
         
         -- Final display values
         CASE
             WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = i.id)
-            THEN (SELECT COALESCE(SUM(unit_price * quantity), 0) FROM invoice_items WHERE invoice_id = i.id)
+            THEN (SELECT COALESCE(SUM(unit_price * qty), 0) FROM invoice_items WHERE invoice_id = i.id)
             ELSE i.subtotal
         END AS display_subtotal,
         
         CASE
             WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = i.id)
-            THEN (SELECT COALESCE(SUM(tax_amount), 0) FROM invoice_items WHERE invoice_id = i.id)
+            THEN (SELECT COALESCE(SUM(taxes), 0) FROM invoice_items WHERE invoice_id = i.id)
             ELSE i.taxes
         END AS display_taxes,
         
         CASE
             WHEN EXISTS (SELECT 1 FROM invoice_items WHERE invoice_id = i.id)
-            THEN (SELECT COALESCE(SUM(total_price), 0) FROM invoice_items WHERE invoice_id = i.id)
+            THEN (SELECT COALESCE(SUM(item_total), 0) FROM invoice_items WHERE invoice_id = i.id)
             ELSE i.total
         END AS display_total
         
@@ -217,6 +203,12 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
       padding: 12px 15px;
       border-bottom: 1px solid #e2e8f0;
       transition: background-color 0.2s ease;
+    }
+
+    .invoice-items-table thead th {
+      background: rgba(0, 25, 45, 0.05);
+      color: var(--main-color);
+      font-size: 12px;
     }
 
     .invoice-item:hover {
@@ -1559,7 +1551,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- ModaLS and offcanvas -->
     <!-- Create Invoice Off-canvas -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="createInvoiceOffcanvas" style="width: 800px !important;">
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="createInvoiceOffcanvas" style="width: 900px !important;">
       <div class="offcanvas-header" style="background: var(--main-color); color: white;">
         <h5 class="offcanvas-title" style="color: white;">
           <i class="fas fa-plus-circle"></i> Create New Invoice
@@ -1593,10 +1585,12 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <select name="unit_id" class="form-select" id="unitSelect" onchange="updateTenantForUnit(this.value)" required disabled>
                 <option value="">Select building first</option>
               </select>
+              <small id="noUnitMessage" class="text-danger" style="display:none; font-style: italic;"><i class="text-danger">No unit found in that building, please select another building</i></small>
             </div>
             <div class="mb-3">
               <label class="form-label">Tenant *</label>
-              <input class="form-control" id="tenantNameInput" type="text" readonly />
+              <input class="form-control" id="tenantNameInput" type="text" placeholder="Select unit first" readonly />
+              <small id="noTenantMessage" class="text-danger" style="display:none; font-style: italic;"><i class="text-danger">No unit found in that building, please select another building</i></small>
               <input type="hidden" id="tenantIdInput" name="tenant_id" />
             </div>
             <div class="row g-3">
@@ -1620,12 +1614,12 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <table class="table invoice-items-table table-sm" id="invoiceItemsTable">
                 <thead>
                   <tr>
-                    <th style="width: 150px;">Item</th>
-                    <th>Description</th>
+                    <th style="width: 170px;">Item</th>
+                    <th style="width:100px;">Description</th>
                     <th style="width: 80px;">Quantity</th>
                     <th style="width: 100px;">Price</th>
                     <th style="width: 80px;">Discount</th>
-                    <th style="width: 70px;">Tax %</th>
+                    <th style="width: 135px;">Tax %</th>
                     <th style="width: 100px;">Amount</th>
                     <th style="width: 40px;"></th>
                   </tr>
@@ -1633,21 +1627,22 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <tbody id="invoiceItemsBody">
                   <tr class="item-row">
                     <td>
-                      <select class="form-select form-select-sm item-name" name="items[0][item]" onchange="updateItemDescription(this)" required>
-                        <option value="">Select Item</option>
-                        <option value="rent">Rent</option>
-                        <option value="water">Water</option>
-                        <option value="electricity">Electricity</option>
-                        <option value="security">Security</option>
-                        <option value="maintenance">Maintenance</option>
-                        <option value="parking">Parking</option>
-                        <option value="other">Other</option>
+                      <select class="form-select form-select-sm item-account-code js-account-items"
+                        name="items[0][account_code]"
+                        onchange="updateItemDescription(this)" required>
+                        <?php foreach ($accountItems as $item): ?>
+                          <option value="<?= htmlspecialchars($item['account_code']) ?>">
+                            <?= htmlspecialchars($item['account_name']) ?>
+                          </option>
+                        <?php endforeach; ?>
                       </select>
+
                     </td>
                     <td>
                       <input type="text" class="form-control form-control-sm item-desc" name="items[0][description]" placeholder="Item description" required>
                     </td>
                     <td>
+
                       <input type="number" class="form-control form-control-sm item-qty" name="items[0][quantity]" value="1" min="1" onchange="calculateRowTotal(this)" required>
                     </td>
                     <td>
@@ -1657,7 +1652,14 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                       <input type="number" class="form-control form-control-sm item-discount" name="items[0][discount]" value="0" min="0" step="0.01" onchange="calculateRowTotal(this)">
                     </td>
                     <td>
-                      <input type="number" class="form-control form-control-sm item-tax" name="items[0][tax]" value="16" min="0" step="0.01" onchange="calculateRowTotal(this)">
+
+                      <select class="form-select form-select-sm item-name" name="items[0][tax]" onchange="calculateRowTotal(this)" required>
+                        <option value="" selected disabled>Select--</option>
+                        <option value="inclusive">VAT 16% Inclusive</option>
+                        <option value="exclusive">VAT 16% Exclusive</option>
+                        <option value="zerorated">Zero Rated</option>
+                        <option value="exempted">Exempted</option>
+                      </select>
                     </td>
                     <td>
                       <input type="text" class="form-control form-control-sm item-amount" name="items[0][amount]" value="0.00" readonly>
@@ -1706,7 +1708,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <button type="button" class="btn btn-secondary btn-lg" onclick="saveAsDraft()">
               <i class="fas fa-save"></i> Save as Draft
             </button>
-            <button type="submit" name="create_invoice" class="actionBtn">
+            <button type="submit" name="create_invoice" class="actionBtn" id="confirmAndSendBtn">
               <i class="fas fa-paper-plane"></i> Confirm and Send
             </button>
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
@@ -1905,48 +1907,74 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
         bulkBar.classList.toggle('show', checkboxes.length > 0);
       }
 
-      // Add invoice item row
+
       function addInvoiceItem() {
         const tbody = document.getElementById('invoiceItemsBody');
+
+        // clone options from the first select that PHP rendered
+        const templateSelect = tbody.querySelector('select.js-account-items');
+        const optionsHtml = templateSelect ? templateSelect.innerHTML : `<option value="">No items</option>`;
+
         const row = document.createElement('tr');
         row.className = 'item-row';
         row.innerHTML = `
-                <td>
-                    <select class="form-select form-select-sm item-name" name="items[${itemCounter}][item]" onchange="updateItemDescription(this)" required>
-                        <option value="">Select Item</option>
-                        <option value="rent">Rent</option>
-                        <option value="water">Water</option>
-                        <option value="electricity">Electricity</option>
-                        <option value="security">Security</option>
-                        <option value="maintenance">Maintenance</option>
-                        <option value="parking">Parking</option>
-                        <option value="other">Other</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm item-desc" name="items[${itemCounter}][description]" placeholder="Item description" required>
-                </td>
-                <td>
-                    <input type="number" class="form-control form-control-sm item-qty" name="items[${itemCounter}][quantity]" value="1" min="1" onchange="calculateRowTotal(this)" required>
-                </td>
-                <td>
-                    <input type="number" class="form-control form-control-sm item-price" name="items[${itemCounter}][price]" placeholder="0.00" step="0.01" onchange="calculateRowTotal(this)" required>
-                </td>
-                <td>
-                    <input type="number" class="form-control form-control-sm item-discount" name="items[${itemCounter}][discount]" value="0" min="0" step="0.01" onchange="calculateRowTotal(this)">
-                </td>
-                <td>
-                    <input type="number" class="form-control form-control-sm item-tax" name="items[${itemCounter}][tax]" value="16" min="0" step="0.01" onchange="calculateRowTotal(this)">
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm item-amount" name="items[${itemCounter}][amount]" value="0.00" readonly>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem(this)" style="padding: 2px 6px;">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </td>
-            `;
+          <td>
+            <select class="form-select form-select-sm js-account-items"
+                    name="items[${itemCounter}][account_code]"
+                    onchange="updateItemDescription(this)" required>
+              ${optionsHtml}
+            </select>
+          </td>
+
+          <td>
+            <input type="text" class="form-control form-control-sm item-desc"
+                  name="items[${itemCounter}][description]"
+                  placeholder="Item description" required>
+          </td>
+
+            <td>
+              <input type="number" class="form-control form-control-sm item-qty"
+                    name="items[${itemCounter}][quantity]"
+                    value="1" min="1" onchange="calculateRowTotal(this)" required>
+            </td>
+
+            <td>
+              <input type="number" class="form-control form-control-sm item-price"
+                    name="items[${itemCounter}][price]"
+                    placeholder="0.00" step="0.01" onchange="calculateRowTotal(this)" required>
+            </td>
+
+            <td>
+              <input type="number" class="form-control form-control-sm item-discount"
+                    name="items[${itemCounter}][discount]"
+                    value="0" min="0" step="0.01" onchange="calculateRowTotal(this)">
+            </td>
+
+            <td>
+              <select class="form-select form-select-sm"
+                      name="items[${itemCounter}][tax_type]"
+                      onchange="calculateRowTotal(this)" required>
+                <option value="" selected disabled>Select--</option>
+                <option value="inclusive">VAT 16% Inclusive</option>
+                <option value="exclusive">VAT 16% Exclusive</option>
+                <option value="zerorated">Zero Rated</option>
+                <option value="exempted">Exempted</option>
+              </select>
+            </td>
+
+            <td>
+              <input type="text" class="form-control form-control-sm item-amount"
+                    name="items[${itemCounter}][amount]" value="0.00" readonly>
+            </td>
+
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-danger"
+                      onclick="removeItem(this)" style="padding:2px 6px;">
+                <i class="fas fa-times"></i>
+              </button>
+            </td>
+          `;
+
         tbody.appendChild(row);
         itemCounter++;
       }

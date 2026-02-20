@@ -408,8 +408,6 @@ require_once './actions/getAllTenants.php'
                 <b>All tenants (<span class="text-warning"><?= $tenantCount ?></span>)</b>
               </div>
               <div class="card-body">
-
-
                 <!-- Display Results in HTML -->
                 <div class="table-responsive mt-3">
                   <table class="table table-striped" id="dataTable">

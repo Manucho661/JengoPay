@@ -27,6 +27,7 @@ try {
 
     // Read POST fields safely
     $category    = isset($_POST['category']) ? trim($_POST['category']) : '';
+    $priority    = isset($_POST['priority']) ? trim($_POST['priority']) : '';
     $title       = isset($_POST['title']) ? trim($_POST['title']) : null;
     $description = isset($_POST['description']) ? trim($_POST['description']) : null;
 
@@ -52,9 +53,9 @@ try {
     // Insert maintenance request
     $stmt = $pdo->prepare("
         INSERT INTO maintenance_requests
-            (created_by_user_id, landlord_id, requester_role, building_id, building_unit_id, title, description, category, created_at)
+            (created_by_user_id, landlord_id, requester_role, building_id, building_unit_id, title, description, category, priority, created_at)
         VALUES
-            (:created_by_user_id, :landlord_id, :requester_role, :building_id, :building_unit_id, :title, :description, :category, NOW())
+            (:created_by_user_id, :landlord_id, :requester_role, :building_id, :building_unit_id, :title, :description, :category, :priority, NOW())
     ");
 
     $stmt->execute([
@@ -66,6 +67,7 @@ try {
         ':title'              => $title,
         ':description'        => $description,
         ':category'           => $category,
+        ':priority'           => $priority,
     ]);
 
     $maintenance_request_id = (int)$pdo->lastInsertId();

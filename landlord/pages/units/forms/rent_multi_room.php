@@ -244,10 +244,10 @@ require_once "../actions/rent_multi_room_unit.php";
                   $id = $row['id'];
                   $unit_number = $row['unit_number'];
                   $location = $row['location'];
-                  $building_link = $row['building_type'];
+                  // $building_link = $row['building_link'];
                   $purpose = $row['purpose'];
                   $purpose = $row['purpose'];
-                  $unit_category = $row['unit_category'];
+                  // $unit_category = $row['unit_category'];
                   $occupancy_status = $row['occupancy_status'];
                 }
               }

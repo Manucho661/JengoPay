@@ -86,7 +86,7 @@ if (isset($_POST['rent_unit'])) {
 
   $tenancyData = [
     
-    'unit_id'            => $_POST['id'] ?? null,
+    'unit_id'            => $_POST['unit_id'] ?? null,
 
     // Generate a unique, human-readable account number per tenancy
     'account_no'         => $unit_number . '-' . time(),
@@ -100,7 +100,7 @@ if (isset($_POST['rent_unit'])) {
     'status'             => 'Active'
   ];
 
-
+ 
   // --------------------------------------------
   // VALIDATION (basic example)
   // --------------------------------------------
@@ -185,8 +185,11 @@ if (isset($_POST['rent_unit'])) {
 
     $pdo->commit();
 
-    header("Location: single_units_tenants.php?success=1");
-    exit;
+  $_SESSION['success'] =
+            "Unit rented successfully.";
+
+        header('Location: ../units.php');
+        exit;
   } catch (Exception $e) {
     $pdo->rollBack();
     echo "Transaction failed. Please try again.";

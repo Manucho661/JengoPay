@@ -248,17 +248,17 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                     <h3 class="profile-username text-center"><?= htmlspecialchars($tenant['first_name'] . ' ' . $tenant['middle_name'] . ' ' . $tenant['last_name']); ?></h3>
                     <p class="text-muted text-center">
                       <?php
-                      if (htmlspecialchars($tenant['income']) == 'formal') {
-                        echo '<i class="fa fa-briefcase"></i>' . ' ' . $tenant['job_title'] . '<br>';
-                        echo '<i class="fa fa-user-circle"></i>' . ' ' . $tenant['job_location'] . '<br>';
-                        echo '<i class="fa fa-building"></i>' . ' ' . $tenant['building_link'] . '<br>';
-                        echo '<i class="fa fa-home"></i>' . ' ' . $tenant['unit_number'] . '<br>';
-                      } else if (htmlspecialchars($tenant['income']) == 'casual') {
-                        echo '<i class="fa fa-briefcase"></i>' . ' ' . $tenant['job_title'] . '<br>';
-                      } else {
-                        echo '<i class="fa fa-briefcase"></i>' . ' ' . $tenant['business_name'] . '<br>';
-                        echo '<i class="fa fa-briefcase"></i>' . ' ' . $tenant['business_location'] . '<br>';
-                      }
+                      // if (htmlspecialchars($tenant['income']) == 'formal') {
+                      //   echo '<i class="fa fa-briefcase"></i>' . ' ' . $tenant['job_title'] . '<br>';
+                      //   echo '<i class="fa fa-user-circle"></i>' . ' ' . $tenant['job_location'] . '<br>';
+                      //   echo '<i class="fa fa-building"></i>' . ' ' . $tenant['building_link'] . '<br>';
+                      //   // echo '<i class="fa fa-home"></i>' . ' ' . $tenant['unit_number'] . '<br>';
+                      // } else if (htmlspecialchars($tenant['income']) == 'casual') {
+                      //   echo '<i class="fa fa-briefcase"></i>' . ' ' . $tenant['job_title'] . '<br>';
+                      // } else {
+                      //   echo '<i class="fa fa-briefcase"></i>' . ' ' . $tenant['business_name'] . '<br>';
+                      //   echo '<i class="fa fa-briefcase"></i>' . ' ' . $tenant['business_location'] . '<br>';
+                      // }
                       ?>
                     </p>
                     <a href="edit_tenant_info.php?edit_tenant=<?= encryptor('encrypt', $tenant['id']); ?>" class="btn btn-block shadow" style="background-color:#00192D; color: #fff;"><i class="fa fa-edit"></i> Edit Info</a>
@@ -287,13 +287,13 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                           <div class="card-body">
                             <div class="row">
                               <div class="col-md-4">
-                                First Name: <?= htmlspecialchars($tenant['tfirst_name']); ?>
+                                First Name: Kelvin
                               </div>
                               <div class="col-md-4">
-                                Middle Name: <?= htmlspecialchars($tenant['tmiddle_name']); ?>
+                                Middle Name: Wanyonyi
                               </div>
                               <div class="col-md-4">
-                                Last Name: <?= htmlspecialchars($tenant['tlast_name']); ?>
+                                Last Name: Kelvin
                               </div>
                             </div>
                           </div>
@@ -304,13 +304,13 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                           <div class="card-body">
                             <div class="row">
                               <div class="col-md-4">
-                                Primary Contact: <a href="tel:<?= htmlspecialchars($tenant['tmain_contact']); ?>"><?= htmlspecialchars($tenant['tmain_contact']); ?></a>
+                                Primary Contact: 073287641894</a>
                               </div>
                               <div class="col-md-4">
-                                Alt Contact: <a href="tel<?= htmlspecialchars($tenant['tmain_contact']); ?>"><?= htmlspecialchars($tenant['tmain_contact']); ?></a>
+                                Alt Contact: 082376482345</a>
                               </div>
                               <div class="col-md-4">
-                                Email: <a href="mailto:<?= htmlspecialchars($tenant['temail']); ?>"><?= htmlspecialchars($tenant['temail']); ?></a></a>
+                                Email: <a href="mailto:wanyoy@gmail.com">Wanyonyi@gmail.com</a></a>
                               </div>
                             </div>
                           </div>
@@ -321,10 +321,10 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                           <div class="card-body">
                             <div class="row">
                               <div class="col-md-4">
-                                <?= htmlspecialchars(ucfirst($tenant['idMode'])); ?>
+                               38011790
                               </div>
                               <div class="col-md-8">
-                                <img src="<?= htmlspecialchars($tenant['id_upload']); ?>" class="img shadow" width="70%">
+                                <img src="" class="img shadow" width="70%">
                               </div>
                             </div>
                           </div>
@@ -335,22 +335,22 @@ if (isset($_GET['rent']) && !empty($_GET['rent'])) {
                           <div class="card-body">
                             <div class="row">
                               <div class="col-md-4">
-                                Leasing Period: <?= htmlspecialchars($tenant['leasing_period']); ?>
+                                Leasing Period: 12 months
                               </div>
                               <div class="col-md-4">
-                                Leasing Starts: <?= htmlspecialchars($tenant['leasing_start_date']); ?>
+                                Leasing Starts: 26, Jan 20216
                               </div>
                               <div class="col-md-4">
-                                Leasing Ends: <?= htmlspecialchars($tenant['leasing_end_date']); ?>
+                                Leasing Ends: 27, Jan 2027
                               </div>
                             </div>
                             <hr>
                             <div class="row">
                               <div class="col-md-4">
-                                Move In Date: <?= htmlspecialchars($tenant['move_in_date']); ?>
+                                Move In Date: Sep, 12 2026
                               </div>
                               <div class="col-md-4">
-                                Move Out Date: <?= htmlspecialchars($tenant['move_out_date']); ?>
+                                Move Out Date: Sep, 12 2026
                               </div>
                               <div class="col-md-4"></div>
                             </div>

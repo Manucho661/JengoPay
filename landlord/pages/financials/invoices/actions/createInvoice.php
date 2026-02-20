@@ -47,15 +47,14 @@ try {
     $totalTax      = (float)($_POST['totalTax'] ?? 0);
     $total         = (float)($_POST['total'] ?? 0);
 
-   
     /* -----------------------------
      * 2. Insert invoice
      * ----------------------------- */
     $stmt = $pdo->prepare("
         INSERT INTO invoices (
-            tenant_id, unit_id, invoice_no, invoice_date, due_date, building_id,
+            tenant_id, unit_id, invoice_no, invoice_date, due_date,
             untaxed_amount, taxes, total
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $stmt->execute([
@@ -63,8 +62,7 @@ try {
         $unit_id,
         $invoice_no,
         $issue_date,
-        $due_date,  // Correctly using landlord_id
-        8,
+        $due_date,
         $untaxedAmount,
         1000,
         $total
@@ -72,162 +70,165 @@ try {
 
     $invoice_id = (int)$pdo->lastInsertId();
 
+
     /* -----------------------------
      * 3. Insert expense items
      * ----------------------------- */
-//     $item_account_codes = $_POST['item_account_code'] ?? [];
-//     $descriptions       = $_POST['description'] ?? [];
-//     $quantities         = $_POST['qty'] ?? [];
-//     $unit_prices        = $_POST['unit_price'] ?? [];
-//     $taxes              = $_POST['taxes'] ?? [];
-//     $item_totals        = $_POST['item_totalForStorage'] ?? [];
-//     $discounts          = $_POST['discount'] ?? [];
+        $item_account_codes = $_POST['item_account_code'] ?? [];
+        $descriptions       = $_POST['description'] ?? [];
+        $quantities         = $_POST['qty'] ?? [];
+        $unit_prices        = $_POST['unit_price'] ?? [];
+        $taxes              = $_POST['taxes'] ?? [];
+        $item_totals        = $_POST['item_totalForStorage'] ?? [];
+        $discounts          = $_POST['discount'] ?? [];
 
-//     if (count($item_account_codes) === 0) {
-//         throw new Exception('Please add at least one expense item.');
-//     }
+        if (count($item_account_codes) === 0) {
+            throw new Exception('Please add at least one invoice item.');
+        }
 
-//     $stmtItem = $pdo->prepare("
-//         INSERT INTO invoice_items (
-//         landlord_id, item_account_code, expense_id, building_id, description, qty,
-//             unit_price, item_untaxed_amount, taxes, item_total, discount
-//         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-//     ");
+    
 
-//     for ($i = 0; $i < count($item_account_codes); $i++) {
-//         $qty        = (float)($quantities[$i] ?? 0);
-//         $unit_price = (float)($unit_prices[$i] ?? 0);
-//         $discount   = (float)($discounts[$i] ?? 0);
+        $stmtItem = $pdo->prepare("
+            INSERT INTO invoice_items (
+            landlord_id, item_account_code, invoice_id, building_id, description, qty,
+                unit_price, item_untaxed_amount, taxes, item_total, discount
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
 
-//         $item_untaxed_amount = $qty * $unit_price;
+        for ($i = 0; $i < count($item_account_codes); $i++) {
+            $qty        = (float)($quantities[$i] ?? 0);
+            $unit_price = (float)($unit_prices[$i] ?? 0);
+            $discount   = (float)($discounts[$i] ?? 0);
 
-//         $stmtItem->execute([
-//             $landlord_id,
-//             $item_account_codes[$i],
-//             $expense_id,
-//             $building_id,
-//             $descriptions[$i] ?? '',
-//             $qty,
-//             $unit_price,
-//             $item_untaxed_amount,
-//             $taxes[$i] ?? '',
-//             (float)($item_totals[$i] ?? 0),
-//             $discount
-//         ]);
-//     }
+            $item_untaxed_amount = $qty * $unit_price;
 
-//     /* -----------------------------
-//  * 4. Create journal entry
-//  * ----------------------------- */
-//     $journalId = createJournalEntry($pdo, [
-//         'description'  => 'Invoice Transaction',
-//         'reference'    => $invoice_no,
-//         'date'         => $invoice_date,
-//         'source_table' => 'invoices',
-//         'source_id'    => $invoice_id
-//     ]);
+            $stmtItem->execute([
+                $landlord_id,
+                $item_account_codes[$i],
+                $expense_id,
+                $building_id,
+                $descriptions[$i] ?? '',
+                $qty,
+                $unit_price,
+                $item_untaxed_amount,
+                $taxes[$i] ?? '',
+                (float)($item_totals[$i] ?? 0),
+                $discount
+            ]);
+        }
 
-//     /* -----------------------------
-//  * 5. Journal lines (FIXED)
-//  * ----------------------------- */
-//     $vatRate = 0.16;
+    //     /* -----------------------------
+    //  * 4. Create journal entry
+    //  * ----------------------------- */
+    //     $journalId = createJournalEntry($pdo, [
+    //         'description'  => 'Invoice Transaction',
+    //         'reference'    => $invoice_no,
+    //         'date'         => $invoice_date,
+    //         'source_table' => 'invoices',
+    //         'source_id'    => $invoice_id
+    //     ]);
 
-//     // (optional) accumulate totals if you ever want to post AP as one line
-//     // $totalNet = 0.0;
-//     // $totalVat = 0.0;
-//     // $totalGross = 0.0;
+    //     /* -----------------------------
+    //  * 5. Journal lines (FIXED)
+    //  * ----------------------------- */
+    //     $vatRate = 0.16;
 
-//     for ($i = 0; $i < count($item_account_codes); $i++) {
+    //     // (optional) accumulate totals if you ever want to post AP as one line
+    //     // $totalNet = 0.0;
+    //     // $totalVat = 0.0;
+    //     // $totalGross = 0.0;
 
-//         $accountCode = (int)($item_account_codes[$i] ?? 0);
-//         $qty         = (float)($quantities[$i] ?? 0);
-//         $unit_price  = (float)($unit_prices[$i] ?? 0);
-//         $tax_type    = strtolower(trim((string)($taxes[$i] ?? 'exclusive')));
+    //     for ($i = 0; $i < count($item_account_codes); $i++) {
 
-//         if ($accountCode <= 0 || $qty <= 0 || $unit_price < 0) {
-//             continue; // skip invalid lines safely
-//         }
+    //         $accountCode = (int)($item_account_codes[$i] ?? 0);
+    //         $qty         = (float)($quantities[$i] ?? 0);
+    //         $unit_price  = (float)($unit_prices[$i] ?? 0);
+    //         $tax_type    = strtolower(trim((string)($taxes[$i] ?? 'exclusive')));
 
-//         // "lineTotal" is the amount as entered on the line (could be net or gross depending on tax type)
-//         $lineTotal = $qty * $unit_price;
+    //         if ($accountCode <= 0 || $qty <= 0 || $unit_price < 0) {
+    //             continue; // skip invalid lines safely
+    //         }
 
-//         $netAmount   = 0.0;
-//         $vatAmount   = 0.0;
-//         $grossAmount = 0.0;
+    //         // "lineTotal" is the amount as entered on the line (could be net or gross depending on tax type)
+    //         $lineTotal = $qty * $unit_price;
 
-//         if ($tax_type === 'exclusive') {
-//             // Entered amount is NET
-//             $netAmount   = $lineTotal;
-//             $vatAmount   = $netAmount * $vatRate;
-//             $grossAmount = $netAmount + $vatAmount;
-//         } elseif ($tax_type === 'inclusive') {
-//             // Entered amount is GROSS
-//             $grossAmount = $lineTotal;
-//             $vatAmount   = $grossAmount * ($vatRate / (1 + $vatRate)); // 16/116
-//             $netAmount   = $grossAmount - $vatAmount;
-//         } else {
-//             // If tax type unknown, treat as no VAT
-//             $netAmount   = $lineTotal;
-//             $vatAmount   = 0.0;
-//             $grossAmount = $lineTotal;
-//         }
+    //         $netAmount   = 0.0;
+    //         $vatAmount   = 0.0;
+    //         $grossAmount = 0.0;
 
-//         // Optional rounding to 2dp to avoid tiny float leftovers
-//         $netAmount   = round($netAmount, 2);
-//         $vatAmount   = round($vatAmount, 2);
-//         $grossAmount = round($grossAmount, 2);
+    //         if ($tax_type === 'exclusive') {
+    //             // Entered amount is NET
+    //             $netAmount   = $lineTotal;
+    //             $vatAmount   = $netAmount * $vatRate;
+    //             $grossAmount = $netAmount + $vatAmount;
+    //         } elseif ($tax_type === 'inclusive') {
+    //             // Entered amount is GROSS
+    //             $grossAmount = $lineTotal;
+    //             $vatAmount   = $grossAmount * ($vatRate / (1 + $vatRate)); // 16/116
+    //             $netAmount   = $grossAmount - $vatAmount;
+    //         } else {
+    //             // If tax type unknown, treat as no VAT
+    //             $netAmount   = $lineTotal;
+    //             $vatAmount   = 0.0;
+    //             $grossAmount = $lineTotal;
+    //         }
 
-//         /* 1) Debit expense (NET) */
-//         addJournalLine(
-//             $pdo,
-//             $journalId,
-//             $building_id,
-//             $landlord_id,
-//             $accountCode,
-//             $netAmount,
-//             0.0,
-//             'expenses',
-//             $expense_id
-//         );
+    //         // Optional rounding to 2dp to avoid tiny float leftovers
+    //         $netAmount   = round($netAmount, 2);
+    //         $vatAmount   = round($vatAmount, 2);
+    //         $grossAmount = round($grossAmount, 2);
 
-//         /* 2) Debit VAT receivable/input VAT (VAT) */
-//         if ($vatAmount > 0) {
-//             addJournalLine(
-//                 $pdo,
-//                 $journalId,
-//                 $building_id,
-//                 $landlord_id,
-//                 325,          // VAT Input / VAT Receivable account code
-//                 $vatAmount,
-//                 0.0,
-//                 'expenses',
-//                 $expense_id
-//             );
-//         }
+    //         /* 1) Debit expense (NET) */
+    //         addJournalLine(
+    //             $pdo,
+    //             $journalId,
+    //             $building_id,
+    //             $landlord_id,
+    //             $accountCode,
+    //             $netAmount,
+    //             0.0,
+    //             'expenses',
+    //             $expense_id
+    //         );
 
-//         /* 3) Credit Accounts Payable (GROSS) */
-//         addJournalLine(
-//             $pdo,
-//             $journalId,
-//             $building_id,
-//             $landlord_id,
-//             300,            // Accounts Payable account code
-//             0.0,
-//             $grossAmount,
-//             'expenses',
-//             $expense_id
-//         );
+    //         /* 2) Debit VAT receivable/input VAT (VAT) */
+    //         if ($vatAmount > 0) {
+    //             addJournalLine(
+    //                 $pdo,
+    //                 $journalId,
+    //                 $building_id,
+    //                 $landlord_id,
+    //                 325,          // VAT Input / VAT Receivable account code
+    //                 $vatAmount,
+    //                 0.0,
+    //                 'expenses',
+    //                 $expense_id
+    //             );
+    //         }
 
-//         // Totals if needed later
-//         // $totalNet += $netAmount;
-//         // $totalVat += $vatAmount;
-//         // $totalGross += $grossAmount;
-//     }
+    //         /* 3) Credit Accounts Payable (GROSS) */
+    //         addJournalLine(
+    //             $pdo,
+    //             $journalId,
+    //             $building_id,
+    //             $landlord_id,
+    //             300,            // Accounts Payable account code
+    //             0.0,
+    //             $grossAmount,
+    //             'expenses',
+    //             $expense_id
+    //         );
+
+    //         // Totals if needed later
+    //         // $totalNet += $netAmount;
+    //         // $totalVat += $vatAmount;
+    //         // $totalGross += $grossAmount;
+    //     }
 
 
-//     /* -----------------------------
-//      * 6. Commit + flash success
-//      * ----------------------------- */
+    //     /* -----------------------------
+    //      * 6. Commit + flash success
+    //      * ----------------------------- */
     $pdo->commit();
 
     $_SESSION['success'] =

@@ -20,7 +20,7 @@ require_once 'actions/getSuppliers.php';
 // create expenses script
 require_once 'actions/createExpense.php';
 // create expenses script
-require_once 'actions/createExpense1.php';
+require_once 'actions/createExpenseOne.php';
 //Include expense Batches
 require_once 'actions/getExpenses.php';
 // Include expense accounts
@@ -217,6 +217,18 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
         a {
             text-decoration: none !important;
         }
+
+        .invoice-items-table thead th {
+            background: rgba(0, 25, 45, 0.05);
+            color: var(--main-color);
+            font-size: 12px;
+        }
+
+        .suppliers-table thead th {
+            background: rgba(0, 25, 45, 0.05);
+            color: var(--main-color);
+            font-size: 12px;
+        }
     </style>
 </head>
 
@@ -412,21 +424,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                                     </div>
 
                                                     <div class="col-md-3">
-                                                        <label class="form-label fw-bold">Supplier</label>
-                                                        <input class="form-control rounded-1 shadow-none"
-                                                            list="supplierList"
-                                                            name="supplier_name"
-                                                            placeholder="Search or select supplier">
-                                                        <datalist id="supplierList">
-                                                            <?php foreach ($suppliers as $supplier): ?>
-                                                                <option
-                                                                    value="<?= htmlspecialchars($supplier['supplier_name']) ?>"
-                                                                    data-id="<?= htmlspecialchars($supplier['id']) ?>">
-                                                                </option>
-                                                            <?php endforeach; ?>
-                                                        </datalist>
-                                                        <input type="hidden" name="supplier_id" id="supplier_id">
-                                                        <small id="supplierError" class="text-danger d-none">The supplier doesn't exist. Please register them to continue.</small>
+
                                                     </div>
 
                                                 </div>
@@ -900,7 +898,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                             }
                             ?>
                             <!-- Line Chart: Expenses vs Months -->
-                            <h6 class="fw-bold text-center">📊 Monthly Expense Trends</h6>
+                            <h6 class="fw-bold text-center">Monthly Expense Trends</h6>
                             <canvas id="monthlyExpenseChart" height="100"></canvas>
                         </div>
                     </div>
@@ -918,7 +916,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
 
         <!-- Offcanvas for new expense -->
         <!-- Create Invoice Off-canvas -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="createExpenseOffcanvas" style="width: 800px !important;">
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="createExpenseOffcanvas" style="width: 900px !important;">
             <div class="offcanvas-header" style="background: var(--main-color); color: white;">
                 <h5 class="offcanvas-title" style="color: white;">
                     <i class="fas fa-plus-circle"></i> Create New Expense
@@ -926,7 +924,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
             </div>
             <div class="offcanvas-body">
-                <form method="POST" id="createInvoiceForm">
+                <form method="POST" id="createInvoiceForm" action="">
                     <!-- Invoice Details -->
                     <div class="mb-4">
                         <h6 style="color: var(--main-color); font-weight: 600; margin-bottom: 15px;">
@@ -936,33 +934,42 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                             <div class="col-6">
 
                                 <label class="form-label">Expense Number *</label>
-                                <input type="text" name="invoice_number" class="form-control" value="INV-2024-" required>
+                                <input type="text" name="expense_no" class="form-control" value="INV-2024-" required>
 
                             </div>
                             <div class="col-6">
-                                <label class="form-label">Supplier *</label>
-                                <select name="building" class="form-select" onchange="updateUnitsForBuilding(this.value)" required>
-                                    <option value="">Select Building</option>
-                                    <option value="1">Hindocha Tower</option>
-                                    <option value="2">Vista Apartments</option>
-                                    <option value="3">Green Valley Homes</option>
-                                </select>
+                                <label class="form-label fw-bold">Supplier</label>
+                                <input class="form-control rounded-1 shadow-none"
+                                    list="supplierList"
+                                    name="supplier_name"
+                                    placeholder="Search or select supplier">
+                                <datalist id="supplierList">
+                                    <?php foreach ($suppliers as $supplier): ?>
+                                        <option
+                                            value="<?= htmlspecialchars($supplier['supplier_name']) ?>"
+                                            data-id="<?= htmlspecialchars($supplier['id']) ?>">
+                                        </option>
+                                    <?php endforeach; ?>
+                                </datalist>
+                                <input type="hidden" name="supplier_id" id="supplier_id">
+                                <small id="supplierError" class="text-danger d-none">The supplier doesn't exist. Please register them to continue.</small>
                             </div>
                         </div>
                         <div class="row g-3 mt-2">
                             <div class="col-6">
                                 <label class="form-label">Building *</label>
-                                <select name="building" class="form-select" onchange="updateUnitsForBuilding(this.value)" required>
-                                    <option value="">Select Building</option>
-                                    <option value="1">Hindocha Tower</option>
-                                    <option value="2">Vista Apartments</option>
-                                    <option value="3">Green Valley Homes</option>
+                                <select name="building_id" class="form-select" required>
+                                    <?php foreach ($buildings as $building): ?>
+                                        <option value="<?= (int)$building['id'] ?>">
+                                            <?= htmlspecialchars($building['building_name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
 
                             <div class="col-6">
 
-                                <label class="form-label">Issue Date *</label>
+                                <label class="form-label">Date *</label>
                                 <input type="date" name="date" class="form-control" value="<?= date('Y-m-d') ?>" required>
 
                             </div>
@@ -972,7 +979,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                     <!-- Invoice Items -->
                     <div class="mb-4">
                         <h6 style="color: var(--main-color); font-weight: 600; margin-bottom: 15px;">
-                            <i class="fas fa-list"></i> Invoice Items
+                            <i class="fas fa-list"></i> Expense Items
                         </h6>
                         <div class="table-responsive">
                             <table class="table invoice-items-table table-sm" id="invoiceItemsTable">
@@ -983,7 +990,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                         <th style="width: 80px;">Quantity</th>
                                         <th style="width: 100px;">Price</th>
                                         <th style="width: 80px;">Discount</th>
-                                        <th style="width: 70px;">Tax %</th>
+                                        <th style="width: 120px;">Tax %</th>
                                         <th style="width: 100px;">Amount</th>
                                         <th style="width: 40px;"></th>
                                     </tr>
@@ -991,34 +998,35 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                                 <tbody id="invoiceItemsBody">
                                     <tr class="item-row">
                                         <td>
-                                            <select class="form-select form-select-sm item-name" name="items[0][item]" onchange="updateItemDescription(this)" required>
-                                                <option value="">Select Item</option>
-                                                <option value="rent">Rent</option>
-                                                <option value="water">Water</option>
-                                                <option value="electricity">Electricity</option>
-                                                <option value="security">Security</option>
-                                                <option value="maintenance">Maintenance</option>
-                                                <option value="parking">Parking</option>
-                                                <option value="other">Other</option>
+                                            <select class="form-select form-select-sm item-account-code js-account-items"
+                                                name="items[0][account_code]"
+                                                onchange="updateItemDescription(this)" required>
+                                                <?php foreach ($accountItems as $item): ?>
+                                                    <option value="<?= htmlspecialchars($item['account_code']) ?>">
+                                                        <?= htmlspecialchars($item['account_name']) ?>
+                                                    </option>
+                                                <?php endforeach; ?>
                                             </select>
+
                                         </td>
+                                    
                                         <td>
                                             <input type="text" class="form-control form-control-sm item-desc" name="items[0][description]" placeholder="Item description" required>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control form-control-sm item-qty" name="items[0][quantity]" value="1" min="1" onchange="calculateRowTotal(this)" required>
+                                            <input type="number" class="form-control form-control-sm item-qty" name="items[0][qty]" value="1" min="1" onchange="calculateRowTotal(this)" required>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control form-control-sm item-price" name="items[0][price]" placeholder="0.00" step="0.01" onchange="calculateRowTotal(this)" required>
+                                            <input type="number" class="form-control form-control-sm item-price" name="items[0][unit_price]" placeholder="0.00" step="0.01" onchange="calculateRowTotal(this)" required>
                                         </td>
                                         <td>
                                             <input type="number" class="form-control form-control-sm item-discount" name="items[0][discount]" value="0" min="0" step="0.01" onchange="calculateRowTotal(this)">
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control form-control-sm item-tax" name="items[0][tax]" value="16" min="0" step="0.01" onchange="calculateRowTotal(this)">
+                                            <input type="number" class="form-control form-control-sm item-tax" name="items[0][taxes]" value="16" min="0" step="0.01" onchange="calculateRowTotal(this)">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control form-control-sm item-amount" name="items[0][amount]" value="0.00" readonly>
+                                            <input type="text" class="form-control form-control-sm item-amount" name="items[0][item_total]" value="0.00" readonly>
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem(this)" style="padding: 2px 6px;">
@@ -1058,9 +1066,7 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
 
                     <!-- Action Buttons -->
                     <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-outline-primary btn-lg" onclick="previewInvoice()">
-                            <i class="fas fa-eye"></i> Preview
-                        </button>
+
                         <button type="button" class="btn btn-secondary btn-lg" onclick="saveAsDraft()">
                             <i class="fas fa-save"></i> Save as Draft
                         </button>
@@ -1487,55 +1493,57 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
                 <button id="supplierSearchBtn">Search</button>
             </div>
 
-            <!-- Supplier list -->
-            <table class="supplier-list-table">
-                <thead class="supplier-list-tableThead border-0">
-                    <tr class="border-0">
-                        <th class="border-0">Name</th>
-                        <th>KRA PIN</th>
-                        <th>Address</th>
-                        <th>Contact</th>
-                        <th>Supplied Items</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="supplier-list-tableTbody">
-                    <?php foreach ($suppliers as $supplier): ?>
-                        <tr class="supplier-list-tableTr shadow-sm text-muted">
-                            <td><?= $supplier['supplier_name'] ?></td>
-                            <td><?= $supplier['kra_pin'] ?></td>
-                            <td><?= $supplier['address'] ?>, Nairobi</td>
-                            <td>
-                                <div class="" style="color:green;"><?= $supplier['email'] ?></div>
-                                <div class="text-primary"><?= $supplier['phone'] ?></div>
-                            </td>
-                            <td>128</td>
-                            <td style="vertical-align: middle;">
-                                <div style="display: flex; gap: 8px; align-items: center; height: 100%;">
-                                    <button
-                                        class="editSupplier btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
-                                        style="background-color: #00192D; color: white; border: none; border-radius: 8px; 
-                               box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
-                                        data-id="<?= $supplier['id'] ?>"
-                                        data-name="<?= htmlspecialchars($supplier['supplier_name'], ENT_QUOTES) ?>"
-                                        data-kra="<?= htmlspecialchars($supplier['kra_pin'], ENT_QUOTES) ?>"
-                                        data-address="<?= htmlspecialchars($supplier['address'], ENT_QUOTES) ?>"
-                                        data-email="<?= htmlspecialchars($supplier['email'], ENT_QUOTES) ?>"
-                                        data-phone="<?= htmlspecialchars($supplier['phone'], ENT_QUOTES) ?>">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </button>
-                                    <button
-                                        class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
-                                        style="background-color: #ec5b53; color: white; border: none; border-radius: 8px; 
-                                                box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
-                                </div>
-                            </td>
+            <div style="width:100%; overflow-x:auto;">
+                <!-- Supplier list -->
+                <table class="suppliers-table">
+                    <thead class="supplier-list-tableThead border-0">
+                        <tr class="border-0">
+                            <th class="border-0">Name</th>
+                            <th>KRA PIN</th>
+                            <th>Address</th>
+                            <th>Contact</th>
+                            <th>Supplied Items</th>
+                            <th>Actions</th>
                         </tr>
-                    <?php endforeach ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="supplier-list-tableTbody">
+                        <?php foreach ($suppliers as $supplier): ?>
+                            <tr class="supplier-list-tableTr shadow-sm text-muted">
+                                <td><?= $supplier['supplier_name'] ?></td>
+                                <td><?= $supplier['kra_pin'] ?></td>
+                                <td><?= $supplier['address'] ?>, Nairobi</td>
+                                <td>
+                                    <div class="" style="color:green;"><?= $supplier['email'] ?></div>
+                                    <div class="text-primary"><?= $supplier['phone'] ?></div>
+                                </td>
+                                <td>128</td>
+                                <td style="vertical-align: middle;">
+                                    <div style="display: flex; gap: 8px; align-items: center; height: 100%;">
+                                        <button
+                                            class="editSupplier btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                            style="background-color: #00192D; color: white; border: none; border-radius: 8px; 
+                               box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;"
+                                            data-id="<?= $supplier['id'] ?>"
+                                            data-name="<?= htmlspecialchars($supplier['supplier_name'], ENT_QUOTES) ?>"
+                                            data-kra="<?= htmlspecialchars($supplier['kra_pin'], ENT_QUOTES) ?>"
+                                            data-address="<?= htmlspecialchars($supplier['address'], ENT_QUOTES) ?>"
+                                            data-email="<?= htmlspecialchars($supplier['email'], ENT_QUOTES) ?>"
+                                            data-phone="<?= htmlspecialchars($supplier['phone'], ENT_QUOTES) ?>">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </button>
+                                        <button
+                                            class="btn btn-sm d-flex align-items-center gap-1 px-3 py-2"
+                                            style="background-color: #ec5b53; color: white; border: none; border-radius: 8px; 
+                                                box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 500;">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </div>
@@ -2123,45 +2131,71 @@ $currentExpenses = array_slice($expenses, $offset, $itemsPerPage);
         // Add invoice item row
         function addInvoiceItem() {
             const tbody = document.getElementById('invoiceItemsBody');
+
+            // clone options from the first select that PHP rendered
+            const templateSelect = tbody.querySelector('select.js-account-items');
+            const optionsHtml = templateSelect ? templateSelect.innerHTML : `<option value="">No items</option>`;
+
             const row = document.createElement('tr');
             row.className = 'item-row';
             row.innerHTML = `
-                <td>
-                    <select class="form-select form-select-sm item-name" name="items[${itemCounter}][item]" onchange="updateItemDescription(this)" required>
-                        <option value="">Select Item</option>
-                        <option value="rent">Rent</option>
-                        <option value="water">Water</option>
-                        <option value="electricity">Electricity</option>
-                        <option value="security">Security</option>
-                        <option value="maintenance">Maintenance</option>
-                        <option value="parking">Parking</option>
-                        <option value="other">Other</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm item-desc" name="items[${itemCounter}][description]" placeholder="Item description" required>
-                </td>
-                <td>
-                    <input type="number" class="form-control form-control-sm item-qty" name="items[${itemCounter}][quantity]" value="1" min="1" onchange="calculateRowTotal(this)" required>
-                </td>
-                <td>
-                    <input type="number" class="form-control form-control-sm item-price" name="items[${itemCounter}][price]" placeholder="0.00" step="0.01" onchange="calculateRowTotal(this)" required>
-                </td>
-                <td>
-                    <input type="number" class="form-control form-control-sm item-discount" name="items[${itemCounter}][discount]" value="0" min="0" step="0.01" onchange="calculateRowTotal(this)">
-                </td>
-                <td>
-                    <input type="number" class="form-control form-control-sm item-tax" name="items[${itemCounter}][tax]" value="16" min="0" step="0.01" onchange="calculateRowTotal(this)">
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm item-amount" name="items[${itemCounter}][amount]" value="0.00" readonly>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem(this)" style="padding: 2px 6px;">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </td>
-            `;
+          <td>
+            <select class="form-select form-select-sm js-account-items"
+                    name="items[${itemCounter}][account_code]"
+                    onchange="updateItemDescription(this)" required>
+              ${optionsHtml}
+            </select>
+          </td>
+
+          <td>
+            <input type="text" class="form-control form-control-sm item-desc"
+                  name="items[${itemCounter}][description]"
+                  placeholder="Item description" required>
+          </td>
+
+            <td>
+              <input type="number" class="form-control form-control-sm item-qty"
+                    name="items[${itemCounter}][quantity]"
+                    value="1" min="1" onchange="calculateRowTotal(this)" required>
+            </td>
+
+            <td>
+              <input type="number" class="form-control form-control-sm item-price"
+                    name="items[${itemCounter}][price]"
+                    placeholder="0.00" step="0.01" onchange="calculateRowTotal(this)" required>
+            </td>
+
+            <td>
+              <input type="number" class="form-control form-control-sm item-discount"
+                    name="items[${itemCounter}][discount]"
+                    value="0" min="0" step="0.01" onchange="calculateRowTotal(this)">
+            </td>
+
+            <td>
+              <select class="form-select form-select-sm"
+                      name="items[${itemCounter}][tax_type]"
+                      onchange="calculateRowTotal(this)" required>
+                <option value="" selected disabled>Select--</option>
+                <option value="inclusive">VAT 16% Inclusive</option>
+                <option value="exclusive">VAT 16% Exclusive</option>
+                <option value="zerorated">Zero Rated</option>
+                <option value="exempted">Exempted</option>
+              </select>
+            </td>
+
+            <td>
+              <input type="text" class="form-control form-control-sm item-amount"
+                    name="items[${itemCounter}][amount]" value="0.00" readonly>
+            </td>
+
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-danger"
+                      onclick="removeItem(this)" style="padding:2px 6px;">
+                <i class="fas fa-times"></i>
+              </button>
+            </td>
+          `;
+
             tbody.appendChild(row);
             itemCounter++;
         }

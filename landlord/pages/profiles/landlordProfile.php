@@ -625,52 +625,6 @@ $paymentHistory = [
                             </div>
                         </div>
 
-                        <!-- Security Settings -->
-                        <div class="card border-0 mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title mb-4"><i class="fas fa-shield-alt"></i> Security Settings</h5>
-
-                                <!-- Change Password -->
-                                <div class="mb-4">
-                                    <h6 style="color: var(--main-color); font-weight: 600;">Change Password</h6>
-                                    <button class="actionBtn" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                                        <i class="fas fa-key"></i> Update Password
-                                    </button>
-                                </div>
-
-                                <!-- Change Email -->
-                                <div class="mb-4">
-                                    <h6 style="color: var(--main-color); font-weight: 600;">Change Email</h6>
-                                    <button class="actionBtn" data-bs-toggle="modal" data-bs-target="#changeEmailModal">
-                                        <i class="fas fa-envelope"></i> Update Email
-                                    </button>
-                                </div>
-
-                                <!-- Two-Factor Authentication -->
-                                <div class="mb-4">
-                                    <h6 style="color: var(--main-color); font-weight: 600;">Two-Factor Authentication</h6>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="twoFactorSwitch"
-                                           
-                                            onchange="toggleTwoFactor(this)">
-                                        <label class="form-check-label" for="twoFactorSwitch">
-                                        
-                                        </label>
-                                    </div>
-                                    <small class="text-muted">Add an extra layer of security to your account</small>
-                                </div>
-
-                                <!-- Session Management -->
-                                <div>
-                                    <h6 style="color: var(--main-color); font-weight: 600;">Active Sessions</h6>
-                                    <p class="text-muted mb-2">Last login: <?= date('M d, Y h:i A', strtotime($profile['created_at'])) ?></p>
-                                    <button class="btn btn-sm btn-outline-danger">
-                                        <i class="fas fa-sign-out-alt"></i> Logout All Devices
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Danger Zone -->
                         <div class="card shadow-sm mb-4">
                             <div class="card-body">
@@ -716,7 +670,7 @@ $paymentHistory = [
                                     <small class="text-muted">2FA Status</small>
                                     <div class="fw-bold text-success">
                                         <i class="fas fa-check-circle"></i>
-                                        <?= $landlord['two_factor_enabled'] ? 'Enabled' : 'Disabled' ?>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -725,19 +679,46 @@ $paymentHistory = [
                         <!-- Activity Log -->
                         <div class="card shadow-sm mb-4">
                             <div class="card-body">
-                                <h5 class="card-title mb-3"><i class="fas fa-clock"></i> Recent Activity</h5>
-                                <?php foreach ($activityLog as $activity): ?>
-                                    <div class="mb-3 pb-3 border-bottom">
-                                        <div class="fw-bold" style="color: var(--main-color); font-size: 14px;">
-                                            <?= $activity['action'] ?>
-                                        </div>
-                                        <small class="text-muted">
-                                            <?= date('M d, Y h:i A', strtotime($activity['timestamp'])) ?>
-                                        </small>
-                                        <br>
-                                        <small class="text-muted">IP: <?= $activity['ip'] ?></small>
+                                <h5 class="card-title mb-4"><i class="fas fa-shield-alt"></i> Security Settings</h5>
+
+                                <!-- Change Password -->
+                                <div class="mb-4">
+                                    <h6 style="color: var(--main-color); font-weight: 600;">Change Password</h6>
+                                    <button class="actionBtn" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                                        <i class="fas fa-key"></i> Update Password
+                                    </button>
+                                </div>
+
+                                <!-- Change Email -->
+                                <div class="mb-4">
+                                    <h6 style="color: var(--main-color); font-weight: 600;">Change Email</h6>
+                                    <button class="actionBtn" data-bs-toggle="modal" data-bs-target="#changeEmailModal">
+                                        <i class="fas fa-envelope"></i> Update Email
+                                    </button>
+                                </div>
+
+                                <!-- Two-Factor Authentication -->
+                                <div class="mb-4">
+                                    <h6 style="color: var(--main-color); font-weight: 600;">Two-Factor Authentication</h6>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="twoFactorSwitch"
+                                           
+                                            onchange="toggleTwoFactor(this)">
+                                        <label class="form-check-label" for="twoFactorSwitch">
+                                        
+                                        </label>
                                     </div>
-                                <?php endforeach; ?>
+                                    <small class="text-muted">Add an extra layer of security to your account</small>
+                                </div>
+
+                                <!-- Session Management -->
+                                <div>
+                                    <h6 style="color: var(--main-color); font-weight: 600;">Active Sessions</h6>
+                                    <p class="text-muted mb-2">Last login: <?= date('M d, Y h:i A', strtotime($profile['created_at'])) ?></p>
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-sign-out-alt"></i> Logout All Devices
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -763,19 +744,7 @@ $paymentHistory = [
             </main>
 
             <!-- Footer -->
-            <footer class="custom-footer">
-                <div class="container-fluid">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <p class="mb-0">&copy; 2024 PropertyHub. All rights reserved.</p>
-                        <div class="d-flex gap-3">
-                            <a href="#">Privacy Policy</a>
-                            <a href="#">Terms of Service</a>
-                            <a href="#">Support</a>
-                            <a href="#">Contact</a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            
         </div>
 
         <!--begin::Footer-->

@@ -14,17 +14,13 @@ include '../db/connect.php'; // adjust path
 // get messages
 require_once "./actions/getMessages.php";
 require_once "./actions/startNewChat.php";
+// get buildings
+require_once "../actions/generalActions/getBuildings.php";
 ?>
 <?php
 
 include '../db/connect.php';
 
-try {
-  $stmt = $pdo->query("SELECT id, building_name, category FROM buildings ORDER BY building_name ASC");
-  $buildings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-  echo "Error: " . $e->getMessage();
-}
 
 ?>
 
@@ -593,7 +589,7 @@ try {
           <div class="row">
 
             <div class="col-md-3 stat-item">
-              <div class="number">7</div>
+              <div class="number"><?= $totalConversations ?></div>
               <div class="label">Total Conversations</div>
             </div>
             <div class="col-md-3 stat-item">
@@ -662,7 +658,7 @@ try {
           <div class="col-sm-12 col-md-12">
             <div class="card border-0">
               <div class="card-header d-flex justify-content-between" style="background-color: #00192D; color:#fff;">
-                <b>Recent Conversations (<span class="text-warning">0</span>)</b>
+                <b>Recent Conversations (<span class="text-warning"><?= $totalConversations ?></span>)</b>
                 <button class="actionBtn2 mb-2" data-bs-toggle="modal" data-bs-target="#newChatModal">
                   <i class="fas fa-plus"></i> New Chat
                 </button>
@@ -741,7 +737,7 @@ try {
                             $timePart = $createdAt ? substr($createdAt, 11, 5) : '';
                             ?>
 
-                            <tr class="table-row" onclick="openChat()">
+                            <tr class="table-row">
                               <td class="timestamp">
                                 <div class="date"><?= htmlspecialchars($datePart) ?></div>
                                 <div class="time"><?= htmlspecialchars($timePart) ?></div>
@@ -766,9 +762,11 @@ try {
                               </td>
 
                               <td>
-                                <button class="btn btn-primary view" onclick="openChat()">
-                                  <i class="bi bi-eye"></i> View
+                                <button class="btn btn-primary view open-chat"
+                                  data-conversation-id="<?= (int)$cid ?>">
+                                  <i class="bi bi-eye"></i> Open
                                 </button>
+                                
                                 <button class="btn btn-danger delete" data-thread-id="<?= $cid ?>">
                                   <i class="bi bi-trash3"></i> Delete
                                 </button>

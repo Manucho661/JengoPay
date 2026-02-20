@@ -42,6 +42,8 @@ try {
     $tenantId   = (string)($_POST['tenant_id'] ?? '');  // e.g. t1 (dummy) or actual users.id
     $buildingId = (string)($_POST['building_id'] ?? '');
     $unitId     = (string)($_POST['unit_id'] ?? '');
+    $maintenanceRequestId = $_POST['maintenance_request_id'] ?? null;
+
 
 
     $recipientUserId = 0;
@@ -74,7 +76,7 @@ try {
             echo "No recipient specified.";
         }
     }
-    
+
 
     // --- DB transaction: create conversation, participants, first message, optional attachment ---
     $pdo->beginTransaction();
@@ -90,6 +92,24 @@ try {
     ]);
 
     $conversationId = (int)$pdo->lastInsertId();
+
+    // 1) Prepare base SQL
+    $sql = "
+    INSERT INTO conversation_links
+    (conversation_id, building_id, unit_id, maintenance_request_id)
+    VALUES (:conversation_id, :building_id, :unit_id, :maintenance_request_id)
+";
+
+    $stmtLink = $pdo->prepare($sql);
+
+    // 2) Bind values (maintenance_request_id can be NULL)
+    $stmtLink->execute([
+        ':conversation_id'        => $conversationId,
+        ':building_id'            => !empty($buildingId) ? (int)$buildingId : null,
+        ':unit_id'                => !empty($unitId) ? (int)$unitId : null,
+        ':maintenance_request_id' => !empty($maintenanceRequestId) ? (int)$maintenanceRequestId : null,
+    ]);
+
 
     // 2) add participants (creator + recipient)
     $stmtPart = $pdo->prepare("
@@ -107,7 +127,7 @@ try {
         ':user_id'         => $recipientUserId,
     ]);
 
-    
+
     // // 3) insert first message
     $messageType = 'text';
     $stmtMsg = $pdo->prepare("
@@ -121,8 +141,8 @@ try {
         ':message_type'    => $messageType,
     ]);
 
-    
-     $messageId = (int)$pdo->lastInsertId();
+
+    $messageId = (int)$pdo->lastInsertId();
 
     // // 4) optional attachment upload (image)
     // Frontend should submit <input type="file" name="attachment">
@@ -171,21 +191,21 @@ try {
         // Store a relative path for easier use in HTML
         $relativeUrl = 'uploads/chat_attachments/' . $newName;
 
-        $stmtAtt = $pdo->prepare("
-            INSERT INTO message_attachments (message_id, file_url, file_name, mime_type, file_size, created_at)
-            VALUES (:message_id, :file_url, :file_name, :mime_type, :file_size, NOW())
-        ");
-        $stmtAtt->execute([
-            ':message_id' => $messageId,
-            ':file_url'   => $relativeUrl,
-            ':file_name'  => $file['name'],
-            ':mime_type'  => $mime,
-            ':file_size'  => (int)$file['size'],
-        ]);
+        // $stmtAtt = $pdo->prepare("
+        //     INSERT INTO message_attachments (message_id, file_url, file_name, mime_type, file_size, created_at)
+        //     VALUES (:message_id, :file_url, :file_name, :mime_type, :file_size, NOW())
+        // ");
+        // $stmtAtt->execute([
+        //     ':message_id' => $messageId,
+        //     ':file_url'   => $relativeUrl,
+        //     ':file_name'  => $file['name'],
+        //     ':mime_type'  => $mime,
+        //     ':file_size'  => (int)$file['size'],
+        // ]);
 
-        // Update message type to image
-        $pdo->prepare("UPDATE conversation_messages SET message_type = 'image' WHERE id = :id")
-            ->execute([':id' => $messageId]);
+        // // Update message type to image
+        // $pdo->prepare("UPDATE conversation_messages SET message_type = 'image' WHERE id = :id")
+        //     ->execute([':id' => $messageId]);
     }
 
     // Update conversation updated_at (optional)

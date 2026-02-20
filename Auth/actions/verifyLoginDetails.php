@@ -61,6 +61,15 @@ try {
         if ($provider) {
             $name = $provider['name'];
         }
+    } elseif ($user['role'] === 'tenant') {
+        // Fetch name tenants table
+        $stmt = $pdo->prepare("SELECT first_name FROM tenants WHERE user_id = ?");
+        $stmt->execute([$user['id']]);
+        $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($tenant) {
+            $name = $tenant['first_name'];
+        }
     }
 
     // -----------------------------
@@ -79,6 +88,8 @@ try {
         $redirectUrl = '/jengopay/landlord/pages/dashboard/dashboard.php';
     } elseif ($user['role'] === 'provider') {
         $redirectUrl = '/jengopay/service/requestOrders.php';
+    } elseif ($user['role'] === 'tenant') {
+        $redirectUrl = '/jengopay/tenant/tenant-portal.php';
     } else {
         $redirectUrl = '/Jengopay/auth/login.php'; // fallback
     }
@@ -90,7 +101,6 @@ try {
         "status" => "success",
         "redirect" => $redirectUrl
     ]);
-
 } catch (Throwable $e) {
     error_log("Login error: " . $e->getMessage());
     echo json_encode([

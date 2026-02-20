@@ -90,13 +90,14 @@ require_once 'actions/getBuildings.php';
       vertical-align: middle;
       color: var(--main-color);
       font-size: 14px;
+      cursor: pointer;
     }
 
     .major-header th {
       font-size: 15px;
       letter-spacing: 0.2px;
       text-transform: uppercase;
-      
+
     }
 
     /* Sub-section headers: Current Assets, etc */
@@ -320,7 +321,7 @@ require_once 'actions/getBuildings.php';
                     <!-- Main Row -->
                     <tr>
                       <?php foreach ($incomeRows  as $item): ?>
-                    <tr class="main-row" data-bs-target="#maintenanceDetails" aria-expanded="false" aria-controls="maintenanceDetails" style="cursor:pointer;">
+                    <tr class="main-row" data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($item['account_code']) ?> style=" cursor:pointer;">
                       <td><?= $item['account_name'] ?></td>
                       <td class="p-0">
                         <div class="d-flex justify-content-start">
@@ -348,11 +349,11 @@ require_once 'actions/getBuildings.php';
                   <tr>
                     <th colspan="2" class="section-header" style="color:red;background-color: #fff8e6; padding: 15px 10px;">Expenses</th>
                   </tr>
-                  
+
 
                   <?php foreach ($expenseRows as $item): ?>
-                    <tr class="main-row child-row clickable-row">
-                      <td class="desc-cell"> <span class="desc-text"><?= $item['account_name'] ?></span>  </td>
+                    <tr class="main-row child-row clickable-row" data-href="/jengopay/landlord/pages/financials/generalledger/general_ledger.php?account_code=<?= urlencode($item['account_code']) ?>">
+                      <td class=" desc-cell"> <span class="desc-text"><?= $item['account_name'] ?></span> </td>
                       <td class="p-0">
                         <div class="d-flex justify-content-start">
                           <div class="d-flex justify-content-end amount-box">
@@ -416,6 +417,20 @@ require_once 'actions/getBuildings.php';
   <script src="/jengopay/landlord/assets/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll("tr.clickable-row[data-href]").forEach(row => {
+        row.addEventListener("click", (e) => {
+          // If user clicks a link/button inside the row, let that work normally
+          if (e.target.closest("a, button, input, select, textarea, label")) return;
+
+          const href = row.getAttribute("data-href");
+          if (href) window.location.href = href;
+        });
+      });
+    });
+  </script>
   <!--end::Script-->
 </body>
 <!--end::Body-->

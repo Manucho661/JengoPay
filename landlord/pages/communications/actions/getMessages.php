@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -75,38 +76,38 @@ try {
     ORDER BY c.created_at DESC, c.id DESC
 ");
 
-$stmt->execute([
-  ':me1' => $userId,
-  ':me2' => $userId,
-  ':me3' => $userId,
-]);
+    $stmt->execute([
+        ':me1' => $userId,
+        ':me2' => $userId,
+        ':me3' => $userId,
+    ]);
 
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // total number of conversations returned for this user
+    $totalConversations = count($rows);
 
-$conversations = [];
-foreach ($rows as $r) {
-    $creatorName =
-        $r['creator_tenant_first_name']
-        ?? $r['creator_landlord_first_name']
-        ?? $r['creator_sp_name']
-        ?? null;
+    $conversations = [];
+    foreach ($rows as $r) {
+        $creatorName =
+            $r['creator_tenant_first_name']
+            ?? $r['creator_landlord_first_name']
+            ?? $r['creator_sp_name']
+            ?? null;
 
-    $conversations[] = [
-        'conversation_id' => (int)$r['conversation_id'],
-        'title' => $r['conversation_title'],
-        'created_at' => $r['conversation_created_at'],
-        'created_by' => (int)$r['creator_user_id'],
-        'creator' => [
-            'user_id' => (int)$r['creator_user_id'],
-            'email'   => $r['creator_email'] ?? null,
-            'role'    => $r['creator_role'] ?? null,
-            'name'    => $creatorName,
-        ],
-        'sent_to_display' => (string)($r['sent_to_display'] ?? ''),
-    ];
-}
-
-
+        $conversations[] = [
+            'conversation_id' => (int)$r['conversation_id'],
+            'title' => $r['conversation_title'],
+            'created_at' => $r['conversation_created_at'],
+            'created_by' => (int)$r['creator_user_id'],
+            'creator' => [
+                'user_id' => (int)$r['creator_user_id'],
+                'email'   => $r['creator_email'] ?? null,
+                'role'    => $r['creator_role'] ?? null,
+                'name'    => $creatorName,
+            ],
+            'sent_to_display' => (string)($r['sent_to_display'] ?? ''),
+        ];
+    }
 } catch (Throwable $e) {
     $_SESSION['error'] = 'Failed to load the conversations: ' . $e->getMessage();
     error_log("Fetch conversations error: " . $e->getMessage());

@@ -674,7 +674,7 @@ $results_show_buildings = $results_show_buildings->fetchAll(PDO::FETCH_ASSOC);
                                                 <th>Building</th>
                                                 <th>Category</th>
                                                 <th>Type</th>
-                                                <th>No. of Units</th>
+                                                <th>Units</th>
                                                 <th>Ownership Mode</th>
                                                 <th>Reg. Date</th>
                                                 <th>Options</th>
@@ -729,7 +729,7 @@ $results_show_buildings = $results_show_buildings->fetchAll(PDO::FETCH_ASSOC);
                                                                     <span class="sr-only">Toggle Dropdown</span>
                                                                 </button>
                                                                 <div class="dropdown-menu shadow" role="menu" style="border:1px solid rgb(0, 25, 45 ,.3);">
-                                                                     <a href="buildingProfile.php?id=<?php echo urlencode($id); ?>" class="dropdown-item">
+                                                                     <a href="/jengopay/landlord/pages/profiles/buildingProfile.php?id=<?php echo urlencode($id); ?>" class="dropdown-item">
                                                                         <i class="bi bi-eye"></i> View
                                                                     </a> 
                                                                     <a href="add_single_unit.php?add_single_unit=<?php echo $id; ?>" class="dropdown-item" onclick="return confirmAddUnit(event, '<?php echo $building_name; ?>')"><i class="bi bi-house"></i> Add Single Unit</a>

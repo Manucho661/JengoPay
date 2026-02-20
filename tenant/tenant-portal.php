@@ -1,3 +1,18 @@
+<?php
+
+// include_once $_SERVER['DOCUMENT_ROOT'] . '/jengopay/auth/tenant_auth_check.php';
+
+// Start session
+session_start();
+
+$error   = $_SESSION['error'] ?? '';
+$success = $_SESSION['success'] ?? '';
+
+unset($_SESSION['error'], $_SESSION['success']);
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -266,10 +281,10 @@
           <div class="col-md-4"></div>
           <div class="col-md-4">
             <h2 class="mt-5 text-light" style="font-weight:bold;"><span style="color:#FFC107;">Welcome</span> Pashan
-              Paul
+              <?= $_SESSION['user']['name']; ?>
             </h2>
             <h5 class="text-light">Balance Due</h5>
-            <h2 class="text-light" style="font-weight:bold;">Kshs.20000.00</h2>
+            <h2 class="text-light" style="font-weight:bold;">Kshs 0.00</h2>
             <h5 class="text-light"><i class="fa fa-calendar"></i> Your Next Due Payment is on 22/12/2025</h5>
             <h5 class="text-light"><i class="fa fa-home"></i> Your house no is 316 Crown Z Towers</h5>
             <h5 class="text-light"><i class="fa fa-user-circle"></i> Your Landlord is Biccount Technologies</h5>
@@ -1155,5 +1170,10 @@
 
     });
   });
+
+
+    
 </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </html>
